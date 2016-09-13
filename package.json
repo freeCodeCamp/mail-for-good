@@ -16,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/FreeCodeCamp/nonprofit-email-service/issues"
   },
-  "homepage": "https://github.com/FreeCodeCamp/nonprofit-email-service#readme"
+  "homepage": "https://github.com/FreeCodeCamp/nonprofit-email-service#readme",
+  "dependencies": {
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "express-session": "^1.14.1",
+    "mongoose": "^4.6.0",
+    "passport": "^0.3.2",
+    "passport-google-oauth": "^1.0.0"
+  }
 }
