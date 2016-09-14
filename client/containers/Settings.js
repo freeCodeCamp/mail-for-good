@@ -7,26 +7,29 @@ export default class Settings extends React.Component {
     super();
 
     this.state = {
-      accessKey: '',
-      secretKey: ''
+      newSettings: {
+        amazonSimpleEmailServiceAccessKey: '',
+        amazonSimpleEmailServiceSecretKey: ''
+      }
     };
   }
 
   handleChange(e) {
-    this.setState({
+    // Preserve the previous settings
+    const newSettings = {...this.state.newSettings,
       [e.target.name]: e.target.value
-    });
+    };
+    
+    this.setState({newSettings});
   }
   
   handleSubmit(e) {
     e.preventDefault();
-    
-    axios.post(SETTINGS_URL_WHOLE, {
-      accessKey: this.state.accessKey,
-      secretKey: this.state.secretKey
-    }).then(() => {
-      console.log("settings POSTed");
-    });
+
+    axios.post(SETTINGS_URL_WHOLE, this.state.newSettings)
+      .then(() => {
+        console.log("settings POSTed");
+      });
   }
 
   render() {
@@ -39,16 +42,16 @@ export default class Settings extends React.Component {
             <input
               id="1"
               type="text"
-              name="accessKey"
-              value={this.state.accessKey} />
+              name="amazonSimpleEmailServiceAccessKey"
+              value={this.state.newSettings.amazonSimpleEmailServiceAccessKey} />
             <br/>
             
             secret key
             <input
               id="2"
               type="text"
-              name="secretKey"
-              value={this.state.secretKey} />
+              name="amazonSimpleEmailServiceSecretKey"
+              value={this.state.newSettings.amazonSimpleEmailServiceSecretKey} />
             <br/>
             <button type="submit" onClick={this.handleSubmit.bind(this)}>Submit</button>
           </form>

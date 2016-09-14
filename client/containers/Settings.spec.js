@@ -19,19 +19,19 @@ describe('<Settings />', () => {
   it('should contain the relevant SES settings inputs', () => {
     const wrapper = shallow(<Settings />);
 
-    expect(wrapper.find('input[name="accessKey"]').prop('type')).to.equal('text');
-    expect(wrapper.find('input[name="secretKey"]').prop('type')).to.equal('text');
+    expect(wrapper.find('input[name="amazonSimpleEmailServiceAccessKey"]').prop('type')).to.equal('text');
+    expect(wrapper.find('input[name="amazonSimpleEmailServiceSecretKey"]').prop('type')).to.equal('text');
   })
 
   it('on submit click, should send a request to the endpoint with the settings data', () => {
     // need to mount so that we can send change events to the <input>s
     const wrapper = mount(<Settings />);
 
-    wrapper.find('input[name="accessKey"]').simulate(
+    wrapper.find('input[name="amazonSimpleEmailServiceSecretKey"]').simulate(
       'change',
       {target: {name: 'accessKey', value: 'new_access_key'}}
     );
-    wrapper.find('input[name="secretKey"]').simulate(
+    wrapper.find('input[name="amazonSimpleEmailServiceSecretKey"]').simulate(
       'change',
       {target: {name: 'secretKey', value: 'new_secret_key'}}
     );

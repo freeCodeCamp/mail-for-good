@@ -1,3 +1,6 @@
+const changeSettings = require('../controllers/changesettings');
+
+
 module.exports = (app, passport) => {
     ////////////////////
     /* AUTHENTICATION */
@@ -19,6 +22,17 @@ module.exports = (app, passport) => {
         failureRedirect: '/login'
       })
     );
+
+    ////////////////////
+    /*      API       */
+    ////////////////////
+
+    /* Settings */
+    
+    // Change settings
+    app.post('/api/settings', (req, res) => {
+      changeSettings(req, res);
+    })
 };
 
 // Helper function for verifying authentication
