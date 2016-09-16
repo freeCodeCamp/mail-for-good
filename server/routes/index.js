@@ -1,4 +1,5 @@
 const changeSettings = require('../controllers/changesettings');
+const addSubscribers = require('../controllers/addsubscribers');
 
 
 module.exports = (app, passport) => {
@@ -32,7 +33,15 @@ module.exports = (app, passport) => {
     // Change settings
     app.post('/api/settings', (req, res) => {
       changeSettings(req, res);
-    })
+    });
+
+  
+    /* Subscribers */
+  
+    // Add multiple subscribers
+    app.post('/api/subscribers', (req, res) => {
+      addSubscribers(req, res);
+    });
 };
 
 // Helper function for verifying authentication
