@@ -1,4 +1,7 @@
 const initialState = {
+  subscribers: {
+    list: []
+  },
   test: {
     something: true
   }

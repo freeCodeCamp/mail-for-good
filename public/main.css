@@ -1,0 +1,40 @@
+body, html {
+    height: 100vh;
+}
+
+.flex {
+    display: flex;
+    flex-direction: row;
+    height: 90vh;
+    background-color: #2196F3;
+}
+
+.flex-login {
+    display: flex;
+    flex-basis: 50vh;
+    text-align: center;
+    margin: auto;
+    opacity: 0.95;
+    transition: all 0.6s cubic-bezier(.20, .8, .25, 1);
+}
+
+@media (max-width: 798px) {
+    .flex-login {
+        width: 95vh;
+    }
+}
+
+.flex-login:hover {
+    opacity: 1;
+}
+
+.flex-login__form {
+    width: 100%;
+    background: #fff;
+    border-radius: 4px;
+    padding: 20px;
+    input, button {
+        width: 100%;
+        margin: 5px 0;
+    }
+}

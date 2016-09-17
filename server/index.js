@@ -3,6 +3,7 @@ const session = require('express-session')
 const passport = require('passport');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 require('dotenv').config();
 
@@ -26,7 +27,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.json());
 
-// app.use('/???', express.static(path.join(__dirname, '/???')));
+app.use('/static', express.static(path.join(__dirname, '../public')));
 
 // Routes
 routes(app, passport);
