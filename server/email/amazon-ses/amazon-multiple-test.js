@@ -15,6 +15,21 @@ const secret = require('../../config/secrets');
     rateLimit - optional Specify the amount of messages that can be sent in 1 second. For example if you want to send at most 5 messages in a second, set this value to 5. If you do not set it, rate limiting is not applied and messages are sent out immediately.
     maxConnections - optional Specify the maximum number of messages to be "in-flight" at any one point in time. Useful for preventing suffocation of an internet connection when sending lots of messages.
 
+    ///////////
+    // Tests //
+    ///////////
+
+    https://docs.aws.amazon.com/ses/latest/DeveloperGuide/mailbox-simulator.html
+    success@simulator.amazonses.com (Successful email)
+    bounce@simulator.amazonses.com (Soft bounce)
+    ooto@simulator.amazonses.com (Out of office response from ISP)
+    complaint@simulator.amazonses.com (Complaint from ISP)
+    suppressionlist@simulator.amazonses.com (Hard bounce as target email is on Amazon's suppression list)
+
+    // WARNING //
+
+    When you send emails to the mailbox simulator, you will be limited by your maximum send rate. You will also be billed for your emails.
+    However, emails to the mailbox simulator will not affect your email deliverability metrics for bounces and complaints or count against your sending quota.
 */
 
 module.exports = () => {
