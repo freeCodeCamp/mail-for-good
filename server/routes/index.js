@@ -1,3 +1,5 @@
+const path = require('path');
+
 const changeSettings = require('../controllers/changesettings');
 const addSubscribers = require('../controllers/addsubscribers');
 
@@ -6,6 +8,10 @@ module.exports = (app, passport) => {
     ////////////////////
     /* AUTHENTICATION */
     ////////////////////
+
+    app.get('/login', (req, res) => {
+      res.sendFile(path.resolve('public/index.html'));
+    });
 
     // Redirect user to Google for authentication. When complete, Google will return the user to /auth/google/return
     // Ref https://developers.google.com/identity/protocols/OpenIDConnect#scope-param
@@ -29,15 +35,15 @@ module.exports = (app, passport) => {
     ////////////////////
 
     /* Settings */
-    
+
     // Change settings
     app.post('/api/settings', (req, res) => {
       changeSettings(req, res);
     });
 
-  
+
     /* Subscribers */
-  
+
     // Add multiple subscribers
     app.post('/api/subscribers', (req, res) => {
       addSubscribers(req, res);
