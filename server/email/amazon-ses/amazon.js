@@ -28,7 +28,7 @@ module.exports = () => {
 
     const transporter = nodemailer.createTransport(sesTransport(options));
 
-    var mailOptions = {
+    const mailOptions = {
         from: `<${secret.testEmail}>`,
         to: `${secret.testEmail}`,
         subject: 'Hello',
