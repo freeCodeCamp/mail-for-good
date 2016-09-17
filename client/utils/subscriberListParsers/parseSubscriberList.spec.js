@@ -7,7 +7,7 @@ khanson5@amazon.co.jp,Male,Keith,Hanson,California,Pass
 jgrant6@hexun.com,Female,Julia,Grant,Georgia,Drive`;
 
 const sampleDataNormalExpected = {
-  data: [
+  subscribers: [
     {email: 'nreid0@domainmarket.com', gender: 'Female', firstName: 'Nancy', lastName: 'Reid', state: 'Virginia', streetType: 'Plaza'},
     {email: 'bbrooks1@about.me', gender: 'Female', firstName: 'Bonnie', lastName: 'Brooks', state: 'Florida', streetType: 'Circle'},
     {email: 'khanson5@amazon.co.jp', gender: 'Male', firstName: 'Keith', lastName: 'Hanson', state: 'California', streetType: 'Pass'},
