@@ -20,16 +20,16 @@ const sampleDataNormalFields = [
     {name: 'lastName', type: 'text'},
     {name: 'state', type: 'group'},
     {name: 'streetType', type: 'group'},
-]
+];
 
 describe('parseSubscriberList', () => {
   it('parsers columns based on the field object', () => {
     const result = parseSubscriberListCsv(sampleDataNormalData, sampleDataNormalFields);
 
     expect(result).to.deep.equal(sampleDataNormalExpected);
-  })
+  });
 
   it('if the csv is invalid, the offending rows should be returned with an error object', () => {
-  })
-})
+  });
+});
 

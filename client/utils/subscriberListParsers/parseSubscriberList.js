@@ -17,11 +17,9 @@ export default function parseSubscriberList(inputData, fields) {
   let header = [];
   fields.forEach((field) => {
     header.push(field.name)
-  })
-  
+  });
   header = header.join(',');
   
-  console.log(header + '\n' + inputData);
   const data = Papa.parse(header + '\n' + inputData, { header: true });
 
   return data.data;

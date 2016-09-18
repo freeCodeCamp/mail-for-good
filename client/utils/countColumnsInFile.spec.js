@@ -12,5 +12,5 @@ describe('countColumnsInFile', () => {
   });
   
   it('should count the number of columns in a tsv file', () => {
-  })
+  });
 });

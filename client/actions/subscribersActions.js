@@ -11,7 +11,7 @@ export function requestAddSubscribers() {
 export function completeAddSubscribers() {
   return {
     type: COMPLETE_ADD_SUBSCRIBERS
-  }
+  };
 }
 
 export function addSubscribers(subscribers, fields) {
@@ -22,6 +22,6 @@ export function addSubscribers(subscribers, fields) {
     axios.post(API_SUBSCRIBERS_ENDPOINT, { subscribers, fields })
       .then(() => {
         // error /success handling
-      })
+      });
   };
 }
