@@ -1,6 +1,6 @@
 'use strict'
 const _ = require('lodash');
-const Settings = require('../db/models/settings');
+const Settings = require('../db/models/index').Settings;
 
 
 module.exports =  function(req, res) {
