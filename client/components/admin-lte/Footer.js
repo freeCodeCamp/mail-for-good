@@ -4,8 +4,7 @@ import React from 'react';
 const Footer = (props) => {
   return (
     <footer className="main-footer">
-      <div className="pull-right hidden-xs">Anything you want</div>
-      <span><strong>Copyright © 2016 <a href="#">Company</a>.</strong> All rights reserved.</span>
+      <span><strong>A <a href="https://www.freecodecamp.com/">FreeCodeCamp</a> initiative.</strong></span>
     </footer>
   )
 };

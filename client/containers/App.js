@@ -34,10 +34,6 @@ export default class App extends React.Component {
         <div className="content-wrapper">
             <section className="content-header">
                 <h1>Page Header <small>Optional description</small></h1>
-                <ol className="breadcrumb">
-                    <li><a href="#"> Level</a></li>
-                    <li className="active">Here</li>
-                </ol>
             </section>
             <section className="content">
               <p> Hello world! </p>
