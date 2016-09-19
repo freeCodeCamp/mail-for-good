@@ -8,6 +8,13 @@ import configureStore from './store/configureStore';
 require('./favicon.ico'); // Tell webpack to load favicon.ico
 import { syncHistoryWithStore } from 'react-router-redux';
 
+import bootstrapCss from 'bootstrap/dist/css/bootstrap.min.css';
+import bootStrap from 'bootstrap/dist/js/bootstrap.min.js';
+
+import adminLte from 'admin-lte/dist/js/app.min.js';
+import adminLteCss from 'admin-lte/dist/css/AdminLTE.min.css';
+import adminLteSkin from 'admin-lte/dist/css/skins/skin-blue.min.css';
+
 import './styles/index.scss';
 
 const store = configureStore();

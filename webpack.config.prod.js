@@ -59,6 +59,12 @@ export default {
       trackJSToken: ''
     }),
 
+    new webpack.ProvidePlugin({
+      jQuery: 'jquery',
+      $: 'jquery',
+      jquery: 'jquery'
+    }),
+
     // Eliminate duplicate packages when generating bundle
     new webpack.optimize.DedupePlugin(),
 
