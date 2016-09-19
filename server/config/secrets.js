@@ -13,6 +13,11 @@ module.exports = {
     },
     //
 
+    smtpServer: {
+      port: process.env.SMTP_TEST_PORT || '2025', // Linux envs disallo use of port <= 1024 without root
+      host: process.env.SMTP_TEST_HOST || '127.0.0.1'
+    },
+
     google: {
         consumerKey: process.env.GOOGLE_CONSUMER_KEY,
         consumerSecret: process.env.GOOGLE_CONSUMER_SECRET,

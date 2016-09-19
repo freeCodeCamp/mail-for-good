@@ -97,6 +97,7 @@
     "mockdate": "1.0.4",
     "nock": "^8.0.0",
     "node-sass": "3.8.0",
+    "nodemailer-smtp-transport": "^2.7.2",
     "npm-run-all": "3.0.0",
     "open": "0.0.5",
     "postcss-loader": "0.11.0",

@@ -15,6 +15,9 @@ const app = express();
 // Connect to mongo
 mongoose.connect(secret.mongo);
 
+/* LINE BELOW SENDS A TEST EMAIL, THIS COMMENT IS TEMPORARY */
+// require('./email/test-internal/test-single.js')();
+
 // Config
 require('./config/passport')(passport);
 
