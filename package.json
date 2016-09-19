@@ -21,7 +21,8 @@
     "client:test:watch": "npm run client:test -- --watch",
     "client:open:cover": "npm run test:cover && open coverage/index.html",
     "start": "node server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "email:test": "node server/email/test-internal"
   },
   "repository": {
     "type": "git",
@@ -55,8 +56,8 @@
     "redux-thunk": "2.1.0"
   },
   "devDependencies": {
-    "axios": "^0.14.0",
     "autoprefixer": "6.4.0",
+    "axios": "^0.14.0",
     "babel-cli": "6.14.0",
     "babel-core": "6.14.0",
     "babel-loader": "6.2.5",
@@ -88,9 +89,9 @@
     "isparta": "4.0.0",
     "mocha": "3.0.2",
     "mockdate": "1.0.4",
+    "nock": "^8.0.0",
     "node-sass": "3.8.0",
     "npm-run-all": "3.0.0",
-    "nock": "^8.0.0",
     "open": "0.0.5",
     "postcss-loader": "0.11.0",
     "prompt": "1.0.0",
@@ -102,6 +103,7 @@
     "sass-loader": "4.0.0",
     "sinon": "1.17.5",
     "sinon-chai": "2.8.0",
+    "smtp-server": "^1.14.2",
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
     "webpack": "1.13.2",
