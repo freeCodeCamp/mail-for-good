@@ -1,34 +1,26 @@
 const path = require('path');
 
+const auth = require('./auth');
+
 const changeSettings = require('../controllers/changesettings');
 const addSubscribers = require('../controllers/addsubscribers');
 
 
 module.exports = (app, passport) => {
+
     ////////////////////
     /* AUTHENTICATION */
     ////////////////////
 
-    app.get('/login', (req, res) => {
-      res.sendFile(path.resolve('public/index.html'));
+    auth(app, passport, isAuth);
+
+    /////////
+    /* APP */
+    /////////
+
+    app.get('/', isAuth, (req, res) => {
+      res.sendFile(path.resolve('dist/index.html'));
     });
-
-    // Redirect user to Google for authentication. When complete, Google will return the user to /auth/google/return
-    // Ref https://developers.google.com/identity/protocols/OpenIDConnect#scope-param
-    app.get('/auth/google', passport.authenticate('google', {
-      scope: [
-        'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/userinfo.email'
-      ]
-    }));
-
-    // Verify authentication with Passport. Send to /
-    app.get('/auth/google/callback',
-      passport.authenticate('google', {
-        successRedirect: '/success', //TODO: Change this to an authenticated url e.g. /a or /account. Can also redirect simply to / using a separate workflow
-        failureRedirect: '/login'
-      })
-    );
 
     ////////////////////
     /*      API       */
@@ -41,7 +33,6 @@ module.exports = (app, passport) => {
       changeSettings(req, res);
     });
 
-
     /* Subscribers */
 
     // Add multiple subscribers
@@ -51,7 +42,7 @@ module.exports = (app, passport) => {
 };
 
 // Helper function for verifying authentication
-function isAuth(req, res) {
+function isAuth(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
     } else {
