@@ -23,7 +23,7 @@ export default class Home extends React.Component {
   render() {
     return (
 
-        <div className="content-wrapper">
+        <div>
             <section className="content-header">
                 <h1>Page Header <small>Optional description</small></h1>
             </section>

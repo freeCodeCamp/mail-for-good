@@ -31,7 +31,9 @@ export default class App extends React.Component {
       <Header />
       <Sidebar />
 
-      {this.props.children}
+      <div className="content-wrapper">
+        {this.props.children}
+      </div>
 
       <Footer />
       </div>
