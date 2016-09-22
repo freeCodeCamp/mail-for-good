@@ -1,8 +1,10 @@
 import React from 'react';
-import axios from 'axios';
-import { SETTINGS_URL_WHOLE } from '../constants/endpoints';
+import {connect} from 'react-redux';
+
+import { changeSettings } from '../actions/settingsActions';
 
 
+@connect(null, {changeSettings})
 export default class Settings extends React.Component {
   constructor() {
     super();
@@ -26,11 +28,7 @@ export default class Settings extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-
-    axios.post(SETTINGS_URL_WHOLE, this.state.newSettings)
-      .then(() => {
-        console.log("settings POSTed");
-      });
+    this.props.changeSettings(this.state.newSettings);
   }
 
   render() {
