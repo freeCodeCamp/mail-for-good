@@ -19,10 +19,10 @@ export default class Settings extends React.Component {
     const newSettings = {...this.state.newSettings,
       [e.target.name]: e.target.value
     };
-    
+
     this.setState({newSettings});
   }
-  
+
   handleSubmit(e) {
     e.preventDefault();
 
@@ -34,27 +34,33 @@ export default class Settings extends React.Component {
 
   render() {
     return (
-      <div className="settings">
-        <h3>settings</h3>
-        <section className="ses">
-          <form onChange={this.handleChange.bind(this)}>
-            access key
-            <input
-              id="1"
-              type="text"
-              name="amazonSimpleEmailServiceAccessKey"
-              value={this.state.newSettings.amazonSimpleEmailServiceAccessKey} />
-            <br/>
-            
-            secret key
-            <input
-              id="2"
-              type="text"
-              name="amazonSimpleEmailServiceSecretKey"
-              value={this.state.newSettings.amazonSimpleEmailServiceSecretKey} />
-            <br/>
-            <button type="submit" onClick={this.handleSubmit.bind(this)}>Submit</button>
-          </form>
+      <div>
+        <section className="content-header">
+            <h1>Settings <small>Settings page</small></h1>
+        </section>
+        <section className="content">
+          <div className="settings">
+            <section className="ses">
+              <form onChange={this.handleChange.bind(this)}>
+                access key
+                <input
+                  id="1"
+                  type="text"
+                  name="amazonSimpleEmailServiceAccessKey"
+                  value={this.state.newSettings.amazonSimpleEmailServiceAccessKey} />
+                <br/>
+
+                secret key
+                <input
+                  id="2"
+                  type="text"
+                  name="amazonSimpleEmailServiceSecretKey"
+                  value={this.state.newSettings.amazonSimpleEmailServiceSecretKey} />
+                <br/>
+                <button type="submit" onClick={this.handleSubmit.bind(this)}>Submit</button>
+              </form>
+            </section>
+          </div>
         </section>
       </div>
     );

@@ -25,10 +25,10 @@ export default class Home extends React.Component {
 
         <div>
             <section className="content-header">
-                <h1>Page Header <small>Optional description</small></h1>
+                <h1>Page Header <small>Home page</small></h1>
             </section>
             <section className="content">
-              <p> Hello world! </p>
+              <p> Home page content will go here. </p>
             </section>
         </div>
 
