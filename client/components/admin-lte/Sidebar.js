@@ -1,6 +1,8 @@
 // Must have at least one test file in this directory or Mocha will throw an error.
 import React from 'react';
 
+import SideLink from '../common/SideLink';
+
 const Sidebar = (props) => {
   return (
     <aside className="main-sidebar">
@@ -14,8 +16,10 @@ const Sidebar = (props) => {
 
             <ul className="sidebar-menu">
                 <li className="header">OPTIONS</li>
-                <li className="active"><a href="#"> Home</a></li>
-                <li><a href="#"> Settings</a></li>
+
+                <SideLink to="/">Home</SideLink>
+                <SideLink to="/settings">Settings</SideLink>
+
                 <li className="treeview"><a href="#"> Tba </a>
                     <ul className="treeview-menu">
                         <li><a href="#">Link in level 2</a></li>
