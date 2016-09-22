@@ -58,3 +58,6 @@ dist
 
 #VSCode metadata
 .vscode
+
+# Test csv files
+*.csv

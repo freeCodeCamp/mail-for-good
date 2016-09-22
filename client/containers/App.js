@@ -31,14 +31,7 @@ export default class App extends React.Component {
       <Header />
       <Sidebar />
 
-        <div className="content-wrapper">
-            <section className="content-header">
-                <h1>Page Header <small>Optional description</small></h1>
-            </section>
-            <section className="content">
-              <p> Hello world! </p>
-            </section>
-        </div>
+      {this.props.children}
 
       <Footer />
       </div>
