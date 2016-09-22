@@ -1,10 +1,17 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import FontAwesome from 'react-fontawesome';
 
 import { changeSettings } from '../actions/settingsActions';
 
 
-@connect(null, {changeSettings})
+function getState(state) {
+  return {
+    loading: state.settings.loading
+  };
+}
+
+@connect(getState, {changeSettings})
 export default class Settings extends React.Component {
   constructor() {
     super();
@@ -13,8 +20,15 @@ export default class Settings extends React.Component {
       newSettings: {
         amazonSimpleEmailServiceAccessKey: '',
         amazonSimpleEmailServiceSecretKey: ''
-      }
+      },
+      loading: false
     };
+  }
+  
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      loading: newProps.loading
+    });
   }
 
   handleChange(e) {
@@ -83,6 +97,10 @@ export default class Settings extends React.Component {
                     </button>
                   </div>
                 </form>
+                {this.props.loading &&  // show the loading spinner appropriately
+                  <div className="overlay">
+                    <FontAwesome name="refresh" spin/>
+                </div>}
               </div>
               {/* End of Amazon SES form box */}
 
