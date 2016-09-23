@@ -8,10 +8,26 @@ Screen-shots here.
 The reason we are creating this software is to help nonprofits manage their email campaigns without having to use third party services. This can be pricey and you have to trust a third part with your email lists. It is our goal to help nonprofit companies do more with their limited resources.
 
 ###Install
-How to Install
+
+####Download or fork the repo.
+* For Mac - open terminal and go to the code directory and run the command 
+
+```
+npm install
+```
+
+* For Windows - open cmd and go to the code directory and run the command 
+```
+npm install
+```
+
+This will install all the dependencies.
+
 
 ###How to Run
-How to run
+
+The application will be running on http://localhost:2025/
+
 
 ###Want to contribute?
 Contribution.md - How to contribute.
