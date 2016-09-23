@@ -1,6 +1,7 @@
 import React from 'react';
-import Dropzone from 'react-dropzone';
 import { connect } from 'react-redux';
+
+import UploadFileModal from '../components/ImportSubscribers/UploadFileModal';
 
 import parseSubscriberList from '../utils/subscriberListParsers/parseSubscriberList';
 import { addSubscribers } from '../actions/subscribersActions';
@@ -16,16 +17,8 @@ export default class ImportSubscribers extends React.Component {
       subscribers: null
     };
   }
-
-  onUpload(file) {
-    const read = new FileReader();
-    read.readAsBinaryString(file[0]);
-    read.onloadend = function() {
-      this.handleUploadSuccess(read.result);
-    }.bind(this);
-  }
-
-  handleUploadSuccess(text) {
+  
+  handleNewFile(text) {
     const data = parseSubscriberList(text);
     
     this.setState({
@@ -48,9 +41,7 @@ export default class ImportSubscribers extends React.Component {
     console.log(this.state);
     return (
       <div>
-        <Dropzone onDrop={this.onUpload.bind(this)}>
-          drag csv here
-        </Dropzone>
+        <UploadFileModal handleNewFile={this.handleNewFile.bind(this)} />
         {this.state.subscribers && this.state.subscribers.map((subscriber) => {
           return (
             <div>
