@@ -25,8 +25,8 @@ This will install all the dependencies.
 
 
 ###How to Run
+How to Run
 
-The application will be running on http://localhost:2025/
 
 
 ###Want to contribute?
