@@ -22,17 +22,15 @@ export default class ImportSubscribers extends React.Component {
     read.readAsBinaryString(file[0]);
     read.onloadend = function() {
       this.handleUploadSuccess(read.result);
-    }.bind(this)
+    }.bind(this);
   }
 
   handleUploadSuccess(text) {
     const data = parseSubscriberList(text);
-    const subscribers = data.subscribers;
-    const fields = data.fields;
     
     this.setState({
-      subscribers,
-      fields
+      subscribers: data.subscribers,
+      fields: data.fields
     });
   }
 
@@ -58,11 +56,11 @@ export default class ImportSubscribers extends React.Component {
             <div>
               {subscriber.email}
             </div>
-          )
+          );
         })
         }
         <button type="submit" onClick={this.handleSubmit.bind(this)}>Submit</button>
       </div>
-    )
+    );
   }
 }
