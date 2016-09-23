@@ -26,6 +26,10 @@ export function changeSettings(newSettings) {
       .then(() => {
         dispatch(receiveChangeSettings('success'))
         // error /success handling
-      });
+      })
+      .catch(() => {
+        dispatch(receiveChangeSettings('error updating settings'));
+      })
+    ;
   };
 }
