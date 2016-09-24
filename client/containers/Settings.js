@@ -35,7 +35,7 @@ export default class Settings extends React.Component {
 
   render() {
     return (
-      <div class="content-wrapper">
+      <div className="content-wrapper">
         <section className="content-header">
           <h1>Settings <small>Settings page</small></h1>
         </section>
@@ -65,11 +65,11 @@ export default class Settings extends React.Component {
                     </div>
                     <div className="form-group">
                       <label for="amazonSimpleEmailServiceSecretKey">Secret</label>
-                      <input 
-                        type="password" 
-                        className="form-control" 
+                      <input
+                        type="password"
+                        className="form-control"
                         id="amazonSimpleEmailServiceSecretKey"
-                        name="amazonSimpleEmailServiceSecretKey" 
+                        name="amazonSimpleEmailServiceSecretKey"
                         value={this.state.newSettings.amazonSimpleEmailServiceSecretKey}
                         placeholder="placeholder"
                       />
