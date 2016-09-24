@@ -22,8 +22,8 @@
     "client:open:cover": "npm run test:cover && open coverage/index.html",
     "start": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "email:start": "node server/email/test-internal",
-    "email:test-multiple": "RUN_ALONE=true node server/email/test-internal/test-multiple.js"
+    "email:server": "node server/email/test-internal",
+    "email:test:multiple": "RUN_ALONE=true node server/email/test-internal/test-multiple.js"
   },
   "repository": {
     "type": "git",
@@ -40,7 +40,7 @@
     "async": "^2.0.1",
     "body-parser": "^1.15.2",
     "bootstrap": "^3.3.7",
-    "csv-parse": "^1.1.7",
+    "csv": "^1.1.0",
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "express-session": "^1.14.1",
