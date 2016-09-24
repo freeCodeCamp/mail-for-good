@@ -56,8 +56,9 @@ export default class UploadFileModal extends React.Component {
   render() {
     return (
       <div>
-        <Button bsStyle="primary" onClick={this.open.bind(this)}>
-          Import subscribers
+        {/* This should really be in the ImportSubscribers container...*/}
+        <Button bsSize="large" bsStyle="primary" onClick={this.open.bind(this)}>
+          Import
         </Button>
         
         <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
@@ -66,7 +67,7 @@ export default class UploadFileModal extends React.Component {
           </Modal.Header>
           
           <Modal.Body>
-            <FormControl type="file" onChange={this.onUpload.bind(this)} help="nope"/>
+            <FormControl className="btn" type="file" onChange={this.onUpload.bind(this)} help="nope"/>
           </Modal.Body>
           
           <Modal.Footer>
