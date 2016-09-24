@@ -49,6 +49,13 @@ export default class ImportSubscribers extends React.Component {
       subscribers: newSubscribers
     });
   }
+  
+  cancelImport() {
+    this.setState({
+      subscribers: null,
+      fields: null
+    });
+  }
 
   render() {
     console.log(this.state);
