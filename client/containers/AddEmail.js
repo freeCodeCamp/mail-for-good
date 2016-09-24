@@ -27,7 +27,7 @@ export default class AddEmail extends React.Component {
         <section className="content">
           <form action="" onSubmit={this.handleSubmit.bind(this)}>
             <div className="form-group">
-              <label for="email">Email address</label>
+              <label htmlFor="email">Email address</label>
               <input name="email" type="email" className="form-control" id="email" placeholder="Email" />
             </div>
             <button type="submit" className="btn btn-default">Submit</button>
@@ -37,3 +37,8 @@ export default class AddEmail extends React.Component {
     );
   }
 }
+
+AddEmail.propTypes = {
+  addSubscribers: React.PropTypes.func.isRequired
+};
+

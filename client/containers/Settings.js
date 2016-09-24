@@ -65,7 +65,7 @@ export default class Settings extends React.Component {
                 <form role="form" onChange={this.handleChange.bind(this)}>
                   <div className="box-body">
                     <div className="form-group">
-                      <label for="example">Access Key</label>
+                      <label htmlFor="example">Access Key</label>
                       <input
                         type="text"
                         className="form-control"
@@ -76,7 +76,7 @@ export default class Settings extends React.Component {
                       />
                     </div>
                     <div className="form-group">
-                      <label for="amazonSimpleEmailServiceSecretKey">Secret</label>
+                      <label htmlFor="amazonSimpleEmailServiceSecretKey">Secret</label>
                       <input
                         type="password"
                         className="form-control"
@@ -104,7 +104,7 @@ export default class Settings extends React.Component {
               </div>
               {/* End of Amazon SES form box */}
 
-              <div className="col-md-6"></div>
+              <div className="col-md-6" />
             </div>
           </div>
         </section>
@@ -112,3 +112,9 @@ export default class Settings extends React.Component {
     );
   }
 }
+
+Settings.propTypes = {
+  changeSettings: React.PropTypes.func.isRequired,
+  loading: React.PropTypes.bool
+};
+

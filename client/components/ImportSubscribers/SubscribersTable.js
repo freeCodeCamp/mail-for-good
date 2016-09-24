@@ -29,28 +29,28 @@ export default class SubscribersTable extends React.Component {
         <Table bordered striped>
           <thead>
           <tr>
-            {this.state.fields.concat(metaFields).map((field) => {
+            {this.state.fields.concat(metaFields).map((field, index) => {
               return (
-                <th>{field}</th>
+                <th key={index}>{field}</th>
               );
             })}
           </tr>
           </thead>
           <tbody>
 
-          {this.state.subscribers.map((subscriber, index) => {
+          {this.state.subscribers.map((subscriber, rowIndex) => {
             return (
-              <tr>
-                {this.state.fields.map((field) => {
+              <tr key={rowIndex}>
+                {this.state.fields.map((field, colIndex) => {
                   return (
-                    <td>{subscriber[field]}</td>
+                    <td key={colIndex}>{subscriber[field]}</td>
                   );
                 })}
                 
                 {/* Meta fields (e.g. unsubscribe, delete, ...) that are always present on each row */}
                 <td>
-                  <Button onClick={this.props.deleteSubscriber.bind(this, index)}>
-                    <FontAwesome name='trash'/>
+                  <Button onClick={this.props.deleteSubscriber.bind(this, rowIndex)}>
+                    <FontAwesome name="trash"/>
                   </Button>
                 </td>
               </tr>
@@ -62,3 +62,8 @@ export default class SubscribersTable extends React.Component {
     );
   }
 }
+
+SubscribersTable.propTypes = {
+  deleteSubscriber: React.PropTypes.func.isRequired,
+};
+

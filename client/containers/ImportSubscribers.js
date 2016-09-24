@@ -59,7 +59,6 @@ export default class ImportSubscribers extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <div>
         <div className="content-header">
@@ -105,3 +104,7 @@ export default class ImportSubscribers extends React.Component {
     );
   }
 }
+
+ImportSubscribers.propTypes = {
+  addSubscribers: React.PropTypes.func.isRequired
+};

@@ -18,7 +18,6 @@ export function addSubscribers(subscribers, fields) {
   return function (dispatch) {
     dispatch(requestAddSubscribers());
     
-    console.log({subscribers, fields});
     axios.post(API_SUBSCRIBERS_ENDPOINT, { subscribers, fields })
       .then(() => {
         // error /success handling

@@ -18,13 +18,13 @@ export default class UploadFileModal extends React.Component {
       showModal: true,
       text: ''
     });
-  };
+  }
 
   close() {
     this.setState({
       showModal: false
     });
-  };
+  }
   
   onUpload(e) {
     this.setState({

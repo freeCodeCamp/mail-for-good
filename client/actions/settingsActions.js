@@ -24,7 +24,7 @@ export function changeSettings(newSettings) {
     
     axios.post(API_SETTINGS_ENDPOINT, newSettings)
       .then(() => {
-        dispatch(receiveChangeSettings('success'))
+        dispatch(receiveChangeSettings('success'));
         // error /success handling
       })
       .catch(() => {
