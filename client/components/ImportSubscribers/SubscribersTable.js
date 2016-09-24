@@ -1,5 +1,6 @@
 import React from 'react';
-import { Table } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
+import FontAwesome from 'react-fontawesome';
 
 
 export default class SubscribersTable extends React.Component {
@@ -20,13 +21,15 @@ export default class SubscribersTable extends React.Component {
   }
 
   render() {  // should add key props to these 3 loops
+    const metaFields = ['delete'];
+
     return (
       <div>
         {this.state.subscribers &&
         <Table bordered striped>
           <thead>
           <tr>
-            {this.state.fields.map((field) => {
+            {this.state.fields.concat(metaFields).map((field) => {
               return (
                 <th>{field}</th>
               );
@@ -35,7 +38,7 @@ export default class SubscribersTable extends React.Component {
           </thead>
           <tbody>
 
-          {this.state.subscribers.map((subscriber) => {
+          {this.state.subscribers.map((subscriber, index) => {
             return (
               <tr>
                 {this.state.fields.map((field) => {
@@ -43,6 +46,13 @@ export default class SubscribersTable extends React.Component {
                     <td>{subscriber[field]}</td>
                   );
                 })}
+                
+                {/* Meta fields (e.g. unsubscribe, delete, ...) that are always present on each row */}
+                <td>
+                  <Button onClick={this.props.deleteSubscriber.bind(this, index)}>
+                    <FontAwesome name='trash'/>
+                  </Button>
+                </td>
               </tr>
             );
           })}

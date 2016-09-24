@@ -38,6 +38,18 @@ export default class ImportSubscribers extends React.Component {
     this.props.addSubscribers(newSubscribers);
   }
 
+  deleteSubscriber(subscriberId) {
+    // Deletes the subscriber at subscriberId then
+    // updates state accordingly
+    let newSubscribers = this.state.subscribers;
+
+    newSubscribers.splice(subscriberId, 1);
+
+    this.setState({
+      subscribers: newSubscribers
+    });
+  }
+
   render() {
     console.log(this.state);
     return (
@@ -47,6 +59,7 @@ export default class ImportSubscribers extends React.Component {
         <SubscribersTable 
           fields={this.state.fields} 
           subscribers={this.state.subscribers}
+          deleteSubscriber={this.deleteSubscriber.bind(this)}
         />
         
         <button type="submit" onClick={this.handleSubmit.bind(this)}>Submit</button>
