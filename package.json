@@ -22,7 +22,8 @@
     "client:open:cover": "npm run test:cover && open coverage/index.html",
     "start": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "email:test": "node server/email/test-internal"
+    "email:start": "node server/email/test-internal",
+    "email:test-multiple": "RUN_ALONE=true node server/email/test-internal/test-multiple.js"
   },
   "repository": {
     "type": "git",
@@ -36,8 +37,10 @@
   "homepage": "https://github.com/FreeCodeCamp/nonprofit-email-service#readme",
   "dependencies": {
     "admin-lte": "^2.3.6",
+    "async": "^2.0.1",
     "body-parser": "^1.15.2",
     "bootstrap": "^3.3.7",
+    "csv-parse": "^1.1.7",
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "express-session": "^1.14.1",
@@ -93,6 +96,7 @@
     "file-loader": "0.9.0",
     "html-webpack-plugin": "2.22.0",
     "isparta": "4.0.0",
+    "kue": "^0.11.1",
     "mocha": "3.0.2",
     "mockdate": "1.0.4",
     "nock": "^8.0.0",
