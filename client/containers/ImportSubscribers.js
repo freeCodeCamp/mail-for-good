@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import UploadFileModal from '../components/ImportSubscribers/UploadFileModal';
+import SubscribersTable from '../components/ImportSubscribers/SubscribersTable';
 
 import parseSubscriberList from '../utils/subscriberListParsers/parseSubscriberList';
 import { addSubscribers } from '../actions/subscribersActions';
@@ -42,14 +43,12 @@ export default class ImportSubscribers extends React.Component {
     return (
       <div>
         <UploadFileModal handleNewFile={this.handleNewFile.bind(this)} />
-        {this.state.subscribers && this.state.subscribers.map((subscriber) => {
-          return (
-            <div>
-              {subscriber.email}
-            </div>
-          );
-        })
-        }
+        
+        <SubscribersTable 
+          fields={this.state.fields} 
+          subscribers={this.state.subscribers}
+        />
+        
         <button type="submit" onClick={this.handleSubmit.bind(this)}>Submit</button>
       </div>
     );
