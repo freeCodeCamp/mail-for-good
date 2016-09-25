@@ -17,15 +17,30 @@ const Sidebar = (props) => {  // eslint-disable-line no-unused-vars
             <ul className="sidebar-menu">
                 <li className="header">OPTIONS</li>
 
-                <SideLink to="/">Home</SideLink>
-                <SideLink to="/settings">Settings</SideLink>
+                <SideLink to="/">Dashboard</SideLink>
 
-                <li className="treeview"><a href="#"> Subscribers </a>
+                <li className="treeview"><a href="#">Send</a>
+                    <ul className="treeview-menu">
+                        <SideLink to="/add-email">Campaign TBA</SideLink>
+                    </ul>
+                </li>
+
+                <li className="treeview"><a href="#">Manage</a>
                     <ul className="treeview-menu">
                         <SideLink to="/add-email">Add email</SideLink>
                         <SideLink to="/import-subscribers">Import subscribers</SideLink>
                     </ul>
                 </li>
+
+                <li className="treeview"><a href="#">Analytics TBA</a>
+                    <ul className="treeview-menu">
+                        <SideLink to="/TBA">Overview TBA</SideLink>
+                    </ul>
+                </li>
+
+                <SideLink to="/activity">Activity TBA</SideLink>
+
+                <SideLink to="/settings">Settings</SideLink>
             </ul>
         </section>
     </aside>
