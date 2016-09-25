@@ -101,7 +101,7 @@ export default class ImportSubscribers extends React.Component {
                   </div>
 
                   <div className="box-footer">
-                    {this.state.subscribers || this.state.errors &&
+                    {(this.state.subscribers || this.state.errors) &&
                     <Button onClick={this.cancelImport.bind(this)}>Cancel</Button>
                     }
 
