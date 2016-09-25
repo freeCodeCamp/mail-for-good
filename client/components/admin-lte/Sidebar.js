@@ -22,8 +22,8 @@ const Sidebar = (props) => {  // eslint-disable-line no-unused-vars
 
                 <li className="treeview"><a href="#"> Subscribers </a>
                     <ul className="treeview-menu">
-                        <li><Link to="/add-email">Add email</Link></li>
-                        <li><Link to="/import-subscribers">Import</Link></li>
+                        <SideLink to="/add-email">Add email</SideLink>
+                        <SideLink to="/import-subscribers">Import subscribers</SideLink>
                     </ul>
                 </li>
             </ul>
