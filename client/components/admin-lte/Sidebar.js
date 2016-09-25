@@ -1,7 +1,7 @@
 import React from 'react';
 
 import SideLink from '../common/SideLink';
-import { Link } from 'react-router';
+
 
 const Sidebar = (props) => {  // eslint-disable-line no-unused-vars
   return (
