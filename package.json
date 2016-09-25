@@ -20,8 +20,10 @@
     "client:test:cover:travis": "babel-node node_modules/isparta/bin/isparta cover --root client--report lcovonly _mocha -- --require ./tools/testSetup.js \"client/**/*.spec.js\" && cat ./coverage/lcov.info | node_modules/coveralls/bin/coveralls.js",
     "client:test:watch": "npm run client:test -- --watch",
     "client:open:cover": "npm run test:cover && open coverage/index.html",
+
     "start": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel-node tools/buildServer.js",
     "email:server": "node server/email/test-internal",
     "email:test:multiple": "RUN_ALONE=true node server/email/test-internal/test-multiple.js"
   },

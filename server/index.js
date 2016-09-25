@@ -28,8 +28,8 @@ app.use(passport.session());
 app.use(bodyParser.json());
 
 // Use dirs appropriately, with a separation of concerns for the public & dist dirs
-app.use('/', express.static(path.join(__dirname, '../dist')));
 app.use('/public', express.static(path.join(__dirname, '../public')));
+app.use('/dist', express.static(path.join(__dirname, '../dist')));
 
 // Routes
 routes(app, passport);

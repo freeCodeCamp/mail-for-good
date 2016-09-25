@@ -14,14 +14,6 @@ module.exports = (app, passport) => {
 
     auth(app, passport, isAuth);
 
-    /////////
-    /* APP */
-    /////////
-
-    app.get('/', isAuth, (req, res) => {
-      res.sendFile(path.resolve('dist/index.html'));
-    });
-
     ////////////////////
     /*      API       */
     ////////////////////
@@ -39,6 +31,15 @@ module.exports = (app, passport) => {
     app.post('/api/subscribers', isAuth, (req, res) => {
       addSubscribers(req, res);
     });
+
+    /////////
+    /* APP */
+    /////////
+
+    app.get('/*', isAuth, (req, res) => {
+      res.sendFile(path.resolve('dist/index.html'));
+    });
+
 };
 
 // Helper function for verifying authentication
