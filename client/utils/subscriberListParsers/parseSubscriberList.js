@@ -5,8 +5,9 @@ export default function parseSubscriberList(inputData) {
   // and their fields
   
   const output = Papa.parse(inputData, { header: true });
+  const errors = output.errors;
   const subscribers = output.data;
   const fields = Object.keys(output.data[0]);
   
-  return { subscribers, fields };
+  return { subscribers, fields, errors };
 }
