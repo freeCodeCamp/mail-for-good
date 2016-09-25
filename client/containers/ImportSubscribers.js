@@ -1,10 +1,10 @@
 import React from 'react';
-import Dropzone from 'react-dropzone';
-import _ from 'lodash';
 import { connect } from 'react-redux';
+import { Row, Col, Button } from 'react-bootstrap';
 
-import deepFillArray from '../utils/deepFillArray';
-import countColumnsInFile from '../utils/countColumnsInFile';
+import UploadFileModal from '../components/ImportSubscribers/UploadFileModal';
+import SubscribersTable from '../components/ImportSubscribers/SubscribersTable';
+
 import parseSubscriberList from '../utils/subscriberListParsers/parseSubscriberList';
 import { addSubscribers } from '../actions/subscribersActions';
 
@@ -15,95 +15,96 @@ export default class ImportSubscribers extends React.Component {
     super();
     
     this.state = {
-      file: '',
-      fields: ['']
+      fields: null,
+      subscribers: null
     };
   }
-
-  onUpload(file) {
-    const read = new FileReader();
-    read.readAsBinaryString(file[0]);
-    read.onloadend = function() {
-      this.handleUploadSuccess(read.result);
-    }.bind(this)
-  }
-
-  handleUploadSuccess(text) {
-    // Keep the uploaded file around for processing by the user
-    // and create an array whose elements will correspond to each column
-    // so the user can assign types/variables to the columns
-    // e.g. fields[0] (col 1) could be 'email' of type 'email'
-    // or fields[1] (col 2) could be 'favourite colour' of type 'text'
-    // or fields[2] (col 3) could be 'lucky number' of type 'int'
-    const field = {name: '', type: ''};
+  
+  handleNewFile(text) {
+    const data = parseSubscriberList(text);
+    
     this.setState({
-      file: text,
-      fields: deepFillArray(countColumnsInFile(text), field)
-    });
-  }
-
-  handleFieldNameChange(field, e) {
-    this.handleFieldChange(field, 'name', e.target.value);
-  }
-
-  handleFieldTypeChange(field, e) {
-    this.handleFieldChange(field, 'type', e.target.value);
-  }
-
-  handleFieldChange(field, selection, value) {
-    // cleaner way to do this replacement?
-    let newFields = this.state.fields;
-    newFields[field][selection] = value;
-    console.log(field);
-    console.log(selection);
-    this.setState({
-      fields: newFields
+      subscribers: data.subscribers,
+      fields: data.fields
     });
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.addSubscribers(parseSubscriberList(this.state.file, this.state.fields), this.state.fields);
+    const newSubscribers = {
+      subscribers: this.state.subscribers,
+      fields: this.state.fields
+    };
+    
+    this.props.addSubscribers(newSubscribers);
+  }
+
+  deleteSubscriber(subscriberId) {
+    // Deletes the subscriber at subscriberId then
+    // updates state accordingly
+    let newSubscribers = this.state.subscribers;
+
+    newSubscribers.splice(subscriberId, 1);
+
+    this.setState({
+      subscribers: newSubscribers
+    });
+  }
+  
+  cancelImport() {
+    this.setState({
+      subscribers: null,
+      fields: null
+    });
   }
 
   render() {
-    console.log(this.state);
     return (
       <div>
-        <Dropzone onDrop={this.onUpload.bind(this)}>
-          drag csv here
-        </Dropzone>
-        <form>
-          {this.state.file && _.range(this.state.fields.length).map((field) => {
-            return (
-              <div>
-                col: {field}
-                
-                <input 
-                  type="text" 
-                  value={this.state.fields[field].name}
-                  onChange={this.handleFieldNameChange.bind(this, field)}
-                />
+        <div className="content-header">
+          <h1>Import Subscribers <small>Import subscribers from a file</small></h1>
+        </div>
 
-                <select
-                  value={this.state.fields[field].type}
-                  onChange={this.handleFieldTypeChange.bind(this, field)}
-                >
-                  <option selected="selected" value="">none</option>
-                  <option value="email">email</option>
-                  <option value="number">number</option>
-                  <option value="text">text</option>
-                  <option value="group">group</option>
-                </select>
+        <section className="content">
+          <Row>
+            <Col md={12}>
 
-                <br/>
-              </div>
-            )
-          })}
-          <button type="submit" onClick={this.handleSubmit.bind(this)}>Submit</button>
-          (should ignore name of field if it is of email type)
-        </form>
+                <div className="box box-primary">
+                  <div className="box-header with-border">
+                    <h3 className="box-title">Subscribers to import</h3>
+                  </div>
+
+                  <div className="box-body">
+                    {!this.state.subscribers &&
+                      <UploadFileModal handleNewFile={this.handleNewFile.bind(this)} />
+                    }
+                    
+                    <SubscribersTable
+                      fields={this.state.fields}
+                      subscribers={this.state.subscribers}
+                      deleteSubscriber={this.deleteSubscriber.bind(this)}
+                    />
+                  </div>
+
+                  <div className="box-footer">
+                    {this.state.subscribers &&
+                    <Button onClick={this.cancelImport.bind(this)}>Cancel</Button>
+                    }
+                    
+                    {this.state.subscribers &&
+                    <Button className="pull-right" bsStyle="primary" type="submit" onClick={this.handleSubmit.bind(this)}>Submit</Button>
+                    }
+                  </div>
+                </div>
+
+            </Col>
+          </Row>
+        </section>
       </div>
-    )
+    );
   }
 }
+
+ImportSubscribers.propTypes = {
+  addSubscribers: React.PropTypes.func.isRequired
+};

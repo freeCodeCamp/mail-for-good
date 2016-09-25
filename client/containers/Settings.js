@@ -1,7 +1,17 @@
 import React from 'react';
-import axios from 'axios';
-import { SETTINGS_URL_WHOLE } from '../constants/endpoints';
+import {connect} from 'react-redux';
+import FontAwesome from 'react-fontawesome';
 
+import { changeSettings } from '../actions/settingsActions';
+
+
+function getState(state) {
+  return {
+    loading: state.settings.loading
+  };
+}
+
+@connect(getState, {changeSettings})
 export default class Settings extends React.Component {
   constructor() {
     super();
@@ -10,8 +20,15 @@ export default class Settings extends React.Component {
       newSettings: {
         amazonSimpleEmailServiceAccessKey: '',
         amazonSimpleEmailServiceSecretKey: ''
-      }
+      },
+      loading: false
     };
+  }
+  
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      loading: newProps.loading
+    });
   }
 
   handleChange(e) {
@@ -25,44 +42,79 @@ export default class Settings extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-
-    axios.post(SETTINGS_URL_WHOLE, this.state.newSettings)
-      .then(() => {
-        console.log("settings POSTed");
-      });
+    this.props.changeSettings(this.state.newSettings);
   }
 
   render() {
     return (
-      <div>
+      <div className="content-wrapper">
         <section className="content-header">
-            <h1>Settings <small>Settings page</small></h1>
+          <h1>Settings <small>Settings page</small></h1>
         </section>
-        <section className="content">
-          <div className="settings">
-            <section className="ses">
-              <form onChange={this.handleChange.bind(this)}>
-                access key
-                <input
-                  id="1"
-                  type="text"
-                  name="amazonSimpleEmailServiceAccessKey"
-                  value={this.state.newSettings.amazonSimpleEmailServiceAccessKey} />
-                <br/>
 
-                secret key
-                <input
-                  id="2"
-                  type="text"
-                  name="amazonSimpleEmailServiceSecretKey"
-                  value={this.state.newSettings.amazonSimpleEmailServiceSecretKey} />
-                <br/>
-                <button type="submit" onClick={this.handleSubmit.bind(this)}>Submit</button>
-              </form>
-            </section>
+        <section className="content">
+          <div className="row">
+            <div className="col-md-6">
+
+              {/* Start of Amazon SES form box */}
+              <div className="box box-primary">
+                <div className="box-header with-border">
+                  <h3 className="box-title">Amazon SES credentials</h3>
+                </div>
+
+                <form role="form" onChange={this.handleChange.bind(this)}>
+                  <div className="box-body">
+                    <div className="form-group">
+                      <label htmlFor="example">Access Key</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="amazonSimpleEmailServiceAccessKey"  // better way to do this?
+                        name="amazonSimpleEmailServiceAccessKey"
+                        value={this.state.newSettings.amazonSimpleEmailServiceAccessKey}
+                        placeholder="placeholder"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="amazonSimpleEmailServiceSecretKey">Secret</label>
+                      <input
+                        type="password"
+                        className="form-control"
+                        id="amazonSimpleEmailServiceSecretKey"
+                        name="amazonSimpleEmailServiceSecretKey"
+                        value={this.state.newSettings.amazonSimpleEmailServiceSecretKey}
+                        placeholder="placeholder"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="box-footer">
+                    <button type="submit"
+                            className="btn btn-primary"
+                            onClick={this.handleSubmit.bind(this)}
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </form>
+                {this.props.loading &&  // show the loading spinner appropriately
+                  <div className="overlay">
+                    <FontAwesome name="refresh" spin/>
+                </div>}
+              </div>
+              {/* End of Amazon SES form box */}
+
+              <div className="col-md-6" />
+            </div>
           </div>
         </section>
       </div>
     );
   }
 }
+
+Settings.propTypes = {
+  changeSettings: React.PropTypes.func.isRequired,
+  loading: React.PropTypes.bool
+};
+

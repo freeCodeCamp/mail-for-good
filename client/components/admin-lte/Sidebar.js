@@ -1,9 +1,9 @@
-// Must have at least one test file in this directory or Mocha will throw an error.
 import React from 'react';
 
 import SideLink from '../common/SideLink';
+import { Link } from 'react-router';
 
-const Sidebar = (props) => {
+const Sidebar = (props) => {  // eslint-disable-line no-unused-vars
   return (
     <aside className="main-sidebar">
         <section className="sidebar">
@@ -20,16 +20,16 @@ const Sidebar = (props) => {
                 <SideLink to="/">Home</SideLink>
                 <SideLink to="/settings">Settings</SideLink>
 
-                <li className="treeview"><a href="#"> Tba </a>
+                <li className="treeview"><a href="#"> Subscribers </a>
                     <ul className="treeview-menu">
-                        <li><a href="#">Link in level 2</a></li>
-                        <li><a href="#">Link in level 2</a></li>
+                        <li><Link to="/add-email">Add email</Link></li>
+                        <li><Link to="/import-subscribers">Import</Link></li>
                     </ul>
                 </li>
             </ul>
         </section>
     </aside>
-  )
+  );
 };
 
 export default Sidebar;

@@ -1,7 +1,6 @@
-// Must have at least one test file in this directory or Mocha will throw an error.
 import React from 'react';
 
-const Header = (props) => {
+const Header = (props) => {  // eslint-disable-line no-unused-vars
   return (
     <header className="main-header">
         <a className="logo"> <span className="logo-mini"><strong>A</strong>LT</span> <span className="logo-lg"><strong>Email</strong>Service</span> </a>
@@ -25,7 +24,7 @@ const Header = (props) => {
             </div>
         </nav>
     </header>
-  )
+  );
 };
 
 export default Header;
