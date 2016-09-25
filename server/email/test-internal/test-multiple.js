@@ -45,43 +45,13 @@ function multipleTest() {
 
     const transporter = nodemailer.createTransport(smtpTransport(options));
 
-    // Parse the CSV file //
-
-    const parser = csv.parse();
-
-    const transformerOptions = {
-        parallel: 25 // Needs to obey concurrency rules based on SMTP limitations
-    };
-
-    const transformer = csv.transform((row, callback) => {
-        // Async flow with SMTP relay server obeys concurrency rules with this stream
-
-        callback(null, row);
-    }, transformerOptions);
-
-    transformer.on('error', (err) => {
-            // Catch & throw errs
-        throw err;
-    });
-
-    // Create read stream, parse then pipe to transformer to perform async operations. Finally, release data for garbage collection.
-    fs.createReadStream(`${__dirname}${inputFile}`)
-        .pipe(parser)
-        .pipe(transformer)
-        .on('data', function() {
-            // Do nothing with the data. Allow chunk to evaporate in write stream to prevent buffer overflow.
-        })
-        .on('end',function() {
-          console.log('CSV file has been processed ...');
-        });
+    let emailConcurrency = 100; // Will need to be changed algorithmically using the relay server response.
 
     /*
         Pool emails using aync queues
         -   asyncModule.queue accepts task (email data to be sent) & a callback function that signifies completion. When an email is successfully sent, callback is invoked.
             Second arg is the no. of emails to be processed concurrently. This will be rate limited in accordance with the relay server's response.
     */
-
-    let emailConcurrency = 2; // Will need to be changed algorithmically using the relay server response.
 
     const q = asyncModule.queue((task, callback) => {
 
@@ -103,13 +73,42 @@ function multipleTest() {
 
     }, emailConcurrency);
 
-    const test = [{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}];
-
-    q.push([...test], (err) => {
-        if (err) throw err;
-    });
-
     q.drain = () => {
         console.log('all items have been processed');
     };
+
+    // Parse the CSV file //
+
+    const parser = csv.parse();
+
+    const transformerOptions = {
+        parallel: emailConcurrency, // Needs to obey concurrency rules based on SMTP limitations
+        consume:true
+    };
+
+    const transformer = csv.transform((row, callback) => {
+        // Async flow with SMTP relay server obeys concurrency rules with this stream
+        q.push([...row], (err) => {
+            if (err) throw err;
+            callback(null, row);
+        });
+
+    }, transformerOptions);
+
+    transformer.on('error', (err) => {
+            // Catch & throw errs
+        throw err;
+    });
+
+    // Create read stream, parse then pipe to transformer to perform async operations. Finally, release data for garbage collection.
+    fs.createReadStream(`${__dirname}${inputFile}`)
+        .pipe(parser)
+        .pipe(transformer)
+        .on('data', function() {
+            // Do nothing with the data. Allow chunk to evaporate in write stream to prevent buffer overflow.
+        })
+        .on('end',function() {
+          console.log('CSV file has been processed ...');
+        });
+
 }
