@@ -8,9 +8,13 @@ module.exports =  function(req, res) {
 
   // Exit if there are no settings to change
   if (_.isEmpty(settingsToChange)) {
+    res.send({
+      type: 'error',
+      message: 'SES credentials form was empty'
+    });
     return;
   }
-  
+
   // Should eventually refactor this to use findOneAndSave
   Settings.findOne({}, {}, (err, settings) => {
     if (err) throw err;

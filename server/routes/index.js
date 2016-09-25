@@ -29,14 +29,14 @@ module.exports = (app, passport) => {
     /* Settings */
 
     // Change settings
-    app.post('/api/settings', (req, res) => {
+    app.post('/api/settings', isAuth, (req, res) => {
       changeSettings(req, res);
     });
 
     /* Subscribers */
 
     // Add multiple subscribers
-    app.post('/api/subscribers', (req, res) => {
+    app.post('/api/subscribers', isAuth, (req, res) => {
       addSubscribers(req, res);
     });
 };
