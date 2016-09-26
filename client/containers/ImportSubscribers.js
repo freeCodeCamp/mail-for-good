@@ -42,12 +42,8 @@ export default class ImportSubscribers extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const newSubscribers = {
-      subscribers: this.state.subscribers,
-      fields: this.state.fields
-    };
-
-    this.props.addSubscribers(newSubscribers);
+    
+    this.props.addSubscribers(this.state.subscribers, this.state.fields);
   }
 
   deleteSubscriber(subscriberId) {
