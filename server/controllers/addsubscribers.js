@@ -13,7 +13,7 @@ module.exports =  function(req, res) {
 
     SubscriberModel.find({email:subscriber.email}, (err, doc) => {
       if (err) throw err;
-      if (doc) {
+      if (doc.length) {
         // User exists! Do not save doc
         res.send({
           status: 'error',
