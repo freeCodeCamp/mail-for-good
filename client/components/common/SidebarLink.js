@@ -2,7 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
-class SideLink extends Component {
+class SidebarLink extends Component {
 
   render() {
     return (
@@ -15,8 +15,13 @@ class SideLink extends Component {
   }
 }
 
-SideLink.contextTypes = {
-  router: PropTypes.func.isRequired
+SidebarLink.contextTypes = {
+  router: PropTypes.object.isRequired
 };
 
-export default SideLink;
+SidebarLink.propTypes = {
+  to: PropTypes.string.isRequired,
+  children: PropTypes.string.isRequired
+};
+
+export default SidebarLink;

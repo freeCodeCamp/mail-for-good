@@ -11,7 +11,7 @@ import { syncHistoryWithStore } from 'react-router-redux';
 /*eslint-disable no-unused-vars*/
 import bootstrapCss from 'bootstrap/dist/css/bootstrap.min.css';
 import bootStrap from 'bootstrap/dist/js/bootstrap.min.js';
-import adminLte from 'admin-lte/dist/js/app.min.js';
+import adminLte from './utils/adminLte/app.js'; // JS needs to be modified for compatabiltiy with react router
 import adminLteCss from 'admin-lte/dist/css/AdminLTE.min.css';
 import adminLteSkin from 'admin-lte/dist/css/skins/skin-blue.min.css';
 /*eslint-enable no-unused-vars*/

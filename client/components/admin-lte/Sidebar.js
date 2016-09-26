@@ -1,6 +1,7 @@
 import React from 'react';
 
-import SideLink from '../common/SideLink';
+import SidebarLink from '../common/SidebarLink';
+import SidebarTreeview from '../common/SidebarTreeview';
 
 
 const Sidebar = (props) => {  // eslint-disable-line no-unused-vars
@@ -17,30 +18,24 @@ const Sidebar = (props) => {  // eslint-disable-line no-unused-vars
             <ul className="sidebar-menu">
                 <li className="header">OPTIONS</li>
 
-                <SideLink to="/">Dashboard</SideLink>
+                <SidebarLink to="/">Dashboard</SidebarLink>
 
-                <li className="treeview"><a href="#">Send</a>
-                    <ul className="treeview-menu">
-                        <SideLink to="/TBA">Campaign TBA</SideLink>
-                    </ul>
-                </li>
+                <SidebarTreeview name="Send">
+                    <SidebarLink to="/campaign">Campaign WIP</SidebarLink>
+                </SidebarTreeview>
 
-                <li className="treeview"><a href="#">Manage</a>
-                    <ul className="treeview-menu">
-                        <SideLink to="/add-email">Add email</SideLink>
-                        <SideLink to="/import-subscribers">Import subscribers</SideLink>
-                    </ul>
-                </li>
+                <SidebarTreeview name="Manage">
+                    <SidebarLink to="/add-email">Add email</SidebarLink>
+                    <SidebarLink to="/import-subscribers">Import subscribers</SidebarLink>
+                </SidebarTreeview>
 
-                <li className="treeview"><a href="#">Analytics TBA</a>
-                    <ul className="treeview-menu">
-                        <SideLink to="/TBA">Overview TBA</SideLink>
-                    </ul>
-                </li>
+                <SidebarTreeview name="Analytics WIP">
+                    <SidebarLink to="/overview">Overview TBA</SidebarLink>
+                </SidebarTreeview>
 
-                <SideLink to="/activity">Activity TBA</SideLink>
+                <SidebarLink to="/activity">Activity TBA</SidebarLink>
 
-                <SideLink to="/settings">Settings</SideLink>
+                <SidebarLink to="/settings">Settings</SidebarLink>
             </ul>
         </section>
     </aside>
