@@ -1,10 +1,8 @@
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
 const asyncModule = require('async');
-const csv = require('csv');
-const fs = require('fs');
 
-const inputFile = '/test-100k.csv';
+const csvParseModule = require('../lib/streams/csv');
 
 if (process.env.RUN_ALONE) {
     require('dotenv').config();
@@ -16,8 +14,6 @@ if (process.env.RUN_ALONE) {
 function multipleTest() {
 
     /*
-        TODO: Eventually split this into modules (for parsing a data source & sending emails concurrently)
-
         Put simply this module:
         -   Opens a stream to a data source containing, at the least, a recipient email address on each line
         -   Sends a given number of emails to an asynchronous process that sends emails to an SMTP relay server and requests more emails when it's finished
@@ -73,42 +69,20 @@ function multipleTest() {
 
     }, emailConcurrency);
 
+    // Async queue complete
     q.drain = () => {
-        console.log('all items have been processed');
+        console.log('[async] All emails have been processed');
     };
 
-    // Parse the CSV file //
-
-    const parser = csv.parse();
-
-    const transformerOptions = {
-        parallel: emailConcurrency, // Needs to obey concurrency rules based on SMTP limitations
-        consume:true
-    };
-
-    const transformer = csv.transform((row, callback) => {
-        // Async flow with SMTP relay server obeys concurrency rules with this stream
-        q.push([...row], (err) => {
+    // Takes an email which is pushed to the queue, and a callback which should tell the stream to continue
+    const pushItemToQueue = (email, callback) => {
+        q.push([email], (err) => {
             if (err) throw err;
-            callback(null, row);
+            callback;
         });
+    };
 
-    }, transformerOptions);
-
-    transformer.on('error', (err) => {
-            // Catch & throw errs
-        throw err;
-    });
-
-    // Create read stream, parse then pipe to transformer to perform async operations. Finally, release data for garbage collection.
-    fs.createReadStream(`${__dirname}${inputFile}`)
-        .pipe(parser)
-        .pipe(transformer)
-        .on('data', function() {
-            // Do nothing with the data. Allow chunk to evaporate in write stream to prevent buffer overflow.
-        })
-        .on('end',function() {
-          console.log('CSV file has been processed ...');
-        });
+    // Modules for parsing streams can now be called
+    csvParseModule(pushItemToQueue, emailConcurrency, '/test-100k.csv');
 
 }
