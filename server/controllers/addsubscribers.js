@@ -1,32 +1,32 @@
-'use strict'
-const SubscriberModel = require('../db/models').Subscriber;
+const SubscriberModel = require('../models').subscriber;
 
-module.exports =  function(req, res) {
-  const subscribers = req.body.subscribers;
-  const fields = req.body.fields;
+module.exports = function(req, res) {
+    const subscribers = req.body.subscribers;
+    const fields = req.body.fields;
 
-  console.log("got new subscribers: ");
-  console.log(subscribers);
-  console.log(fields);
-
-  subscribers.forEach(subscriber => {
-
-    SubscriberModel.find({email:subscriber.email}, (err, doc) => {
-      if (err) throw err;
-      if (doc.length) {
-        // User exists! Do not save doc
-        res.send({
-          status: 'error',
-          message:'This email already exists'
-        });
-      } else {
-        let newSubscriber = new SubscriberModel();
-        newSubscriber.email = subscriber.email;
-        newSubscriber.save(err => {
-          if (err) throw err;
-        });
-      }
-    })
-  });
-  // -> use schema + add all the subscribers + field types to the database
+    subscribers.forEach(subscriber => {
+        SubscriberModel.findOne({
+            where: {
+                email:subscriber.email
+            }
+        }).then(email => {
+            if (email) {
+                res.status(400)
+                    .send({
+                  status: 'error', // Redundant
+                  message:'This email already exists'
+                });
+            } else {
+                SubscriberModel.create({
+                    email: subscriber.email
+                }).then(() => {
+                    res.status(201)
+                        .send({
+                      status: 'success', // Redundant
+                      message: `${subscriber.email} added succesfully`
+                    });
+                });
+            }
+        })
+    });
 }

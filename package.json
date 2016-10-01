@@ -20,7 +20,6 @@
     "client:test:cover:travis": "babel-node node_modules/isparta/bin/isparta cover --root client--report lcovonly _mocha -- --require ./tools/testSetup.js \"client/**/*.spec.js\" && cat ./coverage/lcov.info | node_modules/coveralls/bin/coveralls.js",
     "client:test:watch": "npm run client:test -- --watch",
     "client:open:cover": "npm run test:cover && open coverage/index.html",
-
     "start": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel-node tools/buildServer.js",
@@ -50,13 +49,14 @@
     "jQuery": "^1.7.4",
     "jquery": "^3.1.0",
     "lodash": "^4.15.0",
-    "mongoose": "^4.6.0",
     "nodemailer": "^2.6.0",
     "nodemailer-ses-transport": "^1.4.0",
     "object-assign": "4.1.0",
     "papaparse": "^4.1.2",
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0",
+    "pg": "^6.1.0",
+    "pg-hstore": "^2.3.2",
     "react": "15.3.1",
     "react-bootstrap": "^0.30.3",
     "react-dom": "15.3.1",
@@ -64,7 +64,8 @@
     "react-router": "2.7.0",
     "react-router-redux": "4.0.5",
     "redux": "3.5.2",
-    "redux-thunk": "2.1.0"
+    "redux-thunk": "2.1.0",
+    "sequelize": "^3.24.3"
   },
   "devDependencies": {
     "autoprefixer": "6.4.0",
@@ -115,6 +116,7 @@
     "replace": "0.3.0",
     "rimraf": "2.5.4",
     "sass-loader": "4.0.0",
+    "sequelize-cli": "^2.4.0",
     "sinon": "1.17.5",
     "sinon-chai": "2.8.0",
     "smtp-server": "^1.14.2",

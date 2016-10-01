@@ -1,7 +1,7 @@
 const express = require('express');
 const session = require('express-session')
 const passport = require('passport');
-const mongoose = require('mongoose');
+const Sequelize = require('sequelize');
 const bodyParser = require('body-parser');
 const path = require('path');
 
@@ -11,9 +11,6 @@ const secret = require('./config/secrets');
 const routes = require('./routes');
 
 const app = express();
-
-// Connect to mongo
-mongoose.connect(secret.mongo);
 
 // Config
 require('./config/passport')(passport);

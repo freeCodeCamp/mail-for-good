@@ -1,20 +1,28 @@
-const Google = require('./passport/google');
-
-const User = require('../db/models').User;
 const secrets = require('./secrets');
+const User = require('../models').User;
 
 module.exports = (passport) => {
+    const db = require('../models');
+    const Google = require('./passport/google');
+
+    const sequelize = db.sequelize;
+
     passport.serializeUser(function(user,done) {
         done(null, user.id);
     });
 
     passport.deserializeUser(function(id, done) {
-        User.findById(id, (err, user) => {
-            done(err, user);
-        });
+
+        User.findById(id)
+        .then(user => {
+            done(null, user);
+        })
+        .catch(err => {
+            if (err) throw err;
+        })
     });
     ///////////////////////////////
     /* AUTHENTICATION STRATEGIES */
     ///////////////////////////////
-    Google(passport, User, secrets.google);
+    Google(passport, secrets.google);
 };

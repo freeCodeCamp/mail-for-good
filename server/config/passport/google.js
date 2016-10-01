@@ -1,6 +1,7 @@
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const User = require('../../models').User;
 
-module.exports = (passport, User, secret) => {
+module.exports = (passport, secret) => {
 
     passport.use(new GoogleStrategy({
         clientID: secret.consumerKey,
@@ -9,8 +10,43 @@ module.exports = (passport, User, secret) => {
     }, (token, tokenSecret, profile, done) => {
 
         User.findOne({
-            'google.id': profile.id
-        }, (err, userExists) => {
+            where: {
+                googleId: profile.id
+            }
+        }).then(userExists => {
+            if (userExists) {
+                done(null, userExists);
+            } else {
+                User.create({
+                    googleId: profile.id,
+                    token: token,
+                    email: profile._json.emails[0].value,
+                    name: profile.displayName,
+                    picture: profile._json.picture
+                }).then(newUser => {
+                    done(null, newUser);
+                });
+            }
+
+        }).catch(err => {
+            throw err;
+        });
+
+    }))
+}
+
+
+
+/*User.findOne({
+            where: { google: profile.id }
+        }).then(existingUser) => {
+            console.log(exists)
+        }
+
+    }))*/
+
+
+/*(err, userExists) => {
             // Search will proceed in the following manner:
             //  1. If there was an error, return the error
             //  2. If found, serialise user
@@ -41,3 +77,4 @@ module.exports = (passport, User, secret) => {
 
     }));
 };
+*/
