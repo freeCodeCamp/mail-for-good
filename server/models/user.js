@@ -1,11 +1,14 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var User = sequelize.define('User', {
+  var user = sequelize.define('user', {
     googleId: DataTypes.STRING,
     picture: DataTypes.STRING,
     token: DataTypes.STRING,
     email: DataTypes.STRING,
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+
+    amazonSimpleEmailServiceAccessKey: { type: DataTypes.STRING, defaultValue: '' },
+    amazonSimpleEmailServiceSecretKey: { type: DataTypes.STRING, defaultValue: '' }
   }, {
     classMethods: {
       associate: function(models) {
@@ -13,5 +16,5 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
-  return User;
+  return user;
 };

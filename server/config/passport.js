@@ -1,5 +1,5 @@
 const secrets = require('./secrets');
-const User = require('../models').User;
+const User = require('../models').user;
 
 module.exports = (passport) => {
     const db = require('../models');
