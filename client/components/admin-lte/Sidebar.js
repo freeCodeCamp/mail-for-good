@@ -20,20 +20,21 @@ const Sidebar = (props) => {  // eslint-disable-line no-unused-vars
 
                 <SidebarLink to="/">Dashboard</SidebarLink>
 
-                <SidebarTreeview name="Send">
-                    <SidebarLink to="/campaign">Campaign WIP</SidebarLink>
+                <SidebarTreeview name="Campaigns">
+                    <SidebarLink to="/campaigns/create">Create Campaign WIP</SidebarLink>  {/* typeofcampaign (html, plain etc), use template, steps= 1. to who - 2. campaign info (name, from, subject, from email, options for tracking) 3. Template 4. Write the actual email 5. send & confirm*/}
+                    <SidebarLink to="/campaigns/manage">Manage Campaigns WIP</SidebarLink> {/* delete, resend, edit, view report (analytics) */}
+                    <SidebarLink to="/campaigns/templates">Templates WIP</SidebarLink> {/* CRUD templates */}
                 </SidebarTreeview>
 
-                <SidebarTreeview name="Manage">
-                    <SidebarLink to="/add-email">Add email</SidebarLink>
-                    <SidebarLink to="/import-subscribers">Import subscribers</SidebarLink>
+                <SidebarTreeview name="Lists">
+                    <SidebarLink to="/lists/create">Create List</SidebarLink> {/* Import from CSV etc. Keep this isolated to importing */}
+                    <SidebarLink to="/lists/manage">Manage Lists</SidebarLink> {/* RUD, Export list, statistics, add subscriber, duplicate list, combine list */}
                 </SidebarTreeview>
 
                 <SidebarTreeview name="Analytics WIP">
-                    <SidebarLink to="/overview">Overview TBA</SidebarLink>
+                    <SidebarLink to="/analytics/overview">Overview TBA</SidebarLink>  {/* General overview of all campaigns */}
+                    <SidebarLink to="/analytics/reports">Campaign Reports TBA</SidebarLink> {/* Bounce rate, click rate, open rate, unsub no., etc */}
                 </SidebarTreeview>
-
-                <SidebarLink to="/activity">Activity TBA</SidebarLink>
 
                 <SidebarLink to="/settings">Settings</SidebarLink>
             </ul>

@@ -1,36 +1,38 @@
 'use strict'
 const _ = require('lodash');
-const Settings = require('../db/models/index').Settings;
+const db = require('../models');
+const User = db.user;
+const sequelize = db.sequelize;
 
+module.exports = function(req, res) {
+    const settingsToChange = _.pickBy(req.body);
 
-module.exports =  function(req, res) {
-  const settingsToChange = _.pickBy(req.body);
-
-  // Exit if there are no settings to change
-  if (_.isEmpty(settingsToChange)) {
-    res.send({
-      type: 'error',
-      message: 'SES credentials form was empty'
-    });
-    return;
-  }
-
-  // Should eventually refactor this to use findOneAndSave
-  Settings.findOne({}, {}, (err, settings) => {
-    if (err) throw err;
-
-    // Create default settings if none exist
-    if (!settings) {
-      settings = Settings(settingsToChange);
-    } else {
-      _.keys(settingsToChange).forEach((setting) => {
-        settings[setting] = settingsToChange[setting]
-      });
+    // Exit if there are no settings to change
+    if (_.isEmpty(settingsToChange)) {
+        res.status(400)
+            .send({
+                message: 'SES credentials form is empty'
+            });
+        return;
     }
 
-    settings.save((err) => {
-      if (err) throw err;
-      res.json({})
+    /*
+    TODO: Check settingsToChange.amazonSimpleEmailServiceAccessKey and settingsToChange.amazonSimpleEmailServiceSecretKey for validity using regex
+ */
+    User.update({
+        amazonSimpleEmailServiceAccessKey: settingsToChange.amazonSimpleEmailServiceAccessKey,
+        amazonSimpleEmailServiceSecretKey: settingsToChange.amazonSimpleEmailServiceSecretKey
+    }, {
+        where: {
+            id: req.user.id
+        }
+    }).then(result => {
+        res.status(201)
+            .send({
+                message: 'SES credentials saved'
+            });
+    }).catch(err => {
+        throw err;
     });
-  })
+
 }
