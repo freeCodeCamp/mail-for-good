@@ -21,19 +21,19 @@ const Sidebar = (props) => {  // eslint-disable-line no-unused-vars
                 <SidebarLink to="/">Dashboard</SidebarLink>
 
                 <SidebarTreeview name="Campaigns">
-                    <SidebarLink to="/campaign">Create Campaign WIP</SidebarLink>  {/* typeofcampaign (html, plain etc), use template, steps= 1. to who - 2. campaign info (name, from, subject, from email, options for tracking) 3. Template 4. Write the actual email 5. send & confirm*/}
-                    <SidebarLink to="/campaign">Manage Campaigns WIP</SidebarLink> {/* delete, resend, edit, view report (analytics) */}
-                    <SidebarLink to="/campaign">Templates WIP</SidebarLink> {/* CRUD templates */}
+                    <SidebarLink to="/campaigns/create">Create Campaign WIP</SidebarLink>  {/* typeofcampaign (html, plain etc), use template, steps= 1. to who - 2. campaign info (name, from, subject, from email, options for tracking) 3. Template 4. Write the actual email 5. send & confirm*/}
+                    <SidebarLink to="/campaigns/manage">Manage Campaigns WIP</SidebarLink> {/* delete, resend, edit, view report (analytics) */}
+                    <SidebarLink to="/campaigns/templates">Templates WIP</SidebarLink> {/* CRUD templates */}
                 </SidebarTreeview>
 
                 <SidebarTreeview name="Lists">
-                    <SidebarLink to="/add-email">Create List</SidebarLink> {/* Import from CSV etc. Keep this isolated to importing */}
-                    <SidebarLink to="/import-subscribers">Manage Lists</SidebarLink> {/* RUD, Export list, statistics, add subscriber, duplicate list, combine list */}
+                    <SidebarLink to="/lists/create">Create List</SidebarLink> {/* Import from CSV etc. Keep this isolated to importing */}
+                    <SidebarLink to="/lists/manage">Manage Lists</SidebarLink> {/* RUD, Export list, statistics, add subscriber, duplicate list, combine list */}
                 </SidebarTreeview>
 
                 <SidebarTreeview name="Analytics WIP">
-                    <SidebarLink to="/overview">Overview TBA</SidebarLink>  {/* General overview of all campaigns */}
-                    <SidebarLink to="/overview">Campaign Reports TBA</SidebarLink> {/* Bounce rate, click rate, open rate, unsub no., etc */}
+                    <SidebarLink to="/analytics/overview">Overview TBA</SidebarLink>  {/* General overview of all campaigns */}
+                    <SidebarLink to="/analytics/reports">Campaign Reports TBA</SidebarLink> {/* Bounce rate, click rate, open rate, unsub no., etc */}
                 </SidebarTreeview>
 
                 <SidebarLink to="/settings">Settings</SidebarLink>
