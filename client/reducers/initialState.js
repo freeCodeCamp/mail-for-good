@@ -1,6 +1,7 @@
 const initialState = {
   subscribers: {
-    list: []
+    list: [],
+    isAdding: false
   },
   settings: {
     loading: false

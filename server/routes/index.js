@@ -1,9 +1,12 @@
 const path = require('path');
+const multer = require('multer')({ dest: 'server/uploads/' });
 
 const auth = require('./auth');
 
 const changeSettings = require('../controllers/changesettings');
-const addSubscribers = require('../controllers/addsubscribers');
+
+const addSubscribers = require('../controllers/list/add-subscribers');
+const importCSV = require('../controllers/list/import-csv');
 
 
 module.exports = (app, passport) => {
@@ -27,9 +30,14 @@ module.exports = (app, passport) => {
 
     /* Subscribers */
 
-    // Add multiple subscribers
-    app.post('/api/subscribers', isAuth, (req, res) => {
+    // Add subscribers
+    app.post('/api/list/add/subscribers', isAuth, (req, res) => {
       addSubscribers(req, res);
+    });
+
+    // Import csv
+    app.post('/api/list/add/csv', isAuth, multer.single('csv'), (req, res) => {
+      importCSV(req, res);
     });
 
     /////////

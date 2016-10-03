@@ -7,43 +7,61 @@ import UploadFileModal from '../components/ImportSubscribers/UploadFileModal';
 import SubscribersTable from '../components/ImportSubscribers/SubscribersTable';
 import ErrorsList from '../components/ImportSubscribers/ErrorsList';
 
-import parseSubscriberList from '../utils/subscriberListParsers/parseSubscriberList';
-import { addSubscribers } from '../actions/subscribersActions';
+import previewCSV from '../utils/subscriberListParsers/parseSubscriberList';
+import { submitCSV } from '../actions/subscribersActions';
 
+function mapStateToProps(state) {
+  return { isAdding: state.list.isAdding }
+}
 
-@connect(null, { addSubscribers })
+@connect(mapStateToProps, { submitCSV })
 export default class ImportSubscribers extends React.Component {
   constructor() {
     super();
 
     this.state = {
+      file: null,
       fields: null,
       subscribers: null,
       errors: null
     };
   }
 
-  handleNewFile(text) {
-    const data = parseSubscriberList(text);
+  componentWillReceiveProps(props) {
+      if (!props.isAdding) {
+          this.cancelImport();
+      }
+  }
 
-    // If errors were encountered don't show the
-    // dodgy csv/subscribers list to users
-    if (_.isEmpty(data.errors)) {
-      this.setState({
-        subscribers: data.subscribers,
-        fields: data.fields
-      });
-    } else {
-      this.setState({
-        errors: data.errors
-      });
+  handleNewFile(file) {
+
+    const callback = (results) => {
+        const errors = results.errors;
+        const subscribers = results.data;
+        const fields = results.meta.fields;
+        // If errors were encountered don't show the
+        // dodgy csv/subscribers list to users
+        if (_.isEmpty(errors)) {
+          this.setState({
+            file: file,
+            subscribers: subscribers,
+            fields: fields
+          });
+        } else {
+          this.setState({
+            errors: errors
+          });
+        }
     }
+
+    previewCSV(file, callback);
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    
-    this.props.addSubscribers(this.state.subscribers, this.state.fields);
+
+    const file = this.state.file;
+    this.props.submitCSV(this.state.file);
   }
 
   deleteSubscriber(subscriberId) {
@@ -70,45 +88,65 @@ export default class ImportSubscribers extends React.Component {
     return (
       <div>
         <div className="content-header">
-          <h1>Import Subscribers <small>Import subscribers from a file</small></h1>
+          <h1>Import Subscribers <small>Import subscribers from a CSV file</small></h1>
         </div>
 
         <section className="content">
-          <Row>
-            <Col md={12}>
+        {this.props.isAdding
+            ?        <Row>
+                        <Col md={12}>
 
-                <div className="box box-primary">
-                  <div className="box-header with-border">
-                    <h3 className="box-title">Subscribers to import</h3>
-                  </div>
+                            <div className="box box-primary">
+                              <div className="box-header with-border">
+                                <h3 className="box-title">Your CSV file is uploading ...</h3>
+                              </div>
 
-                  <div className="box-body">
-                    {(!this.state.subscribers && !this.state.errors) &&
-                      <UploadFileModal handleNewFile={this.handleNewFile.bind(this)} />
-                    }
+                              <div className="box-body">
+                                <p>Loading...</p>
+                              </div>
 
-                    <ErrorsList errors={this.state.errors}/>
+                            </div>
 
-                    <SubscribersTable
-                      fields={this.state.fields}
-                      subscribers={this.state.subscribers}
-                      deleteSubscriber={this.deleteSubscriber.bind(this)}
-                    />
-                  </div>
+                        </Col>
+                      </Row>
 
-                  <div className="box-footer">
-                    {(this.state.subscribers || this.state.errors) &&
-                    <Button onClick={this.cancelImport.bind(this)}>Cancel</Button>
-                    }
+            :         <Row>
+                        <Col md={12}>
 
-                    {this.state.subscribers &&
-                    <Button className="pull-right" bsStyle="primary" type="submit" onClick={this.handleSubmit.bind(this)}>Submit</Button>
-                    }
-                  </div>
-                </div>
+                            <div className="box box-primary">
+                              <div className="box-header with-border">
+                                <h3 className="box-title">Subscribers to import</h3>
+                              </div>
 
-            </Col>
-          </Row>
+                              <div className="box-body">
+                                {(!this.state.subscribers && !this.state.errors) &&
+                                  <UploadFileModal handleNewFile={this.handleNewFile.bind(this)} />
+                                }
+
+                                <ErrorsList errors={this.state.errors}/>
+
+                                <SubscribersTable
+                                  fields={this.state.fields}
+                                  subscribers={this.state.subscribers}
+                                  deleteSubscriber={this.deleteSubscriber.bind(this)}
+                                />
+                              </div>
+
+                              <div className="box-footer">
+                                {(this.state.subscribers || this.state.errors) &&
+                                <Button onClick={this.cancelImport.bind(this)}>Cancel</Button>
+                                }
+
+                                {this.state.subscribers &&
+                                <Button className="pull-right" bsStyle="primary" type="submit" onClick={this.handleSubmit.bind(this)}>Submit</Button>
+                                }
+                              </div>
+                            </div>
+
+                        </Col>
+                      </Row>
+                  }
+
         </section>
       </div>
     );
@@ -116,5 +154,5 @@ export default class ImportSubscribers extends React.Component {
 }
 
 ImportSubscribers.propTypes = {
-  addSubscribers: React.PropTypes.func.isRequired
+  submitCSV: React.PropTypes.func.isRequired
 };

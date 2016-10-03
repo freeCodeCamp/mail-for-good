@@ -1,6 +1,4 @@
-import axios from 'axios';
-import { COMPLETE_ADD_SUBSCRIBERS, REQUEST_ADD_SUBSCRIBERS } from '../constants/actionTypes'; import { API_SUBSCRIBERS_ENDPOINT } from '../constants/endpoints';
-
+import { COMPLETE_ADD_SUBSCRIBERS, REQUEST_ADD_SUBSCRIBERS } from '../constants/actionTypes'; import { API_SUBSCRIBERS_ENDPOINT, API_IMPORTCSV_ENDPOINT } from '../constants/endpoints';
 
 export function requestAddSubscribers() {
   return {
@@ -14,13 +12,29 @@ export function completeAddSubscribers() {
   };
 }
 
-export function addSubscribers(subscribers, fields) {
+export function submitCSV(file) {
   return function (dispatch) {
     dispatch(requestAddSubscribers());
-    
-    axios.post(API_SUBSCRIBERS_ENDPOINT, { subscribers, fields })
-      .then(() => {
-        // error /success handling
-      });
+
+    const formData = new FormData();
+    formData.append('csv', file);
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('POST', API_IMPORTCSV_ENDPOINT, true);
+
+    xhr.onreadystatechange = () => {
+        switch (xhr.readyState) {
+            case 3: { // Loading
+
+            }
+            case 4: { // Done
+                dispatch(completeAddSubscribers());
+            }
+        }
+
+    };
+
+    xhr.send(formData);
   };
 }

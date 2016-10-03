@@ -1,4 +1,4 @@
-const SubscriberModel = require('../models').subscriber;
+const SubscriberModel = require('../../models').subscriber;
 
 module.exports = function(req, res) {
     const subscribers = req.body.subscribers;
