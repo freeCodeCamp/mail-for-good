@@ -25,30 +25,24 @@ export default class UploadFileModal extends React.Component {
       showModal: false
     });
   }
-  
+
   onUpload(e) {
     this.setState({
       uploading: true
     });
-    
-    // Read the file locally
     const files = e.target.files;
-    const read = new FileReader();
-    read.readAsBinaryString(files[0]);
-    read.onloadend = function() {
-      this.handleUploadSuccess(read.result);
-    }.bind(this);
+    this.handleUploadSuccess(files[0]);
   }
 
-  handleUploadSuccess(text) {
+  handleUploadSuccess(file) {
     this.setState({
       uploading: false,
-      text
+      file
     });
   }
-  
+
   handleSubmit() {
-    this.props.handleNewFile(this.state.text);
+    this.props.handleNewFile(this.state.file);
     this.close();
   }
 
@@ -60,16 +54,16 @@ export default class UploadFileModal extends React.Component {
         <Button bsSize="large" bsStyle="primary" onClick={this.open.bind(this)}>
           Import
         </Button>
-        
+
         <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
           <Modal.Header closeButton>
             <Modal.Title>Import Subscribers</Modal.Title>
           </Modal.Header>
-          
+
           <Modal.Body>
             <FormControl className="btn" type="file" onChange={this.onUpload.bind(this)} help="nope"/>
           </Modal.Body>
-          
+
           <Modal.Footer>
             <Button onClick={this.close.bind(this)}>Cancel</Button>
             <Button bsStyle="primary" onClick={this.handleSubmit.bind(this)}>Upload</Button>
@@ -83,4 +77,3 @@ export default class UploadFileModal extends React.Component {
 UploadFileModal.propTypes = {
   handleNewFile: React.PropTypes.func.isRequired
 };
-
