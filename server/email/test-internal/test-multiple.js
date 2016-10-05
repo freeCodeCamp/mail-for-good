@@ -76,7 +76,7 @@ function multipleTest() {
 
     // Takes an email which is pushed to the queue, and a callback which should tell the stream to continue
     const pushItemToQueue = (email, callback) => {
-        q.push([email], (err) => {
+        q.push([email], err => {
             if (err) throw err;
             callback;
         });

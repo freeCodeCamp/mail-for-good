@@ -1,9 +1,11 @@
 export const TEST_ACTION = 'TEST_ACTION';
 
-// subscribersActions
+// listActions
 // todo: refactor variable names for consistency (SUBSCRIBERS_... vs REQUEST/COMPLETE_...)
 export const REQUEST_ADD_SUBSCRIBERS = 'REQUEST_ADD_SUBSCRIBERS';
 export const COMPLETE_ADD_SUBSCRIBERS = 'COMPLETE_ADD_SUBSCRIBERS';
+export const REQUEST_GET_LISTS = 'REQUEST_GET_LISTS';
+export const COMPLETE_GET_LISTS = 'COMPLETE_GET_LISTS';
 
 // settingsActions
 export const SETTINGS_CHANGE_REQUEST = 'SETTINGS_CHANGE_REQUEST';

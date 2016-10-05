@@ -42,5 +42,5 @@ export default class ErrorsList extends React.Component {
 }
 
 ErrorsList.propTypes = {
-  errors: React.PropTypes.array.isRequired
+  errors: React.PropTypes.array
 };

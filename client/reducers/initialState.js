@@ -1,7 +1,11 @@
 const initialState = {
-  subscribers: {
+  createList: {
     list: [],
-    isAdding: false
+    isAdding: false // Uploading a file?
+  },
+  manageList: {
+    lists: [], // Array of objects for lists
+    isGetting: false // Getting lists?
   },
   settings: {
     loading: false

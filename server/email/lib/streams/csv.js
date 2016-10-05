@@ -1,13 +1,12 @@
 const nodemailer = require('nodemailer');
 const smtpTransport = require('nodemailer-smtp-transport');
-const asyncModule = require('async');
 const csv = require('csv');
 const fs = require('fs');
 
 const inputFile = '/test-100k.csv';
 
 module.exports = (pushItemToQueue, emailConcurrency, inputFile) => {
-    
+
     const parser = csv.parse();
 
     const transformerOptions = {

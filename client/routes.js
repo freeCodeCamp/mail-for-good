@@ -2,22 +2,30 @@ import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 
 import App from './containers/App';
+
+import Dashboard from './containers/Dasboard';
+
+import CreateCampaign from './containers/CreateCampaign';
+
+import CreateList from './containers/CreateList';
+import ManageLists from './containers/ManageLists';
+
 import Settings from './containers/Settings';
-import Home from './containers/Home';
-import ImportSubscribers from './containers/ImportSubscribers';
+
 import AddEmail from './containers/AddEmail';
 import NotFound from './components/404';
 
 export default (
   <Route path="/" component={App}>
-    <IndexRoute component={Home} />
+    <IndexRoute component={Dasboard} />
 
     <Route path="campaigns">
+        <Route path="create" component={CreateCampaign} />
     </Route>
 
     <Route path="lists">
-        <Route path="create" component={ImportSubscribers} />
-        <Route path="manage" component={AddEmail} />
+        <Route path="create" component={CreateList} />
+        <Route path="manage" component={ManageLists} />
     </Route>
 
     <Route path="analytics">

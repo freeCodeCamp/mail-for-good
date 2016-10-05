@@ -2,7 +2,7 @@ import initialState from './initialState';
 import { SETTINGS_CHANGE_RECEIVE, SETTINGS_CHANGE_REQUEST } from '../constants/actionTypes';
 
 
-export default function settings(state = initialState.subscribers, action) {
+export default function settings(state = initialState.settings, action) {
   switch (action.type) {
     case SETTINGS_CHANGE_REQUEST: {
       return {...state,
