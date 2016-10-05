@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { addSubscribers } from '../actions/subscribersActions';
+import { addSubscribers } from '../actions/listActions';
 
 
 @connect(null, { addSubscribers })
@@ -41,4 +41,3 @@ export default class AddEmail extends React.Component {
 AddEmail.propTypes = {
   addSubscribers: React.PropTypes.func.isRequired
 };
-
