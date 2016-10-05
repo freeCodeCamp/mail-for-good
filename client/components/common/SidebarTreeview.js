@@ -5,7 +5,11 @@ class SidebarTreeview extends Component {
 
   render() {
     return (
-      <li className="treeview"> <a href="#">{this.props.name}</a>
+      <li className="treeview">
+        <a href="#">
+            <i className={`fa ${this.props.icon}`} />
+            {this.props.name}
+        </a>
           <ul className="treeview-menu">
             {this.props.children}
           </ul>
@@ -19,7 +23,8 @@ SidebarTreeview.contextTypes = {
 };
 
 SidebarTreeview.propTypes = {
-  name: PropTypes.string.isRequired
+  name: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired
 };
 
 

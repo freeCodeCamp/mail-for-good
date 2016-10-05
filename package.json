@@ -61,6 +61,8 @@
     "react": "15.3.1",
     "react-bootstrap": "^0.30.3",
     "react-dom": "15.3.1",
+    "react-jsonschema-form": "^0.40.0",
+    "react-notification": "^6.2.1",
     "react-redux": "4.4.5",
     "react-router": "2.7.0",
     "react-router-redux": "4.0.5",

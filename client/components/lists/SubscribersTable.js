@@ -64,5 +64,5 @@ export default class SubscribersTable extends React.Component {
 }
 
 SubscribersTable.propTypes = {
-  deleteSubscriber: React.PropTypes.func.isRequired,
+  deleteSubscriber: React.PropTypes.func,
 };

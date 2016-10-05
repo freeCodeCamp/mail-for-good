@@ -1,30 +1,33 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Button } from 'react-bootstrap';
 import _ from 'lodash';
 
-import UploadFileModal from '../components/ImportSubscribers/UploadFileModal';
-import SubscribersTable from '../components/ImportSubscribers/SubscribersTable';
-import ErrorsList from '../components/ImportSubscribers/ErrorsList';
+import UploadFileModal from '../components/lists/UploadFileModal';
+import SubscribersTable from '../components/lists/SubscribersTable';
+import ErrorsList from '../components/lists/ErrorsList';
 
 import previewCSV from '../utils/subscriberListParsers/parseSubscriberList';
-import { submitCSV } from '../actions/subscribersActions';
 
 function mapStateToProps(state) {
-  return { isAdding: state.list.isAdding }
+    // State reducer @ state.createList
+    return { isAdding: state.createList.isAdding };
 }
 
-@connect(mapStateToProps, { submitCSV })
-export default class ImportSubscribers extends React.Component {
-  constructor() {
-    super();
+@connect(mapStateToProps, null)
+export default class ImportCSV extends Component {
 
-    this.state = {
-      file: null,
-      fields: null,
-      subscribers: null,
-      errors: null
-    };
+  static propTypes = {
+      handleCSVSubmit: PropTypes.func.isRequired,
+      isAdding: PropTypes.bool.isRequired,
+      notification: PropTypes.func.isRequired
+  }
+
+  state = {
+    file: null,
+    fields: null,
+    subscribers: null,
+    errors: null
   }
 
   componentWillReceiveProps(props) {
@@ -33,26 +36,41 @@ export default class ImportSubscribers extends React.Component {
       }
   }
 
+  handleErrorWithFile(err) { // Err is a string informing user of an issue with the csv
+    this.props.notification({ // Ref https://github.com/pburtchaell/react-notification & https://github.com/pburtchaell/react-notification/blob/master/src/notification.js
+      message: err,
+      activeBarStyle: {
+          background: 'red'
+      }
+    });
+  }
+
   handleNewFile(file) {
 
     const callback = (results) => {
-        const errors = results.errors;
-        const subscribers = results.data;
-        const fields = results.meta.fields;
-        // If errors were encountered don't show the
-        // dodgy csv/subscribers list to users
-        if (_.isEmpty(errors)) {
-          this.setState({
-            file: file,
-            subscribers: subscribers,
-            fields: fields
-          });
+        if (!results.meta.fields.some(field => field.toLowerCase() === 'email')) { // Check if any header field is labeled email
+            this.handleErrorWithFile('Please ensure the CSV file contains at least one column field labeled "email" (check the first row)');
         } else {
-          this.setState({
-            errors: errors
-          });
+
+            const errors = results.errors;
+            const subscribers = results.data;
+            const fields = results.meta.fields;
+            // If errors were encountered don't show the
+            // dodgy csv/subscribers list to users
+            if (_.isEmpty(errors)) {
+              this.setState({
+                file: file,
+                subscribers: subscribers,
+                fields: fields
+              });
+            } else {
+              this.setState({
+                errors: errors
+              });
+            }
+
         }
-    }
+    };
 
     previewCSV(file, callback);
   }
@@ -60,8 +78,7 @@ export default class ImportSubscribers extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
 
-    const file = this.state.file;
-    this.props.submitCSV(this.state.file);
+    this.props.handleCSVSubmit(this.state.file, this.state.fields);
   }
 
   deleteSubscriber(subscriberId) {
@@ -87,8 +104,9 @@ export default class ImportSubscribers extends React.Component {
   render() {
     return (
       <div>
+
         <div className="content-header">
-          <h1>Import Subscribers <small>Import subscribers from a CSV file</small></h1>
+          <h1>Import CSV</h1>
         </div>
 
         <section className="content">
@@ -115,7 +133,7 @@ export default class ImportSubscribers extends React.Component {
 
                             <div className="box box-primary">
                               <div className="box-header with-border">
-                                <h3 className="box-title">Subscribers to import</h3>
+                                <h3 className="box-title"><i className="fa fa-exclamation-circle text-red" /> Please ensure the first row of the CSV file contains column names. This row must contain an email header.</h3>
                               </div>
 
                               <div className="box-body">
@@ -152,7 +170,3 @@ export default class ImportSubscribers extends React.Component {
     );
   }
 }
-
-ImportSubscribers.propTypes = {
-  submitCSV: React.PropTypes.func.isRequired
-};

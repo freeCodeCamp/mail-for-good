@@ -8,7 +8,7 @@ class SidebarLink extends Component {
     return (
       <li className={this.context.router.isActive(this.props.to, true) ? 'active' : ''}>
         <Link {...this.props}>
-          {this.props.children}
+          <i className={`fa ${this.props.icon || 'fa-circle-o'}`} />{this.props.children}
         </Link>
       </li>
     );
@@ -21,6 +21,7 @@ SidebarLink.contextTypes = {
 
 SidebarLink.propTypes = {
   to: PropTypes.string.isRequired,
+  icon: PropTypes.string,
   children: PropTypes.string.isRequired
 };
 
