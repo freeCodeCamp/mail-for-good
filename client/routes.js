@@ -3,7 +3,7 @@ import { Route, IndexRoute } from 'react-router';
 
 import App from './containers/App';
 
-import Dashboard from './containers/Dasboard';
+import Dashboard from './containers/Dashboard';
 
 import CreateCampaign from './containers/CreateCampaign';
 
@@ -17,7 +17,7 @@ import NotFound from './components/404';
 
 export default (
   <Route path="/" component={App}>
-    <IndexRoute component={Dasboard} />
+    <IndexRoute component={Dashboard} />
 
     <Route path="campaigns">
         <Route path="create" component={CreateCampaign} />

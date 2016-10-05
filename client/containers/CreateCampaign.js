@@ -1,11 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import Form from 'react-jsonschema-form';
 
-<<<<<<< HEAD
-=======
-//import { submitCSV } from '../actions/listActions';
-
->>>>>>> b5ec80557d404fc308a9ea0ae70ef96393ab35c0
 const schema = {
   title: "Todo",
   type: "object",
@@ -16,11 +11,6 @@ const schema = {
   }
 };
 
-<<<<<<< HEAD
-//@connect(null, null)
-export default class CreateList extends Component {
-
-=======
 //@connect(null, { submitCSV })
 export default class CreateList extends Component {
 
@@ -28,13 +18,12 @@ export default class CreateList extends Component {
     submitCSV: PropTypes.func
   }
 
->>>>>>> b5ec80557d404fc308a9ea0ae70ef96393ab35c0
   render() {
     return (
-        <Form schema={schema}
+        {/*<Form schema={schema}
       onChange={log("changed")}
       onSubmit={log("submitted")}
-      onError={log("errors")} />
+      onError={log("errors")} />*/}
 
     );
   }
