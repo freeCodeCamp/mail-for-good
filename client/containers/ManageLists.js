@@ -22,15 +22,8 @@ export default class ManageList extends Component {
 
     }
 
-    componentWillReceiveProps(props) {
-        console.log(props);
-    }
-
     componentDidMount() {
-        // Get lists if we haven't done so before
-        if (this.props.lists.length === 0) {
-            this.props.getLists();
-        }
+        this.props.getLists();
     }
 
     render() {
