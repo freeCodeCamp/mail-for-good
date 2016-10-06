@@ -78,7 +78,7 @@ export default class CreateList extends Component {
                           <li className="pull-left header"><i className="fa fa-th" /> Import a list</li>
                         </ul>
 
-                        <div className="box">
+                        <div className="box box-primary">
                         <Row>
                         <Col md={12}>
                             <div className="box-header with-border">

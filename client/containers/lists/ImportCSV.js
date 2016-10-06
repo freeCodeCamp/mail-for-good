@@ -104,12 +104,6 @@ export default class ImportCSV extends Component {
   render() {
     return (
       <div>
-
-        <div className="content-header">
-          <h1>Import CSV</h1>
-        </div>
-
-        <section className="content">
         {this.props.isAdding
             ?        <Row>
                         <Col md={12}>
@@ -131,8 +125,9 @@ export default class ImportCSV extends Component {
             :         <Row>
                         <Col md={12}>
 
-                            <div className="box box-primary">
+                            <div className="box">
                               <div className="box-header with-border">
+                                <h2>Import CSV</h2>
                                 <h3 className="box-title"><i className="fa fa-exclamation-circle text-red" /> Please ensure the first row of the CSV file contains column names. This row must contain an email header.</h3>
                               </div>
 
@@ -164,8 +159,6 @@ export default class ImportCSV extends Component {
                         </Col>
                       </Row>
                   }
-
-        </section>
       </div>
     );
   }
