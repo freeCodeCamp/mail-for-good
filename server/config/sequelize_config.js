@@ -3,7 +3,7 @@ module.exports = {
     "username": process.env.PSQL_USERNAME,
     "password": process.env.PSQL_PASSWORD,
     "database": process.env.PSQL_DATABASE,
-    "host": "127.0.0.1",
+    "host": process.env.PSQL_HOST || "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
