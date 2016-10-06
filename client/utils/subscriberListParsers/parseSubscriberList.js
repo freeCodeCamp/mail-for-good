@@ -6,7 +6,7 @@ export default function previewCSV(file, callback) {
     Papa.parse(file, {
         header: true, // First row are headers
         preview: 10, // Show first 10 results
-        complete: function(results, file) {
+        complete: function(results) { // Can also take 2nd 'file' parameter
             callback(results);
         }
     });

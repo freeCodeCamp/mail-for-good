@@ -1,15 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import Form from 'react-jsonschema-form';
-
-const schema = {
-  title: "Todo",
-  type: "object",
-  required: ["title"],
-  properties: {
-    title: {type: "string", title: "Title", default: "A new task"},
-    done: {type: "boolean", title: "Done?", default: false}
-  }
-};
+import CreateCampaignForm from '../components/campaigns/CreateCampaignForm';
 
 //@connect(null, { submitCSV })
 export default class CreateList extends Component {
@@ -20,11 +10,20 @@ export default class CreateList extends Component {
 
   render() {
     return (
-        {/*<Form schema={schema}
-      onChange={log("changed")}
-      onSubmit={log("submitted")}
-      onError={log("errors")} />*/}
+        <div>
+            <div className="content-header">
+                <h1>Create Campaign <small>Create and optionally send to a new campaign</small></h1>
+            </div>
 
+            <section className="content">
+                <div className="box">
+                    <div className="box-body">
+                        <CreateCampaignForm />
+                    </div>
+                </div>
+            </section>
+
+        </div>
     );
   }
 
