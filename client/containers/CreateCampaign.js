@@ -35,7 +35,7 @@ export default class CreateList extends Component {
                 <section className="content">
                     <div className="box">
                         <div className="box-body">
-                            <CreateCampaignForm onSubmit={this.handleSubmit}/>
+                            <CreateCampaignForm onSubmit={this.handleSubmit} />
                         </div>
                     </div>
                 </section>
