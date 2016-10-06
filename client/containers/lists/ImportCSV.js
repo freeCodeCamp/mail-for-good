@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { Row, Col, Button } from 'react-bootstrap';
 import _ from 'lodash';
 
-import UploadFileModal from '../components/lists/UploadFileModal';
-import SubscribersTable from '../components/lists/SubscribersTable';
-import ErrorsList from '../components/lists/ErrorsList';
+import UploadFileModal from './UploadFileModal';
+import SubscribersTable from '../../components/lists/SubscribersTable';
+import ErrorsList from '../../components/lists/ErrorsList';
 
-import previewCSV from '../utils/subscriberListParsers/parseSubscriberList';
+import previewCSV from '../../utils/subscriberListParsers/parseSubscriberList';
 
 function mapStateToProps(state) {
     // State reducer @ state.createList

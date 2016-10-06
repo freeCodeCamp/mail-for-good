@@ -13,6 +13,11 @@ function getState(state) {
 
 @connect(getState, {changeSettings})
 export default class Settings extends React.Component {
+  static propTypes = {
+    changeSettings: React.PropTypes.func.isRequired,
+    loading: React.PropTypes.bool
+  }
+  
   constructor() {
     super();
 
@@ -113,8 +118,3 @@ export default class Settings extends React.Component {
     );
   }
 }
-
-Settings.propTypes = {
-  changeSettings: React.PropTypes.func.isRequired,
-  loading: React.PropTypes.bool
-};

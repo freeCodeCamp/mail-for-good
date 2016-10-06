@@ -5,10 +5,14 @@ import { NotificationStack } from 'react-notification';
 
 import ImportCSV from './ImportCSV';
 
-import { submitCSV } from '../actions/listActions';
+import { submitCSV } from '../../actions/listActions';
 
 @connect(null, { submitCSV })
 export default class CreateList extends Component {
+  static propTypes = {
+    submitCSV: PropTypes.func.isRequired
+  }
+
   constructor() {
     super();
 
@@ -18,10 +22,6 @@ export default class CreateList extends Component {
 
     this.handleCSVSubmit = this.handleCSVSubmit.bind(this);
     this.notification = this.notification.bind(this);
-  }
-
-  static propTypes = {
-    submitCSV: PropTypes.func.isRequired
   }
 
   notification(notification) { // Ref https://github.com/pburtchaell/react-notification & https://github.com/pburtchaell/react-notification/blob/master/src/notification.js

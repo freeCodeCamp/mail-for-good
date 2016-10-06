@@ -7,8 +7,8 @@ import Dashboard from './containers/Dashboard';
 
 import CreateCampaign from './containers/CreateCampaign';
 
-import CreateList from './containers/CreateList';
-import ManageLists from './containers/ManageLists';
+import CreateList from './containers/lists/CreateList';
+import ManageLists from './containers/lists/ManageLists';
 
 import Settings from './containers/Settings';
 

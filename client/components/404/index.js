@@ -7,7 +7,7 @@ const NotFound = () => {
             <h1>Page not found <small>Please check the URL</small></h1>
           </section>
         </div>
-    )
-}
+    );
+};
 
 export default NotFound;
