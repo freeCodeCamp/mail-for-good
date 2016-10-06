@@ -2,7 +2,7 @@ import React from 'react';
 
 const NotFound = () => {
     return (
-        <div className="content-wrapper">
+        <div>
           <section className="content-header">
             <h1>Page not found <small>Please check the URL</small></h1>
           </section>
