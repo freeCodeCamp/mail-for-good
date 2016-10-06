@@ -24,7 +24,7 @@ export default class Settings extends React.Component {
       loading: false
     };
   }
-  
+
   componentWillReceiveProps(newProps) {
     this.setState({
       loading: newProps.loading
@@ -47,12 +47,13 @@ export default class Settings extends React.Component {
 
   render() {
     return (
-      <div className="content-wrapper">
+      <div>
         <section className="content-header">
           <h1>Settings <small>Settings page</small></h1>
         </section>
 
         <section className="content">
+
           <div className="row">
             <div className="col-md-6">
 
@@ -117,4 +118,3 @@ Settings.propTypes = {
   changeSettings: React.PropTypes.func.isRequired,
   loading: React.PropTypes.bool
 };
-
