@@ -1,26 +1,26 @@
 module.exports = {
-    sessionSecret: process.env.SESSION_SECRET || 'TestingTesting',
-    mongo: process.env.MONGO_DB,
+  sessionSecret: process.env.SESSION_SECRET || 'TestingTesting',
+  mongo: process.env.MONGO_DB,
 
-    // Secrets for testing purposes
-    testEmail: process.env.EMAIL || null,
+  // Secrets for testing purposes
+  testEmail: process.env.EMAIL || null,
 
-    email: {
-      amazon: {
-        accessKeyId: process.env.AMAZON_ACCESS_KEY_ID || null,
-        secretAccessKey: process.env.AMAZON_SECRET_ACCESS_KEY || null
-      }
-    },
-    //
-
-    smtpServer: {
-      port: process.env.SMTP_TEST_PORT || '2025', // Linux envs disallo use of port <= 1024 without root
-      host: process.env.SMTP_TEST_HOST || '127.0.0.1'
-    },
-
-    google: {
-        consumerKey: process.env.GOOGLE_CONSUMER_KEY,
-        consumerSecret: process.env.GOOGLE_CONSUMER_SECRET,
-        callbackURL: process.env.GOOGLE_CALLBACK || '/auth/google/callback'
+  email: {
+    amazon: {
+      accessKeyId: process.env.AMAZON_ACCESS_KEY_ID || null,
+      secretAccessKey: process.env.AMAZON_SECRET_ACCESS_KEY || null
     }
+  },
+  //
+
+  smtpServer: {
+    port: process.env.SMTP_TEST_PORT || '2025', // Linux envs disallo use of port <= 1024 without root
+    host: process.env.SMTP_TEST_HOST || '127.0.0.1'
+  },
+
+  google: {
+    consumerKey: process.env.GOOGLE_CONSUMER_KEY,
+    consumerSecret: process.env.GOOGLE_CONSUMER_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK || '/auth/google/callback'
+  }
 };

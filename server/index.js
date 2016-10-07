@@ -15,11 +15,7 @@ const app = express();
 // Config
 require('./config/passport')(passport);
 
-app.use(session({
-    secret: secret.sessionSecret,
-    resave: false,
-    saveUninitialized: true
-}));
+app.use(session({secret: secret.sessionSecret, resave: false, saveUninitialized: true}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.json());
@@ -34,5 +30,5 @@ routes(app, passport);
 // Server
 const port = process.env.PORT || 8080;
 app.listen(port, function() {
-    console.log(`Email service live on port ${port}`);
+  console.log(`Email service live on port ${port}`);
 });

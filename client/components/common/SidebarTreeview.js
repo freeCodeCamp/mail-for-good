@@ -1,5 +1,5 @@
 /*eslint-disable react/prop-types*/
-import React, { Component, PropTypes } from 'react';
+import React, {Component, PropTypes} from 'react';
 
 class SidebarTreeview extends Component {
 
@@ -7,12 +7,11 @@ class SidebarTreeview extends Component {
     return (
       <li className="treeview">
         <a href="#">
-            <i className={`fa ${this.props.icon}`} />
-            {this.props.name}
+          <i className={`fa ${this.props.icon}`}/> {this.props.name}
         </a>
-          <ul className="treeview-menu">
-            {this.props.children}
-          </ul>
+        <ul className="treeview-menu">
+          {this.props.children}
+        </ul>
       </li>
     );
   }
@@ -26,6 +25,5 @@ SidebarTreeview.propTypes = {
   name: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired
 };
-
 
 export default SidebarTreeview;

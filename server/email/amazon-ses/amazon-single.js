@@ -19,28 +19,28 @@ const secret = require('../../config/secrets');
 
 module.exports = () => {
 
-    const options = { // These options need to be configured
-        accessKeyId: secret.email.amazon.accessKeyId,
-        secretAccessKey: secret.email.amazon.secretAccessKey,
-        region: 'us-west-2',
-        rateLimit: 1
-    };
+  const options = { // These options need to be configured
+    accessKeyId: secret.email.amazon.accessKeyId,
+    secretAccessKey: secret.email.amazon.secretAccessKey,
+    region: 'us-west-2',
+    rateLimit: 1
+  };
 
-    const transporter = nodemailer.createTransport(sesTransport(options));
+  const transporter = nodemailer.createTransport(sesTransport(options));
 
-    const mailOptions = {
-        from: `<${secret.testEmail}>`,
-        to: `${secret.testEmail}`,
-        subject: 'Hello',
-        text: 'This is a test email from nonprofit-email-service...',
-        //html: '<b>Implementation of HTML is TBA</b>'
-    };
+  const mailOptions = {
+    from: `<${secret.testEmail}>`,
+    to: `${secret.testEmail}`,
+    subject: 'Hello',
+    text: 'This is a test email from nonprofit-email-service...',
+    //html: '<b>Implementation of HTML is TBA</b>'
+  };
 
-    // send mail with defined transport object
-    transporter.sendMail(mailOptions, function(error, info) {
-        if (error) {
-            return console.log(error);
-        }
-        console.log(`Message sent to ${secret.testEmail}!`);
-    });
+  // send mail with defined transport object
+  transporter.sendMail(mailOptions, function(error, info) {
+    if (error) {
+      return console.log(error);
+    }
+    console.log(`Message sent to ${secret.testEmail}!`);
+  });
 }

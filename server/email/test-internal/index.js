@@ -8,12 +8,12 @@
 */
 
 const SMTPServer = require('smtp-server').SMTPServer;
-const secret = require ('../../config/secrets.js');
+const secret = require('../../config/secrets.js');
 
 // Config options & pass to server
 const smtpServerOptions = {
-    logger:true, // Log to console
-    authOptional: true // Authentication is not required
+  logger: true, // Log to console
+  authOptional: true // Authentication is not required
 };
 const server = new SMTPServer(smtpServerOptions);
 

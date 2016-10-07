@@ -31,72 +31,70 @@ const renderMultiselect = ({ input, ...rest }) =>
     {...rest}/>;
 */
 
-
-const tempLists = [
-    'aListBelongingToTheUser',
-    'anotherListBelongingToTheUser'
-];
+const tempLists = ['aListBelongingToTheUser', 'anotherListBelongingToTheUser'];
 
 const CreateCampaignForm = (props) => {
-    const {handleSubmit, pristine, reset, submitting} = props;
+  const {handleSubmit, pristine, reset, submitting} = props;
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <h3>Select list & relay server</h3>
-            <div>
-                <label>Relay server</label>
-                <Field name="relayServer" component={renderSelectList} data={['Amazon SES']}/>
-            </div>
+  return (
+    <form onSubmit={handleSubmit}>
+      <h3>Select list & relay server</h3>
+      <div>
+        <label>Relay server</label>
+        <Field name="relayServer" component={renderSelectList} data={['Amazon SES']}/>
+      </div>
 
-            <div>
-                <label>Select a List</label>
-                <Field name="list" component={renderCombobox} data={tempLists} valueField="value" textField="color"/>
-            </div>
+      <div>
+        <label>Select a List</label>
+        <Field name="list" component={renderCombobox} data={tempLists} valueField="value" textField="color"/>
+      </div>
 
-            <hr/>
+      <hr/>
 
-            <h3>Campaign details</h3>
-            <div>
-                <label>Campaign Name -
-                    <small>the name of this campaign</small>
-                </label>
-                <Field className="form-control" name="campaignName" component="input" type="text" />
-            </div>
+      <h3>Campaign details</h3>
+      <div>
+        <label>Campaign Name -
+          <small>the name of this campaign</small>
+        </label>
+        <Field className="form-control" name="campaignName" component="input" type="text"/>
+      </div>
 
-            <div>
-                <label>Email: from (name) -
-                    <small>your name e.g. from <i>Bob</i> {'<bob@bobmail.com>'}</small>
-                </label>
-                <Field className="form-control" name="fromName" component="input" />
-            </div>
+      <div>
+        <label>Email: from (name) -
+          <small>your name e.g. from
+            <i>Bob</i>
+            {'<bob@bobmail.com>'}</small>
+        </label>
+        <Field className="form-control" name="fromName" component="input"/>
+      </div>
 
-            <div>
-                <label>Email: from (email) -
-                    <small>ensure this email is authorised to send email to the relay server</small>
-                </label>
-                <Field className="form-control" name="fromEmail" component="input" />
-            </div>
+      <div>
+        <label>Email: from (email) -
+          <small>ensure this email is authorised to send email to the relay server</small>
+        </label>
+        <Field className="form-control" name="fromEmail" component="input"/>
+      </div>
 
-            <hr/>
+      <hr/>
 
-            <h3>Create email</h3>
-            <div>
-                <label>Email Subject</label>
-                <Field className="form-control" name="emailSubject" component="input" />
-            </div>
+      <h3>Create email</h3>
+      <div>
+        <label>Email Subject</label>
+        <Field className="form-control" name="emailSubject" component="input"/>
+      </div>
 
-            <div>
-                <label>Write Email</label>
-                <Field name="emailBody" component={TextEditor} />
-            </div>
+      <div>
+        <label>Write Email</label>
+        <Field name="emailBody" component={TextEditor}/>
+      </div>
 
-            <br/>
-            <div>
-                <button className="btn btn-primary btn-lg pull-left" type="submit" disabled={pristine || submitting}>Create</button>
-                <button className="btn btn-danger btn-lg pull-right" type="button" disabled={pristine || submitting} onClick={reset}>Reset</button>
-            </div>
-        </form>
-    );
+      <br/>
+      <div>
+        <button className="btn btn-primary btn-lg pull-left" type="submit" disabled={pristine || submitting}>Create</button>
+        <button className="btn btn-danger btn-lg pull-right" type="button" disabled={pristine || submitting} onClick={reset}>Reset</button>
+      </div>
+    </form>
+  );
 };
 
 // Use reduxForm decorator

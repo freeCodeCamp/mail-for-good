@@ -5,12 +5,12 @@ const singleTest = require('./test-internal/test-single');
 const multipleTest = require('./test-internal/test-multiple');
 
 module.exports = {
-    amazon: {
-        single: amazonSingle,
-        testSingle: amazonSingleTest
-    },
-    internal: {
-        single: singleTest,
-        multiple: multipleTest
-    }
+  amazon: {
+    single: amazonSingle,
+    testSingle: amazonSingleTest
+  },
+  internal: {
+    single: singleTest,
+    multiple: multipleTest
+  }
 };
