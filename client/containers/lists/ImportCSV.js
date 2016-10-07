@@ -1,6 +1,6 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {Row, Col, Button} from 'react-bootstrap';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { Row, Col, Button } from 'react-bootstrap';
 import _ from 'lodash';
 
 import UploadFileModal from './UploadFileModal';
@@ -11,7 +11,7 @@ import previewCSV from '../../utils/subscriberListParsers/parseSubscriberList';
 
 function mapStateToProps(state) {
   // State reducer @ state.createList
-  return {isAdding: state.createList.isAdding};
+  return { isPosting: state.createList.isPosting };
 }
 
 @connect(mapStateToProps, null)
@@ -19,7 +19,7 @@ export default class ImportCSV extends Component {
 
   static propTypes = {
     handleCSVSubmit: PropTypes.func.isRequired,
-    isAdding: PropTypes.bool.isRequired,
+    isPosting: PropTypes.bool.isRequired,
     notification: PropTypes.func.isRequired
   }
 
@@ -31,7 +31,7 @@ export default class ImportCSV extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (!props.isAdding) {
+    if (!props.isPosting) {
       this.cancelImport();
     }
   }
@@ -92,7 +92,7 @@ export default class ImportCSV extends Component {
   render() {
     return (
       <div>
-        {this.props.isAdding
+        { this.props.isPosting
           ? <Row>
               <Col md={12}>
 
@@ -120,8 +120,7 @@ export default class ImportCSV extends Component {
                 </div>
 
                 <div className="box-body">
-                  {(!this.state.subscribers && !this.state.errors) && <UploadFileModal handleNewFile={this.handleNewFile.bind(this)}/>
-}
+                  {(!this.state.subscribers && !this.state.errors) && <UploadFileModal handleNewFile={this.handleNewFile.bind(this)}/>}
 
                   <ErrorsList errors={this.state.errors}/>
 
@@ -129,17 +128,16 @@ export default class ImportCSV extends Component {
                 </div>
 
                 <div className="box-footer">
-                  {(this.state.subscribers || this.state.errors) && <Button onClick={this.cancelImport.bind(this)}>Cancel</Button>
-}
+                  {(this.state.subscribers || this.state.errors) && <Button onClick={this.cancelImport.bind(this)}>Cancel</Button>}
 
-                  {this.state.subscribers && <Button className="pull-right" bsStyle="primary" type="submit" onClick={this.handleSubmit.bind(this)}>Submit</Button>
-}
+                  {this.state.subscribers && <Button className="pull-right" bsStyle="primary" type="submit" onClick={this.handleSubmit.bind(this)}>Submit</Button>}
                 </div>
               </div>
 
             </Col>
           </Row>
-}
+        }
+
       </div>
     );
   }

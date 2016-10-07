@@ -1,13 +1,15 @@
 const path = require('path');
+const bodyParser = require('body-parser');
 const multer = require('multer')({dest: 'server/controllers/list/uploads/'});
 
 const auth = require('./auth');
-
-const changeSettings = require('../controllers/changesettings');
-
+const createCampaign = require('../controllers/campaign/create-campaign');
 const addSubscribers = require('../controllers/list/add-subscribers');
 const importCSV = require('../controllers/list/import-csv');
 const getLists = require('../controllers/list/get-lists');
+const changeSettings = require('../controllers/changesettings');
+
+const parseJson = bodyParser.json();
 
 module.exports = (app, passport) => {
 
@@ -21,14 +23,16 @@ module.exports = (app, passport) => {
   /*      API       */
   ////////////////////
 
-  /* Settings */
+  /* Campaigns */
 
-  // Change settings
-  app.post('/api/settings', isAuth, (req, res) => {
-    changeSettings(req, res);
+  /* POST */
+
+  // Create new campaign
+  app.post('/api/campaign', isAuth, parseJson, (req, res) => {
+    createCampaign(req, res);
   });
 
-  /* Subscribers */
+  /* Lists */
 
   /* GET */
 
@@ -49,9 +53,16 @@ module.exports = (app, passport) => {
     importCSV(req, res);
   });
 
-  /////////
-  /* APP */
-  /////////
+  /* Settings */
+
+  // Change settings
+  app.post('/api/settings', isAuth, (req, res) => {
+    changeSettings(req, res);
+  });
+
+  ////////////////////
+  /*      APP       */
+  ////////////////////
 
   app.get('/*', isAuth, (req, res) => {
     res.sendFile(path.resolve('dist/index.html'));

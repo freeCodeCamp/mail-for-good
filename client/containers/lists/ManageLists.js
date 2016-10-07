@@ -1,22 +1,27 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {Row, Col} from 'react-bootstrap';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { Row, Col } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 
-import {getLists} from '../../actions/listActions';
+import { getLists } from '../../actions/listActions';
 
 function mapStateToProps(state) {
   // State reducer @ state.manageList
   return {lists: state.manageList.lists, isGetting: state.manageList.isGetting};
 }
 
-@connect(mapStateToProps, {getLists})
+@connect(mapStateToProps, { getLists })
 export default class ManageList extends Component {
 
-  static propTypes = {}
+  static propTypes = {
+    getLists: PropTypes.func.isRequired
+  }
 
   componentDidMount() {
-    this.props.getLists();
+    // Update lists only if we need to
+    if (!!this.props.lists.length) {
+      this.props.getLists();
+    }
   }
 
   render() {

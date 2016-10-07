@@ -1,26 +1,33 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import CreateCampaignForm from '../components/campaigns/CreateCampaignForm';
+import { postCreateCampaign } from '../actions/campaignActions';
 
 function mapStateToProps(state) {
-  // State reducer @ state.form
-  return {form: state.form.createCampaign};
+  // State reducer @ state.form & state.createCampaign
+  return {
+    form: state.form.createCampaign,
+    isPosting: state.createCampaign.isPosting
+  };
 }
 
-@connect(mapStateToProps, null)
-export default class CreateList extends Component {
+@connect(mapStateToProps, { postCreateCampaign })
+export default class CreateCampaign extends Component {
   constructor() {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   static propTypes = {
-    form: PropTypes.object.isRequired
+    form: PropTypes.object, // Should really require this but there's no set up for initalising state atm (see http://redux-form.com/6.0.5/examples/initializeFromState/)
+    isPosting: PropTypes.bool.isRequired,
+    postCreateCampaign: PropTypes.func.isRequired
   }
 
-  handleSubmit(form) {
-    console.log(this.props.form)
-    console.log(form);
+  handleSubmit() {
+    // TODO: Validation both sync and serverside async for the form
+    console.log(JSON.stringify(this.props.form.values));
+    this.props.postCreateCampaign(JSON.stringify(this.props.form.values));
   }
 
   render() {

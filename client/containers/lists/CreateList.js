@@ -1,14 +1,15 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {Row, Col} from 'react-bootstrap';
-import {NotificationStack} from 'react-notification';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { Row, Col } from 'react-bootstrap';
+import { NotificationStack } from 'react-notification';
 
 import ImportCSV from './ImportCSV';
 
-import {submitCSV} from '../../actions/listActions';
+import { submitCSV } from '../../actions/listActions';
 
-@connect(null, {submitCSV})
+@connect(null, { submitCSV })
 export default class CreateList extends Component {
+
   static propTypes = {
     submitCSV: PropTypes.func.isRequired
   }

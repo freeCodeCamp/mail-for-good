@@ -1,5 +1,9 @@
 export const TEST_ACTION = 'TEST_ACTION';
 
+// campaignActions
+export const REQUEST_POST_CREATECAMPAIGN = 'REQUEST_POST_CREATECAMPAIGN';
+export const COMPLETE_POST_CREATECAMPAIGN = 'COMPLETE_POST_CREATECAMPAIGN';
+
 // listActions
 // todo: refactor variable names for consistency (SUBSCRIBERS_... vs REQUEST/COMPLETE_...)
 export const REQUEST_ADD_SUBSCRIBERS = 'REQUEST_ADD_SUBSCRIBERS';

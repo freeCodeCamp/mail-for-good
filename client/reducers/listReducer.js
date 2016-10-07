@@ -5,12 +5,12 @@ export function createList(state = initialState.createList, action) {
   switch (action.type) {
     case REQUEST_ADD_SUBSCRIBERS: {
         return {...state,
-          isAdding: true
+          isPosting: true
         };
     }
     case COMPLETE_ADD_SUBSCRIBERS: {
         return {...state,
-          isAdding: false
+          isPosting: false
         };
     }
     default:

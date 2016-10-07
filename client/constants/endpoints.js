@@ -1,9 +1,18 @@
 export const BASE_URL = 'http://localhost:8080';
 
-export const SETTINGS_URL_RELATIVE = '/api/settings';
-export const API_SETTINGS_ENDPOINT = BASE_URL + SETTINGS_URL_RELATIVE;
+// Dashboard
 
+// Campaigns
+export const API_CAMPAIGN_ENDPOINT = BASE_URL + '/api/campaign'; // REST (post = new campaign, get = get list of campaigns, put = update campaign, del = delete campaign)
+
+// Lists
 // should refactor above variables for consistency (API_...)
 export const API_SUBSCRIBERS_ENDPOINT = BASE_URL + '/api/list/add/subscribers';
 export const API_IMPORTCSV_ENDPOINT = BASE_URL + '/api/list/add/csv';
 export const API_MANAGELIST_ENDPOINT = BASE_URL + '/api/list/manage';
+
+// Analytics
+
+// Settings
+export const SETTINGS_URL_RELATIVE = '/api/settings';
+export const API_SETTINGS_ENDPOINT = BASE_URL + SETTINGS_URL_RELATIVE;

@@ -1,7 +1,10 @@
 const initialState = {
+  createCampaign: {
+    isPosting: false // Posting a new campaign?
+  },
   createList: {
     list: [],
-    isAdding: false // Uploading a file?
+    isPosting: false // Posting a file?
   },
   manageList: {
     lists: [], // Array of objects for lists

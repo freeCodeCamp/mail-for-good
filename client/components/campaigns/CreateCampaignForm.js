@@ -52,7 +52,7 @@ const CreateCampaignForm = (props) => {
 
       <div>
         <label>Select a List</label>
-        <Field name="list" component={renderCombobox} data={tempLists} />
+        <Field name="listName" component={renderCombobox} data={tempLists} />
       </div>
 
       <hr/>
