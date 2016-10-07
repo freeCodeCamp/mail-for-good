@@ -32,13 +32,19 @@ const renderMultiselect = ({ input, ...rest }) =>
 */
 
 const tempLists = ['aListBelongingToTheUser', 'anotherListBelongingToTheUser'];
+const tempTemplates = ['aTemplate', 'anotherTemplate'];
 
 const CreateCampaignForm = (props) => {
   const {handleSubmit, pristine, reset, submitting} = props;
 
   return (
     <form onSubmit={handleSubmit}>
-      <h3>Select list & relay server</h3>
+      <h3>Select email type, relay server & list</h3>
+      <div>
+        <label>Send email as</label>
+        <Field name="type" component={renderSelectList} data={['Plaintext', 'HTML']}/>
+      </div>
+
       <div>
         <label>Relay server</label>
         <Field name="relayServer" component={renderSelectList} data={['Amazon SES']}/>
@@ -46,7 +52,7 @@ const CreateCampaignForm = (props) => {
 
       <div>
         <label>Select a List</label>
-        <Field name="list" component={renderCombobox} data={tempLists} valueField="value" textField="color"/>
+        <Field name="list" component={renderCombobox} data={tempLists} />
       </div>
 
       <hr/>
@@ -78,6 +84,11 @@ const CreateCampaignForm = (props) => {
       <hr/>
 
       <h3>Create email</h3>
+      <div>
+        <label>Import from template</label>
+        <Field name="template" component={renderCombobox} data={tempTemplates} />
+      </div>
+
       <div>
         <label>Email Subject</label>
         <Field className="form-control" name="emailSubject" component="input"/>
