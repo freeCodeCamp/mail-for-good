@@ -10,6 +10,7 @@ import ManageCampaigns from './containers/campaigns/ManageCampaigns';
 
 import CreateList from './containers/lists/CreateList';
 import ManageLists from './containers/lists/ManageLists';
+import ManageListSubscribers from './containers/lists/ManageListSubscribers';
 
 import Settings from './containers/Settings';
 
@@ -28,6 +29,7 @@ export default (
     <Route path="lists">
         <Route path="create" component={CreateList} />
         <Route path="manage" component={ManageLists} />
+        <Route path="manage/:listId" component={ManageListSubscribers} />
     </Route>
 
     <Route path="analytics">

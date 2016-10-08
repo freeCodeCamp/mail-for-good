@@ -1,5 +1,10 @@
-import { REQUEST_ADD_SUBSCRIBERS, COMPLETE_ADD_SUBSCRIBERS, REQUEST_GET_LISTS, COMPLETE_GET_LISTS } from '../constants/actionTypes';
-import { API_SUBSCRIBERS_ENDPOINT, API_IMPORTCSV_ENDPOINT, API_MANAGELIST_ENDPOINT } from '../constants/endpoints';
+import axios from 'axios';
+import { API_SUBSCRIBERS_ENDPOINT, API_IMPORTCSV_ENDPOINT, API_MANAGELIST_ENDPOINT, API_LISTSUBSCRIBERS_ENDPOINT } from '../constants/endpoints';
+import {
+  REQUEST_ADD_SUBSCRIBERS, COMPLETE_ADD_SUBSCRIBERS,
+  REQUEST_GET_LISTS, COMPLETE_GET_LISTS,
+  REQUEST_GET_LIST_SUBSCRIBERS, COMPLETE_GET_LIST_SUBSCRIBERS
+} from '../constants/actionTypes';
 
 export function requestAddSubscribers() {
   return { type: REQUEST_ADD_SUBSCRIBERS };
@@ -15,6 +20,31 @@ export function requestGetList() {
 
 export function completeGetList(lists) {
   return { type: COMPLETE_GET_LISTS, lists };
+}
+
+export function requestGetListSubscribers(listId) {
+  return { type: REQUEST_GET_LIST_SUBSCRIBERS, listId };
+}
+
+export function completeGetListSubscribers(subscribers) {
+  return { type: COMPLETE_GET_LIST_SUBSCRIBERS, subscribers };
+}
+
+export function getListSubscribers(listId) {
+  return dispatch => {
+    dispatch(requestGetListSubscribers(listId));
+
+    axios.get(API_LISTSUBSCRIBERS_ENDPOINT, {
+      params: { listId }
+    })
+      .then(response => {
+        dispatch(completeGetListSubscribers(response.data.subscribers));
+      })
+      .catch(response => {
+        console.log("broke it");
+        console.log(response);
+      })
+  }
 }
 
 export function getLists() {
