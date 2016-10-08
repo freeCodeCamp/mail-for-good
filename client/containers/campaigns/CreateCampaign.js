@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import CreateCampaignForm from '../components/campaigns/CreateCampaignForm';
-import { postCreateCampaign } from '../actions/campaignActions';
+import CreateCampaignForm from '../../components/campaigns/CreateCampaignForm';
+import { postCreateCampaign } from '../../actions/campaignActions';
 
 function mapStateToProps(state) {
   // State reducer @ state.form & state.createCampaign

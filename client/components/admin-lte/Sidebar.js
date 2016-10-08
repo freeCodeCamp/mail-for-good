@@ -22,7 +22,7 @@ const Sidebar = (props) => { // eslint-disable-line no-unused-vars
 
           <SidebarTreeview name="Campaigns" icon="fa-envelope">
             <SidebarLink to="/campaigns/create">Create Campaign</SidebarLink> {/* typeofcampaign (html, plain etc), use template, steps= 1. to who - 2. campaign info (name, from, subject, from email, options for tracking) 3. Template 4. Write the actual email 5. send & confirm*/}
-            <SidebarLink to="/campaigns/manage">Manage Campaigns WIP</SidebarLink> {/* delete, resend, edit, view report (analytics) */}
+            <SidebarLink to="/campaigns/manage">Manage Campaigns</SidebarLink> {/* delete, resend, edit, view report (analytics) */}
             <SidebarLink to="/campaigns/templates">Templates WIP</SidebarLink> {/* CRUD templates */}
           </SidebarTreeview>
 

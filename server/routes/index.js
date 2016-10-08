@@ -1,12 +1,15 @@
 const path = require('path');
 const bodyParser = require('body-parser');
 const multer = require('multer')({dest: 'server/controllers/list/uploads/'});
-
 const auth = require('./auth');
+
 const createCampaign = require('../controllers/campaign/create-campaign');
+const getCampaigns = require('../controllers/campaign/get-campaigns');
+
 const addSubscribers = require('../controllers/list/add-subscribers');
 const importCSV = require('../controllers/list/import-csv');
 const getLists = require('../controllers/list/get-lists');
+
 const changeSettings = require('../controllers/changesettings');
 
 const parseJson = bodyParser.json();
@@ -24,6 +27,13 @@ module.exports = (app, passport) => {
   ////////////////////
 
   /* Campaigns */
+
+  /* GET */
+
+  // Get a list of all campaigns
+  app.get('/api/campaign', isAuth, (req, res) => {
+    getCampaigns(req, res);
+  });
 
   /* POST */
 

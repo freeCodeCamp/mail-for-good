@@ -2,6 +2,10 @@ const initialState = {
   createCampaign: {
     isPosting: false // Posting a new campaign?
   },
+  manageCampaign: {
+    campaigns: [], // Array of objects for campaigns
+    isGetting: false // Getting campaigns?
+  },
   createList: {
     list: [],
     isPosting: false // Posting a file?
@@ -12,9 +16,6 @@ const initialState = {
   },
   settings: {
     loading: false
-  },
-  test: {
-    something: true
   }
 };
 

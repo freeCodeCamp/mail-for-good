@@ -1,8 +1,8 @@
-const list = require('../../models').list;
+const campaign = require('../../models').campaign;
 
 module.exports = (req, res) => {
-  // Find all lists belonging to a user & send it to them
-  list.findAll({
+  // Find all campaigns belonging to a user & send it to them
+  campaign.findAll({
     where: {
       userId: req.user.id
     },

@@ -1,15 +1,14 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import { reducer as formReducer } from 'redux-form'
-import test from './testReducer';
-import settings from './settingsReducer';
-import { createList, manageList } from './listReducer';
-import { createCampaign } from './campaignReducer';
 
+import { createCampaign, manageCampaign } from './campaignReducer';
+import { createList, manageList } from './listReducer';
+import settings from './settingsReducer';
 
 const rootReducer = combineReducers({
-  test,
   createCampaign,
+  manageCampaign,
   createList,
   manageList,
   settings,

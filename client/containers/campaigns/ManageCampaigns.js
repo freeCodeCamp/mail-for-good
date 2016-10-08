@@ -1,28 +1,27 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 
-import { getLists } from '../../actions/listActions';
+import { getCampaigns } from '../../actions/campaignActions';
 
 function mapStateToProps(state) {
-  // State reducer @ state.manageList
-  return {lists: state.manageList.lists, isGetting: state.manageList.isGetting};
+  // State reducer @ state.manageCampaign
+  return { campaigns: state.manageCampaign.campaigns, isGetting: state.manageCampaign.isGetting };
 }
 
-@connect(mapStateToProps, { getLists })
-export default class ManageList extends Component {
+@connect(mapStateToProps, { getCampaigns })
+export default class ManageCampaigns extends Component {
 
   static propTypes = {
-    getLists: PropTypes.func.isRequired,
-    lists: PropTypes.array.isRequired,
+    getCampaigns: PropTypes.func.isRequired,
+    campaigns: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired
   }
 
   componentDidMount() {
-    // Update lists only if we need to
-    if (!this.props.lists.length) {
-      this.props.getLists();
+    // Update campaigns only if we need to
+    if (!this.props.campaigns.length) {
+      this.props.getCampaigns();
     }
   }
 
@@ -30,24 +29,24 @@ export default class ManageList extends Component {
     return (
       <div>
         <div className="content-header">
-          <h1>Manage lists
-            <small>Edit, delete and segement your lists here</small>
+          <h1>Manage campaigns
+            <small>Edit or delete your campaigns here</small>
           </h1>
         </div>
 
         <section className="content">
           <div className="box">
             <div className="box-header">
-              <h3 className="box-title">Your lists</h3>
+              <h3 className="box-title">Your campaigns</h3>
             </div>
 
             <div className="box-body">
               {/* Need to improve this in due time */}
 
               <ol>
-                {this.props.lists.map(list => {
+                {this.props.campaigns.map(campaign => {
                   return (
-                    <li>{`List: "${list.name}" # Created at ${list.createdAt} # Last updated at ${list.updatedAt}`}</li>
+                    <li>{`List: "${campaign.name}" # Created at ${campaign.createdAt} # Last updated at ${campaign.updatedAt}`}</li>
                   );
                 })}
               </ol>
