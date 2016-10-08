@@ -14,6 +14,8 @@ module.exports = function(req, res) {
 
   /*
     TODO: Check settingsToChange.amazonSimpleEmailServiceAccessKey and settingsToChange.amazonSimpleEmailServiceSecretKey for validity using regex
+    TODO: Currently, should a user update one field and leave the other blank the blank field will still be written as an empty string, this needs to change
+    TODO: Need to encrypt these keys
  */
   Setting.update({
     amazonSimpleEmailServiceAccessKey: settingsToChange.amazonSimpleEmailServiceAccessKey,
