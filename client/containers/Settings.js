@@ -17,7 +17,7 @@ export default class Settings extends React.Component {
     changeSettings: React.PropTypes.func.isRequired,
     loading: React.PropTypes.bool
   }
-  
+
   constructor() {
     super();
 
@@ -68,7 +68,7 @@ export default class Settings extends React.Component {
                   <h3 className="box-title">Amazon SES credentials</h3>
                 </div>
 
-                <form role="form" onChange={this.handleChange.bind(this)}>
+                <form role="form" onChange={this.handleChange.bind(this)} autocomplete="off">
                   <div className="box-body">
                     <div className="form-group">
                       <label htmlFor="example">Access Key</label>
@@ -78,7 +78,7 @@ export default class Settings extends React.Component {
                         id="amazonSimpleEmailServiceAccessKey"  // better way to do this?
                         name="amazonSimpleEmailServiceAccessKey"
                         value={this.state.newSettings.amazonSimpleEmailServiceAccessKey}
-                        placeholder="placeholder"
+                        placeholder="Your service access key"
                       />
                     </div>
                     <div className="form-group">
@@ -89,7 +89,7 @@ export default class Settings extends React.Component {
                         id="amazonSimpleEmailServiceSecretKey"
                         name="amazonSimpleEmailServiceSecretKey"
                         value={this.state.newSettings.amazonSimpleEmailServiceSecretKey}
-                        placeholder="placeholder"
+                        placeholder="Your service secret key"
                       />
                     </div>
                   </div>
