@@ -1,43 +1,28 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
-import { NotificationStack } from 'react-notification';
 
 import ImportCSV from './ImportCSV';
 
 import { submitCSV } from '../../actions/listActions';
+import { notify } from '../../actions/notificationActions';
 
-@connect(null, { submitCSV })
+@connect(null, { submitCSV, notify })
 export default class CreateList extends Component {
 
   static propTypes = {
-    submitCSV: PropTypes.func.isRequired
+    submitCSV: PropTypes.func.isRequired,
+    notify: PropTypes.func.isRequired
   }
 
   constructor() {
     super();
 
-    this.state = {
-      notifications: []
-    };
-
     this.handleCSVSubmit = this.handleCSVSubmit.bind(this);
-    this.notification = this.notification.bind(this);
   }
 
-  notification(notification) { // Ref https://github.com/pburtchaell/react-notification & https://github.com/pburtchaell/react-notification/blob/master/src/notification.js
-    // Set position based on sidebar collapsed state
-    if (document.body.classList.contains('sidebar-collapse')) {
-      notification.activeBarStyle.left = '6rem';
-    } else {
-      notification.activeBarStyle.left = '25rem';
-    }
-    notification.dismissAfter = 10000; // In ms
-    notification.isActive = true; // Is displayed
-
-    const newNotifications = this.state.notifications;
-    newNotifications.push(notification);
-    this.setState({notifications: newNotifications});
+  notification(notification) {
+    this.props.notify(notification);
   }
 
   handleCSVSubmit(file, headers) { // Get the csv file, headers of said file & then get the name of the list
@@ -120,9 +105,6 @@ export default class CreateList extends Component {
               </div>
             </Col>
           </Row>
-
-          <NotificationStack notifications={this.state.notifications} onDismiss={() => this.setState({notifications: this.state.notifications.slice(1)})}/>
-
         </section>
       </div>
     );

@@ -5,10 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     picture: DataTypes.STRING,
     token: DataTypes.STRING,
     email: DataTypes.STRING,
-    name: DataTypes.STRING,
-
-    amazonSimpleEmailServiceAccessKey: { type: DataTypes.STRING, defaultValue: '' },
-    amazonSimpleEmailServiceSecretKey: { type: DataTypes.STRING, defaultValue: '' }
+    name: DataTypes.STRING
   }, {
     classMethods: {
       associate: function(models) {

@@ -72,7 +72,7 @@ module.exports = (app, passport) => {
   /* Settings */
 
   // Change settings
-  app.post('/api/settings', isAuth, (req, res) => {
+  app.post('/api/settings', isAuth, parseJson, (req, res) => {
     changeSettings(req, res);
   });
 

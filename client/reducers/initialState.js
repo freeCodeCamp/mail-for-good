@@ -21,6 +21,9 @@ const initialState = {
   },
   settings: {
     loading: false
+  },
+  notifications: {
+    stack: []
   }
 };
 
