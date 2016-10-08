@@ -8,8 +8,8 @@ export default class SubscribersTable extends React.Component {
     super(props);
 
     this.state = {
-      subscribers: null,
-      fields: null
+      subscribers: null || this.props.subscribers,
+      fields: null || this.props.fields
     };
   }
 
