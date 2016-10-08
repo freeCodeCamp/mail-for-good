@@ -5,6 +5,7 @@ import {
   REQUEST_GET_LISTS, COMPLETE_GET_LISTS,
   REQUEST_GET_LIST_SUBSCRIBERS, COMPLETE_GET_LIST_SUBSCRIBERS
 } from '../constants/actionTypes';
+import { notify } from '../actions/notificationActions';
 
 export function requestAddSubscribers() {
   return { type: REQUEST_ADD_SUBSCRIBERS };
@@ -41,8 +42,8 @@ export function getListSubscribers(listId) {
         dispatch(completeGetListSubscribers(response.data.subscribers));
       })
       .catch(response => {
-        console.log("broke it");
-        console.log(response);
+        dispatch(completeGetListSubscribers([]));
+        dispatch(notify({ message: response.message }));
       })
   }
 }
