@@ -13,6 +13,10 @@ function mapStateToProps(state) {
 
 @connect(mapStateToProps, { getCampaigns })
 export default class ManageCampaigns extends Component {
+  constructor() {
+    super();
+    this.deleteRows = this.deleteRows.bind(this);
+  }
 
   static propTypes = {
     getCampaigns: PropTypes.func.isRequired,
@@ -25,6 +29,10 @@ export default class ManageCampaigns extends Component {
     if (!this.props.campaigns.length) {
       this.props.getCampaigns();
     }
+  }
+
+  deleteRows(rows) {
+    
   }
 
   render() {
@@ -45,7 +53,7 @@ export default class ManageCampaigns extends Component {
             <div className="box-body">
               {/* Need to improve this in due time */}
 
-              <ManageCampaignsTable data={this.props.campaigns} />
+              <ManageCampaignsTable data={this.props.campaigns} deleteRows={this.deleteRows} />
 
               {this.props.isGetting && <div className="overlay">
                 <FontAwesome name="refresh" spin/>

@@ -5,19 +5,20 @@ import moment from 'moment';
 
 // Ref: https://allenfang.github.io/react-bootstrap-table/docs.html
 const ManageCampaignsTable = (props) => {
-  const { data } = props;
+  const { data, deleteRows } = props;
 
   const selectRowProp = {
     mode: "checkbox",
-    bgColor: "rgb(176, 224, 230)",
-    onSelect: campaignId => { // This fires on clicking a row. TODO: Needs to go to another route with the format /:[campaign-name-slug] where users can manage (edit, send, schedule, delete) the campaign
-      // NOTE: campaignId is the primary key of a campaign instance
-    }
+    bgColor: "rgb(176, 224, 230)"
   };
 
   const options = {
+    clearSearch: true,
+    onRowClick: campaignId => { // This fires on clicking a row. TODO: Needs to go to another route with the format /:[campaign-name-slug] where users can manage (edit, send, schedule, delete) the campaign
+      // NOTE: campaignId is the primary key of a campaign instance
+    },
     afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
-      console.log(rows)
+      deleteRows(rows);
     },
     handleConfirmDeleteRow: next => {next()} // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
   };
@@ -47,7 +48,8 @@ const ManageCampaignsTable = (props) => {
 };
 
 ManageCampaignsTable.propTypes = {
-
+  data: PropTypes.array.isRequired,
+  deleteRows: PropTypes.func.isRequired
 };
 
 export default ManageCampaignsTable;
