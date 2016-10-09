@@ -1,14 +1,18 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
-import { getCampaigns } from '../../actions/campaignActions';
+import { getCampaigns, postSendCampaign } from '../../actions/campaignActions';
 
 function mapStateToProps(state) {
   // State reducer @ state.manageCampaign
-  return { campaigns: state.manageCampaign.campaigns, isGetting: state.manageCampaign.isGetting };
+  return {
+    campaigns: state.manageCampaign.campaigns,
+    isGetting: state.manageCampaign.isGetting,
+    isPosting: state.sendCampaign.isPosting
+  };
 }
 
-@connect(mapStateToProps, { getCampaigns })
+@connect(mapStateToProps, { getCampaigns, postSendCampaign })
 export default class CampaignView extends Component {
   constructor() {
     super();
@@ -18,7 +22,9 @@ export default class CampaignView extends Component {
   static PropTypes = {
     getCampaigns: PropTypes.func.isRequired,
     campaigns: PropTypes.array.isRequired,
-    isGetting: PropTypes.bool.isRequired
+    isGetting: PropTypes.bool.isRequired,
+    sendCampaign: PropTypes.func.isRequired,
+    isPosting: PropTypes.bool.isRequired
   }
 
   state = {
@@ -52,6 +58,7 @@ export default class CampaignView extends Component {
 
   sendCampaign() {
     // Send id of campaign row to server for execution @ this.state.thisCampaign.id
+    this.props.postSendCampaign();
   }
 
   render() {
