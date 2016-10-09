@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 
@@ -26,6 +25,10 @@ export default class ManageCampaigns extends Component {
     isGetting: PropTypes.bool.isRequired
   }
 
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
+
   componentDidMount() {
     // Update campaigns only if we need to
     if (!this.props.campaigns.length) {
@@ -39,7 +42,7 @@ export default class ManageCampaigns extends Component {
 
   getCampaignView(row) {
     // Send user to the campaign view container
-    browserHistory.push(`campaigns/manage/${row.slug}`);
+    this.context.router.push(`/campaigns/manage/${row.slug}`);
   }
 
   render() {
