@@ -49,6 +49,7 @@
     "jQuery": "^1.7.4",
     "jquery": "^3.1.0",
     "lodash": "^4.15.0",
+    "moment": "^2.15.1",
     "multer": "^1.2.0",
     "nodemailer": "^2.6.0",
     "nodemailer-ses-transport": "^1.4.0",
