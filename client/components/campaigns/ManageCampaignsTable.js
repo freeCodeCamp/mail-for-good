@@ -29,7 +29,7 @@ const ManageCampaignsTable = (props) => {
     return moment(cell).format('lll');
   };
 
-  // ID will be used as the rowKey, but the column itself is hidden as it has no value
+  // ID will be used as the rowKey, but the column itself is hidden as it has no value. Slugs are also hidden.
   return (
     <BootstrapTable data={data}
       pagination={true}
@@ -41,7 +41,8 @@ const ManageCampaignsTable = (props) => {
       searchPlaceholder="Filter campaigns"
       clearSearch={true}>
 
-      <TableHeaderColumn dataField="id" dataAlign="center" hidden={true} isKey={true}>Id</TableHeaderColumn>
+      <TableHeaderColumn dataField="id" hidden={true} isKey={true}>Id</TableHeaderColumn>
+      <TableHeaderColumn dataField="slug" hidden={true}>Slug</TableHeaderColumn>
       <TableHeaderColumn dataField="name" dataAlign="center" dataSort={true}>Name</TableHeaderColumn>
       <TableHeaderColumn dataAlign="center" width="300">Tags (WIP)</TableHeaderColumn>
       <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Created</TableHeaderColumn>

@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
-import slug from 'slug';
 
 import ManageCampaignsTable from '../../components/campaigns/ManageCampaignsTable';
 
@@ -40,8 +39,7 @@ export default class ManageCampaigns extends Component {
 
   getCampaignView(row) {
     // Send user to the campaign view container
-    const urlSlug = slug(row.name);
-    browserHistory.push(`campaigns/manage/${urlSlug}`);
+    browserHistory.push(`campaigns/manage/${row.slug}`);
   }
 
   render() {

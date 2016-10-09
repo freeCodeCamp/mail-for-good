@@ -40,6 +40,8 @@ export function postCreateCampaign(form) {
     xhr.onload = () => {
       // Convert response from JSON
       dispatch(completePostCreateCampaign());
+      // Update campaigns so that the user can see the new campaign under manage campaigns
+      dispatch(getCampaigns());
     };
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(form);

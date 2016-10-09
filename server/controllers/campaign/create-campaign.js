@@ -1,4 +1,5 @@
 const db = require('../../models');
+const slug = require('slug');
 
 module.exports = (req, res) => {
   /*
@@ -39,7 +40,8 @@ module.exports = (req, res) => {
         defaults: {
           name: req.body.campaignName, // Repeating these fields to make it clear that this property marks the new row's fields
           userId: req.user.id,
-          listId: valuedFromValidation.listId
+          listId: valuedFromValidation.listId,
+          slug: slug(req.body.campaignName)
         }
       }).then((instance) => {
         if (instance[0].$options.isNewRecord) {
