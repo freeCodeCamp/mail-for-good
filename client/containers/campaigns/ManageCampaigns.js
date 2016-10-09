@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 
+import ManageCampaignsTable from '../../components/campaigns/ManageCampaignsTable';
+
 import { getCampaigns } from '../../actions/campaignActions';
 
 function mapStateToProps(state) {
@@ -43,13 +45,7 @@ export default class ManageCampaigns extends Component {
             <div className="box-body">
               {/* Need to improve this in due time */}
 
-              <ol>
-                {this.props.campaigns.map(campaign => {
-                  return (
-                    <li>{`List: "${campaign.name}" # Created at ${campaign.createdAt} # Last updated at ${campaign.updatedAt}`}</li>
-                  );
-                })}
-              </ol>
+              <ManageCampaignsTable data={this.props.campaigns} />
 
               {this.props.isGetting && <div className="overlay">
                 <FontAwesome name="refresh" spin/>
@@ -58,6 +54,6 @@ export default class ManageCampaigns extends Component {
           </div>
         </section>
       </div>
-    )
+    );
   }
 }
