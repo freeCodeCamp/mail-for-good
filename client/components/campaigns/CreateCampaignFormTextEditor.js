@@ -3,7 +3,7 @@ import RichTextEditor from 'react-rte';
 
 // Also see ref for Draft JS https://facebook.github.io/draft-js/docs/api-reference-editor.html#content
 export default class CreateCampaignForm extends Component {
-  static PropTypes = {
+  static propTypes = {
     input: {
       onChange: PropTypes.func.isRequired
     }

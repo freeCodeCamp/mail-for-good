@@ -5,7 +5,7 @@ import moment from 'moment';
 
 // Ref: https://allenfang.github.io/react-bootstrap-table/docs.html
 const ManageCampaignsTable = (props) => {
-  const { data, deleteRows } = props;
+  const { data, deleteRows, getCampaignView } = props;
 
   const selectRowProp = {
     mode: "checkbox",
@@ -15,8 +15,9 @@ const ManageCampaignsTable = (props) => {
   const options = {
     clearSearch: true,
     noDataText: 'You do not have any campaigns linked with your account',
-    onRowClick: campaignId => { // This fires on clicking a row. TODO: Needs to go to another route with the format /:[campaign-name-slug] where users can manage (edit, send, schedule, delete) the campaign
-      // NOTE: campaignId is the primary key of a campaign instance
+    onRowClick: row => { // This fires on clicking a row. TODO: Needs to go to another route with the format /:[campaign-name-slug] where users can manage (edit, send, schedule, delete) the campaign
+      // NOTE: Row is an object where keys are data fields
+      getCampaignView(row);
     },
     afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
       deleteRows(rows);
@@ -51,7 +52,8 @@ const ManageCampaignsTable = (props) => {
 
 ManageCampaignsTable.propTypes = {
   data: PropTypes.array.isRequired,
-  deleteRows: PropTypes.func.isRequired
+  deleteRows: PropTypes.func.isRequired,
+  getCampaignView: PropTypes.func.isRequired
 };
 
 export default ManageCampaignsTable;

@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
+import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
+import slug from 'slug';
 
 import ManageCampaignsTable from '../../components/campaigns/ManageCampaignsTable';
 
@@ -16,6 +18,7 @@ export default class ManageCampaigns extends Component {
   constructor() {
     super();
     this.deleteRows = this.deleteRows.bind(this);
+    this.getCampaignView = this.getCampaignView.bind(this);
   }
 
   static propTypes = {
@@ -32,7 +35,13 @@ export default class ManageCampaigns extends Component {
   }
 
   deleteRows(rows) {
-    
+
+  }
+
+  getCampaignView(row) {
+    // Send user to the campaign view container
+    const urlSlug = slug(row.name);
+    browserHistory.push(`campaigns/manage/${urlSlug}`);
   }
 
   render() {
@@ -51,9 +60,8 @@ export default class ManageCampaigns extends Component {
             </div>
 
             <div className="box-body">
-              {/* Need to improve this in due time */}
 
-              <ManageCampaignsTable data={this.props.campaigns} deleteRows={this.deleteRows} />
+              <ManageCampaignsTable data={this.props.campaigns} deleteRows={this.deleteRows} getCampaignView={this.getCampaignView} />
 
               {this.props.isGetting && <div className="overlay">
                 <FontAwesome name="refresh" spin/>
