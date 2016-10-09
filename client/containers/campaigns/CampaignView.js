@@ -58,7 +58,7 @@ export default class CampaignView extends Component {
 
   sendCampaign() {
     // Send id of campaign row to server for execution @ this.state.thisCampaign.id
-    this.props.postSendCampaign();
+    this.props.postSendCampaign(JSON.stringify(this.state.thisCampaign));
   }
 
   render() {
