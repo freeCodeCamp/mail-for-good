@@ -25,7 +25,7 @@ export default (
         <Route path="create" component={CreateCampaign} />
         <Route path="manage">
           <IndexRoute component={ManageCampaigns} />
-          <Route path=":name" component={CampaignView} />
+          <Route path=":slug" component={CampaignView} />
         </Route>
     </Route>
 
