@@ -14,6 +14,7 @@ const ManageCampaignsTable = (props) => {
 
   const options = {
     clearSearch: true,
+    noDataText: 'You do not have any campaigns linked with your account',
     onRowClick: campaignId => { // This fires on clicking a row. TODO: Needs to go to another route with the format /:[campaign-name-slug] where users can manage (edit, send, schedule, delete) the campaign
       // NOTE: campaignId is the primary key of a campaign instance
     },
@@ -39,10 +40,11 @@ const ManageCampaignsTable = (props) => {
       searchPlaceholder="Filter campaigns"
       clearSearch={true}>
 
-      <TableHeaderColumn dataField="id" hidden={true} isKey={true}>Id</TableHeaderColumn>
+      <TableHeaderColumn dataField="id" dataAlign="center" hidden={true} isKey={true}>Id</TableHeaderColumn>
       <TableHeaderColumn dataField="name" dataAlign="center" dataSort={true}>Name</TableHeaderColumn>
-      <TableHeaderColumn dataField="createdAt" dataSort={true} dataFormat={dateFormatter}>Created</TableHeaderColumn>
-      <TableHeaderColumn dataField="updatedAt" dataSort={true} dataFormat={dateFormatter}>Updated</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" width="300">Tags (WIP)</TableHeaderColumn>
+      <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Created</TableHeaderColumn>
+      <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Updated</TableHeaderColumn>
     </BootstrapTable>
   );
 };
