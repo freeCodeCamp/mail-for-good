@@ -7,7 +7,7 @@ export default class ManageSubscribersTable extends React.Component {
     super(props);
 
     this.state = {
-      data: this.props.data
+      data: this.props.data || []
     };
   }
 
@@ -30,7 +30,7 @@ export default class ManageSubscribersTable extends React.Component {
 
   render() {
     return (
-      <BootstrapTable data={this.props.data}
+      <BootstrapTable data={this.state.data}
                       pagination={true}
                       hover={true}>
         <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
