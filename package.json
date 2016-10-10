@@ -24,7 +24,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel-node tools/buildServer.js",
     "email:server": "node server/email/test-internal",
-    "email:test:multiple": "RUN_ALONE=true node server/email/test-internal/test-multiple.js"
+    "email:test:multiple": "RUN_ALONE=true node server/controllers/email/test-internal/test-multiple.js"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,7 @@
   "dependencies": {
     "admin-lte": "^2.3.6",
     "async": "^2.0.1",
+    "aws-sdk": "^2.6.7",
     "body-parser": "^1.15.2",
     "bootstrap": "^3.3.7",
     "csv": "^1.1.0",

@@ -1,10 +1,8 @@
 const db = require('../../models');
+const email = require('./email');
 
 module.exports = (req, res) => {
-  /*
-  Req.body has fornat:
-  { id: 1 }
-  */
+
   // If req.body.id was not supplied or is not a number, cancel
   if (!req.body.id || typeof req.body.id !== 'number') {
     res.status(400).send();
@@ -15,10 +13,16 @@ module.exports = (req, res) => {
     const userId = req.user.id;
     const campaignId = req.body.id;
 
-    // Campaign belongs to user?
-    yield campaignBelongsToUser(userId, campaignId);
-    
-    console.log('belongstouser');
+    // NOTE: Current assumption is that the user is using Amazon SES. Can modularise and change this if necessary.
+
+    // 1. Confirm user has set their keys & retrieve them
+    const [accessKey, serviceKey] = yield getAmazonKeys(userId);
+
+    // 2. Confirm the campaign id belongs to the user and retrieve the associated listId
+    const campaignInfo = yield campaignBelongsToUser(userId, campaignId);
+
+    // 3. Send the campaign
+    yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, serviceKey);
 
   }
 
@@ -36,10 +40,39 @@ module.exports = (req, res) => {
       if (!campaignInstance) {
         res.status(401).send();
       } else {
-        generator.next();
+        const listId = campaignInstance.getDataValue['listId'];
+        const fromEmail = campaignInstance.getDataValue['fromEmail'];
+
+        generator.next({listId, fromEmail});
       }
     }).catch(err => {
       throw err;
     });
   }
+
+  function getAmazonKeys(userId) {
+    db.setting.findOne({
+      where: {
+        userId: userId
+      }
+    }).then(settingInstance => {
+      if (!settingInstance) {
+        // This should never happen
+        res.status(500).send();
+      } else {
+        const accessKey = settingInstance.getDataValue['amazonSimpleEmailServiceAccessKey'];
+        const secretKey = settingInstance.getDataValue['amazonSimpleEmailServiceSecretKey'];
+
+        // If either key is blank, the user needs to set their settings
+        if (accessKey === '' || secretKey === '') {
+          res.status(400).send({message:'Please set your Amazon SES keys'});
+        } else {
+          generator.next([accessKey, secretKey]);
+        }
+      }
+    }).catch(err => {
+      throw err;
+    });
+  }
+
 }
