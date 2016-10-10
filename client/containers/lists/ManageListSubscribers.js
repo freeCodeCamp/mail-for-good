@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 
-import SubscribersTable from '../../components/lists/SubscribersTable';
+import ManageSubscribersTable from '../../components/lists/ManageSubscribersTable';
 import { getListSubscribers } from '../../actions/listActions';
 
 function mapStateToProps(state) {
@@ -43,20 +43,20 @@ export default class ManageListSubscribers extends Component {
     return (
       <div>
         <div className="content-header">
-          <h1>Manage List:
-            <small></small>
+          <h1>Manage List Subscribers: listname
+            <small>alksjd</small>
           </h1>
         </div>
 
         <section className="content">
           <div className="box">
             <div className="box-header">
-              <h3 className="box-title">Your lists</h3>
+              <h3 className="box-title">Subscribers</h3>
             </div>
 
             <div className="box-body">
               {!!this.props.subscribers.length && 
-                <SubscribersTable subscribers={this.state.subscribers} fields={['email']} />
+                <ManageSubscribersTable data={this.state.subscribers} />
               }
               {this.props.isGetting && <div className="overlay">
                 <FontAwesome name="refresh" spin/>
