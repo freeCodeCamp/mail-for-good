@@ -4,6 +4,7 @@ import { Row, Col } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 
 import { getLists } from '../../actions/listActions';
+import ManageListsTable from '../../components/lists/ManageListsTable';
 
 function mapStateToProps(state) {
   // State reducer @ state.manageList
@@ -42,16 +43,8 @@ export default class ManageList extends Component {
             </div>
 
             <div className="box-body">
-              {/* Need to improve this in due time */}
-
-              <ol>
-                {this.props.lists.map(list => {
-                  return (
-                    <li>{`List: "${list.name}" # Created at ${list.createdAt} # Last updated at ${list.updatedAt}`}</li>
-                  );
-                })}
-              </ol>
-
+              <ManageListsTable data={this.props.lists} />
+              
               {this.props.isGetting && <div className="overlay">
                 <FontAwesome name="refresh" spin/>
               </div>}
