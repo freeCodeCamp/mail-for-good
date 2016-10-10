@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 
+import ManageCampaignsTable from '../../components/campaigns/ManageCampaignsTable';
+
 import { getCampaigns } from '../../actions/campaignActions';
 
 function mapStateToProps(state) {
@@ -11,6 +13,11 @@ function mapStateToProps(state) {
 
 @connect(mapStateToProps, { getCampaigns })
 export default class ManageCampaigns extends Component {
+  constructor() {
+    super();
+    this.deleteRows = this.deleteRows.bind(this);
+    this.getCampaignView = this.getCampaignView.bind(this);
+  }
 
   static propTypes = {
     getCampaigns: PropTypes.func.isRequired,
@@ -18,11 +25,24 @@ export default class ManageCampaigns extends Component {
     isGetting: PropTypes.bool.isRequired
   }
 
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
+
   componentDidMount() {
     // Update campaigns only if we need to
     if (!this.props.campaigns.length) {
       this.props.getCampaigns();
     }
+  }
+
+  deleteRows(rows) {
+
+  }
+
+  getCampaignView(row) {
+    // Send user to the campaign view container
+    this.context.router.push(`/campaigns/manage/${row.slug}`);
   }
 
   render() {
@@ -41,15 +61,8 @@ export default class ManageCampaigns extends Component {
             </div>
 
             <div className="box-body">
-              {/* Need to improve this in due time */}
 
-              <ol>
-                {this.props.campaigns.map(campaign => {
-                  return (
-                    <li>{`List: "${campaign.name}" # Created at ${campaign.createdAt} # Last updated at ${campaign.updatedAt}`}</li>
-                  );
-                })}
-              </ol>
+              <ManageCampaignsTable data={this.props.campaigns} deleteRows={this.deleteRows} getCampaignView={this.getCampaignView} />
 
               {this.props.isGetting && <div className="overlay">
                 <FontAwesome name="refresh" spin/>
@@ -58,6 +71,6 @@ export default class ManageCampaigns extends Component {
           </div>
         </section>
       </div>
-    )
+    );
   }
 }

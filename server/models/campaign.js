@@ -4,7 +4,8 @@ module.exports = function(sequelize, DataTypes) {
     name: DataTypes.STRING,
     subject: DataTypes.STRING,
     fromName: DataTypes.STRING,
-    fromEmail: DataTypes.STRING
+    fromEmail: DataTypes.STRING,
+    slug: DataTypes.STRING
   }, {
     classMethods: {
       associate: function(models) {

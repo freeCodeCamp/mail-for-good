@@ -6,6 +6,9 @@ const initialState = {
     campaigns: [], // Array of objects for campaigns
     isGetting: false // Getting campaigns?
   },
+  sendCampaign: {
+    isPosting: false
+  },
   createList: {
     list: [],
     isPosting: false // Posting a file?

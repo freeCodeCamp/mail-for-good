@@ -5,6 +5,7 @@ const auth = require('./auth');
 
 const createCampaign = require('../controllers/campaign/create-campaign');
 const getCampaigns = require('../controllers/campaign/get-campaigns');
+const sendCampaign = require('../controllers/campaign/send-campaign');
 
 const addSubscribers = require('../controllers/list/add-subscribers');
 const importCSV = require('../controllers/list/import-csv');
@@ -41,6 +42,10 @@ module.exports = (app, passport) => {
   // Create new campaign
   app.post('/api/campaign', isAuth, parseJson, (req, res) => {
     createCampaign(req, res);
+  });
+
+  app.post('/api/campaign/send', isAuth, parseJson, (req, res) => {
+    sendCampaign(req, res);
   });
 
   /* Lists */

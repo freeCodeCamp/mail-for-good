@@ -58,7 +58,7 @@ const CreateCampaignForm = (props) => {
       <hr/>
 
       <h3>Campaign details</h3>
-      <div>
+      <div> {/* TODO: This needs to be validated via regex. Doesn't need to be a slug but must resolve to a unique slug so there's no possibility of conflict. */}
         <label>Campaign Name -
           <small>the name of this campaign</small>
         </label>

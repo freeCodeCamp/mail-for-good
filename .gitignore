@@ -64,3 +64,8 @@ dist
 
 # Uploads
 uploads
+
+# Folders for sequelize-cli
+migrations
+seed
+seeders
