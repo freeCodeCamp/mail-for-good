@@ -10,6 +10,7 @@ const sendCampaign = require('../controllers/campaign/send-campaign');
 const addSubscribers = require('../controllers/list/add-subscribers');
 const importCSV = require('../controllers/list/import-csv');
 const getLists = require('../controllers/list/get-lists');
+const getListSubscribers = require('../controllers/list/get-list-subscribers');
 
 const changeSettings = require('../controllers/changesettings');
 
@@ -54,6 +55,11 @@ module.exports = (app, passport) => {
   // Send user their lists
   app.get('/api/list/manage', isAuth, (req, res) => {
     getLists(req, res);
+  });
+  
+  // Get the subscribers of a specified list
+  app.get('/api/list/subscribers', isAuth, (req, res) => {
+    getListSubscribers(req, res);
   });
 
   /* POST */

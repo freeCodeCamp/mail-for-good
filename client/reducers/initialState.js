@@ -17,6 +17,11 @@ const initialState = {
     lists: [], // Array of objects for lists
     isGetting: false // Getting lists?
   },
+  manageListSubscribers: {
+    listId: null,
+    subscribers: [],
+    isGetting: false
+  },
   settings: {
     loading: false
   },
