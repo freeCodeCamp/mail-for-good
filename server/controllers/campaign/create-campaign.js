@@ -8,7 +8,7 @@ module.exports = (req, res) => {
   */
 
   // Will mutate the below object to extract info we need during validation checks
-  const valuedFromValidation = {};
+  const valueFromValidation = {};
 
   // Validate that this list belongs to the user
   const validateListBelongsToUser = db.list.findOne({
@@ -18,7 +18,7 @@ module.exports = (req, res) => {
     }
   }).then(instance => { // The requested list exists & it belongs to the user
     if (instance) {
-      valuedFromValidation.listId = instance.dataValues.id;
+      valueFromValidation.listId = instance.dataValues.id;
       return true;
     } else {
       return false;
@@ -39,8 +39,11 @@ module.exports = (req, res) => {
         },
         defaults: {
           name: req.body.campaignName, // Repeating these fields to make it clear that this property marks the new row's fields
+          fromName: req.body.fromName,
+          fromEmail: req.body.fromEmail,
+          subject: req.body.subject,
           userId: req.user.id,
-          listId: valuedFromValidation.listId,
+          listId: valueFromValidation.listId,
           slug: slug(req.body.campaignName)
         }
       }).then((instance) => {

@@ -40,8 +40,10 @@ module.exports = (req, res) => {
       if (!campaignInstance) {
         res.status(401).send();
       } else {
-        const listId = campaignInstance.getDataValue['listId'];
-        const fromEmail = campaignInstance.getDataValue['fromEmail'];
+        campaignObject = campaignInstance.get({ plain:true });
+        console.log(campaignObject);
+        const listId = campaignObject.listId;
+        const fromEmail = campaignObject.fromEmail;
 
         generator.next({listId, fromEmail});
       }

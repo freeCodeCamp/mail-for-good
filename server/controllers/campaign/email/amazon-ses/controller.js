@@ -16,6 +16,8 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, serviceKey
   let totalListSubscribers = 0; // Updated later
   let offset = 0;
 
+  console.log(campaignInfo)
+
   const returnList = () => {
     ListSubscriber.findAll({
       where: {
@@ -26,7 +28,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, serviceKey
       raw: true
     }).then(listRaw => {
       offset += limit;
-      q.push([listRaw], err => {
+      q.push(listRaw, err => {
         throw err;
       });
     }).catch(err => {
@@ -35,9 +37,9 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, serviceKey
   }
 
   const q = queue((task, done) => {
-
+    console.log(task);
     const mailOptions = {
-      from: `<${campaignInfo.email}>`,
+      from: `<${campaignInfo.fromEmail}>`,
       to: `${task.email}`,
       subject: 'Hello from nonprofit-email-service',
       text: 'This is a test email from nonprofit-email-service!'

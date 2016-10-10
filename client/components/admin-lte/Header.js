@@ -5,7 +5,7 @@ const Header = (props) => { // eslint-disable-line no-unused-vars
     <header className="main-header">
       <a className="logo">
         <span className="logo-mini">
-          <strong>A</strong>LT</span>
+          <strong>E</strong>S</span>
         <span className="logo-lg">
           <strong>Email</strong>Service</span>
       </a>
