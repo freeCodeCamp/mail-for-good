@@ -7,7 +7,7 @@ class SidebarTreeview extends Component {
     return (
       <li className="treeview">
         <a href="#">
-          <i className={`fa ${this.props.icon}`}/> {this.props.name}
+          <i className={`fa ${this.props.icon}`}/><span>{this.props.name}</span>
         </a>
         <ul className="treeview-menu">
           {this.props.children}

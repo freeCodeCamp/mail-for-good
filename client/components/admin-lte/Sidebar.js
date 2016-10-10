@@ -11,7 +11,7 @@ const Sidebar = (props) => { // eslint-disable-line no-unused-vars
           <div className="pull-left image"><img className="img-circle" src="https://placeholdit.imgix.net/~text?txtsize=15&txt=160%C3%97160&w=160&h=160" alt="User Image"/></div>
           <div className="pull-left info">
             <p>Test user</p>
-            <a>Online</a>
+            <a><i className="fa fa-circle text-success" />Online</a>
           </div>
         </div>
 

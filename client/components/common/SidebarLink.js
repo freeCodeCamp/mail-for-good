@@ -10,7 +10,7 @@ class SidebarLink extends Component {
         ? 'active'
         : ''}>
         <Link {...this.props}>
-          <i className={`fa ${this.props.icon || 'fa-circle-o'}`}/>{this.props.children}
+          <i className={`fa ${this.props.icon || 'fa-circle-o'}`}/><span>{this.props.children}</span>
         </Link>
       </li>
     );
