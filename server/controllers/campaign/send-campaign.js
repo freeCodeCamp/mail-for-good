@@ -16,13 +16,16 @@ module.exports = (req, res) => {
     // NOTE: Current assumption is that the user is using Amazon SES. Can modularise and change this if necessary.
 
     // 1. Confirm user has set their keys & retrieve them
-    const [accessKey, serviceKey] = yield getAmazonKeys(userId);
+    const { accessKey, secretKey } = yield getAmazonKeys(userId);
 
     // 2. Confirm the campaign id belongs to the user and retrieve the associated listId
     const campaignInfo = yield campaignBelongsToUser(userId, campaignId);
 
-    // 3. Send the campaign
-    yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, serviceKey);
+    // 3. At this stage, we've confirmed that the user's request is authentic. Respond that the request was successful.
+    res.send({ message: 'Your emails are being sent! We\'ll notify you when this is done.' })
+
+    // 4. Send the campaign
+    yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey);
 
   }
 
@@ -41,11 +44,10 @@ module.exports = (req, res) => {
         res.status(401).send();
       } else {
         campaignObject = campaignInstance.get({ plain:true });
-        console.log(campaignObject);
         const listId = campaignObject.listId;
         const fromEmail = campaignObject.fromEmail;
 
-        generator.next({listId, fromEmail});
+        generator.next({ listId, fromEmail });
       }
     }).catch(err => {
       throw err;
@@ -59,17 +61,19 @@ module.exports = (req, res) => {
       }
     }).then(settingInstance => {
       if (!settingInstance) {
-        // This should never happen
+        // This should never happen as settings are created on account creation
         res.status(500).send();
       } else {
-        const accessKey = settingInstance.getDataValue['amazonSimpleEmailServiceAccessKey'];
-        const secretKey = settingInstance.getDataValue['amazonSimpleEmailServiceSecretKey'];
+        settingObject = settingInstance.get({ plain:true });
+
+        const accessKey = settingObject.amazonSimpleEmailServiceAccessKey;
+        const secretKey = settingObject.amazonSimpleEmailServiceSecretKey;
 
         // If either key is blank, the user needs to set their settings
         if (accessKey === '' || secretKey === '') {
-          res.status(400).send({message:'Please set your Amazon SES keys'});
+          res.status(400).send({message:'Please provide your details for your Amazon account under "Settings".'});
         } else {
-          generator.next([accessKey, secretKey]);
+          generator.next({ accessKey, secretKey });
         }
       }
     }).catch(err => {

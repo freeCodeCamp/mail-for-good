@@ -13,29 +13,43 @@ statusCode: 400,
 retryable: false,
 retryDelay: 82.08305956551291 }
 
+https://docs.aws.amazon.com/ses/latest/DeveloperGuide/mailbox-simulator.html
+success@simulator.amazonses.com (Successful email)
+bounce@simulator.amazonses.com (Soft bounce)
+ooto@simulator.amazonses.com (Out of office response from ISP)
+complaint@simulator.amazonses.com (Complaint from ISP)
+suppressionlist@simulator.amazonses.com (Hard bounce as target email is on Amazon's suppression list)
+
+API endpoints
+US East (N. Virginia)	us-east-1	email.us-east-1.amazonaws.com	email-smtp.us-east-1.amazonaws.com	Email sending
+US West (Oregon)	us-west-2	email.us-west-2.amazonaws.com	email-smtp.us-west-2.amazonaws.com	Email sending
+EU (Ireland)	eu-west-1	email.eu-west-1.amazonaws.com	email-smtp.eu-west-1.amazonaws.com	Email sending
+US East (N. Virginia)	us-east-1	N/A	inbound-smtp.us-east-1.amazonaws.com	Email receiving
+US West (Oregon)	us-west-2	N/A	inbound-smtp.us-west-2.amazonaws.com	Email receiving
+EU (Ireland)	eu-west-1	N/A	inbound-smtp.eu-west-1.amazonaws.com	Email receiving
+
 */
 
-module.exports = (generator, ListSubscriber, campaignInfo, accessKey, serviceKey) => {
-  // NOTE: This file streams data from the db to the relay server
-  const options = {
-    accessKeyId: accessKey,
-    secretAccessKey: serviceKey,
-    region: 'us-west-2',
-    rateLimit: 1 // Emails per second
-  };
-  const transporter = nodemailer.createTransport(sesTransport(options));
-  const concurrency = 1;
-  const limit = 1;
-  let totalListSubscribers = 0; // Updated later
+
+module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey) => {
+
+  const limit = 1; // The number of emails to pull from the db at once. Dte
+  let concurrency = 1;
+  let totalListSubscribers = 0; // R
   let offset = 0;
 
-  console.log(campaignInfo)
+  const options = {
+    accessKeyId: accessKey,
+    secretAccessKey: secretKey,
+    region: 'eu-west-1',
+    rateLimit: concurrency // Emails per second
+  };
+  const transporter = nodemailer.createTransport(sesTransport(options));
 
   const q = queue((task, done) => {
-    console.log(task);
     const mailOptions = {
       from: `<${campaignInfo.fromEmail}>`,
-      to: 'success@simulator.amazonses.com' || `${task.email}`,
+      to: `${task.email}`,
       subject: 'Hello from nonprofit-email-service',
       text: 'This is a test email from nonprofit-email-service!'
       //html: '<b>Implementation of HTML is TBA</b>'
@@ -43,11 +57,9 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, serviceKey
 
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
-        return console.log(err);
+        throw err;
       }
-      console.log(`Message sent to ${task.email}!`);
       if (totalListSubscribers !== offset) {
-        console.log(totalListSubscribers);
         returnList(); // Get a new listSubscriber
         done(); // Accept new email from pool
       }
@@ -69,7 +81,6 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, serviceKey
       raw: true
     }).then(listRaw => {
       offset += limit;
-      console.log(listRaw);
       q.push(listRaw, err => {
         if (err) throw err;
       });
@@ -84,7 +95,6 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, serviceKey
     }
   }).then(total => {
     totalListSubscribers = total;
-    console.log(total, totalListSubscribers);
     // Start the process
     returnList();
   });
