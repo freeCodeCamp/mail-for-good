@@ -43,49 +43,58 @@ module.exports = (req, res) => {
     return;
   }
 
-  const listPromise = new Promise((resolve, reject) => {
-    db.list.findOrCreate({
-      where: {
-        name: listName,
-        userId: userPrimaryKey
-      }
-    }).then(listInstance => {
-      resolve(listInstance);
-    }).catch(err => {
-      throw err;
-      reject();
-    });
+  const validateListBelongsToUser = db.list.findOrCreate({
+    where: {
+      name: listName,
+      userId: userPrimaryKey
+    }
+  }).then(listInstance => {
+    if (listInstance) {
+      return listInstance;
+    } else {
+      return false;
+    }
+  }, err => {
+    throw err;
   });
 
-  listPromise.then(listInstance => {
-    listInstance = listInstance[0]; // Each list is unique, so we can always grab the first index
-    
+  Promise.all([validateListBelongsToUser]).then(values => {
+    let [listInstance] = values; // Get variables from the values array
     const concurrency = 500; // Number of rows and upserts to handle concurrently. Arbitrary number.
+
+    listInstance = listInstance[0];
     console.log(listInstance);
     const listIsNew = listInstance.$options.isNewRecord;
     const listId = listInstance.dataValues.id;
 
     const q = queue((task, callback) => {
       // Where task has object format { header: field } - e.g. { email: bob@bobmail.com }
-      db.listsubscriber.upsert({email: task.email, listId: listId}).then(created => { // Where created = true if created, false if updated
-        callback();
+      console.log(task);
+      db.listsubscriber.upsert({ email: task.email, listId: listId })
+        .then(created => { // Where created = true if created, false if updated
+          callback();
       });
     }, concurrency);
 
     /* Config csv parser */
-    const parser = csv.parse({columns: true});
+    const parser = csv.parse({ columns: true, skip_empty_lines: true }); // Write object with headers as object keys, and skip empty rows
     const transformerOptions = {
       parallel: concurrency
     };
     /* ///////////////// */
 
     const transformer = csv.transform((row, callback) => {
-      // Push the row to function ref q. Callback when q invokes its own callback.
-      q.push([row], err => {
-        if (err)
-          throw err;
+      // If row has no email field (though it should), skip the line. Implicit conversion from both undefined & '' is assumed.
+      if (!row.email) {
         callback();
-      });
+      } else {
+        // Push the row to function ref q. Callback when q invokes its own callback.
+        q.push(row, err => {
+          if (err)
+            throw err;
+          callback();
+        });
+      }
     }, transformerOptions);
 
     transformer.on('error', err => {
@@ -94,19 +103,23 @@ module.exports = (req, res) => {
     });
 
     // Create read stream, parse then pipe to transformer to perform async operations. Finally, release data for garbage collection.
-    fs.createReadStream(`${path.resolve(req.file.path)}`).pipe(parser).pipe(transformer).on('data', () => {
-      // Do nothing with the data. Allow chunk to evaporate in write stream to prevent buffer overflow.
+    fs.createReadStream(`${path.resolve(req.file.path)}`)
+      .pipe(parser)
+      .pipe(transformer)
+      .on('data', () => {
+      // Do nothing with the data. Let it be garbage collected.
     }).on('end', () => {
       console.log('Upserts to listsubscribers complete ...');
 
-      // This needs to moved below. Inadequate solution for large files.
-      const message = listIsNew
-        ? `List: ${listName} - Successfully created`
-        : `List: ${listName} - Successfully updated`;
-      res.status(200).send({message: message});
+      // IDEA: Post success to a field in the user model called 'notifications' & push through websocket
     });
 
-    // Res.send will be moved here...
+    const message = listIsNew
+      ? `List: ${listName} - Successfully created`
+      : `List: ${listName} - Successfully updated`;
+    res.status(200).send({message: message});
 
+  }, err => {
+    throw err;
   });
 }
