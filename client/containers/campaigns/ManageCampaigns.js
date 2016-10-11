@@ -13,11 +13,6 @@ function mapStateToProps(state) {
 
 @connect(mapStateToProps, { getCampaigns })
 export default class ManageCampaigns extends Component {
-  constructor() {
-    super();
-    this.deleteRows = this.deleteRows.bind(this);
-    this.getCampaignView = this.getCampaignView.bind(this);
-  }
 
   static propTypes = {
     getCampaigns: PropTypes.func.isRequired,
@@ -27,6 +22,12 @@ export default class ManageCampaigns extends Component {
 
   static contextTypes = {
     router: PropTypes.object.isRequired
+  }
+
+  constructor() {
+    super();
+    this.deleteRows = this.deleteRows.bind(this);
+    this.getCampaignView = this.getCampaignView.bind(this);
   }
 
   componentDidMount() {
