@@ -11,6 +11,6 @@ module.exports = (req, res) => {
     ],
     raw: true
   }).then(instancesArray => {
-    res.status(200).send(instancesArray);
+    res.send(instancesArray);
   });
 }

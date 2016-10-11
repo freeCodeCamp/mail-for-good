@@ -48,7 +48,7 @@ module.exports = (req, res) => {
         }
       }).then((instance) => {
         if (instance[0].$options.isNewRecord) {
-          res.status(200).send({message: 'New campaign successfully created'});
+          res.send({message: 'New campaign successfully created'});
         } else {
           res.status(400).send(); // As before, form will be validated client side so no need for a response
         }
