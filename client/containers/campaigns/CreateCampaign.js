@@ -32,6 +32,12 @@ export default class CreateCampaign extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentWillReceiveProps(props) {
+    if (this.props.isPosting === true && props.isPosting === false) { // Fires when campaign has been successfully created
+
+    }
+  }
+
   componentDidMount() {
     // Update lists only if we need to
     if (!this.props.lists.length) {

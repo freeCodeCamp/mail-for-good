@@ -65,10 +65,13 @@ const CreateCampaignForm = (props) => {
 
   const lists = props.lists.map(x => x.name);
 
-  console.log(lists);
+  const resetFormAndSubmit = () => {
+    handleSubmit();
+    reset();
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={resetFormAndSubmit}>
       <h3>Select email type, relay server & list</h3>
       <div>
         <label>Select a List</label>
