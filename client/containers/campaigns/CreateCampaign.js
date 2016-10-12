@@ -2,27 +2,43 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import CreateCampaignForm from '../../components/campaigns/CreateCampaignForm';
 import { postCreateCampaign } from '../../actions/campaignActions';
+import { getLists } from '../../actions/listActions';
+import FontAwesome from 'react-fontawesome';
 
 function mapStateToProps(state) {
-  // State reducer @ state.form & state.createCampaign
+  // State reducer @ state.form & state.createCampaign & state.manageLists
   return {
     form: state.form.createCampaign,
-    isPosting: state.createCampaign.isPosting
+    isPosting: state.createCampaign.isPosting,
+    lists: state.manageList.lists,
+    isGetting: state.manageList.isGetting
   };
 }
 
-@connect(mapStateToProps, { postCreateCampaign })
+@connect(mapStateToProps, { postCreateCampaign, getLists })
 export default class CreateCampaign extends Component {
+
+  static propTypes = {
+    form: PropTypes.object,
+    isPosting: PropTypes.bool.isRequired,
+    postCreateCampaign: PropTypes.func.isRequired,
+    getLists: PropTypes.func.isRequired,
+    lists: PropTypes.array.isRequired,
+    isGetting: PropTypes.bool.isRequired
+  }
+
   constructor() {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  static propTypes = {
-    form: PropTypes.object, // Should really require this but there's no set up for initalising state atm (see http://redux-form.com/6.0.5/examples/initializeFromState/)
-    isPosting: PropTypes.bool.isRequired,
-    postCreateCampaign: PropTypes.func.isRequired
+  componentDidMount() {
+    // Update lists only if we need to
+    if (!this.props.lists.length) {
+      this.props.getLists();
+    }
   }
+
 
   handleSubmit() {
     // TODO: Validation both sync and serverside async for the form
@@ -39,10 +55,14 @@ export default class CreateCampaign extends Component {
         </div>
 
         <section className="content">
-          <div className="box">
+          <div className="box box-primary">
             <div className="box-body">
-              <CreateCampaignForm onSubmit={this.handleSubmit}/>
+              <CreateCampaignForm onSubmit={this.handleSubmit} lists={this.props.lists} />
             </div>
+
+            {this.props.isGetting && <div className="overlay">
+              <FontAwesome name="refresh" spin/>
+            </div>}
           </div>
         </section>
 

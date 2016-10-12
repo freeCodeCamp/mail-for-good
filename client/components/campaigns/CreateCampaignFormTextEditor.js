@@ -1,12 +1,11 @@
 import React, {Component, PropTypes} from 'react';
 import RichTextEditor from 'react-rte';
+import style from '../../styles/campaign-text-form.scss';
 
 // Also see ref for Draft JS https://facebook.github.io/draft-js/docs/api-reference-editor.html#content
 export default class CreateCampaignForm extends Component {
   static propTypes = {
-    input: {
-      onChange: PropTypes.func.isRequired
-    }
+    input: PropTypes.object
   }
 
   state = {
@@ -15,10 +14,16 @@ export default class CreateCampaignForm extends Component {
 
   onChange(value) {
     this.setState({value});
-    this.props.input.onChange(value.toString('markdown')); // Accepts 'html' or 'markdown' - Outputs text to these formats
+    this.props.input.onChange(value.toString('html'));
   }
 
   render() {
-    return <RichTextEditor value={this.state.value} onChange={this.onChange.bind(this)} placeholder="Enter your email body here" spellCheck={true}/>;
+    return <RichTextEditor
+      value={this.state.value}
+      onChange={this.onChange.bind(this)}
+      placeholder="Write your email"
+      spellCheck={true}
+      editorClassName="text-editor"
+      />;
   }
 }

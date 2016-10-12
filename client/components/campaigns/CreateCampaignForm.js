@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Field, reduxForm, propTypes} from 'redux-form';
-import {DropdownList, SelectList, Multiselect, Combobox} from 'react-widgets';
+import React from 'react';
+import { Field, reduxForm, propTypes } from 'redux-form';
+import { Combobox } from 'react-widgets';
 import 'react-widgets/dist/css/react-widgets.css';
 
 import TextEditor from './CreateCampaignFormTextEditor';
@@ -17,8 +17,8 @@ import TextEditor from './CreateCampaignFormTextEditor';
 // Ref react-widgets https://jquense.github.io/react-widgets/ (for examples see https://github.com/erikras/redux-form/blob/master/examples/react-widgets/src/ReactWidgetsForm.js)
 // Ref react-rte https://github.com/sstur/react-rte
 
-const renderCombobox = ({ input, ...rest }) => <Combobox {...input} {...rest} />;
-const renderSelectList = ({ input, ...rest }) => <SelectList {...input} onBlur={() => input.onBlur()} {...rest}/>;
+const renderCombobox = ({ input }) => <Combobox {...input} />;
+// const renderSelectList = ({ input, ...rest }) => <SelectList {...input} onBlur={() => input.onBlur()} {...rest}/>;
 
 /*
 Helper wrapper functions for react-widgets from the redux-form examples page. May be useful later.
@@ -34,21 +34,36 @@ const renderMultiselect = ({ input, ...rest }) =>
 const tempLists = ['aListBelongingToTheUser', 'anotherListBelongingToTheUser'];
 const tempTemplates = ['aTemplate', 'anotherTemplate'];
 
+const validate = values => {
+  const errors = {};
+  if (values.listName === '') {
+    errors.listName = 'Required';
+  }
+  if (values.campaignName === '') {
+    errors.campaignName = 'Required';
+  }
+  if (values.fromName === '') {
+    errors.fromName = 'Required';
+  }
+
+  return errors;
+};
+
 const CreateCampaignForm = (props) => {
-  const {handleSubmit, pristine, reset, submitting} = props;
+  const { handleSubmit, pristine, reset, submitting } = props;
 
   return (
     <form onSubmit={handleSubmit}>
       <h3>Select email type, relay server & list</h3>
-      <div>
+      {/*<div>
         <label>Send email as</label>
         <Field name="type" component={renderSelectList} data={['Plaintext', 'HTML']}/>
-      </div>
+      </div>*/}
 
-      <div>
+      {/*<div>
         <label>Relay server</label>
         <Field name="relayServer" component={renderSelectList} data={['Amazon SES']}/>
-      </div>
+      </div>*/}
 
       <div>
         <label>Select a List</label>
@@ -62,7 +77,7 @@ const CreateCampaignForm = (props) => {
         <label>Campaign Name -
           <small>the name of this campaign</small>
         </label>
-        <Field className="form-control" name="campaignName" component="input" type="text"/>
+        <Field className="form-control" name="campaignName" component="input" type="text" />
       </div>
 
       <div>
@@ -71,32 +86,32 @@ const CreateCampaignForm = (props) => {
             <i>Bob</i>
             {'<bob@bobmail.com>'}</small>
         </label>
-        <Field className="form-control" name="fromName" component="input"/>
+        <Field className="form-control" name="fromName" component="input" />
       </div>
 
       <div>
         <label>Email: from (email) -
           <small>ensure this email is authorised to send email to the relay server</small>
         </label>
-        <Field className="form-control" name="fromEmail" component="input"/>
+        <Field className="form-control" name="fromEmail" component="input" />
       </div>
 
       <hr/>
 
       <h3>Create email</h3>
-      <div>
+      {/*<div>
         <label>Import from template</label>
         <Field name="template" component={renderCombobox} data={tempTemplates} />
-      </div>
+      </div>*/}
 
       <div>
         <label>Email Subject</label>
-        <Field className="form-control" name="emailSubject" component="input"/>
+        <Field className="form-control" name="emailSubject" component="input" />
       </div>
 
       <div>
         <label>Write Email</label>
-        <Field name="emailBody" component={TextEditor}/>
+        <Field name="emailBody" component={TextEditor} />
       </div>
 
       <br/>
@@ -109,4 +124,8 @@ const CreateCampaignForm = (props) => {
 };
 
 // Use reduxForm decorator
-export default reduxForm({form: 'createCampaign', destroyOnUnmount: false})(CreateCampaignForm);
+export default reduxForm({
+  form: 'createCampaign',
+  destroyOnUnmount: false,
+  validate
+})(CreateCampaignForm);
