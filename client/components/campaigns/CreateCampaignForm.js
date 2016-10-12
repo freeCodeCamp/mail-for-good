@@ -1,28 +1,20 @@
 import React from 'react';
-import { Field, reduxForm, propTypes } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 import { Combobox } from 'react-widgets';
 import 'react-widgets/dist/css/react-widgets.css';
 
 import TextEditor from './CreateCampaignFormTextEditor';
-
-/*
-    TODO: Consider turning this into a wizard (see http://redux-form.com/6.0.5/examples/wizard/)
-    Rough guide to questions we need to ask:
-        1. Which list to commit the campaign on. Entire list? If not, redirect to lists to create a new list/segment
-        2. Descriptive questions (Campaign name, email from name, from email & subject)
-        3. What to send (plainscript for now)
-*/
 
 // Ref redux-form http://redux-form.com/6.0.5/docs/GettingStarted.md/
 // Ref react-widgets https://jquense.github.io/react-widgets/ (for examples see https://github.com/erikras/redux-form/blob/master/examples/react-widgets/src/ReactWidgetsForm.js)
 // Ref react-rte https://github.com/sstur/react-rte
 
 const renderCombobox = ({ input }) => <Combobox {...input} />;
-// const renderSelectList = ({ input, ...rest }) => <SelectList {...input} onBlur={() => input.onBlur()} {...rest}/>;
 
 /*
 Helper wrapper functions for react-widgets from the redux-form examples page. May be useful later.
 
+const renderSelectList = ({ input, ...rest }) => <SelectList {...input} onBlur={() => input.onBlur()} {...rest}/>;
 const renderDropdownList = ({ input, ...rest }) => <DropdownList {...input} {...rest}/>;
 const renderMultiselect = ({ input, ...rest }) =>
   <Multiselect {...input}
@@ -36,77 +28,71 @@ const tempTemplates = ['aTemplate', 'anotherTemplate'];
 
 const validate = values => {
   const errors = {};
-  if (values.listName === '') {
+
+  if (!values.listName) {
     errors.listName = 'Required';
   }
-  if (values.campaignName === '') {
+  if (!values.campaignName) {
     errors.campaignName = 'Required';
   }
-  if (values.fromName === '') {
+  if (!values.fromName) {
     errors.fromName = 'Required';
+  }
+  if (!values.fromEmail) {
+    errors.fromEmail = 'Required';
+  }
+  if (!values.emailSubject) {
+    errors.emailSubject = 'Required';
+  }
+  if (!values.emailBody) {
+    errors.emailBody = 'Required';
   }
 
   return errors;
 };
 
+const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
+  <div>
+    <label>{label}</label>
+    <div>
+      <input className="form-control" {...input} placeholder={label} type={type}/>
+      {touched && ((error && <span className="text-red"><i className="fa fa-exclamation" /> {error}</span>) || (warning && <span>{warning}</span>))}
+    </div>
+  </div>
+);
+
+
 const CreateCampaignForm = (props) => {
-  const { handleSubmit, pristine, reset, submitting } = props;
+  const { error, handleSubmit, pristine, reset, submitting } = props;
 
   return (
     <form onSubmit={handleSubmit}>
       <h3>Select email type, relay server & list</h3>
-      {/*<div>
-        <label>Send email as</label>
-        <Field name="type" component={renderSelectList} data={['Plaintext', 'HTML']}/>
-      </div>*/}
-
-      {/*<div>
-        <label>Relay server</label>
-        <Field name="relayServer" component={renderSelectList} data={['Amazon SES']}/>
-      </div>*/}
-
       <div>
         <label>Select a List</label>
-        <Field name="listName" component={renderCombobox} data={tempLists} />
+        <Field name="listName" component={renderCombobox} data={tempLists} label="Campaign Name" />
       </div>
 
       <hr/>
 
       <h3>Campaign details</h3>
       <div> {/* TODO: This needs to be validated via regex. Doesn't need to be a slug but must resolve to a unique slug so there's no possibility of conflict. */}
-        <label>Campaign Name -
-          <small>the name of this campaign</small>
-        </label>
-        <Field className="form-control" name="campaignName" component="input" type="text" />
+        <Field name="campaignName" component={renderField} label="Campaign Name" type="text" />
       </div>
 
       <div>
-        <label>Email: from (name) -
-          <small>your name e.g. from
-            <i>Bob</i>
-            {'<bob@bobmail.com>'}</small>
-        </label>
-        <Field className="form-control" name="fromName" component="input" />
+        <Field name="fromName" component={renderField} label="From Name" type="text" />
       </div>
 
       <div>
-        <label>Email: from (email) -
-          <small>ensure this email is authorised to send email to the relay server</small>
-        </label>
-        <Field className="form-control" name="fromEmail" component="input" />
+        <Field name="fromEmail" component={renderField} label="From Email" type="email" />
       </div>
 
       <hr/>
 
       <h3>Create email</h3>
-      {/*<div>
-        <label>Import from template</label>
-        <Field name="template" component={renderCombobox} data={tempTemplates} />
-      </div>*/}
-
       <div>
-        <label>Email Subject</label>
-        <Field className="form-control" name="emailSubject" component="input" />
+        <Field name="emailSubject" component={renderField} label="Subject" type="text" />
       </div>
 
       <div>
@@ -123,7 +109,6 @@ const CreateCampaignForm = (props) => {
   );
 };
 
-// Use reduxForm decorator
 export default reduxForm({
   form: 'createCampaign',
   destroyOnUnmount: false,

@@ -60,9 +60,9 @@ export default class CreateCampaign extends Component {
               <CreateCampaignForm onSubmit={this.handleSubmit} lists={this.props.lists} />
             </div>
 
-            {this.props.isGetting && <div className="overlay">
+            {/*this.props.isGetting && <div className="overlay">
               <FontAwesome name="refresh" spin/>
-            </div>}
+            </div>*/}
           </div>
         </section>
 
