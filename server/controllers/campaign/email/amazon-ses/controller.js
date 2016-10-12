@@ -1,6 +1,5 @@
 const queue = require('async/queue');
-const nodemailer = require('nodemailer');
-const sesTransport = require('nodemailer-ses-transport');
+const AWS = require('aws-sdk');
 
 /*
 Rejections due to a lack of verification look like:
@@ -35,34 +34,49 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey)
 
   const limit = 1; // The number of emails to pull from the db at once. Dte
   let concurrency = 1;
-  let totalListSubscribers = 0; // R
+  let totalListSubscribers = 0;
   let offset = 0;
 
-  const options = {
+  const ses = new AWS.SES({
     accessKeyId: accessKey,
     secretAccessKey: secretKey,
-    region: 'eu-west-1',
-    rateLimit: concurrency // Emails per second
-  };
-  const transporter = nodemailer.createTransport(sesTransport(options));
+    region: `eu-west-1` //TODO: Get this from the client
+  });
 
   const q = queue((task, done) => {
-    const mailOptions = {
-      from: `<${campaignInfo.fromEmail}>`,
-      to: `${task.email}`,
-      subject: 'Hello from nonprofit-email-service',
-      text: 'This is a test email from nonprofit-email-service!'
-      //html: '<b>Implementation of HTML is TBA</b>'
+
+    // Ref https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SES.html#sendEmail-property
+    const params = {
+      Source: campaignInfo.fromEmail, // From email
+      Destination: { // To email
+        ToAddresses: [task.email]
+      },
+      Message: {
+        Body: { // Body (plaintext or html)
+          Text: {
+            Data: 'This is a test email from nonprofit-email-service!'
+          }
+        },
+        Subject: { // Subject
+          Data: 'Hello from nonprofit-email-service'
+        }
+      }
     };
 
-    transporter.sendMail(mailOptions, (err, info) => {
+    ses.sendEmail(params, (err, data) => {
+      // NOTE: Data contains only data.messageId, which we need to get the result of the request in terms of success/bounce/complaint etc from Amazon later
       if (err) {
-        throw err;
+       throw err;
       }
-      if (totalListSubscribers !== offset) {
-        returnList(); // Get a new listSubscriber
-        done(); // Accept new email from pool
+      if (totalListSubscribers > offset) {
+       console.log(data);
+       returnList(); // Get a new listSubscriber
+       done(); // Accept new email from pool
+      } else {
+       console.log(data);
+       done();
       }
+
     });
 
   }, concurrency);
@@ -97,6 +111,8 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey)
     totalListSubscribers = total;
     // Start the process
     returnList();
+  }).catch(err => {
+    throw err;
   });
 
 };

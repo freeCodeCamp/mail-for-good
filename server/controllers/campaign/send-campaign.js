@@ -1,6 +1,8 @@
 const db = require('../../models');
 const email = require('./email');
 
+// TODO: Validate contents abide to Amazon's limits https://docs.aws.amazon.com/ses/latest/DeveloperGuide/limits.html
+
 module.exports = (req, res) => {
 
   // If req.body.id was not supplied or is not a number, cancel
