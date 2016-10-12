@@ -65,7 +65,8 @@ const CreateCampaignForm = (props) => {
 
   const lists = props.lists.map(x => x.name);
 
-  const resetFormAndSubmit = () => {
+  const resetFormAndSubmit = (e) => {
+    e.preventDefault();
     handleSubmit();
     reset();
   };

@@ -27,6 +27,10 @@ export default class CreateCampaign extends Component {
     isGetting: PropTypes.bool.isRequired
   }
 
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
+
   constructor() {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,7 +38,7 @@ export default class CreateCampaign extends Component {
 
   componentWillReceiveProps(props) {
     if (this.props.isPosting === true && props.isPosting === false) { // Fires when campaign has been successfully created
-
+      this.context.router.push(`/campaigns/manage`);
     }
   }
 
