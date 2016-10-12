@@ -9,7 +9,7 @@ import TextEditor from './CreateCampaignFormTextEditor';
 // Ref react-widgets https://jquense.github.io/react-widgets/ (for examples see https://github.com/erikras/redux-form/blob/master/examples/react-widgets/src/ReactWidgetsForm.js)
 // Ref react-rte https://github.com/sstur/react-rte
 
-const renderCombobox = ({ input }) => <Combobox {...input} />;
+const renderCombobox = ({ input, ...data }) => <Combobox {...input} {...data} />;
 
 /*
 Helper wrapper functions for react-widgets from the redux-form examples page. May be useful later.
@@ -22,9 +22,6 @@ const renderMultiselect = ({ input, ...rest }) =>
     value={input.value || []} // requires value to be an array
     {...rest}/>;
 */
-
-const tempLists = ['aListBelongingToTheUser', 'anotherListBelongingToTheUser'];
-const tempTemplates = ['aTemplate', 'anotherTemplate'];
 
 const validate = values => {
   const errors = {};
@@ -63,14 +60,19 @@ const renderField = ({ input, label, type, meta: { touched, error, warning } }) 
 
 
 const CreateCampaignForm = (props) => {
+
   const { error, handleSubmit, pristine, reset, submitting } = props;
+
+  const lists = props.lists.map(x => x.name);
+
+  console.log(lists);
 
   return (
     <form onSubmit={handleSubmit}>
       <h3>Select email type, relay server & list</h3>
       <div>
         <label>Select a List</label>
-        <Field name="listName" component={renderCombobox} data={tempLists} label="Campaign Name" />
+        <Field name="listName" component={renderCombobox} data={lists} />
       </div>
 
       <hr/>
