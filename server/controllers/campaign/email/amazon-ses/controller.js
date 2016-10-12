@@ -27,15 +27,27 @@ US East (N. Virginia)	us-east-1	N/A	inbound-smtp.us-east-1.amazonaws.com	Email r
 US West (Oregon)	us-west-2	N/A	inbound-smtp.us-west-2.amazonaws.com	Email receiving
 EU (Ireland)	eu-west-1	N/A	inbound-smtp.eu-west-1.amazonaws.com	Email receiving
 
+NOTE: Use these particular functions in the future
+ses.getSendStatistics(function(err, data) {
+if (err) console.log(err, err.stack); // an error occurred
+else     console.log(data);           // successful response
+});
+
+ses.getSendQuota(function(err, data) {
+if (err) console.log(err, err.stack); // an error occurred
+else     console.log(data);           // successful response
+});
+
 */
 
 
 module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey) => {
 
-  const limit = 1; // The number of emails to pull from the db at once. Dte
-  let concurrency = 1;
-  let totalListSubscribers = 0;
-  let offset = 0;
+  const concurrency = 500; // No. of emails to process server side, limited to prevent overflow
+  const limit = 1; // The number of emails to be pulled from each returnList call
+  let rateLimit = 1; // The number of emails to send per second
+  let totalListSubscribers = 0; // The total num of list subscribers to be processed
+  let offset = limit - 1; // The offset when pulling emails from the db
 
   const ses = new AWS.SES({
     accessKeyId: accessKey,
@@ -68,14 +80,8 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey)
       if (err) {
        throw err;
       }
-      if (totalListSubscribers > offset) {
-       console.log(data);
-       returnList(); // Get a new listSubscriber
-       done(); // Accept new email from pool
-      } else {
-       console.log(data);
-       done();
-      }
+      console.log(data);
+      done(); // Accept new email from pool
 
     });
 
@@ -103,6 +109,17 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey)
     });
   }
 
+  function pushByRateLimit() {
+    setTimeout(() => {
+      if (totalListSubscribers > offset) {
+       returnList();
+       pushByRateLimit();
+     } else {
+       generator.next();
+     }
+    }, (1000 / rateLimit));
+  }
+
   ListSubscriber.count({
     where: {
       listId: campaignInfo.listId
@@ -110,7 +127,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey)
   }).then(total => {
     totalListSubscribers = total;
     // Start the process
-    returnList();
+    pushByRateLimit();
   }).catch(err => {
     throw err;
   });
