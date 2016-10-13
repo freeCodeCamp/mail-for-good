@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 import { getCampaigns, postSendCampaign } from '../../actions/campaignActions';
+import { Modal, Button, FormControl } from 'react-bootstrap';
 
 function mapStateToProps(state) {
   // State reducer @ state.manageCampaign
@@ -14,10 +15,6 @@ function mapStateToProps(state) {
 
 @connect(mapStateToProps, { getCampaigns, postSendCampaign })
 export default class CampaignView extends Component {
-  constructor() {
-    super();
-    this.sendCampaign = this.sendCampaign.bind(this);
-  }
 
   static PropTypes = {
     getCampaigns: PropTypes.func.isRequired,
@@ -27,8 +24,16 @@ export default class CampaignView extends Component {
     isPosting: PropTypes.bool.isRequired
   }
 
+  constructor() {
+    super();
+    this.open = this.open.bind(this);
+    this.close = this.close.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
   state = {
-    thisCampaign: {}
+    thisCampaign: {},
+    showModal: false
   }
 
   componentWillReceiveProps(props) {
@@ -56,13 +61,25 @@ export default class CampaignView extends Component {
     });
   }
 
-  sendCampaign() {
-    // Send id of campaign row to server for execution @ this.state.thisCampaign.id
+  handleSubmit() {
     const form = {
       id: this.state.thisCampaign.id
     };
-    
+
     this.props.postSendCampaign(JSON.stringify(form));
+    this.close();
+  }
+
+  open() {
+    this.setState({
+      showModal: true
+    });
+  }
+
+  close() {
+    this.setState({
+      showModal: false
+    });
   }
 
   render() {
@@ -77,14 +94,25 @@ export default class CampaignView extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-header">
-              <h3 className="box-title">{this.state.thisCampaign.name}</h3>
+              <h3 className="box-title">Campaign: {this.state.thisCampaign.name}</h3>
             </div>
 
             <div className="box-body">
 
-              <button className="btn btn-primary" type="button" onClick={this.sendCampaign}>Send</button>
+              <button className="btn btn-primary" type="button" onClick={this.open}>Send</button>
 
-              {this.props.isGetting && <div className="overlay">
+              <Modal show={this.state.showModal} onHide={this.close}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Are you sure you would like to send this campaign?</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Footer>
+                  <Button onClick={this.close}>No</Button>
+                  <Button bsStyle="primary" onClick={this.handleSubmit}>Yes</Button>
+                </Modal.Footer>
+              </Modal>
+
+              {this.props.isGetting || this.props.isPosting && <div className="overlay">
                 <FontAwesome name="refresh" spin/>
               </div>}
             </div>
