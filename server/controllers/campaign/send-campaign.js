@@ -36,7 +36,7 @@ module.exports = (req, res) => {
     const totalListSubscribers = yield countListSubscribers(campaignInfo.listId, quotas.AvailableToday);
 
     // 5. At this stage, we've ready to send the campaign. Respond that the request was successful.
-    res.send({ message: `Your emails are being sent! We'll notify you when this is done.` });
+    res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday));
 
     // 6. Send the campaign.
     yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers);
@@ -131,6 +131,23 @@ module.exports = (req, res) => {
       throw err;
       res.status(500).send();
     });
+  }
+
+  function howLongEmailingWillTake(totalListSubscribers, AvailableToday) {
+    const timeTaken = (totalListSubscribers / 14 / 60);
+    let formattedMessage = 'Your email is being sent, it should take ';
+
+    if (timeTaken < 1) { // Less than a minute
+      formattedMessage += 'less than a minute.';
+    } else if (timeTaken > 1 && timeTaken < 60) { // More than a minute, less than an hour
+      formattedMessage += `around ${Math.floor(timeTaken)} minute${Math.floor(timeTaken) === 1 ? '' : 's'}.`;
+    } else if (timeTaken >= 60) { // An hour or more
+      formattedMessage += `around ${(timeTaken / 60).toFixed(1)} hours.`;
+    } else { // Shouldn't fire
+      formattedMessage += 'some time.';
+    }
+
+    return { message: formattedMessage };
   }
 
 }

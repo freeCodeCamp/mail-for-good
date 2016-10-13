@@ -1,6 +1,8 @@
 const queue = require('async/queue');
 const AWS = require('aws-sdk');
 
+const AmazonEmail = require('./amazon');
+
 /*
 
 https://docs.aws.amazon.com/ses/latest/DeveloperGuide/mailbox-simulator.html
@@ -33,32 +35,15 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
   const q = queue((task, done) => {
 
-    // Ref https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SES.html#sendEmail-property
-    const params = {
-      Source: campaignInfo.fromEmail, // From email
-      Destination: { // To email
-        ToAddresses: [`"${campaignInfo.fromName}" <${task.email}>`] // Set name as follows https://docs.aws.amazon.com/ses/latest/DeveloperGuide/email-format.html
-      },
-      Message: {
-        Body: { // Body (plaintext or html)
-          Html: {
-            Data: campaignInfo.emailBody
-          }
-        },
-        Subject: { // Subject
-          Data: campaignInfo.emailSubject
-        }
-      }
-    };
+    const emailFormat = AmazonEmail(task, campaignInfo);
 
-    ses.sendEmail(params, (err, data) => {
+    ses.sendEmail(emailFormat, (err, data) => {
       // NOTE: Data contains only data.messageId, which we need to get the result of the request in terms of success/bounce/complaint etc from Amazon later
       if (err) {
        throw err;
       }
       console.log(data);
       done(); // Accept new email from pool
-
     });
 
   }, rateLimit);
