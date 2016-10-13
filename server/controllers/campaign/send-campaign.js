@@ -4,6 +4,11 @@ const AWS = require('aws-sdk');
 
 // TODO: Validate contents abide to Amazon's limits https://docs.aws.amazon.com/ses/latest/DeveloperGuide/limits.html
 
+/*
+Reveives
+{"listName":"test","campaignName":"sfds","fromName":"fsdsdf","fromEmail":"me@gmail.com","emailSubject":"ssdff","emailBody":"<p>sdfsf</p>"}
+*/
+
 module.exports = (req, res) => {
 
   // If req.body.id was not supplied or is not a number, cancel
@@ -56,9 +61,9 @@ module.exports = (req, res) => {
       } else {
         campaignObject = campaignInstance.get({ plain:true });
         const listId = campaignObject.listId;
-        const fromEmail = campaignObject.fromEmail;
+        const { fromName, fromEmail, emailSubject, emailBody } = campaignObject;
 
-        generator.next({ listId, fromEmail });
+        generator.next({ listId, fromName, fromEmail, emailSubject, emailBody });
       }
     }).catch(err => {
       throw err;

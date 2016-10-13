@@ -5,6 +5,7 @@ module.exports = (req, res) => {
   /*
         Outstanding issues:
         -- Validate other things? Validations can be added as promises to validationComplete and run concurrently
+        -- Clean up sequelize code
   */
 
   // Will mutate the below object to extract info we need during validation checks
@@ -41,7 +42,8 @@ module.exports = (req, res) => {
           name: req.body.campaignName, // Repeating these fields to make it clear that this property marks the new row's fields
           fromName: req.body.fromName,
           fromEmail: req.body.fromEmail,
-          subject: req.body.subject,
+          emailSubject: req.body.emailSubject,
+          emailBody: req.body.emailBody,
           userId: req.user.id,
           listId: valueFromValidation.listId,
           slug: slug(req.body.campaignName)

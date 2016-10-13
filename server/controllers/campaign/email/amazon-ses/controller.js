@@ -19,7 +19,7 @@ EU (Ireland)	eu-west-1
 
 module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers) => {
 
-  // TODO: Remaining issue where rateLimit is determined by response time of DB rather. Needs fix.
+  // TODO: Remaining issue where rateLimit is determined by response time of DB. Needs fix.
 
   const limit = 1; // The number of emails to be pulled from each returnList call
   let rateLimit = quotas.MaxSendRate; // The number of emails to send per second
@@ -37,16 +37,16 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     const params = {
       Source: campaignInfo.fromEmail, // From email
       Destination: { // To email
-        ToAddresses: [task.email] // Set name as follows https://docs.aws.amazon.com/ses/latest/DeveloperGuide/email-format.html
+        ToAddresses: [`"${campaignInfo.fromName}" <${task.email}>`] // Set name as follows https://docs.aws.amazon.com/ses/latest/DeveloperGuide/email-format.html
       },
       Message: {
         Body: { // Body (plaintext or html)
-          Text: {
-            Data: 'This is a test email from nonprofit-email-service!'
+          Html: {
+            Data: campaignInfo.emailBody
           }
         },
         Subject: { // Subject
-          Data: 'Hello from nonprofit-email-service'
+          Data: campaignInfo.emailSubject
         }
       }
     };
