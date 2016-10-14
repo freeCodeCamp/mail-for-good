@@ -12,7 +12,7 @@ How to Install
 How to run
 
 ###Want to contribute?
-Contribution.md - How to contribute.
+[CONTRIBUTING.md](https://github.com/FreeCodeCamp/nonprofit-email-service/blob/master/CONTRIBUTING.md) - How to contribute.
 
 ###License
 
