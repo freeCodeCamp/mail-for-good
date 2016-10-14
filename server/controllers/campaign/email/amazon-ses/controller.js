@@ -19,7 +19,7 @@ EU (Ireland)	eu-west-1
 
 */
 
-module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers) => {
+module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region) => {
 
   // TODO: Remaining issue where rateLimit is determined by response time of DB. Needs fix.
 
@@ -30,7 +30,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   const ses = new AWS.SES({
     accessKeyId: accessKey,
     secretAccessKey: secretKey,
-    region: `eu-west-1` //TODO: Get this from the client
+    region: region
   });
 
   const q = queue((task, done) => {
@@ -42,7 +42,6 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
       if (err) {
        throw err;
       }
-      console.log(data);
       done(); // Accept new email from pool
     });
 

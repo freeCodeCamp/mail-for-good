@@ -19,7 +19,7 @@ module.exports = (req, res) => {
     // NOTE: Current assumption is that the user is using Amazon SES. Can modularise and change this if necessary.
 
     // 1. Confirm user has set their keys & retrieve them
-    const { accessKey, secretKey } = yield getAmazonKeys(userId);
+    const { accessKey, secretKey, region } = yield getAmazonKeysAndRegion(userId);
 
     // 2. Confirm the campaign id belongs to the user and retrieve the associated listId
     const campaignInfo = yield campaignBelongsToUser(userId, campaignId);
@@ -33,8 +33,8 @@ module.exports = (req, res) => {
     // 5. At this stage, we've ready to send the campaign. Respond that the request was successful.
     res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday));
 
-    // 6. Send the campaign.
-    yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers);
+    // 6. Send the campaign. TODO: Clean up & condense these arguments
+    yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region);
 
     // 7. If there was an error preventing emails from being sent, send it here. Otherwise, TODO: push a notification
 
@@ -65,7 +65,7 @@ module.exports = (req, res) => {
     });
   }
 
-  function getAmazonKeys(userId) {
+  function getAmazonKeysAndRegion(userId) {
     db.setting.findOne({
       where: {
         userId: userId
@@ -76,15 +76,12 @@ module.exports = (req, res) => {
         res.status(500).send();
       } else {
         settingObject = settingInstance.get({ plain:true });
-
-        const accessKey = settingObject.amazonSimpleEmailServiceAccessKey;
-        const secretKey = settingObject.amazonSimpleEmailServiceSecretKey;
-
+        const { accessKey, secretKey, region } = settingObject;
         // If either key is blank, the user needs to set their settings
-        if (accessKey === '' || secretKey === '') {
+        if (accessKey === '' || secretKey === '' || region === '') {
           res.status(400).send({ message:'Please provide your details for your Amazon account under "Settings".' });
         } else {
-          generator.next({ accessKey, secretKey });
+          generator.next({ accessKey, secretKey, region });
         }
       }
     }).catch(err => {
