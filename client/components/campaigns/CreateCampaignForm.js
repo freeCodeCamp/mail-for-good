@@ -9,8 +9,6 @@ import TextEditor from './CreateCampaignFormTextEditor';
 // Ref react-widgets https://jquense.github.io/react-widgets/ (for examples see https://github.com/erikras/redux-form/blob/master/examples/react-widgets/src/ReactWidgetsForm.js)
 // Ref react-rte https://github.com/sstur/react-rte
 
-const renderCombobox = ({ input, ...data }) => <Combobox {...input} {...data} />;
-
 /*
 Helper wrapper functions for react-widgets from the redux-form examples page. May be useful later.
 
@@ -48,6 +46,8 @@ const validate = values => {
   return errors;
 };
 
+const renderCombobox = ({ input, ...data }) => <Combobox {...input} {...data} />;
+
 const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
   <div>
     <label>{label}</label>
@@ -57,7 +57,6 @@ const renderField = ({ input, label, type, meta: { touched, error, warning } }) 
     </div>
   </div>
 );
-
 
 const CreateCampaignForm = (props) => {
 
@@ -73,7 +72,7 @@ const CreateCampaignForm = (props) => {
 
   return (
     <form onSubmit={resetFormAndSubmit}>
-      <h3>Select email type, relay server & list</h3>
+      <h3>List and region</h3>
       <div>
         <label>Select a List</label>
         <Field name="listName" component={renderCombobox} data={lists} />

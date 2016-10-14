@@ -38,14 +38,16 @@ export function manageCampaign(state = initialState.manageCampaign, action) {
 
 export function sendCampaign(state = initialState.sendCampaign, action) {
   switch (action.type) {
-    case REQUEST_GET_CAMPAIGNS: {
+    case REQUEST_POST_SENDCAMPAIGN: {
         return {...state,
           isPosting: true
         };
     }
-    case COMPLETE_GET_CAMPAIGNS: {
+    case COMPLETE_POST_SENDCAMPAIGN: {
         return {...state,
-          isPosting: false
+          isPosting: false,
+          sendCampaignResponse: action.sendCampaignResponse,
+          sendCampaignStatus: action.sendCampaignStatus
         };
     }
     default:
@@ -55,5 +57,6 @@ export function sendCampaign(state = initialState.sendCampaign, action) {
 
 export default {
   createCampaign,
-  manageCampaign
+  manageCampaign,
+  sendCampaign
 };

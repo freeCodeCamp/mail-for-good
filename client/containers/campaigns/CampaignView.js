@@ -9,7 +9,10 @@ function mapStateToProps(state) {
   return {
     campaigns: state.manageCampaign.campaigns,
     isGetting: state.manageCampaign.isGetting,
-    isPosting: state.sendCampaign.isPosting
+
+    isPosting: state.sendCampaign.isPosting,
+    sendCampaignResponse: state.sendCampaign.sendCampaignResponse,
+    sendCampaignStatus: state.sendCampaign.sendCampaignStatus
   };
 }
 
@@ -21,7 +24,9 @@ export default class CampaignView extends Component {
     campaigns: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired,
     sendCampaign: PropTypes.func.isRequired,
-    isPosting: PropTypes.bool.isRequired
+    isPosting: PropTypes.bool.isRequired,
+    sendCampaignResponse: PropTypes.string.isRequired,
+    sendCampaignStatus: PropTypes.number.isRequired
   }
 
   constructor() {
@@ -38,6 +43,7 @@ export default class CampaignView extends Component {
 
   componentWillReceiveProps(props) {
     // Set thisCampaign from campaigns once we have it
+    console.log(props);
     if (props.campaigns && props.campaigns.length && !this.props.campaigns.length) { // Guarded and statement that confirms campaigns is in the new props, confirms the array isn't empty, and then confirms that current props do not exist
       this.getSingleCampaign(props);
     }
@@ -98,6 +104,11 @@ export default class CampaignView extends Component {
             </div>
 
             <div className="box-body">
+
+              {this.props.sendCampaignResponse &&
+                <p className={this.props.sendCampaignStatus === 200 ? 'text-green' : 'text-red'}>
+                  <i className={this.props.sendCampaignStatus === 200 ? 'fa fa-check' : 'fa fa-exclamation'}/> {this.props.sendCampaignResponse}
+                </p>}
 
               <button className="btn btn-primary" type="button" onClick={this.open}>Send</button>
 

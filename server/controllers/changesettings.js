@@ -3,7 +3,6 @@ const _ = require('lodash');
 const Setting = require('../models').setting;
 
 module.exports = function(req, res) {
-  console.log(req.body);
   const settingsToChange = _.pickBy(req.body);
 
   // Exit if there are no settings to change
@@ -17,9 +16,11 @@ module.exports = function(req, res) {
     TODO: Currently, should a user update one field and leave the other blank the blank field will still be written as an empty string, this needs to change
     TODO: Need to encrypt these keys
  */
+
   Setting.update({
     amazonSimpleEmailServiceAccessKey: settingsToChange.amazonSimpleEmailServiceAccessKey,
-    amazonSimpleEmailServiceSecretKey: settingsToChange.amazonSimpleEmailServiceSecretKey
+    amazonSimpleEmailServiceSecretKey: settingsToChange.amazonSimpleEmailServiceSecretKey,
+    region: settingsToChange.region
   }, {
     where: {
       userId: req.user.id

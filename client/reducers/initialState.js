@@ -7,7 +7,9 @@ const initialState = {
     isGetting: false // Getting campaigns?
   },
   sendCampaign: {
-    isPosting: false
+    isPosting: false,
+    sendCampaignResponse: '',
+    sendCampaignStatus: 0
   },
   createList: {
     list: [],

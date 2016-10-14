@@ -63,13 +63,11 @@ module.exports = (req, res) => {
     const concurrency = 500; // Number of rows and upserts to handle concurrently. Arbitrary number.
 
     listInstance = listInstance[0];
-    console.log(listInstance);
     const listIsNew = listInstance.$options.isNewRecord;
     const listId = listInstance.dataValues.id;
 
     const q = queue((task, callback) => {
       // Where task has object format { header: field } - e.g. { email: bob@bobmail.com }
-      console.log(task);
       db.listsubscriber.upsert({ email: task.email, listId: listId })
         .then(created => { // Where created = true if created, false if updated
           callback();

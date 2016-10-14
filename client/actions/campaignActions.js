@@ -21,8 +21,8 @@ export function completeGetCampaign(campaigns) {
 export function requestPostSendCampaign() {
   return { type: REQUEST_POST_SENDCAMPAIGN };
 }
-export function completePostSendCampaign() {
-  return { type: COMPLETE_POST_SENDCAMPAIGN };
+export function completePostSendCampaign(response, status) {
+  return { type: COMPLETE_POST_SENDCAMPAIGN, sendCampaignResponse: response, sendCampaignStatus: status };
 }
 
 export function getCampaigns() {
@@ -63,7 +63,8 @@ export function postSendCampaign(campaign) {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', API_SEND_CAMPAIGN_ENDPOINT);
     xhr.onload = () => {
-      dispatch(completePostSendCampaign());
+      const sendCampaignResponse = JSON.parse(xhr.responseText);
+      dispatch(completePostSendCampaign(sendCampaignResponse.message, xhr.status));
     };
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(campaign);
