@@ -12,7 +12,10 @@ const importCSV = require('../controllers/list/import-csv');
 const getLists = require('../controllers/list/get-lists');
 const getListSubscribers = require('../controllers/list/get-list-subscribers');
 
+const unsubscribe = require('../controllers/subscriber/unsubscribe');
+
 const changeSettings = require('../controllers/changesettings');
+
 
 const parseJson = bodyParser.json();
 
@@ -80,6 +83,12 @@ module.exports = (app, passport) => {
   app.post('/api/settings', isAuth, parseJson, (req, res) => {
     changeSettings(req, res);
   });
+  
+  /* Subscribers */
+  
+  app.get('/unsubscribe/:unsubscribeKey', (req, res) => {
+    unsubscribe(req, res);
+  })
 
   ////////////////////
   /*      APP       */
