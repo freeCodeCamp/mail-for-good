@@ -6,6 +6,7 @@ const auth = require('./auth');
 const createCampaign = require('../controllers/campaign/create-campaign');
 const getCampaigns = require('../controllers/campaign/get-campaigns');
 const sendCampaign = require('../controllers/campaign/send-campaign');
+const deleteCampaigns = require('../controllers/campaign/delete-campaigns');
 
 const addSubscribers = require('../controllers/list/add-subscribers');
 const importCSV = require('../controllers/list/import-csv');
@@ -47,8 +48,10 @@ module.exports = (app, passport) => {
     createCampaign(req, res);
   });
 
-  app.post('/api/campaign/send', isAuth, parseJson, (req, res) => {
-    sendCampaign(req, res);
+  /* DELETE */
+
+  app.delete('/api/campaign', isAuth, parseJson, (req, res) => {
+    deleteCampaigns(req, res);
   });
 
   /* Lists */
@@ -59,7 +62,7 @@ module.exports = (app, passport) => {
   app.get('/api/list/manage', isAuth, (req, res) => {
     getLists(req, res);
   });
-  
+
   // Get the subscribers of a specified list
   app.get('/api/list/subscribers', isAuth, (req, res) => {
     getListSubscribers(req, res);

@@ -4,14 +4,14 @@ import FontAwesome from 'react-fontawesome';
 
 import ManageCampaignsTable from '../../components/campaigns/ManageCampaignsTable';
 
-import { getCampaigns } from '../../actions/campaignActions';
+import { getCampaigns, deleteCampaigns } from '../../actions/campaignActions';
 
 function mapStateToProps(state) {
   // State reducer @ state.manageCampaign
   return { campaigns: state.manageCampaign.campaigns, isGetting: state.manageCampaign.isGetting };
 }
 
-@connect(mapStateToProps, { getCampaigns })
+@connect(mapStateToProps, { getCampaigns, deleteCampaigns })
 export default class ManageCampaigns extends Component {
 
   static propTypes = {
@@ -37,8 +37,9 @@ export default class ManageCampaigns extends Component {
     }
   }
 
-  deleteRows(rows) {
-
+  deleteRows(campaignIds) { // campaignIds [...Numbers]
+    const jsonCampaignIds = JSON.stringify({ data: campaignIds });
+    this.props.deleteCampaigns(jsonCampaignIds);
   }
 
   getCampaignView(row) {

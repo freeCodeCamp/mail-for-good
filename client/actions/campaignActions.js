@@ -56,6 +56,15 @@ export function postCreateCampaign(form) {
   };
 }
 
+export function deleteCampaigns(campaignIds) {
+  return dispatch => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('DELETE', API_CAMPAIGN_ENDPOINT);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(campaignIds);
+  };
+}
+
 export function postSendCampaign(campaign) {
   return dispatch => {
     dispatch(requestPostSendCampaign());
