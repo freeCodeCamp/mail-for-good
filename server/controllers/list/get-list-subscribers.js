@@ -23,7 +23,7 @@ module.exports = (req, res) => {
     } else {
       listsubscriber.findAll({
         where: { listId },
-        attributes: ['email', 'subscribed'],
+        attributes: ['email', 'subscribed', 'createdAt', 'updatedAt'],
         raw: true
       }).then(instancesArray => {
         res.send({ subscribers: instancesArray });

@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import BSTyle from 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
+import moment from 'moment';
+
 
 export default class ManageSubscribersTable extends React.Component {
   constructor(props) {
@@ -31,6 +33,10 @@ export default class ManageSubscribersTable extends React.Component {
     }
   }
 
+  formatDate(cell) {
+    return moment(cell).format('lll');
+  };
+
 
   render() {
     return (
@@ -38,8 +44,10 @@ export default class ManageSubscribersTable extends React.Component {
                       pagination={true}
                       hover={true}>
         <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
-        <TableHeaderColumn dataField="email">email</TableHeaderColumn>
-        <TableHeaderColumn dataField="subscribed" dataFormat={this.formatFieldSubscribed}>status</TableHeaderColumn>
+        <TableHeaderColumn dataField="email">Email</TableHeaderColumn>
+        <TableHeaderColumn dataField="createdAt" dataFormat={this.formatDate} dataSort={true} width="150">Created</TableHeaderColumn>
+        <TableHeaderColumn dataField="updatedAt" dataFormat={this.formatDate} dataSort={true} width="150">Updated</TableHeaderColumn>
+        <TableHeaderColumn dataField="subscribed" dataFormat={this.formatFieldSubscribed} width="150" dataAlign="center" dataSort={true}>Status</TableHeaderColumn>
       </BootstrapTable>
     );
   }
