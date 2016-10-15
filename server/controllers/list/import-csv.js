@@ -24,7 +24,7 @@ module.exports = (req, res) => {
         TODO: TSV & other files are not accounted for. The current method only works with CSV files. There's also no current validation of CSV files in terms of both the information within and the actual file type.
         TODO: Currently, only emails are stored from the header/email labeled 'email'. Everything else is ignored. This should be changed to store other fields.
         TODO: Delete CSV after use
-        TODO: Res.send needs to occur as a status 202 to confirm that the request can be processed. As this can take time, notification of the actual success of upserting all data needs to happen later.
+        TODO: Notification of the actual success of upserting all data needs to happen later.
     */
 
   /*
@@ -107,15 +107,16 @@ module.exports = (req, res) => {
       .on('data', () => {
       // Do nothing with the data. Let it be garbage collected.
     }).on('end', () => {
-      console.log('Upserts to listsubscribers complete ...');
-
-      // IDEA: Post success to a field in the user model called 'notifications' & push through websocket
+      // Delete CSV
+      fs.unlink(`${path.resolve(req.file.path)}`, err => {
+        // IDEA: Post success to a field in the user model called 'notifications' & push through websocket
+      });
     });
 
     const message = listIsNew
       ? `List: ${listName} - Successfully created`
       : `List: ${listName} - Successfully updated`;
-    res.status(200).send({message: message});
+    res.status(202).send({message: message});
 
   }, err => {
     throw err;
