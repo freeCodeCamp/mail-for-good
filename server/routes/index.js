@@ -48,6 +48,11 @@ module.exports = (app, passport) => {
     createCampaign(req, res);
   });
 
+  // Send campaign
+  app.post('/api/campaign/send', isAuth, parseJson, (req, res) => {
+    sendCampaign(req, res);
+  });
+
   /* DELETE */
 
   app.delete('/api/campaign', isAuth, parseJson, (req, res) => {
@@ -86,9 +91,9 @@ module.exports = (app, passport) => {
   app.post('/api/settings', isAuth, parseJson, (req, res) => {
     changeSettings(req, res);
   });
-  
+
   /* Subscribers */
-  
+
   app.get('/unsubscribe/:unsubscribeKey', (req, res) => {
     unsubscribe(req, res);
   })

@@ -23,7 +23,6 @@ module.exports = (req, res) => {
         Outstanding issues:
         TODO: TSV & other files are not accounted for. The current method only works with CSV files. There's also no current validation of CSV files in terms of both the information within and the actual file type.
         TODO: Currently, only emails are stored from the header/email labeled 'email'. Everything else is ignored. This should be changed to store other fields.
-        TODO: Delete CSV after use
         TODO: Notification of the actual success of upserting all data needs to happen later.
     */
 
