@@ -24,7 +24,11 @@ export default class ManageSubscribersTable extends React.Component {
   formatFieldSubscribed(subscribed) {
     // this is a placeholder for now, since we are not yet handling
     // user subscription state
-    return '<span class="label label-success">Subscribed</span>'
+    if (subscribed) {
+      return '<span class="label label-success">Subscribed</span>'
+    } else {
+      return '<span class="label label-danger">Unsubscribed</span>'
+    }
   }
 
 
