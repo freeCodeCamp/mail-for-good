@@ -5,7 +5,7 @@ module.exports = function(sequelize, DataTypes) {
     fromName: DataTypes.STRING,
     fromEmail: DataTypes.STRING,
     emailSubject: DataTypes.STRING,
-    emailBody: DataTypes.STRING,
+    emailBody: DataTypes.TEXT,
     slug: DataTypes.STRING
   }, {
     classMethods: {

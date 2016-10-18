@@ -17,6 +17,19 @@ US East (N. Virginia)	us-east-1
 US West (Oregon)	us-west-2
 EU (Ireland)	eu-west-1
 
+Successful response has form:
+{ ResponseMetadata: { RequestId: 'e8a3d6b4-94fd-11z6-afac-757cax279ap5' },
+  MessageId: '01020157a1261241-90a5e1cd-3a5z-4sb7-1r41-957a4cae8e58-000000' }
+Throttling error:
+{ Throttling: Maximum sending rate exceeded.
+    at ...
+  message: 'Maximum sending rate exceeded.',
+  code: 'Throttling',
+  time: 2016-10-18T07:50:11.286Z,
+  requestId: '7f2d1781-9507-11e6-8885-675506266ba7',
+  statusCode: 400,
+  retryable: true }
+
 */
 
 module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region) => {
@@ -24,14 +37,10 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   // TODO: Remaining issue where rateLimit is determined by response time of DB. Needs fix.
 
   const limit = 1; // The number of emails to be pulled from each returnList call
-  let rateLimit = quotas.MaxSendRate; // The number of emails to send per second
+  let rateLimit = 1000; //quotas.MaxSendRate; // The number of emails to send per second
   let offset = limit - 1; // The offset when pulling emails from the db
 
-  const ses = new AWS.SES({
-    accessKeyId: accessKey,
-    secretAccessKey: secretKey,
-    region: region
-  });
+  const ses = new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region: region });
 
   const q = queue((task, done) => {
 
@@ -40,9 +49,10 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     ses.sendEmail(emailFormat, (err, data) => {
       // NOTE: Data contains only data.messageId, which we need to get the result of the request in terms of success/bounce/complaint etc from Amazon later
       if (err) {
-       throw err;
+        handleError(err, data, done);
+      } else {
+        done(); // Accept new email from pool
       }
-      done(); // Accept new email from pool
     });
 
   }, rateLimit);
@@ -50,6 +60,17 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   q.drain(() => {
     console.log('all done!');
   });
+
+  function handleError(err, data, done) {
+    switch(err.code) {
+      case 'Throttling':
+        handleThrottlingError(data, done);
+    }
+  }
+
+  function handleThrottlingError(data, done) {
+    // Too many responses send per second. Handle error by reducing sending rate.
+  }
 
   const returnList = () => {
     ListSubscriber.findAll({
@@ -60,24 +81,32 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
       offset,
       raw: true
     }).then(listRaw => {
-      offset += limit;
       q.push(listRaw, err => {
-        if (err) throw err;
-      });
+        if (err)
+          throw err;
+        }
+      );
     }).catch(err => {
       throw err;
     });
-  }
+  };
 
-  (function pushByRateLimit() {
+  function pushByRateLimit() {
     setTimeout(() => {
       if (totalListSubscribers > offset) {
-       returnList();
-       pushByRateLimit();
-     } else {
-       generator.next(null);
-     }
+        returnList();
+        offset += limit;
+        pushByRateLimit();
+      } else {
+        console.timeEnd('sending');
+        generator.next(null);
+      }
     }, (1000 / rateLimit));
+  }
+
+  (function startSending() {
+    console.time('sending');
+    pushByRateLimit();
   })();
 
 };
