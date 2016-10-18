@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 
 
-export default class ErrorsList extends React.Component {
+export default class ErrorsList extends Component {
   constructor(props) {
     super(props);
 

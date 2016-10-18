@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Button } from 'react-bootstrap';
-import _ from 'lodash';
 
 import UploadFileModal from './UploadFileModal';
 import SubscribersTable from '../../components/lists/SubscribersTable';
@@ -57,7 +56,17 @@ export default class ImportCSV extends Component {
         const fields = results.meta.fields;
         // If errors were encountered don't show the
         // dodgy csv/subscribers list to users
-        if (_.isEmpty(errors)) {
+        const errorIsNotSignificant = (errors) => { // Check that thrown errors are actually errors
+          if (errors.length) {
+            return errors.every(i => { // Put allowed errors below
+              return i.code === 'UndetectableDelimiter'; // UndetectableDelimiter can occur when the CSV files has one column, as no delimiter is present
+            });
+          } else {
+            return true;
+          }
+        };
+
+        if (errorIsNotSignificant(errors)) {
           this.setState({file: file, subscribers: subscribers, fields: fields});
         } else {
           this.setState({errors: errors});
