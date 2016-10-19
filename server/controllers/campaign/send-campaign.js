@@ -31,7 +31,7 @@ module.exports = (req, res) => {
     const totalListSubscribers = yield countListSubscribers(campaignInfo.listId, quotas.AvailableToday);
 
     // 5. At this stage, we've ready to send the campaign. Respond that the request was successful.
-    res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday));
+    res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday, totalListSubscribers));
 
     // 6. Send the campaign. TODO: Clean up & condense these arguments
     yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region);
@@ -54,7 +54,7 @@ module.exports = (req, res) => {
       if (!campaignInstance) {
         res.status(401).send();
       } else {
-        campaignObject = campaignInstance.get({ plain:true });
+        const campaignObject = campaignInstance.get({ plain:true });
         const listId = campaignObject.listId;
         const { fromName, fromEmail, emailSubject, emailBody } = campaignObject;
 
@@ -75,7 +75,7 @@ module.exports = (req, res) => {
         // This should never happen as settings are created on account creation
         res.status(500).send();
       } else {
-        settingObject = settingInstance.get({ plain:true });
+        const settingObject = settingInstance.get({ plain:true });
         const { accessKey, secretKey, region } = settingObject;
         // If either key is blank, the user needs to set their settings
         if (accessKey === '' || secretKey === '' || region === '') {
@@ -85,8 +85,7 @@ module.exports = (req, res) => {
         }
       }
     }).catch(err => {
-      throw err;
-      res.status(500).send();
+      res.status(500).send(err);
     });
   }
 
@@ -120,13 +119,13 @@ module.exports = (req, res) => {
         generator.next(total);
       }
     }).catch(err => {
-      throw err;
-      res.status(500).send();
+      res.status(500).send(err);
     });
   }
 
   function howLongEmailingWillTake(totalListSubscribers, AvailableToday) {
     const timeTaken = (totalListSubscribers / 14 / 60);
+    const emailsLeftAfterSend = AvailableToday - totalListSubscribers;
     let formattedMessage = 'Your email is being sent, it should take ';
 
     if (timeTaken < 1) { // Less than a minute
@@ -139,7 +138,9 @@ module.exports = (req, res) => {
       formattedMessage += 'some time.';
     }
 
+    formattedMessage += ` Your Amazon limit for today is now ${emailsLeftAfterSend} emails.`;
+
     return { message: formattedMessage };
   }
 
-}
+};
