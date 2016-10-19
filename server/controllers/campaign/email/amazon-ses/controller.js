@@ -1,5 +1,6 @@
 const queue = require('async/queue');
 const AWS = require('aws-sdk');
+const backoff = require('backoff');
 
 const AmazonEmail = require('./amazon');
 
@@ -37,19 +38,28 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   // TODO: Remaining issue where rateLimit is determined by response time of DB. Needs fix.
 
   const limit = 1; // The number of emails to be pulled from each returnList call
-  let rateLimit = 1000; //quotas.MaxSendRate; // The number of emails to send per second
+  let rateLimit = quotas.MaxSendRate; // The number of emails to send per second
   let offset = limit - 1; // The offset when pulling emails from the db
+  let pushByRateLimitInterval = 0;
 
-  const ses = new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region: region });
+  const backoffExpo = backoff.exponential({ // Exp backoff for throttling errs - see https://github.com/MathieuTurcotte/node-backoff
+    initialDelay: 3000,
+    maxDelay: 120000
+  });
+
+  const ses = new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region });
+
+  ///////////
+  // Queue //
+  ///////////
 
   const q = queue((task, done) => {
-
     const emailFormat = AmazonEmail(task, campaignInfo);
 
     ses.sendEmail(emailFormat, (err, data) => {
       // NOTE: Data contains only data.messageId, which we need to get the result of the request in terms of success/bounce/complaint etc from Amazon later
       if (err) {
-        handleError(err, data, done);
+        handleError(err, done, task);
       } else {
         done(); // Accept new email from pool
       }
@@ -57,20 +67,55 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
   }, rateLimit);
 
-  q.drain(() => {
-    console.log('all done!');
-  });
+  const pushToQueue = list => {
+    q.push(list, err => {
+      if (err)
+        throw err;
+      }
+    );
+  };
 
-  function handleError(err, data, done) {
+  ///////////
+  ///////////
+
+  ///////////
+  // Error //
+  ///////////
+
+  function handleError(err, done, task) {
     switch(err.code) {
       case 'Throttling':
-        handleThrottlingError(data, done);
+        handleThrottlingError(done, task);
     }
   }
 
-  function handleThrottlingError(data, done) {
+  function handleThrottlingError(done, task) {
     // Too many responses send per second. Handle error by reducing sending rate.
+
+    backoffExpo.backoff();
+    pushToQueue(task);
+
   }
+
+  backoffExpo.on('backoff', () => {
+    // Stop interval, pause queue & reduce rateLimit
+    clearInterval(pushByRateLimit);
+    q.pause();
+    rateLimit = Math.floor(rateLimit - (rateLimit / 10)) > 0 ? Math.floor(rateLimit - (rateLimit / 10)) > 0 : 1;
+  });
+
+  backoffExpo.on('ready', () => {
+    q.resume();
+    // Wait for existing buffer to clear then start again
+    setTimeout(pushByRateLimit, 2000);
+  });
+
+  ///////////
+  ///////////
+
+  ///////////
+  // Calls //
+  ///////////
 
   const returnList = () => {
     ListSubscriber.findAll({
@@ -80,24 +125,20 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
       limit,
       offset,
       raw: true
-    }).then(listRaw => {
-      q.push(listRaw, err => {
-        if (err)
-          throw err;
-        }
-      );
+    }).then(list => {
+      pushToQueue(list);
     }).catch(err => {
       throw err;
     });
   };
 
   function pushByRateLimit() {
-    setTimeout(() => {
+    pushByRateLimitInterval = setInterval(() => {
       if (totalListSubscribers > offset) {
         returnList();
         offset += limit;
-        pushByRateLimit();
       } else {
+        clearInterval(pushByRateLimit);
         console.timeEnd('sending');
         generator.next(null);
       }
@@ -108,5 +149,8 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     console.time('sending');
     pushByRateLimit();
   })();
+
+  ///////////
+  ///////////
 
 };
