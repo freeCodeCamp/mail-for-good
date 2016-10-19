@@ -41,6 +41,10 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   let rateLimit = quotas.MaxSendRate; // The number of emails to send per second
   let offset = limit - 1; // The offset when pulling emails from the db
   let pushByRateLimitInterval = 0;
+  let isBackingOff = false;
+  let isRunning = false;
+
+  let successCount = 0;
 
   const backoffExpo = backoff.exponential({ // Exp backoff for throttling errs - see https://github.com/MathieuTurcotte/node-backoff
     initialDelay: 3000,
@@ -58,9 +62,19 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
     ses.sendEmail(emailFormat, (err, data) => {
       // NOTE: Data contains only data.messageId, which we need to get the result of the request in terms of success/bounce/complaint etc from Amazon later
+      console.log(err, data);
       if (err) {
         handleError(err, done, task);
       } else {
+
+        /*if (q.length >= rateLimit) { // Prevents excessign congestion
+          clearInterval(pushByRateLimitInterval);
+          isRunning = false;
+        } else if (!isRunning) {
+          pushByRateLimit();
+        }*/
+
+        successCount++;
         done(); // Accept new email from pool
       }
     });
@@ -91,23 +105,33 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
   function handleThrottlingError(done, task) {
     // Too many responses send per second. Handle error by reducing sending rate.
-
-    backoffExpo.backoff();
+    if (!isBackingOff) {
+      backoffExpo.backoff();
+    }
     pushToQueue(task);
-
+    done();
   }
 
   backoffExpo.on('backoff', () => {
     // Stop interval, pause queue & reduce rateLimit
-    clearInterval(pushByRateLimit);
+    isBackingOff = true;
+    clearInterval(pushByRateLimitInterval);
+    isRunning = false;
+
     q.pause();
-    rateLimit = Math.floor(rateLimit - (rateLimit / 10)) > 0 ? Math.floor(rateLimit - (rateLimit / 10)) > 0 : 1;
+    rateLimit = Math.floor(rateLimit - (rateLimit / 10)) > 0 ? Math.floor(rateLimit - (rateLimit / 10)) : 1;
   });
 
   backoffExpo.on('ready', () => {
     q.resume();
-    // Wait for existing buffer to clear then start again
-    setTimeout(pushByRateLimit, 2000);
+    setTimeout(() => { // Wait for 2 seconds for the queue buffer to clear, then resume
+      pushByRateLimit();
+      isBackingOff = false;
+    }, 2000);
+  });
+
+  backoffExpo.on('fail', () => {
+    // Shouldn't happen but does need to be handled
   });
 
   ///////////
@@ -133,14 +157,16 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   };
 
   function pushByRateLimit() {
+    isRunning = true;
     pushByRateLimitInterval = setInterval(() => {
       if (totalListSubscribers > offset) {
         returnList();
         offset += limit;
       } else {
-        clearInterval(pushByRateLimit);
         console.timeEnd('sending');
+        console.log(successCount);
         generator.next(null);
+        clearInterval(pushByRateLimitInterval);
       }
     }, (1000 / rateLimit));
   }
