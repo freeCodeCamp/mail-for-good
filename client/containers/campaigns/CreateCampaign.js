@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import CreateCampaignForm from '../../components/campaigns/CreateCampaignForm';
+import PreviewCampaignForm from '../../components/campaigns/PreviewCampaignForm';
 import { postCreateCampaign } from '../../actions/campaignActions';
 import { getLists } from '../../actions/listActions';
 import FontAwesome from 'react-fontawesome';
@@ -34,12 +35,12 @@ export default class CreateCampaign extends Component {
   constructor() {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.nextPage = this.nextPage.bind(this);
+    this.lastPage = this.lastPage.bind(this);
   }
 
-  componentWillReceiveProps(props) {
-    if (this.props.isPosting === true && props.isPosting === false) { // Fires when campaign has been successfully created
-      this.context.router.push(`/campaigns/manage`);
-    }
+  state = {
+    page: 1
   }
 
   componentDidMount() {
@@ -49,12 +50,28 @@ export default class CreateCampaign extends Component {
     }
   }
 
+  componentWillReceiveProps(props) {
+    if (this.props.isPosting === true && props.isPosting === false) { // Fires when campaign has been successfully created
+      this.context.router.push(`/campaigns/manage`);
+    }
+  }
+
   handleSubmit() {
     // TODO: Validation both sync and serverside async for the form
     this.props.postCreateCampaign(JSON.stringify(this.props.form.values));
   }
 
+  nextPage() {
+    this.setState({ page: this.state.page + 1 });
+  }
+
+  lastPage() {
+    this.setState({ page: this.state.page - 1 });
+  }
+
   render() {
+    const { page } = this.state;
+
     return (
       <div>
         <div className="content-header">
@@ -66,7 +83,8 @@ export default class CreateCampaign extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              <CreateCampaignForm onSubmit={this.handleSubmit} lists={this.props.lists} />
+              {page === 1 && <CreateCampaignForm lists={this.props.lists} nextPage={this.nextPage} />}
+              {page === 2 && <PreviewCampaignForm form={this.props.form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
 
             {this.props.isGetting || this.props.isPosting && <div className="overlay">

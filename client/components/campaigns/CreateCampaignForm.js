@@ -47,7 +47,6 @@ const validate = values => {
 };
 
 const renderCombobox = ({ input, ...data }) => <Combobox {...input} {...data} />;
-
 const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
   <div>
     <label>{label}</label>
@@ -60,14 +59,13 @@ const renderField = ({ input, label, type, meta: { touched, error, warning } }) 
 
 const CreateCampaignForm = (props) => {
 
-  const { error, handleSubmit, pristine, reset, submitting } = props;
+  const { error, pristine, submitting, nextPage, reset } = props;
 
   const lists = props.lists.map(x => x.name);
 
   const resetFormAndSubmit = (e) => {
     e.preventDefault();
-    handleSubmit();
-    reset();
+    nextPage();
   };
 
   return (
@@ -107,7 +105,7 @@ const CreateCampaignForm = (props) => {
 
       <br/>
       <div>
-        <button className="btn btn-primary btn-lg pull-left" type="submit" disabled={pristine || submitting}>Create</button>
+        <button className="btn btn-primary btn-lg pull-left" type="submit" disabled={pristine || submitting}>Preview</button>
         <button className="btn btn-danger btn-lg pull-right" type="button" disabled={pristine || submitting} onClick={reset}>Reset</button>
       </div>
     </form>
