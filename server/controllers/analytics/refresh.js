@@ -33,8 +33,16 @@ module.exports = function(req, res) {
         const email = JSON.parse(JSON.parse(message.Body).Message);
 
         if (email && email.notificationType && email.mail && email.mail.messageId ) {
+
+          let bounceType = '';
+          let bounceSubType = '';
+          if (email.notificationType === 'Bounce' && email.bounce) {
+            bounceType = email.bounce.bounceType;
+            bounceSubType = email.bounce.bounceSubType;
+          }
+
           CampaignSubscriber.update (
-            { status: email.notificationType },
+            { status: email.notificationType, bounceType, bounceSubType },
             { where: { messageId: email.mail.messageId } }
           ).then(result => {
             sqs.deleteMessage({
