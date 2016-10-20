@@ -3,6 +3,7 @@ const AWS = require('aws-sdk');
 const backoff = require('backoff');
 
 const AmazonEmail = require('./amazon');
+const CampaignSubscriber = require('../../../../models').campaignsubscriber;
 
 /*
 
@@ -73,6 +74,14 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
         } else if (!isRunning) {
           pushByRateLimit();
         }*/
+
+        // Save the SES message ID so we can find its status later (bounced, recv, etc)
+        // ~ Using the email field here is a bit of a hack, please change me
+        CampaignSubscriber.create({
+          campaignId: campaignInfo.campaignId,
+          messageId: data.MessageId,
+          email: task.email
+        });
 
         successCount++;
         done(); // Accept new email from pool

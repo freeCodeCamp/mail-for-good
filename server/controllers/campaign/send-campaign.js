@@ -58,7 +58,7 @@ module.exports = (req, res) => {
         const listId = campaignObject.listId;
         const { fromName, fromEmail, emailSubject, emailBody } = campaignObject;
 
-        generator.next({ listId, fromName, fromEmail, emailSubject, emailBody });
+        generator.next({ listId, fromName, fromEmail, emailSubject, emailBody, campaignId });
       }
     }).catch(err => {
       throw err;
