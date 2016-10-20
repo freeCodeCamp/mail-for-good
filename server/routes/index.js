@@ -15,6 +15,8 @@ const getListSubscribers = require('../controllers/list/get-list-subscribers');
 
 const unsubscribe = require('../controllers/subscriber/unsubscribe');
 
+const refresh = require('../controllers/analytics/refresh');
+
 const changeSettings = require('../controllers/changesettings');
 
 
@@ -97,6 +99,15 @@ module.exports = (app, passport) => {
   app.get('/unsubscribe/:unsubscribeKey', (req, res) => {
     unsubscribe(req, res);
   })
+
+  ////////////////////
+  /*    ANALYTICS   */
+  ////////////////////
+
+  // convenience root for dev
+  app.get('/api/analytics/refresh', (req, res) => {
+    refresh(req, res)
+  });
 
   ////////////////////
   /*      APP       */
