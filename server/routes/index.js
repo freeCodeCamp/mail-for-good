@@ -16,6 +16,7 @@ const getListSubscribers = require('../controllers/list/get-list-subscribers');
 const unsubscribe = require('../controllers/subscriber/unsubscribe');
 
 const refresh = require('../controllers/analytics/refresh');
+const clickthrough = require('../controllers/analytics/clickthrough');
 
 const changeSettings = require('../controllers/changesettings');
 
@@ -107,6 +108,11 @@ module.exports = (app, passport) => {
   // convenience root for dev
   app.get('/api/analytics/refresh', (req, res) => {
     refresh(req, res)
+  });
+
+  // Clickthrough
+  app.get('/clickthrough', (req, res) => {
+    clickthrough(req, res)
   });
 
   ////////////////////
