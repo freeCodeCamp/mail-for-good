@@ -29,6 +29,10 @@ const ManageCampaignsTable = (props) => {
     return moment(cell).format('lll');
   };
 
+  const bouncedFormatter = (cell, row) => {
+    return row["campaignanalytic.permanentBounceCount"] + row["campaignanalytic.transientBounceCount"] + row["campaignanalytic.undeterminedBounceCount"];
+  }
+
   // ID will be used as the rowKey, but the column itself is hidden as it has no value. Slugs are also hidden.
   return (
     <BootstrapTable data={data}
@@ -44,6 +48,8 @@ const ManageCampaignsTable = (props) => {
       <TableHeaderColumn dataField="id" hidden={true} isKey={true}>Id</TableHeaderColumn>
       <TableHeaderColumn dataField="slug" hidden={true}>Slug</TableHeaderColumn>
       <TableHeaderColumn dataField="name" dataAlign="center" dataSort={true}>Name</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" dataFormat={bouncedFormatter}>Bounced</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" dataField="campaignanalytic.complaintCount">Complained</TableHeaderColumn>
       <TableHeaderColumn dataAlign="center" width="300">Tags (WIP)</TableHeaderColumn>
       <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Created</TableHeaderColumn>
       <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Updated</TableHeaderColumn>
