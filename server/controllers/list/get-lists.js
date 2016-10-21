@@ -13,4 +13,4 @@ module.exports = (req, res) => {
   }).then(instancesArray => {
     res.status(200).send(instancesArray);
   });
-}
+};

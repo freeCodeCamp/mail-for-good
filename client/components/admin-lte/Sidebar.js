@@ -4,13 +4,15 @@ import SidebarLink from '../common/SidebarLink';
 import SidebarTreeview from '../common/SidebarTreeview';
 
 const Sidebar = (props) => { // eslint-disable-line no-unused-vars
+  const { user } = props;
+
   return (
     <aside className="main-sidebar">
       <section className="sidebar">
         <div className="user-panel">
-          <div className="pull-left image"><img className="img-circle" src="https://placeholdit.imgix.net/~text?txtsize=15&txt=160%C3%97160&w=160&h=160" alt="User Image" /></div>
+          <div className="pull-left image"><img className="img-circle" src={user.picture || 'https://placeholdit.imgix.net/~text?txtsize=15&txt=160%C3%97160&w=160&h=160'} alt="User Image" /></div>
           <div className="pull-left info">
-            <p>Test user</p>
+            <p>{user.name || 'Loading...'}</p>
             <a><i className="fa fa-circle text-success" />Online</a>
           </div>
         </div>

@@ -6,20 +6,25 @@ import Footer from '../components/admin-lte/Footer.js';
 import Notifications from './Notifications';
 import io from 'socket.io-client';
 
-const socket = io();
-
-socket.emit('login');
-
-socket.on('loginResponse', data => {
-  console.log(data);
-});
-
 export default class App extends React.Component {
+  state = {
+    user: {}
+  }
+
+  componentWillMount() {
+    const socket = io();
+    socket.emit('login');
+
+    socket.on('loginResponse', data => {
+      this.setState({ user:data });
+    });
+  }
+
   render() {
     return (
       <div className="wrapper">
-        <Header />
-        <Sidebar />
+        <Header user={this.state.user} />
+        <Sidebar user={this.state.user} />
 
         <div className="content-wrapper">
           {this.props.children}

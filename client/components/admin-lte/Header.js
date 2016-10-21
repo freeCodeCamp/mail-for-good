@@ -1,6 +1,7 @@
 import React from 'react';
 
 const Header = (props) => { // eslint-disable-line no-unused-vars
+  const { user } = props;
   return (
     <header className="main-header">
       <a className="logo">
@@ -17,13 +18,14 @@ const Header = (props) => { // eslint-disable-line no-unused-vars
           <ul className="nav navbar-nav">
             <li className="dropdown user user-menu">
               <a className="dropdown-toggle" href="#" data-toggle="dropdown">
-                <img className="user-image" src="https://placeholdit.imgix.net/~text?txtsize=15&txt=160%C3%97160&w=160&h=160" alt="User Image"/>
-                <span className="hidden-xs">Test user</span>
+                <img className="user-image" src={user.picture} alt="User Image"/>
+                <span className="hidden-xs">{user.email}</span>
               </a>
               <ul className="dropdown-menu">
                 <li className="user-header">
-                  <img className="img-circle" src="https://placeholdit.imgix.net/~text?txtsize=15&txt=160%C3%97160&w=160&h=160" alt="User Image"/>
-                  <p>Test user</p>
+                  <img className="img-circle" src={user.picture} alt="User Image"/>
+                  <p>{user.name}</p>
+                  <p>{user.email}</p>
                 </li>
                 <li className="user-footer">
                   <div className="pull-right">
