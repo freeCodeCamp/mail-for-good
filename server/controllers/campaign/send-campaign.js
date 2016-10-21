@@ -30,14 +30,16 @@ module.exports = (req, res) => {
     // 4. Count the number of list subscribers to message. If this is above the daily quota, send an error.
     const totalListSubscribers = yield countListSubscribers(campaignInfo.listId, quotas.AvailableToday);
 
-    // 5. At this stage, we've ready to send the campaign. Respond that the request was successful.
+    // 5. Update analytics data
+    yield updateAnalytics(campaignInfo.campaignId, totalListSubscribers);
+
+    // 6. At this stage, we've ready to send the campaign. Respond that the request was successful.
     res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday, totalListSubscribers));
 
-    // 6. Send the campaign. TODO: Clean up & condense these arguments
+    // 7. Send the campaign. TODO: Clean up & condense these arguments
     yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region);
 
-    // 7. If there was an error preventing emails from being sent, send it here. Otherwise, TODO: push a notification
-
+    // 8. If there was an error preventing emails from being sent, send it here. Otherwise, TODO: push a notification
   }
 
   const generator = sendCampaign();
@@ -121,6 +123,18 @@ module.exports = (req, res) => {
     }).catch(err => {
       res.status(500).send(err);
     });
+  }
+
+  function updateAnalytics(campaignId, totalEmails) {
+    db.campaignanalytics.update(
+      { totalSentCount: totalEmails },
+      { where: { campaignId } }
+    ).then(result => {
+      generator.next();
+    }).catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+    })
   }
 
   function howLongEmailingWillTake(totalListSubscribers, AvailableToday) {
