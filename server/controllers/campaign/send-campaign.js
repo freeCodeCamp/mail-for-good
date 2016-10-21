@@ -33,10 +33,13 @@ module.exports = (req, res) => {
     // 5. At this stage, we've ready to send the campaign. Respond that the request was successful.
     res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday, totalListSubscribers));
 
-    // 6. Send the campaign. TODO: Clean up & condense these arguments
-    yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region);
+    // 6. Create a new analysis entry in the db
+    const { id: analysisId } = yield createAnalysisRow();
 
-    // 7. If there was an error preventing emails from being sent, send it here. Otherwise, TODO: push a notification
+    // 7. Send the campaign. TODO: Clean up & condense these arguments
+    yield email.amazon.controller(req.user.id, generator, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, analysisId);
+
+    // 8. If there was an error preventing emails from being sent, send it here. Otherwise, TODO: push a notification
 
   }
 
@@ -141,6 +144,15 @@ module.exports = (req, res) => {
     formattedMessage += ` Your Amazon limit for today is now ${emailsLeftAfterSend} emails.`;
 
     return { message: formattedMessage };
+  }
+
+  function createAnalysisRow() {
+    db.analysis.create({
+      userId: req.user.id
+    }).then(analysisInstance => {
+      const analysisObject = analysisInstance.get({ plain:true });
+      generator.next(analysisObject);
+    });
   }
 
 };

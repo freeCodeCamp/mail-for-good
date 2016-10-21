@@ -1,7 +1,7 @@
 const queue = require('async/queue');
 const AWS = require('aws-sdk');
 const backoff = require('backoff');
-
+const db = require('../../../../models');
 const AmazonEmail = require('./amazon');
 
 /*
@@ -33,7 +33,7 @@ Throttling error:
 
 */
 
-module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region) => {
+module.exports = (userId, generator, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, analysisId) => {
 
   // TODO: Remaining issue where rateLimit is determined by response time of DB. Needs fix.
 
@@ -57,6 +57,15 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   // Queue //
   ///////////
 
+  function saveAnalysisEmail(email, messageId) {
+    db.analysisEmail.create({
+      userId,
+      email,
+      sesMessageId: messageId ? messageId : '',
+      analysisId
+    });
+  }
+
   const q = queue((task, done) => {
     const emailFormat = AmazonEmail(task, campaignInfo);
 
@@ -66,15 +75,8 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
       if (err) {
         handleError(err, done, task);
       } else {
-
-        /*if (q.length >= rateLimit) { // Prevents excessign congestion
-          clearInterval(pushByRateLimitInterval);
-          isRunning = false;
-        } else if (!isRunning) {
-          pushByRateLimit();
-        }*/
-
         successCount++;
+        saveAnalysisEmail(task.email, data.MessageId);
         done(); // Accept new email from pool
       }
     });
@@ -100,6 +102,10 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     switch(err.code) {
       case 'Throttling':
         handleThrottlingError(done, task);
+        break;
+      default: // Failsafe that discards the email. Should not occur as errors should be caught by handlers.
+        done();
+        saveAnalysisEmail(task.email, null);
     }
   }
 
@@ -142,7 +148,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   ///////////
 
   const returnList = () => {
-    ListSubscriber.findAll({
+    db.listsubscriber.findAll({
       where: {
         listId: campaignInfo.listId
       },
