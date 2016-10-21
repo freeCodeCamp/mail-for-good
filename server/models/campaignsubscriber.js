@@ -10,6 +10,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         campaignsubscriber.belongsTo(models.campaign);
+        campaignsubscriber.belongsTo(models.listsubscriber)
       }
     }
   });

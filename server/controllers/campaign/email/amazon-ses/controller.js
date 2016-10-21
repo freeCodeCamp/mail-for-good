@@ -2,8 +2,10 @@ const queue = require('async/queue');
 const AWS = require('aws-sdk');
 const backoff = require('backoff');
 
+const wrapLink = require('./analytics');
 const AmazonEmail = require('./amazon');
 const CampaignSubscriber = require('../../../../models').campaignsubscriber;
+const CampaignAnalyticsLink = require('../../../../models').campaignanalyticslink
 
 /*
 
@@ -59,35 +61,43 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   ///////////
 
   const q = queue((task, done) => {
-    const emailFormat = AmazonEmail(task, campaignInfo);
+    CampaignAnalyticsLink.create({
+      trackingId: campaignInfo.trackingId,
+      campaignAnalyticsId: campaignInfo.campaignAnalyticsId,
+      listSubscriberId: task.id
+    }).then(newCampaignAnalyticsLink => {
+      console.log(newCampaignAnalyticsLink);
+      campaignInfo.emailBody = wrapLink(campaignInfo.emailBody, newCampaignAnalyticsLink.dataValues.trackingId);
 
-    ses.sendEmail(emailFormat, (err, data) => {
-      // NOTE: Data contains only data.messageId, which we need to get the result of the request in terms of success/bounce/complaint etc from Amazon later
-      console.log(err, data);
-      if (err) {
-        handleError(err, done, task);
-      } else {
+      const emailFormat = AmazonEmail(task, campaignInfo);
 
-        /*if (q.length >= rateLimit) { // Prevents excessign congestion
-          clearInterval(pushByRateLimitInterval);
-          isRunning = false;
-        } else if (!isRunning) {
-          pushByRateLimit();
-        }*/
+      ses.sendEmail(emailFormat, (err, data) => {
+        // NOTE: Data contains only data.messageId, which we need to get the result of the request in terms of success/bounce/complaint etc from Amazon later
+        console.log(err, data);
+        if (err) {
+          handleError(err, done, task);
+        } else {
 
-        // Save the SES message ID so we can find its status later (bounced, recv, etc)
-        // ~ Using the email field here is a bit of a hack, please change me
-        CampaignSubscriber.create({
-          campaignId: campaignInfo.campaignId,
-          messageId: data.MessageId,
-          email: task.email
-        });
+          /*if (q.length >= rateLimit) { // Prevents excessign congestion
+           clearInterval(pushByRateLimitInterval);
+           isRunning = false;
+           } else if (!isRunning) {
+           pushByRateLimit();
+           }*/
 
-        successCount++;
-        done(); // Accept new email from pool
-      }
-    });
+          // Save the SES message ID so we can find its status later (bounced, recv, etc)
+          // ~ Using the email field here is a bit of a hack, please change me
+          CampaignSubscriber.create({
+            campaignId: campaignInfo.campaignId,
+            messageId: data.MessageId,
+            email: task.email
+          });
 
+          successCount++;
+          done(); // Accept new email from pool
+        }
+      });
+    })
   }, rateLimit);
 
   const pushToQueue = list => {

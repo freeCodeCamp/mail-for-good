@@ -6,11 +6,13 @@ module.exports = function(sequelize, DataTypes) {
     transientBounceCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     undeterminedBounceCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     totalSentCount: { type: DataTypes.INTEGER, defaultValue: 0 },
+    trackLinksEnabled: { type: DataTypes.BOOLEAN, defaultValue: true }
   }, {
     freezeTableName: true,  // because CampaignAnalyticss is a silly name
     classMethods: {
       associate: function(models) {
         campaignanalytics.belongsTo(models.campaign);
+        campaignanalytics.hasMany(models.campaignanalyticslink)
       }
     }
   });
