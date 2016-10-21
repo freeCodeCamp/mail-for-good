@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const CampaignSubscriber = require('../../models').campaignsubscriber;
+const CampaignAnalytics = require('../../models').campaignanalytics;
 
 module.exports = function(req, res) {
 
@@ -34,17 +35,46 @@ module.exports = function(req, res) {
 
         if (email && email.notificationType && email.mail && email.mail.messageId ) {
 
+          const notificationType = email.notificationType
           let bounceType = '';
           let bounceSubType = '';
-          if (email.notificationType === 'Bounce' && email.bounce) {
+          if (notificationType === 'Bounce' && email.bounce) {
             bounceType = email.bounce.bounceType;
             bounceSubType = email.bounce.bounceSubType;
           }
 
           CampaignSubscriber.update (
-            { status: email.notificationType, bounceType, bounceSubType },
-            { where: { messageId: email.mail.messageId } }
+            { status: notificationType, bounceType, bounceSubType },
+            {
+              where: { messageId: email.mail.messageId },
+              returning: true  // only supported in postgres
+            }
           ).then(result => {
+            const updatedCampaignSubscriber = result[1][0];
+
+            let incrementField = '';
+            if (notificationType === 'Bounce') {
+              if (bounceType === 'Permanent') {
+                incrementField = 'permanentBounceCount'
+              } else if (bounceType === 'Transient') {
+                incrementField = 'transientBounceCount';
+              } else {
+                incrementField = 'undeterminedBounceCount';
+              }
+            } else if (notificationType === 'Complaint') {
+              incrementField = 'complaintCount'
+            }
+
+            if (incrementField) {
+              CampaignAnalytics.findOne({
+                where: { campaignId: updatedCampaignSubscriber.dataValues.campaignId }
+              }).then(ParentCampaignAnalytics => {
+                return ParentCampaignAnalytics.increment(incrementField);
+              }).then(result => {
+                console.log("updated CampaignAnalytics");
+              })
+            }
+
             sqs.deleteMessage({
               QueueUrl: receiveMessageParams.QueueUrl,
               ReceiptHandle: message.ReceiptHandle
