@@ -59,11 +59,11 @@ const ManageCampaignsTable = (props) => {
       <TableHeaderColumn dataField="id" hidden={true} isKey={true}>Id</TableHeaderColumn>
       <TableHeaderColumn dataField="slug" hidden={true}>Slug</TableHeaderColumn>
       <TableHeaderColumn dataField="name" dataAlign="center" dataSort={true}>Name</TableHeaderColumn>
-      <TableHeaderColumn dataAlign="center" dataField="campaignanalytic.totalSentCount">Sent</TableHeaderColumn>
-      <TableHeaderColumn dataAlign="center" dataFormat={deliveredFormatter}>Delivered</TableHeaderColumn>
-      <TableHeaderColumn dataAlign="center" dataFormat={bouncedFormatter}>Bounced</TableHeaderColumn>
-      <TableHeaderColumn dataAlign="center" dataField="campaignanalytic.complaintCount">Complained</TableHeaderColumn>
-      <TableHeaderColumn dataAlign="center" width="300">Tags (WIP)</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" dataSort={true} dataField="campaignanalytic.totalSentCount">Sent</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" dataSort={true} dataFormat={deliveredFormatter}>Delivered</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" dataSort={true} dataFormat={bouncedFormatter}>Bounced</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" dataSort={true} dataField="campaignanalytic.complaintCount">Complained</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" width="100">Tags (WIP)</TableHeaderColumn>
       <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Created</TableHeaderColumn>
       <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Updated</TableHeaderColumn>
     </BootstrapTable>
