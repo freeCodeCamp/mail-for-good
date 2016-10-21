@@ -63,8 +63,8 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   const q = queue((task, done) => {
     CampaignAnalyticsLink.create({
       trackingId: campaignInfo.trackingId,
-      campaignAnalyticsId: campaignInfo.campaignAnalyticsId,
-      listSubscriberId: task.id
+      campaignanalyticId: campaignInfo.campaignAnalyticsId,  // consider refactoring these?
+      listsubscriberId: task.id
     }).then(newCampaignAnalyticsLink => {
       console.log(newCampaignAnalyticsLink);
       campaignInfo.emailBody = wrapLink(campaignInfo.emailBody, newCampaignAnalyticsLink.dataValues.trackingId);
