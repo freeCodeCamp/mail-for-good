@@ -1,15 +1,15 @@
 const express = require('express');
-const session = require('express-session')
+const session = require('express-session');
 const passport = require('passport');
-const Sequelize = require('sequelize');
 const path = require('path');
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 require('dotenv').config();
 
 const secret = require('./config/secrets');
 const routes = require('./routes');
-
-const app = express();
 
 // Config
 require('./config/passport')(passport);
@@ -23,10 +23,10 @@ app.use('/public', express.static(path.join(__dirname, '../public')));
 app.use('/dist', express.static(path.join(__dirname, '../dist')));
 
 // Routes
-routes(app, passport);
+routes(app, passport, io);
 
 // Server
 const port = process.env.PORT || 8080;
-app.listen(port, function() {
+server.listen(port, function() {
   console.log(`Email service live on port ${port}`);
 });

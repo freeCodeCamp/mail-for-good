@@ -4,7 +4,15 @@ import Header from '../components/admin-lte/Header.js';
 import Sidebar from '../components/admin-lte/Sidebar.js';
 import Footer from '../components/admin-lte/Footer.js';
 import Notifications from './Notifications';
+import io from 'socket.io-client';
 
+const socket = io();
+
+socket.emit('login');
+
+socket.on('loginResponse', data => {
+  console.log(data);
+});
 
 export default class App extends React.Component {
   render() {
@@ -18,7 +26,7 @@ export default class App extends React.Component {
         </div>
 
         <Notifications />
-        
+
         <Footer />
       </div>
     );
