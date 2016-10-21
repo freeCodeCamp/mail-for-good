@@ -2,6 +2,7 @@
 module.exports = function(sequelize, DataTypes) {
   var campaignanalyticslink = sequelize.define('campaignanalyticslink', {
     userData: DataTypes.TEXT,
+    clicked: { type: DataTypes.BOOLEAN, defaultValue: false },
     trackingId: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4 }
   }, {
     classMethods: {
