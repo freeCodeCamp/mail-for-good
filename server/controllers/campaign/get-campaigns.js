@@ -1,11 +1,26 @@
-const campaign = require('../../models').campaign;
+const Campaign = require('../../models').campaign;
+const CampaignAnalytics = require('../../models').campaignanalytics;
 
 module.exports = (req, res) => {
   // Find all campaigns belonging to a user & send it to them
-  campaign.findAll({
+
+  Campaign.findAll({
     where: {
       userId: req.user.id
     },
+    include: [
+      {
+        model: CampaignAnalytics,  // Campaign summary analytics
+        required: true,
+        attributes: [
+          'complaintCount',
+          'permanentBounceCount',
+          'transientBounceCount',
+          'undeterminedBounceCount',
+          'totalSentCount'
+        ]
+      }
+    ],
     attributes: [
       'name', 'createdAt', 'updatedAt', 'id', 'slug'
     ],
