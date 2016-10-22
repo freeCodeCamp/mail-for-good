@@ -6,7 +6,6 @@ import {
 } from '../constants/actionTypes';
 
 export function manageListSubscribers(state = initialState.manageListSubscribers, action) {
-  console.log(action)
   switch(action.type) {
     case REQUEST_GET_LIST_SUBSCRIBERS: {
       return {...state,
@@ -22,7 +21,7 @@ export function manageListSubscribers(state = initialState.manageListSubscribers
       };
     }
     default:
-      return state
+      return state;
   }
 }
 

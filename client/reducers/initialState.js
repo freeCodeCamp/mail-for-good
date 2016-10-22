@@ -29,6 +29,9 @@ const initialState = {
   },
   notifications: {
     stack: []
+  },
+  profile: {
+    user: {}
   }
 };
 

@@ -1,30 +1,36 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 
 import Header from '../components/admin-lte/Header.js';
 import Sidebar from '../components/admin-lte/Sidebar.js';
 import Footer from '../components/admin-lte/Footer.js';
 import Notifications from './Notifications';
-import io from 'socket.io-client';
+import { emitProfileRequest } from '../actions/appActions';
 
-export default class App extends React.Component {
-  state = {
-    user: {}
+function mapStateToProps(state) {
+  return {
+    user: state.profile.user
+  };
+}
+
+@connect(mapStateToProps, { emitProfileRequest })
+export default class App extends Component {
+
+  propTypes = {
+    children: PropTypes.element.isRequired,
+    emitProfileRequest: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired
   }
 
   componentWillMount() {
-    const socket = io();
-    socket.emit('login');
-
-    socket.on('loginResponse', data => {
-      this.setState({ user:data });
-    });
+    this.props.emitProfileRequest();
   }
 
   render() {
     return (
       <div className="wrapper">
-        <Header user={this.state.user} />
-        <Sidebar user={this.state.user} />
+        <Header user={this.props.user} />
+        <Sidebar user={this.props.user} />
 
         <div className="content-wrapper">
           {this.props.children}
@@ -37,7 +43,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-App.propTypes = {
-  children: React.PropTypes.element.isRequired
-};
