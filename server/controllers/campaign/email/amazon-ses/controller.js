@@ -38,7 +38,7 @@ Throttling error:
 
 */
 
-module.exports = (userId, generator, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, analysisId) => {
+module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region) => {
 
   // TODO: Remaining issue where rateLimit is determined by response time of DB. Needs fix.
 
