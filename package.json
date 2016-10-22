@@ -47,6 +47,7 @@
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "express-session": "^1.14.1",
+    "geoip-lite": "^1.1.8",
     "import": "0.0.6",
     "jQuery": "^1.7.4",
     "jquery": "^3.1.0",
@@ -73,9 +74,9 @@
     "redux-form": "^6.0.5",
     "redux-thunk": "2.1.0",
     "sequelize": "^3.24.3",
-    "ua-parser-js": "^0.7.10",
     "slug": "^0.9.1",
-    "socket.io": "^1.5.0"
+    "socket.io": "^1.5.0",
+    "ua-parser-js": "^0.7.10"
   },
   "devDependencies": {
     "autoprefixer": "6.4.0",
