@@ -1,7 +1,6 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var campaignanalyticslink = sequelize.define('campaignanalyticslink', {
-    userData: DataTypes.TEXT,
     ipAddress: DataTypes.STRING,
     operatingSystem: DataTypes.STRING,
     deviceType: DataTypes.STRING,
