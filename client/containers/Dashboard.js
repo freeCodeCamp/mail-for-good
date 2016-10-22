@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import ManageCampaignsBox from './campaigns/ManageCampaignsBox';
 import ManageListsBox from './lists/ManageListsBox';
+import UserInfo from '../components/dashboard/UserInfo';
 
-export default class Home extends React.Component {
+function mapStateToProps(state) {
+  return {
+    user: state.profile.user
+  };
+}
+
+@connect(mapStateToProps, null)
+export default class Dashboard extends Component {
   render() {
     return (
       <div>
@@ -11,6 +20,7 @@ export default class Home extends React.Component {
         </section>
         <section className="content">
 
+          <UserInfo user={this.props.user} />
           <ManageCampaignsBox />
           <ManageListsBox />
 
@@ -20,6 +30,7 @@ export default class Home extends React.Component {
   }
 }
 
-Home.propTypes = {
-  children: React.PropTypes.element
+Dashboard.propTypes = {
+  children: PropTypes.element,
+  user: PropTypes.object.isRequired
 };
