@@ -73,7 +73,8 @@
     "redux-form": "^6.0.5",
     "redux-thunk": "2.1.0",
     "sequelize": "^3.24.3",
-    "slug": "^0.9.1"
+    "slug": "^0.9.1",
+    "ua-parser-js": "^0.7.10"
   },
   "devDependencies": {
     "autoprefixer": "6.4.0",

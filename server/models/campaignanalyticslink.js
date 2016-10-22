@@ -3,6 +3,10 @@ module.exports = function(sequelize, DataTypes) {
   var campaignanalyticslink = sequelize.define('campaignanalyticslink', {
     userData: DataTypes.TEXT,
     ipAddress: DataTypes.STRING,
+    operatingSystem: DataTypes.STRING,
+    deviceType: DataTypes.STRING,
+    deviceVendor: DataTypes.STRING,
+    browserName: DataTypes.STRING,
     clicked: { type: DataTypes.BOOLEAN, defaultValue: false },
     trackingId: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4 }
   }, {
