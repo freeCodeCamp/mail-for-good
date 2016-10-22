@@ -13,32 +13,35 @@ import CreateList from './containers/lists/CreateList';
 import ManageLists from './containers/lists/ManageLists';
 import ManageListSubscribers from './containers/lists/ManageListSubscribers';
 
+import CampaignReports from './containers/analytics/CampaignReports';
+
 import Settings from './containers/Settings';
 
-import AddEmail from './containers/AddEmail';
+// import AddEmail from './containers/AddEmail';
 import NotFound from './components/404';
 
-export default (
+export default(
   <Route path="/" component={App}>
-    <IndexRoute component={Dashboard} />
+    <IndexRoute component={Dashboard}/>
 
     <Route path="campaigns">
-        <Route path="create" component={CreateCampaign} />
-        <Route path="manage" component={ManageCampaigns} />
-        <Route path="manage/:slug" component={CampaignView} />
+      <Route path="create" component={CreateCampaign}/>
+      <Route path="manage" component={ManageCampaigns}/>
+      <Route path="manage/:slug" component={CampaignView}/>
     </Route>
 
     <Route path="lists">
-        <Route path="create" component={CreateList} />
-        <Route path="manage" component={ManageLists} />
-        <Route path="manage/:listId" component={ManageListSubscribers} />
+      <Route path="create" component={CreateList}/>
+      <Route path="manage" component={ManageLists}/>
+      <Route path="manage/:listId" component={ManageListSubscribers}/>
     </Route>
 
     <Route path="analytics">
+      <Route path="reports" component={CampaignReports}/>
     </Route>
 
-    <Route path="settings" component={Settings} />
+    <Route path="settings" component={Settings}/>
 
-    <Route path="*" component={NotFound} />
+    <Route path="*" component={NotFound}/>
   </Route>
 );

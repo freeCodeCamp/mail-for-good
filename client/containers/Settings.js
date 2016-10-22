@@ -1,5 +1,5 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 import { DropdownList } from 'react-widgets';
 import 'react-widgets/dist/css/react-widgets.css';
@@ -16,24 +16,20 @@ function getState(state) {
 }
 
 @connect(getState, {changeSettings})
-export default class Settings extends React.Component {
+export default class Settings extends Component {
 
   static propTypes = {
-    changeSettings: React.PropTypes.func.isRequired,
-    loading: React.PropTypes.bool
+    changeSettings: PropTypes.func.isRequired,
+    loading: PropTypes.bool
   }
 
-  constructor() {
-    super();
-
-    this.state = {
-      newSettings: {
-        amazonSimpleEmailServiceAccessKey: '',
-        amazonSimpleEmailServiceSecretKey: '',
-        region: ''
-      },
-      loading: false
-    };
+  state = {
+    newSettings: {
+      amazonSimpleEmailServiceAccessKey: '',
+      amazonSimpleEmailServiceSecretKey: '',
+      region: ''
+    },
+    loading: false
   }
 
   componentWillReceiveProps(newProps) {
@@ -48,7 +44,7 @@ export default class Settings extends React.Component {
       [e.target.name]: e.target.value
     };
 
-    this.setState({newSettings});
+    this.setState({ newSettings });
   }
 
   handleSubmit(e) {
@@ -80,7 +76,7 @@ export default class Settings extends React.Component {
                   <h3 className="box-title">Amazon SES credentials</h3>
                 </div>
 
-                <form role="form" ref="form" onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} autocomplete="off">
+                <form role="form" ref="form" onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} autoComplete="off">
                   <div className="box-body">
 
                     <div className="form-group">
