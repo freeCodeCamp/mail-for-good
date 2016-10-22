@@ -1,5 +1,6 @@
 import React from 'react';
 import ManageCampaignsBox from './campaigns/ManageCampaignsBox';
+import ManageListsBox from './lists/ManageListsBox';
 
 export default class Home extends React.Component {
   render() {
@@ -11,6 +12,7 @@ export default class Home extends React.Component {
         <section className="content">
 
           <ManageCampaignsBox />
+          <ManageListsBox />
 
         </section>
       </div>

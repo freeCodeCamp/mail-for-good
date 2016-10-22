@@ -28,7 +28,7 @@ export default class ManageList extends Component {
 
   render() {
     return (
-      <div className="box">
+      <div className="box box-primary">
         <div className="box-header">
           <h3 className="box-title">Your lists</h3>
         </div>
