@@ -50,31 +50,36 @@ module.exports = function(req, res) {
               returning: true  // only supported in postgres
             }
           ).then(result => {
-            const updatedCampaignSubscriber = result[1][0];
+            // Skip to deleting the SQS message if the messageId is invalid
+            // (i.e. doesn't correspond to a CampaignSubscriber entry).
+            // This should only happen if the CampaignSubscriber row
+            // has been deleted or the SQS message is dodgy
+            if (result[0]) {
+              const updatedCampaignSubscriber = result[1][0];
 
-            let incrementField = '';
-            if (notificationType === 'Bounce') {
-              if (bounceType === 'Permanent') {
-                incrementField = 'permanentBounceCount'
-              } else if (bounceType === 'Transient') {
-                incrementField = 'transientBounceCount';
-              } else {
-                incrementField = 'undeterminedBounceCount';
+              let incrementField = '';
+              if (notificationType === 'Bounce') {
+                if (bounceType === 'Permanent') {
+                  incrementField = 'permanentBounceCount'
+                } else if (bounceType === 'Transient') {
+                  incrementField = 'transientBounceCount';
+                } else {
+                  incrementField = 'undeterminedBounceCount';
+                }
+              } else if (notificationType === 'Complaint') {
+                incrementField = 'complaintCount'
               }
-            } else if (notificationType === 'Complaint') {
-              incrementField = 'complaintCount'
-            }
 
-            if (incrementField) {
-              CampaignAnalytics.findOne({
-                where: { campaignId: updatedCampaignSubscriber.dataValues.campaignId }
-              }).then(ParentCampaignAnalytics => {
-                return ParentCampaignAnalytics.increment(incrementField);
-              }).then(result => {
-                console.log("updated CampaignAnalytics");
-              })
+              if (incrementField) {
+                CampaignAnalytics.findOne({
+                  where: { campaignId: updatedCampaignSubscriber.dataValues.campaignId }
+                }).then(ParentCampaignAnalytics => {
+                  return ParentCampaignAnalytics.increment(incrementField);
+                }).then(result => {
+                  console.log("updated CampaignAnalytics");
+                })
+              }
             }
-
             sqs.deleteMessage({
               QueueUrl: receiveMessageParams.QueueUrl,
               ReceiptHandle: message.ReceiptHandle
