@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 
 import { getLists } from '../../actions/listActions';
@@ -29,29 +28,19 @@ export default class ManageList extends Component {
 
   render() {
     return (
-      <div>
-        <div className="content-header">
-          <h1>Manage lists
-            <small>Edit, delete and segement your lists here</small>
-          </h1>
+      <div className="box">
+        <div className="box-header">
+          <h3 className="box-title">Your lists</h3>
         </div>
 
-        <section className="content">
-          <div className="box">
-            <div className="box-header">
-              <h3 className="box-title">Your lists</h3>
-            </div>
+        <div className="box-body">
+          <ManageListsTable data={this.props.lists}/>
 
-            <div className="box-body">
-              <ManageListsTable data={this.props.lists} />
-              
-              {this.props.isGetting && <div className="overlay">
-                <FontAwesome name="refresh" spin/>
-              </div>}
-            </div>
-          </div>
-        </section>
+          {this.props.isGetting && <div className="overlay">
+            <FontAwesome name="refresh" spin/>
+          </div>}
+        </div>
       </div>
-    )
+    );
   }
 }

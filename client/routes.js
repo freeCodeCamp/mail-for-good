@@ -10,7 +10,7 @@ import ManageCampaigns from './components/campaigns/ManageCampaigns';
 import CampaignView from './containers/campaigns/CampaignView';
 
 import CreateList from './containers/lists/CreateList';
-import ManageLists from './containers/lists/ManageLists';
+import ManageLists from './components/lists/ManageLists';
 import ManageListSubscribers from './containers/lists/ManageListSubscribers';
 
 import Settings from './containers/Settings';
