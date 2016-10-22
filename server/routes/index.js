@@ -17,6 +17,7 @@ const unsubscribe = require('../controllers/subscriber/unsubscribe');
 
 const refresh = require('../controllers/analytics/refresh');
 const clickthrough = require('../controllers/analytics/clickthrough');
+const getClickthroughs = require('../controllers/analytics/get-clickthroughs');
 
 const getProfile = require('../controllers/websockets/get-profile');
 
@@ -120,6 +121,11 @@ module.exports = (app, passport, io) => {
   // Clickthrough
   app.get('/clickthrough', (req, res) => {
     clickthrough(req, res)
+  });
+
+  // temporary
+  app.get('/api/analytics/clickthrough', apiIsAuth, (req, res) => {
+    getClickthroughs(req, res)
   });
 
   ////////////////////
