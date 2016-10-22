@@ -25,7 +25,8 @@ module.exports = (passport, secret) => {
             token: token,
             email: profile._json.emails[0].value,
             name: profile.displayName,
-            picture: profile._json.image.url
+            picture: profile._json.image.url,
+            totalEmailCount: 0
           }, { transaction: t })
             .then(newUser => {
               newUserCreated = newUser;

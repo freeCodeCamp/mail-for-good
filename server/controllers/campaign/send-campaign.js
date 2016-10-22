@@ -31,7 +31,7 @@ module.exports = (req, res) => {
     const totalListSubscribers = yield countListSubscribers(campaignInfo.listId, quotas.AvailableToday);
 
     // 5. Update analytics data
-    campaignInfo.campaignAnalyticsId = yield updateAnalytics(campaignInfo.campaignId, totalListSubscribers);
+    campaignInfo.campaignAnalyticsId = yield updateAnalytics(campaignInfo.campaignId, userId, totalListSubscribers);
 
     // 6. At this stage, we've ready to send the campaign. Respond that the request was successful.
     res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday, totalListSubscribers));
@@ -125,14 +125,19 @@ module.exports = (req, res) => {
     });
   }
 
-  function updateAnalytics(campaignId, totalEmails) {
-    db.campaignanalytics.update(
-      { totalSentCount: totalEmails },
-      {
-        where: { campaignId },
-        returning: true
-      }
-    ).then(result => {
+  function updateAnalytics(campaignId, userId, totalEmails) {
+    db.user.findById(
+      userId
+    ).then(foundUser => {
+      return foundUser.increment('totalEmailCount', { by: totalEmails });
+    }).then(result => {
+      return db.campaignanalytics.update(
+        {totalSentCount: totalEmails},
+        {
+          where: {campaignId},
+          returning: true
+        })
+    }).then(result => {
       generator.next(result[1][0].id);
     }).catch(err => {
       console.log(err);
