@@ -33,6 +33,11 @@ module.exports = (app, passport, io) => {
 
   auth(app, passport, isAuth);
 
+  app.get('/logout', isAuth, (req, res) => {
+    req.logout();
+    res.redirect('/login');
+  });
+
   ////////////////////
   /*      API       */
   ////////////////////
@@ -42,25 +47,25 @@ module.exports = (app, passport, io) => {
   /* GET */
 
   // Get a list of all campaigns
-  app.get('/api/campaign', isAuth, (req, res) => {
+  app.get('/api/campaign', apiIsAuth, (req, res) => {
     getCampaigns(req, res);
   });
 
   /* POST */
 
   // Create new campaign
-  app.post('/api/campaign', isAuth, parseJson, (req, res) => {
+  app.post('/api/campaign', apiIsAuth, parseJson, (req, res) => {
     createCampaign(req, res);
   });
 
   // Send campaign
-  app.post('/api/campaign/send', isAuth, parseJson, (req, res) => {
+  app.post('/api/campaign/send', apiIsAuth, parseJson, (req, res) => {
     sendCampaign(req, res);
   });
 
   /* DELETE */
 
-  app.delete('/api/campaign', isAuth, parseJson, (req, res) => {
+  app.delete('/api/campaign', apiIsAuth, parseJson, (req, res) => {
     deleteCampaigns(req, res);
   });
 
@@ -69,31 +74,31 @@ module.exports = (app, passport, io) => {
   /* GET */
 
   // Send user their lists
-  app.get('/api/list/manage', isAuth, (req, res) => {
+  app.get('/api/list/manage', apiIsAuth, (req, res) => {
     getLists(req, res);
   });
 
   // Get the subscribers of a specified list
-  app.get('/api/list/subscribers', isAuth, (req, res) => {
+  app.get('/api/list/subscribers', apiIsAuth, (req, res) => {
     getListSubscribers(req, res);
   });
 
   /* POST */
 
   // Add subscribers
-  app.post('/api/list/add/subscribers', isAuth, (req, res) => {
+  app.post('/api/list/add/subscribers', apiIsAuth, (req, res) => {
     addSubscribers(req, res);
   });
 
   // Import csv
-  app.post('/api/list/add/csv', isAuth, multer.single('csv'), (req, res) => {
+  app.post('/api/list/add/csv', apiIsAuth, multer.single('csv'), (req, res) => {
     importCSV(req, res);
   });
 
   /* Settings */
 
   // Change settings
-  app.post('/api/settings', isAuth, parseJson, (req, res) => {
+  app.post('/api/settings', apiIsAuth, parseJson, (req, res) => {
     changeSettings(req, res);
   });
 
@@ -141,5 +146,13 @@ function isAuth(req, res, next) {
     return next();
   } else {
     res.redirect('/login');
+  }
+}
+
+function apiIsAuth(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    res.status(403).send();
   }
 }

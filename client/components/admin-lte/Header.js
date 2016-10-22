@@ -29,7 +29,7 @@ const Header = (props) => { // eslint-disable-line no-unused-vars
                 </li>
                 <li className="user-footer">
                   <div className="pull-right">
-                    <a className="btn btn-default btn-flat" href="#">Sign out</a>
+                    <a className="btn btn-default btn-flat" href="/logout">Sign out</a>
                   </div>
                 </li>
               </ul>

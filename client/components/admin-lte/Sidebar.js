@@ -33,9 +33,9 @@ const Sidebar = (props) => { // eslint-disable-line no-unused-vars
             <SidebarLink to="/lists/manage">Manage Lists</SidebarLink> {/* RUD, Export list, statistics, add subscriber, duplicate list, combine list */}
           </SidebarTreeview>
 
-          <SidebarTreeview name="Analytics WIP" icon="fa-bar-chart">
+          <SidebarTreeview name="Analytics" icon="fa-bar-chart">
             <SidebarLink to="/analytics/overview">Overview TBA</SidebarLink> {/* General overview of all campaigns */}
-            <SidebarLink to="/analytics/reports">Campaign Reports TBA</SidebarLink> {/* Bounce rate, click rate, open rate, unsub no., etc */}
+            <SidebarLink to="/analytics/reports">Campaign Reports</SidebarLink> {/* Bounce rate, click rate, open rate, unsub no., etc */}
           </SidebarTreeview>
 
           <SidebarLink to="/settings" icon="fa-cog">Settings</SidebarLink>

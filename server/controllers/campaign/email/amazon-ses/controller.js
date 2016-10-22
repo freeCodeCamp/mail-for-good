@@ -3,6 +3,8 @@ const AWS = require('aws-sdk');
 const backoff = require('backoff');
 
 const wrapLink = require('./analytics');
+
+const db = require('../../../../models');
 const AmazonEmail = require('./amazon');
 const CampaignSubscriber = require('../../../../models').campaignsubscriber;
 const CampaignAnalyticsLink = require('../../../../models').campaignanalyticslink
@@ -36,7 +38,7 @@ Throttling error:
 
 */
 
-module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region) => {
+module.exports = (userId, generator, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, analysisId) => {
 
   // TODO: Remaining issue where rateLimit is determined by response time of DB. Needs fix.
 
@@ -103,14 +105,11 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
   const pushToQueue = list => {
     q.push(list, err => {
-      if (err)
-        throw err;
+        if (err)
+          throw err;
       }
     );
   };
-
-  ///////////
-  ///////////
 
   ///////////
   // Error //
@@ -120,6 +119,10 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     switch(err.code) {
       case 'Throttling':
         handleThrottlingError(done, task);
+        break;
+      default: // Failsafe that discards the email. Should not occur as errors should be caught by handlers.
+        done();
+        saveAnalysisEmail(task.email, null);
     }
   }
 
@@ -162,7 +165,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   ///////////
 
   const returnList = () => {
-    ListSubscriber.findAll({
+    db.listsubscriber.findAll({
       where: {
         listId: campaignInfo.listId
       },
@@ -195,8 +198,5 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     console.time('sending');
     pushByRateLimit();
   })();
-
-  ///////////
-  ///////////
 
 };
