@@ -18,12 +18,14 @@ const unsubscribe = require('../controllers/subscriber/unsubscribe');
 const refresh = require('../controllers/analytics/refresh');
 const clickthrough = require('../controllers/analytics/clickthrough');
 
+const getProfile = require('../controllers/websockets/get-profile');
+
 const changeSettings = require('../controllers/changesettings');
 
 
 const parseJson = bodyParser.json();
 
-module.exports = (app, passport) => {
+module.exports = (app, passport, io) => {
 
   ////////////////////
   /* AUTHENTICATION */
@@ -99,7 +101,7 @@ module.exports = (app, passport) => {
 
   app.get('/unsubscribe/:unsubscribeKey', (req, res) => {
     unsubscribe(req, res);
-  })
+  });
 
   ////////////////////
   /*    ANALYTICS   */
@@ -121,6 +123,14 @@ module.exports = (app, passport) => {
 
   app.get('/*', isAuth, (req, res) => {
     res.sendFile(path.resolve('dist/index.html'));
+
+    io.on('connection', socket => {
+      socket.on('login', () => {
+        getProfile(req).then(userObject => {
+          socket.emit('loginResponse', userObject);
+        });
+      });
+    });
   });
 
 };
@@ -132,4 +142,4 @@ function isAuth(req, res, next) {
   } else {
     res.redirect('/login');
   }
-};
+}
