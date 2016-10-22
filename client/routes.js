@@ -6,7 +6,7 @@ import App from './containers/App';
 import Dashboard from './containers/Dashboard';
 
 import CreateCampaign from './containers/campaigns/CreateCampaign';
-import ManageCampaigns from './containers/campaigns/ManageCampaigns';
+import ManageCampaigns from './components/campaigns/ManageCampaigns';
 import CampaignView from './containers/campaigns/CampaignView';
 
 import CreateList from './containers/lists/CreateList';

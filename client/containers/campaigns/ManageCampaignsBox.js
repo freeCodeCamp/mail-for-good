@@ -49,7 +49,7 @@ export default class ManageCampaignsBox extends Component {
 
   render() {
     return (
-      <div className="box">
+      <div className="box box-primary">
         <div className="box-header">
           <h3 className="box-title">Your campaigns</h3>
         </div>

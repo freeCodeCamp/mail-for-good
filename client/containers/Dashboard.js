@@ -1,15 +1,17 @@
 import React from 'react';
-
+import ManageCampaignsBox from './campaigns/ManageCampaignsBox';
 
 export default class Home extends React.Component {
   render() {
     return (
       <div>
         <section className="content-header">
-          <h1>Page Header <small>Home page</small></h1>
+          <h1>Dashboard <small>An overview of your lists and campaigns</small></h1>
         </section>
         <section className="content">
-          <p> Home page content will go here. </p>
+
+          <ManageCampaignsBox />
+
         </section>
       </div>
     );
