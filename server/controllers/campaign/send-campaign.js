@@ -129,7 +129,7 @@ module.exports = (req, res) => {
     db.user.findById(
       userId
     ).then(foundUser => {
-      return foundUser.increment('totalEmailCount', { by: totalEmails });
+      return foundUser.increment('sentEmailsCount', { by: totalEmails });
     }).then(result => {
       return db.campaignanalytics.update(
         {totalSentCount: totalEmails},

@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
     token: DataTypes.STRING,
     email: DataTypes.STRING,
     name: DataTypes.STRING,
-    totalEmailCount: { type: DataTypes.INTEGER, default: 0 }
+    sentEmailsCount: { type: DataTypes.INTEGER, defaultValue: 0 }
   }, {
     classMethods: {
       associate: function(models) {
