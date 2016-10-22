@@ -66,10 +66,11 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
       campaignanalyticId: campaignInfo.campaignAnalyticsId,  // consider refactoring these?
       listsubscriberId: task.id
     }).then(newCampaignAnalyticsLink => {
-      console.log(newCampaignAnalyticsLink);
-      campaignInfo.emailBody = wrapLink(campaignInfo.emailBody, newCampaignAnalyticsLink.dataValues.trackingId);
 
-      const emailFormat = AmazonEmail(task, campaignInfo);
+      const updatedCampaignInfo = Object.assign({}, campaignInfo);
+      updatedCampaignInfo.emailBody = wrapLink(campaignInfo.emailBody, newCampaignAnalyticsLink.dataValues.trackingId);
+
+      const emailFormat = AmazonEmail(task, updatedCampaignInfo);
 
       ses.sendEmail(emailFormat, (err, data) => {
         // NOTE: Data contains only data.messageId, which we need to get the result of the request in terms of success/bounce/complaint etc from Amazon later
