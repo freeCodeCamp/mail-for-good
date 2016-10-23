@@ -57,15 +57,20 @@ const renderField = ({ input, label, type, meta: { touched, error, warning } }) 
   </div>
 );
 
-const CreateCampaignForm = (props) => {
+const CreateCampaignForm = props => {
 
-  const { error, pristine, submitting, nextPage, reset } = props;
+  const { touch, valid, error, pristine, submitting, nextPage, reset } = props;
 
   const lists = props.lists.map(x => x.name);
+  const nameArray = ['listName', 'campaignName', 'fromName', 'fromEmail', 'emailSubject', 'emailBody'];
 
   const resetFormAndSubmit = (e) => {
     e.preventDefault();
-    nextPage();
+    if (valid) {
+      nextPage();
+    } else {
+      touch(...nameArray);
+    }
   };
 
   return (
@@ -79,29 +84,16 @@ const CreateCampaignForm = (props) => {
       <hr/>
 
       <h3>Campaign details</h3>
-      <div> {/* TODO: This needs to be validated via regex. Doesn't need to be a slug but must resolve to a unique slug so there's no possibility of conflict. */}
-        <Field name="campaignName" component={renderField} label="Campaign Name" type="text" />
-      </div>
-
-      <div>
-        <Field name="fromName" component={renderField} label="From Name" type="text" />
-      </div>
-
-      <div>
-        <Field name="fromEmail" component={renderField} label="From Email" type="email" />
-      </div>
+      {/* TODO: This needs to be validated via regex. Doesn't need to be a slug but must resolve to a unique slug so there's no possibility of conflict. */}
+      <Field name="campaignName" component={renderField} label="Campaign Name" type="text" />
+      <Field name="fromName" component={renderField} label="From Name" type="text" />
+      <Field name="fromEmail" component={renderField} label="From Email" type="email" />
 
       <hr/>
 
       <h3>Create email</h3>
-      <div>
-        <Field name="emailSubject" component={renderField} label="Subject" type="text" />
-      </div>
-
-      <div>
-        <label>Write Email</label>
-        <Field name="emailBody" component={TextEditor} />
-      </div>
+      <Field name="emailSubject" component={renderField} label="Subject" type="text" />
+      <Field name="emailBody" component={renderTextEditor} label="Write Email" />
 
       <br/>
       <div>
