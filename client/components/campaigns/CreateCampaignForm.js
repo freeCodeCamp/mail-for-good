@@ -46,12 +46,31 @@ const validate = values => {
   return errors;
 };
 
-const renderCombobox = ({ input, ...data }) => <Combobox {...input} {...data} />;
+const renderCombobox = ({ input, label, type, meta: { touched, error, warning }, ...data }) => (
+  <div>
+    <label>{label}</label>
+    <div>
+      <Combobox {...input} {...data} />
+      {touched && ((error && <span className="text-red"><i className="fa fa-exclamation" /> {error}</span>) || (warning && <span>{warning}</span>))}
+    </div>
+  </div>
+);
+
 const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
   <div>
     <label>{label}</label>
     <div>
       <input className="form-control" {...input} placeholder={label} type={type}/>
+      {touched && ((error && <span className="text-red"><i className="fa fa-exclamation" /> {error}</span>) || (warning && <span>{warning}</span>))}
+    </div>
+  </div>
+);
+
+const renderTextEditor = ({ input, label, type, meta: { touched, error, warning } }) => (
+  <div>
+    <label>{label}</label>
+    <div>
+      <Field name="emailBody" component={TextEditor} />
       {touched && ((error && <span className="text-red"><i className="fa fa-exclamation" /> {error}</span>) || (warning && <span>{warning}</span>))}
     </div>
   </div>
