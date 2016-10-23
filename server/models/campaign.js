@@ -13,6 +13,7 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
         campaign.belongsTo(models.user);
         campaign.belongsTo(models.list);
+        campaign.hasMany(models.campaignsubscriber);
         campaign.hasOne(models.campaignanalytics);
       }
     }
