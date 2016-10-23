@@ -167,7 +167,8 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   const returnList = () => {
     db.listsubscriber.findAll({
       where: {
-        listId: campaignInfo.listId
+        listId: campaignInfo.listId,
+        subscribed: true
       },
       limit,
       offset,

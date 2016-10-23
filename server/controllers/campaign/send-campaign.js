@@ -112,7 +112,8 @@ module.exports = (req, res) => {
   function countListSubscribers(listId, AvailableToday) {
     db.listsubscriber.count({
       where: {
-        listId: listId
+        listId: listId,
+        subscribed: true
       }
     }).then(total => {
       if (total > AvailableToday) {
