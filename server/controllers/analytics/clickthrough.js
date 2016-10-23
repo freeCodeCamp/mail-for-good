@@ -2,6 +2,7 @@ const uaParser = require('ua-parser-js');
 const geoip = require('geoip-lite');
 
 const CampaignAnalyticsLink = require('../../models').campaignanalyticslink;
+const CampaignAnalytics = require('../../models').campaignanalytics;
 
 console.log("Clickthrough tracking: Make sure that geoip data has been downloaded: ")
 console.log("   $ cd node_modules/geoip-lite")
@@ -42,7 +43,11 @@ module.exports = function(req, res) {
       foundCampaignAnalyticsLink.operatingSystem = headers.os.name;
 
       foundCampaignAnalyticsLink.save().then(result => {
-        console.log("saved");
+        CampaignAnalytics.findById(foundCampaignAnalyticsLink.campaignanalyticId).then(foundCampaignAnalytics => {
+          foundCampaignAnalytics.increment('clickthroughCount').then(result => {
+            console.log("saved");
+          });
+        });
       });
     }
   })

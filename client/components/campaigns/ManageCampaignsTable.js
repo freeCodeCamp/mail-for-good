@@ -63,6 +63,7 @@ const ManageCampaignsTable = (props) => {
       <TableHeaderColumn dataAlign="center" dataSort={true} dataFormat={deliveredFormatter}>Delivered</TableHeaderColumn>
       <TableHeaderColumn dataAlign="center" dataSort={true} dataFormat={bouncedFormatter}>Bounced</TableHeaderColumn>
       <TableHeaderColumn dataAlign="center" dataSort={true} dataField="campaignanalytic.complaintCount">Complained</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" dataSort={true} dataField="campaignanalytic.clickthroughCount">Clickthroughs</TableHeaderColumn>
       <TableHeaderColumn dataAlign="center" width="100">Tags (WIP)</TableHeaderColumn>
       <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Created</TableHeaderColumn>
       <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Updated</TableHeaderColumn>
