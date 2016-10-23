@@ -2,7 +2,8 @@ const queue = require('async/queue');
 const AWS = require('aws-sdk');
 const backoff = require('backoff');
 
-const wrapLink = require('./analytics');
+const wrapLink = require('./analytics').wrapLink;
+const insertUnsubscribeLink = require('./analytics').insertUnsubscribeLink;
 
 const db = require('../../../../models');
 const AmazonEmail = require('./amazon');
@@ -71,6 +72,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
       const updatedCampaignInfo = Object.assign({}, campaignInfo);
       updatedCampaignInfo.emailBody = wrapLink(campaignInfo.emailBody, newCampaignAnalyticsLink.dataValues.trackingId);
+      updatedCampaignInfo.emailBody = insertUnsubscribeLink(updatedCampaignInfo.emailBody, task.unsubscribeKey);
 
       const emailFormat = AmazonEmail(task, updatedCampaignInfo);
 
