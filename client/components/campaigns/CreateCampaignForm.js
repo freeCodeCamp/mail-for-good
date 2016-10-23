@@ -48,6 +48,7 @@ const renderRadio = ({ input, label, type, meta: { touched, error, warning } }) 
     <label>{label}</label>
     <div className="form-group">
       <label><Field component="input" type="radio" {...input} value="Plaintext" /> Plaintext</label>
+      <br />
       <label><Field component="input" type="radio" {...input} value="HTML" /> HTML</label>
       <br />
       {touched && ((error && <span className="text-red"><i className="fa fa-exclamation" /> {error}</span>) || (warning && <span>{warning}</span>))}

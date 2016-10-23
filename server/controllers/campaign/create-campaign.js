@@ -1,5 +1,6 @@
 const db = require('../../models');
 const slug = require('slug');
+const htmlToText = require('html-to-text');
 
 module.exports = (req, res) => {
   /*
@@ -32,6 +33,9 @@ module.exports = (req, res) => {
     if (values.some(x => x === false)) {
       res.status(400).send(); // If any validation promise resolves to false, fail silently. No need to respond as validation is handled client side & this is a security measure.
     } else {
+      // Set emailBody to plaintext if type === Plaintext
+      const htmlToTextOpts = { wordwrap: false, ignoreImage: true };
+      const emailBodyType = req.body.type === 'Plaintext' ? htmlToText.fromString(req.body.emailBody, htmlToTextOpts) : req.body.emailBody;
       // Find or create the campaign
       db.campaign.findOrCreate({
         where: {
@@ -43,7 +47,8 @@ module.exports = (req, res) => {
           fromName: req.body.fromName,
           fromEmail: req.body.fromEmail,
           emailSubject: req.body.emailSubject,
-          emailBody: req.body.emailBody,
+          emailBody: emailBodyType,
+          type: req.body.type,
           userId: req.user.id,
           listId: valueFromValidation.listId,
           slug: slug(req.body.campaignName)
