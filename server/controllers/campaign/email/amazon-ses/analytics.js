@@ -1,10 +1,10 @@
 const clickThroughBaseUrl = 'localhost:8080';  // placeholder
 
-function wrapLink(str, trackingId) {
-  str = str.replace(/\{(.+?)\/(.+?)\}/g, function(m, label, url) {
+function wrapLink(body, trackingId) {
+  body = body.replace(/\{(.+?)\/(.+?)\}/g, function(m, label, url) {
     return '<a href="http://' + clickThroughBaseUrl + '/clickthrough?url=' + url + '&trackingId=' + trackingId + '">' + label + '</a>';
   });
-  return str;
+  return body;
 }
 
 function insertUnsubscribeLink(body, unsubscribeId) {
