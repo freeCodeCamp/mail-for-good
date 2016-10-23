@@ -16,7 +16,7 @@ function mapStateToProps(state) {
 @connect(mapStateToProps, { emitProfileRequest })
 export default class App extends Component {
 
-  propTypes = {
+  static propTypes = {
     children: PropTypes.element.isRequired,
     emitProfileRequest: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired
