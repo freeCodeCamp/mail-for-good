@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Field, reduxForm } from 'redux-form';
+import { Field, reduxForm, initialize } from 'redux-form';
 import { Combobox } from 'react-widgets';
 import 'react-widgets/dist/css/react-widgets.css';
 
@@ -43,6 +43,17 @@ const renderField = ({ input, label, type, meta: { touched, error, warning } }) 
     </div>
   </div>
 );
+const renderRadio = ({ input, label, type, meta: { touched, error, warning } }) => (
+  <div>
+    <label>{label}</label>
+    <div className="form-group">
+      <label><Field component="input" type="radio" {...input} value="Plaintext" /> Plaintext</label>
+      <label><Field component="input" type="radio" {...input} value="HTML" /> HTML</label>
+      <br />
+      {touched && ((error && <span className="text-red"><i className="fa fa-exclamation" /> {error}</span>) || (warning && <span>{warning}</span>))}
+    </div>
+  </div>
+);
 const renderTextEditor = ({ input, label, type, meta: { touched, error, warning } }) => (
   <div>
     <label>{label}</label>
@@ -65,10 +76,11 @@ const CreateCampaignForm = props => {
   const { touch, valid, pristine, submitting, nextPage, reset } = props;
 
   const lists = props.lists.map(x => x.name);
-  const nameArray = ['listName', 'campaignName', 'fromName', 'fromEmail', 'emailSubject', 'emailBody'];
+  const nameArray = ['listName', 'campaignName', 'fromName', 'fromEmail', 'emailSubject', 'emailBody', 'type'];
 
   const resetFormAndSubmit = (e) => {
     e.preventDefault();
+    console.log(props);
     if (valid) {
       nextPage();
     } else {
@@ -95,6 +107,7 @@ const CreateCampaignForm = props => {
       <hr/>
 
       <h3>Create email</h3>
+      <Field name="type" component={renderRadio} label="Type" />
       <Field name="emailSubject" component={renderField} label="Subject" type="text" />
       <Field name="emailBody" component={renderTextEditor} label="Write Email" />
 
@@ -137,6 +150,9 @@ const validate = values => {
   }
   if (!values.emailBody) {
     errors.emailBody = 'Required';
+  }
+  if (!values.type) {
+    errors.type = 'Required';
   }
 
   return errors;

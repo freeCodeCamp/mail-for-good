@@ -40,7 +40,10 @@ export default class CreateCampaign extends Component {
   }
 
   state = {
-    page: 1
+    page: 1,
+    initialFormValues: {
+      type: 'Plaintext'
+    }
   }
 
   componentDidMount() {
@@ -83,7 +86,7 @@ export default class CreateCampaign extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateCampaignForm lists={this.props.lists} nextPage={this.nextPage} />}
+              {page === 1 && <CreateCampaignForm lists={this.props.lists} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
               {page === 2 && <PreviewCampaignForm form={this.props.form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
 

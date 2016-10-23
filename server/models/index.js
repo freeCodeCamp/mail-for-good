@@ -34,7 +34,7 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 sequelize
-  .sync({ force: false })
+  .sync({ force: true })
   .then(function(err) {
     console.log('DB connected & reset');
   }, function (err) {
