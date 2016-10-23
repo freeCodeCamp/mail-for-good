@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Combobox } from 'react-widgets';
 import 'react-widgets/dist/css/react-widgets.css';
@@ -10,7 +10,7 @@ import TextEditor from './CreateCampaignFormTextEditor';
 // Ref react-rte https://github.com/sstur/react-rte
 
 /*
-Helper wrapper functions for react-widgets from the redux-form examples page. May be useful later.
+Helper wrapper functions for react-widgets from the redux-form examples page.
 
 const renderSelectList = ({ input, ...rest }) => <SelectList {...input} onBlur={() => input.onBlur()} {...rest}/>;
 const renderDropdownList = ({ input, ...rest }) => <DropdownList {...input} {...rest}/>;
@@ -21,30 +21,9 @@ const renderMultiselect = ({ input, ...rest }) =>
     {...rest}/>;
 */
 
-const validate = values => {
-  const errors = {};
-
-  if (!values.listName) {
-    errors.listName = 'Required';
-  }
-  if (!values.campaignName) {
-    errors.campaignName = 'Required';
-  }
-  if (!values.fromName) {
-    errors.fromName = 'Required';
-  }
-  if (!values.fromEmail) {
-    errors.fromEmail = 'Required';
-  }
-  if (!values.emailSubject) {
-    errors.emailSubject = 'Required';
-  }
-  if (!values.emailBody) {
-    errors.emailBody = 'Required';
-  }
-
-  return errors;
-};
+/////////////////////
+// Render Wrappers //
+/////////////////////
 
 const renderCombobox = ({ input, label, type, meta: { touched, error, warning }, ...data }) => (
   <div>
@@ -55,7 +34,6 @@ const renderCombobox = ({ input, label, type, meta: { touched, error, warning },
     </div>
   </div>
 );
-
 const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
   <div>
     <label>{label}</label>
@@ -65,7 +43,6 @@ const renderField = ({ input, label, type, meta: { touched, error, warning } }) 
     </div>
   </div>
 );
-
 const renderTextEditor = ({ input, label, type, meta: { touched, error, warning } }) => (
   <div>
     <label>{label}</label>
@@ -76,9 +53,16 @@ const renderTextEditor = ({ input, label, type, meta: { touched, error, warning 
   </div>
 );
 
+/////////////////////
+/////////////////////
+
+///////////////////////////
+// Create form component //
+///////////////////////////
+
 const CreateCampaignForm = props => {
 
-  const { touch, valid, error, pristine, submitting, nextPage, reset } = props;
+  const { touch, valid, pristine, submitting, nextPage, reset } = props;
 
   const lists = props.lists.map(x => x.name);
   const nameArray = ['listName', 'campaignName', 'fromName', 'fromEmail', 'emailSubject', 'emailBody'];
@@ -121,6 +105,41 @@ const CreateCampaignForm = props => {
       </div>
     </form>
   );
+};
+
+CreateCampaignForm.propTypes = {
+  touch: PropTypes.func.isRequired,
+  valid: PropTypes.bool.isRequired,
+  pristine: PropTypes.bool.isRequired,
+  submitting: PropTypes.bool.isRequired,
+  nextPage: PropTypes.func.isRequired,
+  reset: PropTypes.func.isRequired,
+  lists: PropTypes.array.isRequired
+};
+
+const validate = values => {
+  const errors = {};
+
+  if (!values.listName) {
+    errors.listName = 'Required';
+  }
+  if (!values.campaignName) {
+    errors.campaignName = 'Required';
+  }
+  if (!values.fromName) {
+    errors.fromName = 'Required';
+  }
+  if (!values.fromEmail) {
+    errors.fromEmail = 'Required';
+  }
+  if (!values.emailSubject) {
+    errors.emailSubject = 'Required';
+  }
+  if (!values.emailBody) {
+    errors.emailBody = 'Required';
+  }
+
+  return errors;
 };
 
 export default reduxForm({
