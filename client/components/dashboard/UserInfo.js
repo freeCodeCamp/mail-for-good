@@ -10,6 +10,7 @@ const UserInfo = props => {
 
       <div className="box-body">
         <p>{user.email}</p>
+        <p>Total emails sent: {user.sentEmailsCount}</p>
       </div>
     </div>
   );

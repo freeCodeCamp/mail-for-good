@@ -5,7 +5,7 @@ module.exports = function(req) {
     where: {
       id: req.user.id
     },
-    attributes:['picture', 'email', 'createdAt', 'name']
+    attributes: ['picture', 'email', 'createdAt', 'name', 'sentEmailsCount']
   }).then(userInstance => {
     const userObject = userInstance.get({ plain:true });
     return userObject;
