@@ -21,10 +21,10 @@
     "client:test:watch": "npm run client:test -- --watch",
     "client:open:cover": "npm run test:cover && open coverage/index.html",
     "start": "node server/index.js",
+    "dev": "IS_DEV_MODE=true npm start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel-node tools/buildServer.js",
-    "email:server": "node server/email/test-internal",
-    "email:test:multiple": "RUN_ALONE=true node server/controllers/email/test-internal/test-multiple.js"
+    "email:test:amazon": "node server/controllers/campaign/email/amazon-ses/test-server.js"
   },
   "repository": {
     "type": "git",

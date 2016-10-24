@@ -43,6 +43,8 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
   // TODO: Remaining issue where rateLimit is determined by response time of DB. Needs fix.
 
+  const isDevMode = process.env.IS_DEV_MODE || false;
+
   const limit = 1; // The number of emails to be pulled from each returnList call
   let rateLimit = quotas.MaxSendRate; // The number of emails to send per second
   let offset = limit - 1; // The offset when pulling emails from the db
@@ -57,7 +59,9 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     maxDelay: 120000
   });
 
-  const ses = new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region });
+  const ses = isDevMode
+    ? new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region, endpoint: 'http://localhost:9999' })
+    : new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region });
 
   ///////////
   // Queue //
@@ -78,8 +82,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
       ses.sendEmail(emailFormat, (err, data) => {
         // NOTE: Data contains only data.messageId, which we need to get the result of the request in terms of success/bounce/complaint etc from Amazon later
-        console.log(err, data);
-        if (err) {
+        if (err && !isDevMode) {
           handleError(err, done, task);
         } else {
 
