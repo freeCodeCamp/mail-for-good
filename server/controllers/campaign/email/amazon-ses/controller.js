@@ -37,11 +37,16 @@ Throttling error:
   statusCode: 400,
   retryable: true }
 
+  TODO: Eventual plan
+
+  > Buffer emails to be sent
+  > Send fixed number of emails per second
+
+  Can be implemented when this code is more concrete. As things stand, the send rate is determined by db latency.
+
 */
 
 module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region) => {
-
-  // TODO: Remaining issue where rateLimit is determined by response time of DB. Needs fix.
 
   const isDevMode = process.env.IS_DEV_MODE || false;
 
@@ -85,13 +90,6 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
           handleError(err, done, task);
         } else {
 
-          /*if (q.length >= rateLimit) { // Prevents excessign congestion
-           clearInterval(pushByRateLimitInterval);
-           isRunning = false;
-           } else if (!isRunning) {
-           pushByRateLimit();
-           }*/
-
           // Save the SES message ID so we can find its status later (bounced, recv, etc)
           // ~ Using the email field here is a bit of a hack, please change me
           CampaignSubscriber.create({
@@ -103,7 +101,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
           done(); // Accept new email from pool
         }
       });
-    })
+    });
   }, rateLimit);
 
   const pushToQueue = list => {
@@ -125,7 +123,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
         break;
       default: // Failsafe that discards the email. Should not occur as errors should be caught by handlers.
         done();
-        saveAnalysisEmail(task.email, null);
+        // saveAnalysisEmail(task.email, null);
     }
   }
 
@@ -187,8 +185,10 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     isRunning = true;
     pushByRateLimitInterval = setInterval(() => {
       if (totalListSubscribers > offset) {
-        returnList();
-        offset += limit;
+        if (q.length() <= rateLimit) { // Prevent race condition where requests to returnList vastly exceed & overwhelm other db requests
+          returnList();
+          offset += limit;
+        }
       } else {
         console.timeEnd('sending');
         generator.next(null);

@@ -131,19 +131,19 @@ module.exports = (req, res) => {
       userId
     ).then(foundUser => {
       return foundUser.increment('sentEmailsCount', { by: totalEmails });
-    }).then(result => {
+    }).then(() => {
       return db.campaignanalytics.update(
         {totalSentCount: totalEmails},
         {
           where: {campaignId},
           returning: true
-        })
+        });
     }).then(result => {
       generator.next(result[1][0].id);
     }).catch(err => {
       console.log(err);
       res.status(500).send(err);
-    })
+    });
   }
 
   function howLongEmailingWillTake(totalListSubscribers, AvailableToday) {

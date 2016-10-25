@@ -59,7 +59,7 @@ module.exports = (req, res) => {
 
   Promise.all([validateListBelongsToUser]).then(values => {
     let [listInstance] = values; // Get variables from the values array
-    const concurrency = 500; // Number of rows and upserts to handle concurrently. Arbitrary number.
+    const concurrency = 5000; // Number of rows and upserts to handle concurrently. Arbitrary number.
 
     listInstance = listInstance[0];
     const listIsNew = listInstance.$options.isNewRecord;
