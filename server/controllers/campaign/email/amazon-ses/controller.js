@@ -81,8 +81,8 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     }).then(newCampaignAnalyticsLink => {
 
       const updatedCampaignInfo = Object.assign({}, campaignInfo);
-      updatedCampaignInfo.emailBody = wrapLink(campaignInfo.emailBody, newCampaignAnalyticsLink.dataValues.trackingId);
-      updatedCampaignInfo.emailBody = insertUnsubscribeLink(updatedCampaignInfo.emailBody, task.unsubscribeKey);
+      updatedCampaignInfo.emailBody = wrapLink(campaignInfo.emailBody, newCampaignAnalyticsLink.dataValues.trackingId, campaignInfo.type);
+      updatedCampaignInfo.emailBody = insertUnsubscribeLink(updatedCampaignInfo.emailBody, task.unsubscribeKey, campaignInfo.type);
 
       const emailFormat = AmazonEmail(task, updatedCampaignInfo);
 
