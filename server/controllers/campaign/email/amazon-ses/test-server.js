@@ -7,26 +7,17 @@ const json = JSON.stringify({
   MessageId: '01020157a1261241-90a5e1cd-3a5z-4sb7-1r41-957a4cae8e58-000000'
 });
 
-<<<<<<< HEAD
-const server = http.createServer((req, res) => {
-  // Mock latency
-  setTimeout(() => {
-    console.log('Responded!');
-=======
 let numReceived = 0;
 const server = http.createServer((req, res) => {
   // Mock latency
   numReceived++;
   setTimeout(() => {
->>>>>>> staging
     res.statusCode = 200;
     res.writeHead(200, {'Content-Type': 'application/json'});
     res.end(json);
   }, 150);
 });
 
-<<<<<<< HEAD
-=======
 (function printNumReceivedPerSecond() {
   setTimeout(() => {
     if (numReceived !== 0) {
@@ -38,7 +29,6 @@ const server = http.createServer((req, res) => {
   }, 1000);
 })();
 
->>>>>>> staging
 const port = 9999;
 const host = 'localhost';
 

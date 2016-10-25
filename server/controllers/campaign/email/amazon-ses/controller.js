@@ -48,7 +48,6 @@ Throttling error:
 
 module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region) => {
 
-  const isDevMode = process.env.IS_DEV_MODE || false;
 
   const isDevMode = process.env.IS_DEV_MODE || false;
 
