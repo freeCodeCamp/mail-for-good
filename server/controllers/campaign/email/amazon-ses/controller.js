@@ -53,9 +53,11 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
   const limit = 1; // The number of emails to be pulled from each returnList call
   console.log(quotas);
-  let rateLimit = process.env.DEV_SEND_RATE || quotas.MaxSendRate; // The number of emails to send per second
+  let rateLimit = 200;//process.env.DEV_SEND_RATE || quotas.MaxSendRate > 50 ? 50 : quotas.MaxSendRate; // The number of emails to send per second
   let offset = limit - 1; // The offset when pulling emails from the db
   let pushByRateLimitInterval = 0;
+  let listCalls = 0;
+  let processedEmails = 0;
   let isBackingOff = false;
   let isRunning = false;
 
@@ -67,7 +69,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   const ses = isDevMode
     ? new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region, endpoint: 'http://localhost:9999' })
     : new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region });
-
+  console.log(ses);
   ///////////
   // Queue //
   ///////////
@@ -97,9 +99,10 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
             campaignId: campaignInfo.campaignId,
             messageId: data.MessageId,
             email: task.email
+          }).then(() => {
+            done(); // Accept new email from pool
+            processedEmails++;
           });
-
-          done(); // Accept new email from pool
         }
       });
     });
@@ -167,6 +170,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   ///////////
 
   const returnList = () => {
+    listCalls++;
     db.listsubscriber.findAll({
       where: {
         listId: campaignInfo.listId,
@@ -186,7 +190,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     isRunning = true;
     pushByRateLimitInterval = setInterval(() => {
       if (totalListSubscribers > offset) {
-        if (q.length() <= rateLimit) { // Prevent race condition where requests to returnList vastly exceed & overwhelm other db requests
+        if (q.length() <= rateLimit && !(listCalls > (processedEmails + rateLimit))) { // Prevent race condition where requests to returnList vastly exceed & overwhelm other db requests
           returnList();
           offset += limit;
         }
