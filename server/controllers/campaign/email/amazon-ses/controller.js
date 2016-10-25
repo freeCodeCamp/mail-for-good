@@ -8,7 +8,7 @@ const insertUnsubscribeLink = require('./analytics').insertUnsubscribeLink;
 const db = require('../../../../models');
 const AmazonEmail = require('./amazon');
 const CampaignSubscriber = require('../../../../models').campaignsubscriber;
-const CampaignAnalyticsLink = require('../../../../models').campaignanalyticslink
+const CampaignAnalyticsLink = require('../../../../models').campaignanalyticslink;
 
 /*
 
@@ -37,22 +37,28 @@ Throttling error:
   statusCode: 400,
   retryable: true }
 
+  TODO: Eventual plan
+
+  > Buffer emails to be sent
+  > Send fixed number of emails per second
+
+  Can be implemented when this code is more concrete. As things stand, the send rate is determined by db latency.
+
 */
 
 module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region) => {
 
-  // TODO: Remaining issue where rateLimit is determined by response time of DB. Needs fix.
+  const isDevMode = process.env.IS_DEV_MODE || false;
 
   const isDevMode = process.env.IS_DEV_MODE || false;
 
   const limit = 1; // The number of emails to be pulled from each returnList call
-  let rateLimit = quotas.MaxSendRate; // The number of emails to send per second
+  console.log(quotas);
+  let rateLimit = process.env.DEV_SEND_RATE || quotas.MaxSendRate; // The number of emails to send per second
   let offset = limit - 1; // The offset when pulling emails from the db
   let pushByRateLimitInterval = 0;
   let isBackingOff = false;
   let isRunning = false;
-
-  let successCount = 0;
 
   const backoffExpo = backoff.exponential({ // Exp backoff for throttling errs - see https://github.com/MathieuTurcotte/node-backoff
     initialDelay: 3000,
@@ -86,13 +92,6 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
           handleError(err, done, task);
         } else {
 
-          /*if (q.length >= rateLimit) { // Prevents excessign congestion
-           clearInterval(pushByRateLimitInterval);
-           isRunning = false;
-           } else if (!isRunning) {
-           pushByRateLimit();
-           }*/
-
           // Save the SES message ID so we can find its status later (bounced, recv, etc)
           // ~ Using the email field here is a bit of a hack, please change me
           CampaignSubscriber.create({
@@ -101,11 +100,10 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
             email: task.email
           });
 
-          successCount++;
           done(); // Accept new email from pool
         }
       });
-    })
+    });
   }, rateLimit);
 
   const pushToQueue = list => {
@@ -127,7 +125,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
         break;
       default: // Failsafe that discards the email. Should not occur as errors should be caught by handlers.
         done();
-        saveAnalysisEmail(task.email, null);
+        // saveAnalysisEmail(task.email, null);
     }
   }
 
@@ -189,11 +187,12 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     isRunning = true;
     pushByRateLimitInterval = setInterval(() => {
       if (totalListSubscribers > offset) {
-        returnList();
-        offset += limit;
+        if (q.length() <= rateLimit) { // Prevent race condition where requests to returnList vastly exceed & overwhelm other db requests
+          returnList();
+          offset += limit;
+        }
       } else {
         console.timeEnd('sending');
-        console.log(successCount);
         generator.next(null);
         clearInterval(pushByRateLimitInterval);
       }
