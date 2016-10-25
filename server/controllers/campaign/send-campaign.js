@@ -80,7 +80,7 @@ module.exports = (req, res) => {
         const settingObject = settingInstance.get({ plain:true });
         const { accessKey, secretKey, region } = settingObject;
         // If either key is blank, the user needs to set their settings
-        if (accessKey === '' || secretKey === '' || region === '') {
+        if (accessKey === '' || secretKey === '' || region === '' && !process.env.IS_DEV_MODE) {
           res.status(400).send({ message:'Please provide your details for your Amazon account under "Settings".' });
         } else {
           generator.next({ accessKey, secretKey, region });
@@ -99,7 +99,7 @@ module.exports = (req, res) => {
     });
 
     ses.getSendQuota((err, data) => {
-      if (err) { // Either access keys are wrong here or the request is being placed too quickly
+      if (err && !process.env.DEV_SEND_RATE) { // Either access keys are wrong here or the request is being placed too quickly
         res.status(400).send({ message: 'Please confirm your Amazon SES settings and try again later.' });
       } else {
         const { Max24HourSend, SentLast24Hours, MaxSendRate } = data;
@@ -116,7 +116,7 @@ module.exports = (req, res) => {
         subscribed: true
       }
     }).then(total => {
-      if (total > AvailableToday) {
+      if (total > AvailableToday && !process.env.IS_DEV_MODE) {
         res.status(400).send({ message: `This list exceeds your 24 hour allowance of ${AvailableToday} emails. Please upgrade your SES limit.` });
       } else {
         generator.next(total);

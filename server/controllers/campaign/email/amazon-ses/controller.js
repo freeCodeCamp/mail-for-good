@@ -8,7 +8,7 @@ const insertUnsubscribeLink = require('./analytics').insertUnsubscribeLink;
 const db = require('../../../../models');
 const AmazonEmail = require('./amazon');
 const CampaignSubscriber = require('../../../../models').campaignsubscriber;
-const CampaignAnalyticsLink = require('../../../../models').campaignanalyticslink
+const CampaignAnalyticsLink = require('../../../../models').campaignanalyticslink;
 
 /*
 
@@ -46,13 +46,12 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   const isDevMode = process.env.IS_DEV_MODE || false;
 
   const limit = 1; // The number of emails to be pulled from each returnList call
-  let rateLimit = quotas.MaxSendRate; // The number of emails to send per second
+  console.log(quotas);
+  let rateLimit = process.env.DEV_SEND_RATE || quotas.MaxSendRate; // The number of emails to send per second
   let offset = limit - 1; // The offset when pulling emails from the db
   let pushByRateLimitInterval = 0;
   let isBackingOff = false;
   let isRunning = false;
-
-  let successCount = 0;
 
   const backoffExpo = backoff.exponential({ // Exp backoff for throttling errs - see https://github.com/MathieuTurcotte/node-backoff
     initialDelay: 3000,
@@ -101,7 +100,6 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
             email: task.email
           });
 
-          successCount++;
           done(); // Accept new email from pool
         }
       });
@@ -193,7 +191,6 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
         offset += limit;
       } else {
         console.timeEnd('sending');
-        console.log(successCount);
         generator.next(null);
         clearInterval(pushByRateLimitInterval);
       }
