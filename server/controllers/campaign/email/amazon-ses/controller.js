@@ -51,15 +51,14 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
   const isDevMode = process.env.IS_DEV_MODE || false;
 
-  const limit = 1; // The number of emails to be pulled from each returnList call
-  console.log(quotas);
-  let rateLimit = 200;//process.env.DEV_SEND_RATE || quotas.MaxSendRate > 50 ? 50 : quotas.MaxSendRate; // The number of emails to send per second
-  let offset = limit - 1; // The offset when pulling emails from the db
+  let rateLimit = process.env.DEV_SEND_RATE || quotas.MaxSendRate > 50 ? 50 : quotas.MaxSendRate; // The number of emails to send per second
   let pushByRateLimitInterval = 0;
   let listCalls = 0;
   let processedEmails = 0;
   let isBackingOff = false;
   let isRunning = false;
+
+  let ListSubscriberIndexPointer = 0;
 
   const backoffExpo = backoff.exponential({ // Exp backoff for throttling errs - see https://github.com/MathieuTurcotte/node-backoff
     initialDelay: 3000,
@@ -69,7 +68,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   const ses = isDevMode
     ? new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region, endpoint: 'http://localhost:9999' })
     : new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region });
-  console.log(ses);
+
   ///////////
   // Queue //
   ///////////
@@ -169,18 +168,19 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   // Calls //
   ///////////
 
-  const returnList = () => {
+  const returnList = (id) => {
     listCalls++;
-    db.listsubscriber.findAll({
+    db.listsubscriber.findOne({
       where: {
+        id,
         listId: campaignInfo.listId,
         subscribed: true
-      },
-      limit,
-      offset,
-      raw: true
+      }
     }).then(list => {
-      pushToQueue(list);
+      if (list) {
+
+        pushToQueue(list.get({ plain:true }));  
+      }
     }).catch(err => {
       throw err;
     });
@@ -189,10 +189,10 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   function pushByRateLimit() {
     isRunning = true;
     pushByRateLimitInterval = setInterval(() => {
-      if (totalListSubscribers > offset) {
+      if (totalListSubscribers > listCalls) {
         if (q.length() <= rateLimit && !(listCalls > (processedEmails + rateLimit))) { // Prevent race condition where requests to returnList vastly exceed & overwhelm other db requests
-          returnList();
-          offset += limit;
+          returnList(ListSubscriberIndexPointer);
+          ListSubscriberIndexPointer++;
         }
       } else {
         console.timeEnd('sending');
@@ -202,9 +202,26 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     }, (1000 / rateLimit));
   }
 
-  (function startSending() {
+  const getInitialListSubscriberId = () => {
+    return db.listsubscriber.findOne({
+      where: {
+        listId: campaignInfo.listId
+      },
+      raw: true
+    }).then(list => {
+      return startGenerator.next(list.id);
+    }).catch(err => {
+      throw err;
+    });
+  };
+
+  function *startSending() {
     console.time('sending');
+    ListSubscriberIndexPointer = yield getInitialListSubscriberId();
     pushByRateLimit();
-  })();
+  }
+
+  const startGenerator = startSending();
+  startGenerator.next();
 
 };
