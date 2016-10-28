@@ -78,7 +78,7 @@ module.exports = (req, res) => {
         res.status(500).send();
       } else {
         const settingObject = settingInstance.get({ plain:true });
-        const { accessKey, secretKey, region } = settingObject;
+        const { amazonSimpleEmailServiceAccessKey: accessKey, amazonSimpleEmailServiceSecretKey: secretKey, region } = settingObject;
         // If either key is blank, the user needs to set their settings
         if (accessKey === '' || secretKey === '' || region === '' && !process.env.IS_DEV_MODE) {
           res.status(400).send({ message:'Please provide your details for your Amazon account under "Settings".' });
