@@ -18,7 +18,7 @@ const db = require('../../models');
     }
 */
 
-module.exports = (req, res) => {
+module.exports = (req, res, io) => {
   /*
         Outstanding issues:
         TODO: TSV & other files are not accounted for. The current method only works with CSV files. There's also no current validation of CSV files in terms of both the information within and the actual file type.
@@ -109,6 +109,8 @@ module.exports = (req, res) => {
       // Delete CSV
       fs.unlink(`${path.resolve(req.file.path)}`, err => {
         // IDEA: Post success to a field in the user model called 'notifications' & push through websocket
+        if (err) throw err;
+        io.sockets.connected[req.session.passport.socket].emit('message', 'test');
       });
     });
 
@@ -120,4 +122,4 @@ module.exports = (req, res) => {
   }, err => {
     throw err;
   });
-}
+};

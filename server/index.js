@@ -19,10 +19,6 @@ const sessionConfig = session({ secret: secret.sessionSecret, resave: false, sav
 app.use(sessionConfig);
 app.use(passport.initialize());
 app.use(passport.session());
-io.use((socket, next) => {
-  console.log(socket);
-  sessionConfig(socket.request, {}, next);
-});
 
 // Use dirs appropriately, with a separation of concerns for the public & dist dirs
 app.use('/public', express.static(path.join(__dirname, '../public')));

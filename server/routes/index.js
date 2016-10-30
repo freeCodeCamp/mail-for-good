@@ -93,7 +93,7 @@ module.exports = (app, passport, io) => {
 
   // Import csv
   app.post('/api/list/add/csv', apiIsAuth, multer.single('csv'), (req, res) => {
-    importCSV(req, res);
+    importCSV(req, res, io);
   });
 
   /* Settings */
@@ -142,7 +142,8 @@ module.exports = (app, passport, io) => {
 
     io.on('connection', socket => {
       socket.on('login', () => {
-        req.session.passport.socket = socket.handshake;
+        req.session.passport.socket = socket.id;
+        req.session.save();
         getProfile(req).then(userObject => {
           socket.emit('loginResponse', userObject);
         });
