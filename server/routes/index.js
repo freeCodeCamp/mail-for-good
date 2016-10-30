@@ -24,7 +24,6 @@ const getProfile = require('../controllers/websockets/get-profile');
 
 const changeSettings = require('../controllers/changesettings');
 
-
 const parseJson = bodyParser.json();
 
 module.exports = (app, passport, io) => {
@@ -116,23 +115,23 @@ module.exports = (app, passport, io) => {
 
   // convenience root for dev
   app.get('/api/analytics/refresh', (req, res) => {
-    refresh(req, res)
+    refresh(req, res);
   });
 
   // Clickthrough
   app.get('/clickthrough', (req, res) => {
-    clickthrough(req, res)
+    clickthrough(req, res);
   });
 
   // temporary
   app.get('/api/analytics/clickthrough', apiIsAuth, (req, res) => {
-    getClickthroughs(req, res)
+    getClickthroughs(req, res);
   });
 
   // temporary
   app.get('/api/analytics/get-sent-emails', (req, res) => {
     getSentEmails(req, res);
-  })
+  });
 
   ////////////////////
   /*      APP       */
@@ -143,11 +142,13 @@ module.exports = (app, passport, io) => {
 
     io.on('connection', socket => {
       socket.on('login', () => {
+        req.session.passport.socket = socket.handshake;
         getProfile(req).then(userObject => {
           socket.emit('loginResponse', userObject);
         });
       });
     });
+
   });
 
 };
