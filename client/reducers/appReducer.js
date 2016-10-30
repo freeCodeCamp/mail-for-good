@@ -1,7 +1,8 @@
 import initialState from './initialState';
 import {
   REQUEST_WS_PROFILE,
-  COMPLETE_WS_PROFILE
+  COMPLETE_WS_PROFILE,
+  RECEIVE_WS_NOTIFICATION
 } from '../constants/actionTypes';
 
 export function profile(state = initialState.profile, action) {
@@ -11,9 +12,13 @@ export function profile(state = initialState.profile, action) {
       };
     }
     case COMPLETE_WS_PROFILE: {
-      return {
-        ...state,
+      return {...state,
         user: action.user
+      };
+    }
+    case RECEIVE_WS_NOTIFICATION: {
+      state.ws_notification.push(action.notifcation);
+      return {...state
       };
     }
     default:

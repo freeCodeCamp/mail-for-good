@@ -110,7 +110,7 @@ module.exports = (req, res, io) => {
       fs.unlink(`${path.resolve(req.file.path)}`, err => {
         // IDEA: Post success to a field in the user model called 'notifications' & push through websocket
         if (err) throw err;
-        io.sockets.connected[req.session.passport.socket].emit('message', 'test');
+        io.sockets.connected[req.session.passport.socket].emit('notification', 'test');
       });
     });
 
