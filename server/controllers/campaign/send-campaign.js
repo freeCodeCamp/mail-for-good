@@ -4,7 +4,7 @@ const AWS = require('aws-sdk');
 
 // TODO: Validate contents abide to Amazon's limits https://docs.aws.amazon.com/ses/latest/DeveloperGuide/limits.html
 
-module.exports = (req, res) => {
+module.exports = (req, res, io) => {
 
   // If req.body.id was not supplied or is not a number, cancel
   if (!req.body.id || typeof req.body.id !== 'number') {
@@ -39,7 +39,15 @@ module.exports = (req, res) => {
     // 7. Send the campaign. TODO: Clean up & condense these arguments
     yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region);
 
-    // 8. If there was an error preventing emails from being sent, send it here. Otherwise, TODO: push a notification
+    // 8. TODO: If there was an error, handle it here
+
+    // 9. Push a notification regarding the success of the operation
+    const emailSuccess = {
+      message: `Campaign "${campaignInfo.name}" has been sent`,
+      icon: 'fa-envelope',
+      iconColour: 'text-green'
+    };
+    io.sockets.connected[req.session.passport.socket].emit('notification', emailSuccess);
   }
 
   const generator = sendCampaign();
@@ -58,9 +66,9 @@ module.exports = (req, res) => {
       } else {
         const campaignObject = campaignInstance.get({ plain:true });
         const listId = campaignObject.listId;
-        const { fromName, fromEmail, emailSubject, emailBody, type } = campaignObject;
+        const { fromName, fromEmail, emailSubject, emailBody, type, name } = campaignObject;
 
-        generator.next({ listId, fromName, fromEmail, emailSubject, emailBody, campaignId, type });
+        generator.next({ listId, fromName, fromEmail, emailSubject, emailBody, campaignId, type, name });
       }
     }).catch(err => {
       throw err;

@@ -14,7 +14,9 @@ const routes = require('./routes');
 // Config
 require('./config/passport')(passport);
 
-app.use(session({ secret: secret.sessionSecret, resave: false, saveUninitialized: true }));
+const sessionConfig = session({ secret: secret.sessionSecret, resave: false, saveUninitialized: true });
+
+app.use(sessionConfig);
 app.use(passport.initialize());
 app.use(passport.session());
 

@@ -1,25 +1,19 @@
 const secrets = require('./secrets');
-const User = require('../models').user;
+const db = require('../models');
+const Google = require('./passport/google');
 
 module.exports = (passport) => {
-  const db = require('../models');
-  const Google = require('./passport/google');
-
-  const sequelize = db.sequelize;
-
   passport.serializeUser(function(user, done) {
     done(null, user.id);
   });
 
   passport.deserializeUser(function(id, done) {
-
-    User.findById(id).then(user => {
+    db.user.findById(id).then(user => {
       done(null, user);
     }).catch(err => {
-      if (err)
-        throw err;
+      if (err) { throw err; }
       }
-    )
+    );
   });
   ///////////////////////////////
   /* AUTHENTICATION STRATEGIES */

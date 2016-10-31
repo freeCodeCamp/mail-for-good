@@ -1,7 +1,8 @@
-import React, {PropTypes} from 'react';
+import React, { PropTypes } from 'react';
+import WSNotification from './WS-Notification';
 
 const Header = (props) => { // eslint-disable-line no-unused-vars
-  const {user} = props;
+  const { user, ws_notification, consumeNotification } = props;
   return (
     <header className="main-header">
       <a className="logo">
@@ -20,10 +21,10 @@ const Header = (props) => { // eslint-disable-line no-unused-vars
             <li className="dropdown notifications-menu">
               <a href="#" className="dropdown-toggle" data-toggle="dropdown">
                 <i className="fa fa-bell-o"/>
-                <span className="label label-warning">1</span>
+                <span className="label label-warning">{ws_notification.length || ''}</span>
               </a>
               <ul className="dropdown-menu">
-                <li className="header">You have 1 notifications</li>
+                <li className="header">You have {ws_notification.length || 'no new'} notification{ws_notification.length === 1 ? '' : 's'}</li>
                 <li>
                   <ul className="menu" style={{
                     'overflow': 'hidden',
@@ -31,12 +32,9 @@ const Header = (props) => { // eslint-disable-line no-unused-vars
                     'height': '200px'
                   }}>
 
-                    <li>
-                      <a href="#">
-                        <i className="fa fa-users text-red"/>
-                        Example
-                      </a>
-                    </li>
+                  {ws_notification.map((notification, i) => {
+                    return <WSNotification key={`ws-notification${i}`} message={notification.message} consumeNotification={consumeNotification} index={i} />;
+                  })}
 
                   </ul>
                 </li>
@@ -72,7 +70,9 @@ const Header = (props) => { // eslint-disable-line no-unused-vars
 };
 
 Header.propTypes = {
-  user: PropTypes.object
+  user: PropTypes.object.isRequired,
+  ws_notification: PropTypes.array.isRequired,
+  consumeNotification: PropTypes.func.isRequired
 };
 
 export default Header;

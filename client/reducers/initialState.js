@@ -27,11 +27,12 @@ const initialState = {
   settings: {
     loading: false
   },
-  notifications: {
+  notifications: { // Internal notifcations for things such as errors on importing CSV files and so forth
     stack: []
   },
   profile: {
-    user: {}
+    user: {},
+    ws_notification: []
   }
 };
 

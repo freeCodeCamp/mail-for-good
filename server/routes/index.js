@@ -24,7 +24,6 @@ const getProfile = require('../controllers/websockets/get-profile');
 
 const changeSettings = require('../controllers/changesettings');
 
-
 const parseJson = bodyParser.json();
 
 module.exports = (app, passport, io) => {
@@ -62,7 +61,7 @@ module.exports = (app, passport, io) => {
 
   // Send campaign
   app.post('/api/campaign/send', apiIsAuth, parseJson, (req, res) => {
-    sendCampaign(req, res);
+    sendCampaign(req, res, io);
   });
 
   /* DELETE */
@@ -94,7 +93,7 @@ module.exports = (app, passport, io) => {
 
   // Import csv
   app.post('/api/list/add/csv', apiIsAuth, multer.single('csv'), (req, res) => {
-    importCSV(req, res);
+    importCSV(req, res, io);
   });
 
   /* Settings */
@@ -116,23 +115,23 @@ module.exports = (app, passport, io) => {
 
   // convenience root for dev
   app.get('/api/analytics/refresh', (req, res) => {
-    refresh(req, res)
+    refresh(req, res);
   });
 
   // Clickthrough
   app.get('/clickthrough', (req, res) => {
-    clickthrough(req, res)
+    clickthrough(req, res);
   });
 
   // temporary
   app.get('/api/analytics/clickthrough', apiIsAuth, (req, res) => {
-    getClickthroughs(req, res)
+    getClickthroughs(req, res);
   });
 
   // temporary
   app.get('/api/analytics/get-sent-emails', (req, res) => {
     getSentEmails(req, res);
-  })
+  });
 
   ////////////////////
   /*      APP       */
@@ -143,11 +142,14 @@ module.exports = (app, passport, io) => {
 
     io.on('connection', socket => {
       socket.on('login', () => {
+        req.session.passport.socket = socket.id;
+        req.session.save();
         getProfile(req).then(userObject => {
           socket.emit('loginResponse', userObject);
         });
       });
     });
+
   });
 
 };

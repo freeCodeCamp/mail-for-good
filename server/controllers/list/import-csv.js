@@ -18,7 +18,7 @@ const db = require('../../models');
     }
 */
 
-module.exports = (req, res) => {
+module.exports = (req, res, io) => {
   /*
         Outstanding issues:
         TODO: TSV & other files are not accounted for. The current method only works with CSV files. There's also no current validation of CSV files in terms of both the information within and the actual file type.
@@ -68,7 +68,7 @@ module.exports = (req, res) => {
     const q = queue((task, callback) => {
       // Where task has object format { header: field } - e.g. { email: bob@bobmail.com }
       db.listsubscriber.upsert({ email: task.email, listId: listId })
-        .then(created => { // Where created = true if created, false if updated
+        .then(() => { // Where created = true if created, false if updated
           callback();
       });
     }, concurrency);
@@ -107,8 +107,16 @@ module.exports = (req, res) => {
       // Do nothing with the data. Let it be garbage collected.
     }).on('end', () => {
       // Delete CSV
+      const filename = req.file.originalname;
       fs.unlink(`${path.resolve(req.file.path)}`, err => {
         // IDEA: Post success to a field in the user model called 'notifications' & push through websocket
+        if (err) throw err;
+        const importSuccess = {
+          message: `Your file ${filename} has finished uploading`,
+          icon: 'fa-list-alt',
+          iconColour: 'text-green'
+        };
+        io.sockets.connected[req.session.passport.socket].emit('notification', importSuccess);
       });
     });
 
@@ -120,4 +128,4 @@ module.exports = (req, res) => {
   }, err => {
     throw err;
   });
-}
+};
