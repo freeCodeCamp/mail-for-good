@@ -61,7 +61,7 @@ module.exports = (app, passport, io) => {
 
   // Send campaign
   app.post('/api/campaign/send', apiIsAuth, parseJson, (req, res) => {
-    sendCampaign(req, res);
+    sendCampaign(req, res, io);
   });
 
   /* DELETE */
