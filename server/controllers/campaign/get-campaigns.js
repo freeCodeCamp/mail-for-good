@@ -18,6 +18,7 @@ module.exports = (req, res) => {
           'transientBounceCount',
           'undeterminedBounceCount',
           'totalSentCount',
+          'openCount',
           'clickthroughCount'
         ]
       }
