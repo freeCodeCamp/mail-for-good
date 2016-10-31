@@ -125,7 +125,7 @@ module.exports = (app, passport, io) => {
   });
 
   // Open/pixel tracking
-  app.get('/open', (req, res) => {
+  app.get('/trackopen', (req, res) => {
     open(req, res);
   })
 
