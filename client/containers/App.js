@@ -9,7 +9,8 @@ import { emitProfileRequest } from '../actions/appActions';
 
 function mapStateToProps(state) {
   return {
-    user: state.profile.user
+    user: state.profile.user,
+    ws_notification: state.profile.ws_notification
   };
 }
 
@@ -19,7 +20,8 @@ export default class App extends Component {
   static propTypes = {
     children: PropTypes.element.isRequired,
     emitProfileRequest: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired
+    user: PropTypes.object.isRequired,
+    ws_notification: PropTypes.array.isRequired
   }
 
   componentWillMount() {
@@ -29,7 +31,7 @@ export default class App extends Component {
   render() {
     return (
       <div className="wrapper">
-        <Header user={this.props.user} />
+        <Header user={this.props.user} ws_notification={this.props.ws_notification} />
         <Sidebar user={this.props.user} />
 
         <div className="content-wrapper">
@@ -37,7 +39,6 @@ export default class App extends Component {
         </div>
 
         <Notifications />
-
         <Footer />
       </div>
     );

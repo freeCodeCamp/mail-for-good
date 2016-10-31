@@ -107,10 +107,16 @@ module.exports = (req, res, io) => {
       // Do nothing with the data. Let it be garbage collected.
     }).on('end', () => {
       // Delete CSV
+      const filename = req.file.originalname;
       fs.unlink(`${path.resolve(req.file.path)}`, err => {
         // IDEA: Post success to a field in the user model called 'notifications' & push through websocket
         if (err) throw err;
-        io.sockets.connected[req.session.passport.socket].emit('notification', 'test');
+        const importSuccess = {
+          message: `Your file ${filename} has finished uploading`,
+          icon: 'fa-list-alt',
+          iconColour: 'text-green'
+        };
+        io.sockets.connected[req.session.passport.socket].emit('notification', importSuccess);
       });
     });
 
