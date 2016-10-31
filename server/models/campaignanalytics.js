@@ -6,6 +6,7 @@ module.exports = function(sequelize, DataTypes) {
     transientBounceCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     undeterminedBounceCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     clickthroughCount: { type: DataTypes.INTEGER, defaultValue: 0 },
+    openCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     totalSentCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     trackLinksEnabled: { type: DataTypes.BOOLEAN, defaultValue: true }
   }, {
@@ -13,7 +14,8 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         campaignanalytics.belongsTo(models.campaign);
-        campaignanalytics.hasMany(models.campaignanalyticslink)
+        campaignanalytics.hasMany(models.campaignanalyticslink);
+        campaignanalytics.hasMany(models.campaignanalyticsopen);
       }
     }
   });

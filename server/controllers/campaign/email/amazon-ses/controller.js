@@ -4,11 +4,13 @@ const backoff = require('backoff');
 
 const wrapLink = require('./analytics').wrapLink;
 const insertUnsubscribeLink = require('./analytics').insertUnsubscribeLink;
+const insertTrackingPixel = require('./analytics').insertTrackingPixel;
 
 const db = require('../../../../models');
 const AmazonEmail = require('./amazon');
 const CampaignSubscriber = require('../../../../models').campaignsubscriber;
 const CampaignAnalyticsLink = require('../../../../models').campaignanalyticslink;
+const CampaignAnalyticsOpen = require('../../../../models').campaignanalyticsopen;
 
 /*
 
@@ -74,14 +76,25 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   ///////////
 
   const q = queue((task, done) => {
+
+    // Clone the campaign info object so that we can add per-campaign
+    // analytics stuff (unsubscribe, link tracking, open tracking)
+    let updatedCampaignInfo = Object.assign({}, campaignInfo);
+
     CampaignAnalyticsLink.create({
       trackingId: campaignInfo.trackingId,
       campaignanalyticId: campaignInfo.campaignAnalyticsId,  // consider refactoring these?
       listsubscriberId: task.id
     }).then(newCampaignAnalyticsLink => {
-
-      const updatedCampaignInfo = Object.assign({}, campaignInfo);
       updatedCampaignInfo.emailBody = wrapLink(campaignInfo.emailBody, newCampaignAnalyticsLink.dataValues.trackingId, campaignInfo.type);
+
+      return CampaignAnalyticsOpen.create({
+        campaignanalyticId: campaignInfo.campaignAnalyticsId,
+        listsubscriberId: task.id
+      })
+    }).then(newCampaignAnalyticsOpen => {
+      updatedCampaignInfo.emailBody = insertTrackingPixel(campaignInfo.emailBody, newCampaignAnalyticsOpen.dataValues.trackingId, campaignInfo.type);
+
       updatedCampaignInfo.emailBody = insertUnsubscribeLink(updatedCampaignInfo.emailBody, task.unsubscribeKey, campaignInfo.type);
 
       const emailFormat = AmazonEmail(task, updatedCampaignInfo);

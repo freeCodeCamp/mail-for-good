@@ -10,6 +10,7 @@ module.exports = function(sequelize, DataTypes) {
         // associations can be defined here
         listsubscriber.belongsTo(models.list);
         listsubscriber.hasMany(models.campaignanalyticslink);
+        listsubscriber.hasMany(models.campaignanalyticsopen);
       }
     }
   });

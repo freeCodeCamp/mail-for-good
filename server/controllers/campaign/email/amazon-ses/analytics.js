@@ -19,7 +19,17 @@ function insertUnsubscribeLink(body, unsubscribeId, type) {
   return body + "\n<a href=http://" + clickThroughBaseUrl + "/unsubscribe/" + unsubscribeId + "/>unsubscribe</a>";
 }
 
+function insertTrackingPixel(body, trackingId, type) {
+  if (type === 'Plaintext') {
+    return body;
+  }
+
+  return body +
+    `\n<img src="http://${clickThroughBaseUrl}/trackopen?trackingId=${trackingId}" style="position:absolute; visibility:hidden">`
+}
+
 module.exports = {
   wrapLink,
-  insertUnsubscribeLink
+  insertUnsubscribeLink,
+  insertTrackingPixel
 }
