@@ -9,12 +9,12 @@ module.exports = function(req, res) {
   CampaignAnalyticsOpen.findOne({
     where: {
       trackingId: req.query.trackingId,
-      clicked: false
+      opened: false
     }
   }).then(foundCampaignAnalyticsOpen => {
     // only track the first open (updatedAt is set automatically)
     if (foundCampaignAnalyticsOpen) {
-      foundCampaignAnalyticsOpen.clicked = true;
+      foundCampaignAnalyticsOpen.opened = true;
 
       // Attempt to get ip
       const ipAddress = req.headers['x -forwarded-for'] ||
