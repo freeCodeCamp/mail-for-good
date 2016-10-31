@@ -17,9 +17,8 @@ export function profile(state = initialState.profile, action) {
       };
     }
     case RECEIVE_WS_NOTIFICATION: {
-      state.ws_notification.push(action.notification);
-      console.log(state, action);
-      return {...state
+      return {...state,
+        ws_notification: [...state.ws_notification, action.notification]
       };
     }
     default:
