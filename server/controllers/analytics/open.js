@@ -4,6 +4,7 @@ const geoip = require('geoip-lite');
 const CampaignAnalyticsOpen = require('../../models').campaignanalyticsopen;
 const CampaignAnalytics = require('../../models').campaignanalytics;
 
+const trackingPixel = new Buffer('R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw', 'base64');
 
 module.exports = function(req, res) {
   CampaignAnalyticsOpen.findOne({
@@ -46,7 +47,11 @@ module.exports = function(req, res) {
         });
       });
     }
-  })
+  });
 
-  res.status(200).send('pixel');
-}
+  res.writeHead(200, {
+    'Content-Type': 'image/gif',
+    'Content-Length': trackingPixel.length
+  });
+  res.end(trackingPixel);
+};
