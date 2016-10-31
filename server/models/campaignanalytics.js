@@ -6,6 +6,7 @@ module.exports = function(sequelize, DataTypes) {
     transientBounceCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     undeterminedBounceCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     clickthroughCount: { type: DataTypes.INTEGER, defaultValue: 0 },
+    openCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     totalSentCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     trackLinksEnabled: { type: DataTypes.BOOLEAN, defaultValue: true }
   }, {
