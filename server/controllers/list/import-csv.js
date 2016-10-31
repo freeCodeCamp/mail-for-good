@@ -68,7 +68,7 @@ module.exports = (req, res, io) => {
     const q = queue((task, callback) => {
       // Where task has object format { header: field } - e.g. { email: bob@bobmail.com }
       db.listsubscriber.upsert({ email: task.email, listId: listId })
-        .then(created => { // Where created = true if created, false if updated
+        .then(() => { // Where created = true if created, false if updated
           callback();
       });
     }, concurrency);

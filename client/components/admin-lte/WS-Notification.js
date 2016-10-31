@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react';
 
 const WSNotification = (props) => { // eslint-disable-line no-unused-vars
-  const { message, icon, iconColour} = props;
+  const { message, icon, iconColour, consumeNotification, index } = props;
 
   return (
-    <li>
+    <li onClick={() => consumeNotification(index)}>
       <a href="#">
         <i className={`fa ${icon || 'fa-users'} ${iconColour || 'text-green'}`} />
         {message}
@@ -16,7 +16,8 @@ const WSNotification = (props) => { // eslint-disable-line no-unused-vars
 WSNotification.propTypes = {
   message: PropTypes.string.isRequired,
   icon: PropTypes.string,
-  iconColour: PropTypes.string
+  iconColour: PropTypes.string,
+  consumeNotification: PropTypes.func.isRequired
 };
 
 export default WSNotification;

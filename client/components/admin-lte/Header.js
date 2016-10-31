@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import WSNotification from './WS-Notification';
 
 const Header = (props) => { // eslint-disable-line no-unused-vars
-  const { user, ws_notification } = props;
+  const { user, ws_notification, consumeNotification } = props;
   return (
     <header className="main-header">
       <a className="logo">
@@ -33,7 +33,7 @@ const Header = (props) => { // eslint-disable-line no-unused-vars
                   }}>
 
                   {ws_notification.map((notification, i) => {
-                    return <WSNotification key={`ws-notification${i}`} message={notification.message} />;
+                    return <WSNotification key={`ws-notification${i}`} message={notification.message} consumeNotification={consumeNotification} index={i} />;
                   })}
 
                   </ul>
@@ -71,7 +71,8 @@ const Header = (props) => { // eslint-disable-line no-unused-vars
 
 Header.propTypes = {
   user: PropTypes.object.isRequired,
-  ws_notification: PropTypes.array.isRequired
+  ws_notification: PropTypes.array.isRequired,
+  consumeNotification: PropTypes.func.isRequired
 };
 
 export default Header;

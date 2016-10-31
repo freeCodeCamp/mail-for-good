@@ -5,7 +5,7 @@ import Header from '../components/admin-lte/Header.js';
 import Sidebar from '../components/admin-lte/Sidebar.js';
 import Footer from '../components/admin-lte/Footer.js';
 import Notifications from './Notifications';
-import { emitProfileRequest } from '../actions/appActions';
+import { emitProfileRequest, consumeNotification } from '../actions/appActions';
 
 function mapStateToProps(state) {
   return {
@@ -14,12 +14,13 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { emitProfileRequest })
+@connect(mapStateToProps, { emitProfileRequest, consumeNotification })
 export default class App extends Component {
 
   static propTypes = {
     children: PropTypes.element.isRequired,
     emitProfileRequest: PropTypes.func.isRequired,
+    consumeNotification: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
     ws_notification: PropTypes.array.isRequired
   }
@@ -31,7 +32,7 @@ export default class App extends Component {
   render() {
     return (
       <div className="wrapper">
-        <Header user={this.props.user} ws_notification={this.props.ws_notification} />
+        <Header user={this.props.user} ws_notification={this.props.ws_notification} consumeNotification={this.props.consumeNotification} />
         <Sidebar user={this.props.user} />
 
         <div className="content-wrapper">

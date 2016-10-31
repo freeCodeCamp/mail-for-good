@@ -2,7 +2,8 @@ import initialState from './initialState';
 import {
   REQUEST_WS_PROFILE,
   COMPLETE_WS_PROFILE,
-  RECEIVE_WS_NOTIFICATION
+  RECEIVE_WS_NOTIFICATION,
+  CONSUME_WS_NOTIFICATION
 } from '../constants/actionTypes';
 
 export function profile(state = initialState.profile, action) {
@@ -19,6 +20,12 @@ export function profile(state = initialState.profile, action) {
     case RECEIVE_WS_NOTIFICATION: {
       return {...state,
         ws_notification: [...state.ws_notification, action.notification]
+      };
+    }
+    case CONSUME_WS_NOTIFICATION: {
+      const spliceArrWithoutMutatingState = state.ws_notification.slice().splice(1, action.index);
+      return {...state,
+        ws_notification: spliceArrWithoutMutatingState
       };
     }
     default:
