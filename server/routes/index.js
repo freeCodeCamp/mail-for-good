@@ -16,6 +16,7 @@ const getListSubscribers = require('../controllers/list/get-list-subscribers');
 const unsubscribe = require('../controllers/subscriber/unsubscribe');
 
 const refresh = require('../controllers/analytics/refresh');
+const open = require('../controllers/analytics/open');
 const clickthrough = require('../controllers/analytics/clickthrough');
 const getClickthroughs = require('../controllers/analytics/get-clickthroughs');
 const getSentEmails = require('../controllers/analytics/get-sent-emails');
@@ -122,6 +123,11 @@ module.exports = (app, passport, io) => {
   app.get('/clickthrough', (req, res) => {
     clickthrough(req, res);
   });
+
+  // Open/pixel tracking
+  app.get('/open', (req, res) => {
+    open(req, res);
+  })
 
   // temporary
   app.get('/api/analytics/clickthrough', apiIsAuth, (req, res) => {
