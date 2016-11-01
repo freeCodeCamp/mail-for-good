@@ -13,6 +13,12 @@ describe('amazon-ses analytics', () => {
 
       expect(insertUnsubscribeLink(body, unsubscribeLink, 'Html')).to.be.equal(expectedBody);
     })
+
+    it('inserts an unsubscribe url at the end of a plaintext email', () => {
+      const expectedBody = body + '\nhttp://localhost:8080/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
+
+      expect(insertUnsubscribeLink(body, unsubscribeLink, 'Plaintext')).to.be.equal(expectedBody);
+    })
   })
 
   describe('insertTrackingPixel', () => {

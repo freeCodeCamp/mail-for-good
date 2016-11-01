@@ -12,11 +12,12 @@ function wrapLink(body, trackingId, type) {
 }
 
 function insertUnsubscribeLink(body, unsubscribeId, type) {
+  const unsubscribeUrl = `http://${clickThroughBaseUrl}/unsubscribe/${unsubscribeId}`;
   if (type === 'Plaintext') {
-    return body + `\nhttp://${clickThroughBaseUrl}/unsubscribe/${unsubscribeId}`;
+    return body + '\n' + unsubscribeUrl;
   }
 
-  return body + `\n<a href="http://${clickThroughBaseUrl}/unsubscribe/${unsubscribeId}">unsubscribe</a>`
+  return body + `\n<a href="${unsubscribeUrl}">unsubscribe</a>`
 }
 
 function insertTrackingPixel(body, trackingId, type) {
