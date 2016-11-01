@@ -1,9 +1,20 @@
 const { expect } = require('chai');
 
-const { insertTrackingPixel } = require('./analytics');
+const { insertTrackingPixel, insertUnsubscribeLink } = require('./analytics');
 
 
 describe('amazon-ses analytics', () => {
+  describe('insertUnsubscribeLink', () => {
+    const body = '\ndear whoever,\nthis is a plaintext email body\ncheers.';
+    const unsubscribeLink = 'd9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
+
+    it('inserts an unsubscribe link at the end of a html email', () => {
+      const expectedBody = body + '\n<a href="http://localhost:8080/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3">unsubscribe</a>';
+
+      expect(insertUnsubscribeLink(body, unsubscribeLink, 'Html')).to.be.equal(expectedBody);
+    })
+  })
+
   describe('insertTrackingPixel', () => {
     const body = '\ndear whoever,\nthis is a plaintext email body\ncheers.';
     const trackingId = 'd9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
