@@ -27,7 +27,7 @@ function insertTrackingPixel(body, trackingId, type) {
   }
 
   return body +
-    `\n<img src="${clickthroughHost}/trackopen?trackingId=${trackingId}" style="position:absolute; visibility:hidden">`
+    `\n<img src="${clickthroughHost}/trackopen?trackingId=${trackingId}" style="display:none">`
 }
 
 module.exports = {

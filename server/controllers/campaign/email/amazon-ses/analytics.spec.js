@@ -47,7 +47,7 @@ describe('amazon-ses analytics', () => {
     })
 
     it('adds a tracking pixel img tag to the end of a html email', () => {
-      const expectedImgTag = '<img src="http://localhost:8080/trackopen?trackingId=d9ba38b2-7b52-449f-946c-7dfb7c97a3f3" style="position:absolute; visibility:hidden">'
+      const expectedImgTag = '<img src="http://localhost:8080/trackopen?trackingId=d9ba38b2-7b52-449f-946c-7dfb7c97a3f3" style="display:none">'
       const expectedBody = body + '\n' +  expectedImgTag;
 
       expect(insertTrackingPixel(body, trackingId, 'Html')).to.be.equal(expectedBody);
