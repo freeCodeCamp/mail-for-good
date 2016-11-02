@@ -27,7 +27,7 @@ module.exports = (req, res) => {
         raw: true
       }).then(instancesArray => {
         res.send({ subscribers: instancesArray });
-      })
+      });
     }
-  })
-}
+  });
+};

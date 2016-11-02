@@ -22,7 +22,7 @@ const ManageCampaignsTable = (props) => {
     afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
       deleteRows(rows);
     },
-    handleConfirmDeleteRow: next => {next()} // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
+    handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
   };
 
   const dateFormatter = cell => {
@@ -31,18 +31,18 @@ const ManageCampaignsTable = (props) => {
 
   const countBounced = data => {
     return data["campaignanalytic.permanentBounceCount"] + data["campaignanalytic.transientBounceCount"] + data["campaignanalytic.undeterminedBounceCount"];
-  }
+  };
 
   const bouncedFormatter = (cell, row) => {
     return countBounced(row);
-  }
+  };
 
   const deliveredFormatter = (cell, row) => {
     const total = row['campaignanalytic.totalSentCount'];
     const failed = countBounced(row) + row['campaignanalytic.complaintCount'];
 
     return total - failed;
-  }
+  };
 
   // ID will be used as the rowKey, but the column itself is hidden as it has no value. Slugs are also hidden.
   return (

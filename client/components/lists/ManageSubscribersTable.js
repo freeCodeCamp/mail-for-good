@@ -5,44 +5,41 @@ import moment from 'moment';
 
 
 export default class ManageSubscribersTable extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      data: this.props.data || []
-    };
-  }
-
   static propTypes = {
     data: PropTypes.array.isRequired
+  }
+
+  state = {
+    data: this.props.data || []
   }
 
   componentWillReceiveProps(newProps) {
     this.setState({
       data: newProps.data
-    })
+    });
   }
 
   formatFieldSubscribed(subscribed) {
     // this is a placeholder for now, since we are not yet handling
     // user subscription state
     if (subscribed) {
-      return '<span class="label label-success">Subscribed</span>'
+      return '<span class="label label-success">Subscribed</span>';
     } else {
-      return '<span class="label label-danger">Unsubscribed</span>'
+      return '<span class="label label-danger">Unsubscribed</span>';
     }
   }
 
   formatDate(cell) {
     return moment(cell).format('lll');
-  };
-
+  }
 
   render() {
     return (
       <BootstrapTable data={this.state.data}
                       pagination={true}
-                      hover={true}>
+                      hover={true}
+                      exportCSV={true}>
+
         <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
         <TableHeaderColumn dataField="email">Email</TableHeaderColumn>
         <TableHeaderColumn dataField="createdAt" dataFormat={this.formatDate} dataSort={true} width="150">Created</TableHeaderColumn>
@@ -54,4 +51,3 @@ export default class ManageSubscribersTable extends React.Component {
 
 
 }
-
