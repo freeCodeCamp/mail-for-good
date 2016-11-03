@@ -11,6 +11,7 @@ const AmazonEmail = require('./amazon');
 const CampaignSubscriber = require('../../../../models').campaignsubscriber;
 const CampaignAnalyticsLink = require('../../../../models').campaignanalyticslink;
 const CampaignAnalyticsOpen = require('../../../../models').campaignanalyticsopen;
+const CampaignAnalytics = require('../../../../models').campaignanalytics;
 
 /*
 
@@ -112,8 +113,12 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
             messageId: data.MessageId,
             email: task.email
           }).then(() => {
-            done(); // Accept new email from pool
-            processedEmails++;
+            CampaignAnalytics.findById(campaignInfo.campaignAnalyticsId).then(foundCampaignAnalytics => {
+              foundCampaignAnalytics.increment('totalSentCount').then(result => {
+                done(); // Accept new email from pool
+                processedEmails++;
+              })
+            })
           });
         }
       });

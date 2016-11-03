@@ -140,14 +140,11 @@ module.exports = (req, res, io) => {
     ).then(foundUser => {
       return foundUser.increment('sentEmailsCount', { by: totalEmails });
     }).then(() => {
-      return db.campaignanalytics.update(
-        {totalSentCount: totalEmails},
-        {
-          where: {campaignId},
-          returning: true
-        });
+      return db.campaignanalytics.findOne(
+        { where: { campaignId } }
+      )
     }).then(result => {
-      generator.next(result[1][0].id);
+      generator.next(result.dataValues.id);
     }).catch(err => {
       console.log(err);
       res.status(500).send(err);
