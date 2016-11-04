@@ -192,7 +192,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     }).then(list => {
       if (list) {
 
-        pushToQueue(list.get({ plain:true }));  
+        pushToQueue(list.get({ plain:true }));
       }
     }).catch(err => {
       throw err;

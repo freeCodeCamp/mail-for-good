@@ -3,7 +3,7 @@ import RichTextEditor from 'react-rte';
 import style from '../../styles/campaign-text-form.scss';
 
 // Also see ref for Draft JS https://facebook.github.io/draft-js/docs/api-reference-editor.html#content
-export default class CreateCampaignForm extends Component {
+export default class TextEditor extends Component {
   static propTypes = {
     input: PropTypes.object
   }

@@ -4,6 +4,7 @@ const multer = require('multer')({dest: 'server/controllers/list/uploads/'});
 const auth = require('./auth');
 
 const createCampaign = require('../controllers/campaign/create-campaign');
+const createTemplate = require('../controllers/campaign/create-template');
 const getCampaigns = require('../controllers/campaign/get-campaigns');
 const sendCampaign = require('../controllers/campaign/send-campaign');
 const deleteCampaigns = require('../controllers/campaign/delete-campaigns');
@@ -58,6 +59,11 @@ module.exports = (app, passport, io) => {
   // Create new campaign
   app.post('/api/campaign', apiIsAuth, parseJson, (req, res) => {
     createCampaign(req, res);
+  });
+
+  // Create new template
+  app.post('/api/campaign/template', apiIsAuth, parseJson, (req, res) => {
+    createTemplate(req, res);
   });
 
   // Send campaign
@@ -127,7 +133,7 @@ module.exports = (app, passport, io) => {
   // Open/pixel tracking
   app.get('/trackopen', (req, res) => {
     open(req, res);
-  })
+  });
 
   // temporary
   app.get('/api/analytics/clickthrough', apiIsAuth, (req, res) => {
