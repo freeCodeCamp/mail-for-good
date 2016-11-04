@@ -4,7 +4,7 @@ import FontAwesome from 'react-fontawesome';
 import CreateTemplateForm from '../../components/campaigns/CreateTemplateForm';
 import PreviewTemplateForm from '../../components/campaigns/PreviewTemplateForm';
 import ManageTemplatesTable from '../../components/campaigns/ManageTemplatesTable';
-import { getTemplates, postCreateTemplate } from '../../actions/campaignActions';
+import { getTemplates, postCreateTemplate, deleteTemplates } from '../../actions/campaignActions';
 
 function mapStateToProps(state) {
   // State reducer @ state.form.createTemplate & state.createTemplate
@@ -16,7 +16,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getTemplates, postCreateTemplate })
+@connect(mapStateToProps, { getTemplates, postCreateTemplate, deleteTemplates })
 export default class Templates extends Component {
 
   static propTypes = {
@@ -25,7 +25,8 @@ export default class Templates extends Component {
     postCreateTemplate: PropTypes.func.isRequired,
     getTemplates: PropTypes.func.isRequired,
     templates: PropTypes.array.isRequired,
-    isGetting: PropTypes.bool.isRequired
+    isGetting: PropTypes.bool.isRequired,
+    deleteTemplates: PropTypes.func.isRequired
   }
 
   static contextTypes = {
@@ -35,6 +36,7 @@ export default class Templates extends Component {
   constructor() {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.deleteRows = this.deleteRows.bind(this);
     this.nextPage = this.nextPage.bind(this);
     this.lastPage = this.lastPage.bind(this);
   }
@@ -60,7 +62,6 @@ export default class Templates extends Component {
   }
 
   handleSubmit() {
-    console.log(this.props);
     this.props.postCreateTemplate(JSON.stringify(this.props.form.values));
   }
 
@@ -72,9 +73,9 @@ export default class Templates extends Component {
     this.setState({ page: this.state.page - 1 });
   }
 
-  deleteRows(templateIds) { // campaignIds [...Numbers]
-    const jsonCampaignIds = JSON.stringify({data: templateIds});
-    //this.props.deleteCampaigns(jsonCampaignIds);
+  deleteRows(templateIds) { // templateIds [...Numbers]
+    const jsonCampaignIds = JSON.stringify({ data: templateIds });
+    this.props.deleteTemplates(jsonCampaignIds);
   }
 
   render() {
@@ -94,6 +95,9 @@ export default class Templates extends Component {
             <div className="box-body">
               <ManageTemplatesTable data={this.props.templates} deleteRows={this.deleteRows} />
             </div>
+            {this.props.isPosting || this.props.isGetting && <div className="overlay">
+              <FontAwesome name="refresh" spin/>
+            </div>}
           </div>
 
           <div className="box box-primary">
@@ -101,11 +105,10 @@ export default class Templates extends Component {
               {page === 1 && <CreateTemplateForm nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
               {page === 2 && <PreviewTemplateForm form={this.props.form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
+            {this.props.isPosting || this.props.isGetting && <div className="overlay">
+              <FontAwesome name="refresh" spin/>
+            </div>}
           </div>
-
-          {this.props.isPosting || this.props.isGetting && <div className="overlay">
-            <FontAwesome name="refresh" spin/>
-          </div>}
         </section>
 
       </div>

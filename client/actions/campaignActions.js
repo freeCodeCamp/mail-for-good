@@ -128,3 +128,12 @@ export function getTemplates() {
     xhr.send();
   };
 }
+
+export function deleteTemplates(templateIds) {
+  return () => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('DELETE', API_TEMPLATE_ENDPOINT);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(templateIds);
+  };
+}

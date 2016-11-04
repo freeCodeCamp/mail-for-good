@@ -9,6 +9,7 @@ const getCampaigns = require('../controllers/campaign/get-campaigns');
 const getTemplates = require('../controllers/campaign/get-templates');
 const sendCampaign = require('../controllers/campaign/send-campaign');
 const deleteCampaigns = require('../controllers/campaign/delete-campaigns');
+const deleteTemplates = require('../controllers/campaign/delete-templates');
 
 const addSubscribers = require('../controllers/list/add-subscribers');
 const importCSV = require('../controllers/list/import-csv');
@@ -81,6 +82,10 @@ module.exports = (app, passport, io) => {
 
   app.delete('/api/campaign', apiIsAuth, parseJson, (req, res) => {
     deleteCampaigns(req, res);
+  });
+
+  app.delete('/api/campaign/template', apiIsAuth, parseJson, (req, res) => {
+    deleteTemplates(req, res);
   });
 
   /* Lists */

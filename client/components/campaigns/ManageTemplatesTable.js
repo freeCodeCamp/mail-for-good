@@ -4,7 +4,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 import moment from 'moment';
 
 // Ref: https://allenfang.github.io/react-bootstrap-table/docs.html
-const ManageTemplatesTable = ({ data, deleteRows, getTemplatesView }) => {
+const ManageTemplatesTable = ({ data, deleteRows }) => {
 
   const selectRowProp = {
     mode: "checkbox",
@@ -16,7 +16,6 @@ const ManageTemplatesTable = ({ data, deleteRows, getTemplatesView }) => {
     noDataText: 'You do not have any templates linked with your account',
     onRowClick: row => { // This fires on clicking a row. TODO: Needs to go to another route with the format /:[campaign-name-slug] where users can manage (edit, send, schedule, delete) the campaign
       // NOTE: Row is an object where keys are data fields
-      getCampaignView(row);
     },
     afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
       deleteRows(rows);
@@ -40,7 +39,8 @@ const ManageTemplatesTable = ({ data, deleteRows, getTemplatesView }) => {
       searchPlaceholder="Filter templates"
       clearSearch={true}>
 
-      <TableHeaderColumn dataField="name" dataAlign="center" dataSort={true} isKey={true}>Name</TableHeaderColumn>
+      <TableHeaderColumn dataField="id" hidden={true} isKey={true}>Id</TableHeaderColumn>
+      <TableHeaderColumn dataField="name" dataAlign="center" dataSort={true}>Name</TableHeaderColumn>
       <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Created</TableHeaderColumn>
       <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Updated</TableHeaderColumn>
 
