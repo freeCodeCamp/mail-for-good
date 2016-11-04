@@ -1,5 +1,10 @@
-import { REQUEST_POST_CREATECAMPAIGN, COMPLETE_POST_CREATECAMPAIGN, REQUEST_GET_CAMPAIGNS, COMPLETE_GET_CAMPAIGNS, REQUEST_POST_SENDCAMPAIGN, COMPLETE_POST_SENDCAMPAIGN } from '../constants/actionTypes';
-import { API_CAMPAIGN_ENDPOINT, API_SEND_CAMPAIGN_ENDPOINT } from '../constants/endpoints';
+import {
+  REQUEST_POST_CREATECAMPAIGN, COMPLETE_POST_CREATECAMPAIGN,
+  REQUEST_GET_CAMPAIGNS, COMPLETE_GET_CAMPAIGNS,
+  REQUEST_POST_SENDCAMPAIGN, COMPLETE_POST_SENDCAMPAIGN,
+  REQUEST_POST_CREATETEMPLATE, COMPLETE_POST_CREATETEMPLATE
+} from '../constants/actionTypes';
+import { API_CAMPAIGN_ENDPOINT, API_SEND_CAMPAIGN_ENDPOINT, API_TEMPLATE_ENDPOINT } from '../constants/endpoints';
 
 // Create new campaign
 export function requestPostCreateCampaign() {
@@ -7,6 +12,14 @@ export function requestPostCreateCampaign() {
 }
 export function completePostCreateCampaign() {
   return { type: COMPLETE_POST_CREATECAMPAIGN };
+}
+
+// Create new template
+export function requestPostCreateTemplate() {
+  return { type: REQUEST_POST_CREATETEMPLATE};
+}
+export function completePostCreateTemplate() {
+  return { type: COMPLETE_POST_CREATETEMPLATE };
 }
 
 // Get array of existing campaigns
@@ -39,6 +52,20 @@ export function getCampaigns() {
   };
 }
 
+export function postCreateTemplate(form) {
+  return dispatch => {
+    dispatch(requestPostCreateTemplate());
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', API_TEMPLATE_ENDPOINT);
+    xhr.onload = () => {
+      dispatch(completePostCreateTemplate());
+    };
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(form);
+  };
+}
+
 export function postCreateCampaign(form) {
   return dispatch => {
     dispatch(requestPostCreateCampaign());
@@ -46,7 +73,6 @@ export function postCreateCampaign(form) {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', API_CAMPAIGN_ENDPOINT);
     xhr.onload = () => {
-      // Convert response from JSON
       dispatch(completePostCreateCampaign());
       // Update campaigns so that the user can see the new campaign under manage campaigns
       dispatch(getCampaigns());
@@ -57,7 +83,7 @@ export function postCreateCampaign(form) {
 }
 
 export function deleteCampaigns(campaignIds) {
-  return dispatch => {
+  return () => {
     const xhr = new XMLHttpRequest();
     xhr.open('DELETE', API_CAMPAIGN_ENDPOINT);
     xhr.setRequestHeader('Content-Type', 'application/json');

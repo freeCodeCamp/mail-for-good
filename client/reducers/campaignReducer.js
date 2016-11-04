@@ -1,5 +1,10 @@
 import initialState from './initialState';
-import { REQUEST_POST_CREATECAMPAIGN, COMPLETE_POST_CREATECAMPAIGN, REQUEST_GET_CAMPAIGNS, COMPLETE_GET_CAMPAIGNS, REQUEST_POST_SENDCAMPAIGN, COMPLETE_POST_SENDCAMPAIGN } from '../constants/actionTypes';
+import {
+  REQUEST_POST_CREATECAMPAIGN, COMPLETE_POST_CREATECAMPAIGN,
+  REQUEST_GET_CAMPAIGNS, COMPLETE_GET_CAMPAIGNS,
+  REQUEST_POST_SENDCAMPAIGN, COMPLETE_POST_SENDCAMPAIGN,
+  REQUEST_POST_CREATETEMPLATE, COMPLETE_POST_CREATETEMPLATE
+} from '../constants/actionTypes';
 
 export function createCampaign(state = initialState.createCampaign, action) {
   switch (action.type) {
@@ -9,6 +14,23 @@ export function createCampaign(state = initialState.createCampaign, action) {
         };
     }
     case COMPLETE_POST_CREATECAMPAIGN: {
+        return {...state,
+          isPosting: false
+        };
+    }
+    default:
+      return state;
+  }
+}
+
+export function createTemplate(state = initialState.createTemplate, action) {
+  switch (action.type) {
+    case REQUEST_POST_CREATETEMPLATE: {
+        return {...state,
+          isPosting: true
+        };
+    }
+    case COMPLETE_POST_CREATETEMPLATE: {
         return {...state,
           isPosting: false
         };
@@ -57,6 +79,7 @@ export function sendCampaign(state = initialState.sendCampaign, action) {
 
 export default {
   createCampaign,
+  createTemplate,
   manageCampaign,
   sendCampaign
 };

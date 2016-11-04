@@ -2,6 +2,9 @@ const initialState = {
   createCampaign: {
     isPosting: false // Posting a new campaign?
   },
+  createTemplate: {
+    isPosting: false // Posting a new template?
+  },
   manageCampaign: {
     campaigns: [], // Array of objects for campaigns
     isGetting: false // Getting campaigns?
