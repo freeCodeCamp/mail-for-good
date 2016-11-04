@@ -6,6 +6,7 @@ const auth = require('./auth');
 const createCampaign = require('../controllers/campaign/create-campaign');
 const createTemplate = require('../controllers/campaign/create-template');
 const getCampaigns = require('../controllers/campaign/get-campaigns');
+const getTemplates = require('../controllers/campaign/get-templates');
 const sendCampaign = require('../controllers/campaign/send-campaign');
 const deleteCampaigns = require('../controllers/campaign/delete-campaigns');
 
@@ -52,6 +53,11 @@ module.exports = (app, passport, io) => {
   // Get a list of all campaigns
   app.get('/api/campaign', apiIsAuth, (req, res) => {
     getCampaigns(req, res);
+  });
+
+  // Get a list of all templates
+  app.get('/api/campaign/template', apiIsAuth, (req, res) => {
+    getTemplates(req, res);
   });
 
   /* POST */

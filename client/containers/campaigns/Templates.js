@@ -10,17 +10,22 @@ function mapStateToProps(state) {
   // State reducer @ state.form.createTemplate & state.createTemplate
   return {
     form: state.form.createTemplate,
-    isPosting: state.createTemplate.isPosting
+    isPosting: state.createTemplate.isPosting,
+    templates: state.manageTemplates.templates,
+    isGetting: state.manageTemplates.isGetting
   };
 }
 
-@connect(mapStateToProps, { postCreateTemplate })
+@connect(mapStateToProps, { getTemplates, postCreateTemplate })
 export default class Templates extends Component {
 
   static propTypes = {
     form: PropTypes.object,
     isPosting: PropTypes.bool.isRequired,
-    postCreateTemplate: PropTypes.func.isRequired
+    postCreateTemplate: PropTypes.func.isRequired,
+    getTemplates: PropTypes.func.isRequired,
+    templates: PropTypes.array.isRequired,
+    isGetting: PropTypes.bool.isRequired
   }
 
   static contextTypes = {
@@ -38,6 +43,13 @@ export default class Templates extends Component {
     page: 1,
     initialFormValues: {
       type: 'Plaintext'
+    }
+  }
+
+  componentDidMount() {
+    // Update campaigns only if we need to
+    if (!this.props.templates.length) {
+      this.props.getTemplates();
     }
   }
 
@@ -78,11 +90,11 @@ export default class Templates extends Component {
 
         <section className="content">
 
-        <div className="box box-primary">
-          <div className="box-body">
-            <ManageTemplatesTable data={this.props.campaigns} deleteRows={this.deleteRows} />
+          <div className="box box-primary">
+            <div className="box-body">
+              <ManageTemplatesTable data={this.props.templates} deleteRows={this.deleteRows} />
+            </div>
           </div>
-        </div>
 
           <div className="box box-primary">
             <div className="box-body">
@@ -91,7 +103,7 @@ export default class Templates extends Component {
             </div>
           </div>
 
-          {this.props.isPosting && <div className="overlay">
+          {this.props.isPosting || this.props.isGetting && <div className="overlay">
             <FontAwesome name="refresh" spin/>
           </div>}
         </section>

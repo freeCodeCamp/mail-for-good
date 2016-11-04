@@ -8,7 +8,10 @@ import { getCampaigns, deleteCampaigns } from '../../actions/campaignActions';
 
 function mapStateToProps(state) {
   // State reducer @ state.manageCampaign
-  return {campaigns: state.manageCampaign.campaigns, isGetting: state.manageCampaign.isGetting};
+  return {
+    campaigns: state.manageCampaign.campaigns,
+    isGetting: state.manageCampaign.isGetting
+  };
 }
 
 @connect(mapStateToProps, {getCampaigns, deleteCampaigns})
