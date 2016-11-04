@@ -3,18 +3,17 @@ import DOMPurify from 'dompurify';
 
 const PreviewCampaignForm = props => {
   const { handleSubmit, lastPage, form:{ values: form } } = props;
-  // { listName, campaignName, fromName, fromEmail, emailSubject, emailBody, type }
+  // { templateName, fromName (OPTIONAL), fromEmail (OPTIONAL), emailSubject (OPTIONAL), emailBody, type }
   const cleanHtml = DOMPurify.sanitize(form.emailBody); // Purify xss to prevent xss attacks
 
   return (
     <div>
-      <h3><i className="fa fa-list text-green" aria-hidden="true" /> - {form.listName}</h3>
-      <h3><i className="fa fa-flag text-green" aria-hidden="true" /> - {form.campaignName}</h3>
+      <h3><i className="fa fa-list text-green" aria-hidden="true" /> - {form.templateName}</h3>
 
       <hr />
 
-      <h3>From - {`${form.fromName} <${form.fromEmail}>`}</h3>
-      <h4>Subject - {`${form.emailSubject}`}</h4>
+      <h3>From - {`${form.fromName || 'Not set'} <${form.fromEmail || 'Not set'}>`}</h3>
+      <h4>Subject - {`${form.emailSubject || 'Not set'}`}</h4>
       <blockquote>
         <p>
           <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />

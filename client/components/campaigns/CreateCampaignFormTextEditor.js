@@ -14,7 +14,11 @@ export default class CreateCampaignForm extends Component {
   }
 
   state = {
-    value: RichTextEditor.createEmptyValue()
+    value: {}
+  }
+
+  componentWillMount() {
+    this.setState({ value: this.props.input.value ? RichTextEditor.createValueFromString(this.props.input.value, 'html') : RichTextEditor.createEmptyValue() });
   }
 
   onChange(value) {
@@ -23,13 +27,13 @@ export default class CreateCampaignForm extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (<RichTextEditor
       value={this.state.value}
       onChange={this.onChange.bind(this)}
       placeholder="Write your email"
       spellCheck={true}
       editorClassName="text-editor"
-      spellCheck={true}
       />);
   }
 }
