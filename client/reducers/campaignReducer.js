@@ -3,7 +3,8 @@ import {
   REQUEST_POST_CREATECAMPAIGN, COMPLETE_POST_CREATECAMPAIGN,
   REQUEST_GET_CAMPAIGNS, COMPLETE_GET_CAMPAIGNS,
   REQUEST_POST_SENDCAMPAIGN, COMPLETE_POST_SENDCAMPAIGN,
-  REQUEST_POST_CREATETEMPLATE, COMPLETE_POST_CREATETEMPLATE
+  REQUEST_POST_CREATETEMPLATE, COMPLETE_POST_CREATETEMPLATE,
+  REQUEST_GET_TEMPLATES, COMPLETE_GET_TEMPLATES
 } from '../constants/actionTypes';
 
 export function createCampaign(state = initialState.createCampaign, action) {
@@ -58,6 +59,24 @@ export function manageCampaign(state = initialState.manageCampaign, action) {
   }
 }
 
+export function manageTemplates(state = initialState.manageTemplates, action) {
+  switch (action.type) {
+    case REQUEST_GET_TEMPLATES: {
+        return {...state,
+          isGetting: true
+        };
+    }
+    case COMPLETE_GET_TEMPLATES: {
+        return {...state,
+          templates: action.templates,
+          isGetting: false
+        };
+    }
+    default:
+      return state;
+  }
+}
+
 export function sendCampaign(state = initialState.sendCampaign, action) {
   switch (action.type) {
     case REQUEST_POST_SENDCAMPAIGN: {
@@ -81,5 +100,6 @@ export default {
   createCampaign,
   createTemplate,
   manageCampaign,
-  sendCampaign
+  sendCampaign,
+  manageTemplates
 };

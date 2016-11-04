@@ -52,11 +52,10 @@ const CreateTemplateForm = props => {
 
   const { touch, valid, pristine, submitting, nextPage, reset } = props;
 
-  const nameArray = ['listName', 'campaignName', 'fromName', 'fromEmail', 'emailSubject', 'emailBody', 'type'];
+  const nameArray = ['templateName', 'fromName', 'fromEmail', 'emailSubject', 'emailBody', 'type'];
 
   const resetFormAndSubmit = (e) => {
     e.preventDefault();
-    console.log(props);
     if (valid) {
       nextPage();
     } else {

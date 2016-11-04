@@ -2,7 +2,8 @@ import {
   REQUEST_POST_CREATECAMPAIGN, COMPLETE_POST_CREATECAMPAIGN,
   REQUEST_GET_CAMPAIGNS, COMPLETE_GET_CAMPAIGNS,
   REQUEST_POST_SENDCAMPAIGN, COMPLETE_POST_SENDCAMPAIGN,
-  REQUEST_POST_CREATETEMPLATE, COMPLETE_POST_CREATETEMPLATE
+  REQUEST_POST_CREATETEMPLATE, COMPLETE_POST_CREATETEMPLATE,
+  REQUEST_GET_TEMPLATES, COMPLETE_GET_TEMPLATES
 } from '../constants/actionTypes';
 import { API_CAMPAIGN_ENDPOINT, API_SEND_CAMPAIGN_ENDPOINT, API_TEMPLATE_ENDPOINT } from '../constants/endpoints';
 
@@ -36,6 +37,14 @@ export function requestPostSendCampaign() {
 }
 export function completePostSendCampaign(response, status) {
   return { type: COMPLETE_POST_SENDCAMPAIGN, sendCampaignResponse: response, sendCampaignStatus: status };
+}
+
+// Get templates
+export function requestGetTemplates() {
+  return { type: REQUEST_GET_TEMPLATES };
+}
+export function completeGetTemplates(templates) {
+  return { type: COMPLETE_GET_TEMPLATES, templates };
 }
 
 export function getCampaigns() {
@@ -103,5 +112,19 @@ export function postSendCampaign(campaign) {
     };
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(campaign);
+  };
+}
+
+export function getTemplates() {
+  return dispatch => {
+    dispatch(requestGetTemplates());
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', API_TEMPLATE_ENDPOINT);
+    xhr.onload = () => {
+      // Convert response from JSON
+      const templatesArray = JSON.parse(xhr.responseText);
+      dispatch(completeGetTemplates(templatesArray));
+    };
+    xhr.send();
   };
 }

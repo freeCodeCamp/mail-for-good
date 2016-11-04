@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { postCreateTemplate } from '../../actions/campaignActions';
 import FontAwesome from 'react-fontawesome';
 import CreateTemplateForm from '../../components/campaigns/CreateTemplateForm';
 import PreviewTemplateForm from '../../components/campaigns/PreviewTemplateForm';
+import ManageTemplatesTable from '../../components/campaigns/ManageTemplatesTable';
+import { getTemplates, postCreateTemplate } from '../../actions/campaignActions';
 
 function mapStateToProps(state) {
   // State reducer @ state.form.createTemplate & state.createTemplate
@@ -42,11 +43,12 @@ export default class Templates extends Component {
 
   componentWillReceiveProps(props) {
     if (this.props.isPosting === true && props.isPosting === false) { // Fires when template has been successfully created
-      this.context.router.push(`/campaigns/templates`);
+      this.context.router.push(`/campaigns/create`);
     }
   }
 
   handleSubmit() {
+    console.log(this.props);
     this.props.postCreateTemplate(JSON.stringify(this.props.form.values));
   }
 
@@ -56,6 +58,11 @@ export default class Templates extends Component {
 
   lastPage() {
     this.setState({ page: this.state.page - 1 });
+  }
+
+  deleteRows(templateIds) { // campaignIds [...Numbers]
+    const jsonCampaignIds = JSON.stringify({data: templateIds});
+    //this.props.deleteCampaigns(jsonCampaignIds);
   }
 
   render() {
@@ -70,6 +77,13 @@ export default class Templates extends Component {
         </div>
 
         <section className="content">
+
+        <div className="box box-primary">
+          <div className="box-body">
+            <ManageTemplatesTable data={this.props.campaigns} deleteRows={this.deleteRows} />
+          </div>
+        </div>
+
           <div className="box box-primary">
             <div className="box-body">
               {page === 1 && <CreateTemplateForm nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}

@@ -81,7 +81,6 @@ const CreateCampaignForm = props => {
 
   const resetFormAndSubmit = (e) => {
     e.preventDefault();
-    console.log(props);
     if (valid) {
       nextPage();
     } else {

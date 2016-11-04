@@ -17,7 +17,8 @@ export default class ManageCampaignsBox extends Component {
   static propTypes = {
     getCampaigns: PropTypes.func.isRequired,
     campaigns: PropTypes.array.isRequired,
-    isGetting: PropTypes.bool.isRequired
+    isGetting: PropTypes.bool.isRequired,
+    deleteCampaigns: PropTypes.func.isRequired
   }
 
   static contextTypes = {
