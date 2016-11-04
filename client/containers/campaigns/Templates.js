@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react';
+import CreateTemplateForm from '../../components/campaigns/CreateTemplateForm';
 
 export default class Templates extends Component {
   render() {
@@ -13,7 +14,7 @@ export default class Templates extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-            test
+              <CreateTemplateForm />
             </div>
           </div>
         </section>
