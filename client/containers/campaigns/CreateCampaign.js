@@ -60,7 +60,6 @@ export default class CreateCampaign extends Component {
   }
 
   handleSubmit() {
-    // TODO: Validation both sync and serverside async for the form
     this.props.postCreateCampaign(JSON.stringify(this.props.form.values));
   }
 
