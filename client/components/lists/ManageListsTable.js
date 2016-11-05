@@ -5,6 +5,10 @@ import moment from 'moment';
 import BSTyle from 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
 export default class ManageListsTable extends React.Component {
+  static propTypes = {
+    data: PropTypes.array.isRequired
+  }
+
   constructor(props) {
     super(props);
 
@@ -17,8 +21,10 @@ export default class ManageListsTable extends React.Component {
     };
   }
 
-  static propTypes = {
-    data: PropTypes.array.isRequired
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      data: newProps.data
+    });
   }
 
   formatFieldDate(cell) {
@@ -32,13 +38,7 @@ export default class ManageListsTable extends React.Component {
           <i className="fa fa-user" />
       </button>
       </Link>
-    )
-  }
-
-  componentWillReceiveProps(newProps) {
-    this.setState({
-      data: newProps.data
-    });
+    );
   }
 
   render() {

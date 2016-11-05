@@ -14,18 +14,25 @@ function mapStateToProps(state) {
 
 @connect(mapStateToProps, { getListSubscribers })
 export default class ManageListSubscribers extends Component {
+
+  static propTypes = {
+    subscribers: PropTypes.array.isRequired,
+    isGetting: PropTypes.bool.isRequired,
+    getListSubscribers: PropTypes.func.isRequired,
+    params: PropTypes.object
+  }
+
   constructor(props) {
     super(props);
-    
+
     this.state = {
       subscribers: this.props.subscribers,
       isGetting: this.props.isGetting
     };
   }
 
-  static propTypes = {
-    subscribers: PropTypes.array.isRequired,
-    isGetting: PropTypes.bool.isRequired
+  componentDidMount() {
+    this.props.getListSubscribers(this.props.params.listId);
   }
 
   componentWillReceiveProps(newProps) {
@@ -33,10 +40,6 @@ export default class ManageListSubscribers extends Component {
       subscribers: newProps.subscribers,
       isGetting: newProps.isGetting
     });
-  }
-
-  componentDidMount() {
-    this.props.getListSubscribers(this.props.params.listId);
   }
 
   render() {
@@ -55,7 +58,7 @@ export default class ManageListSubscribers extends Component {
             </div>
 
             <div className="box-body">
-              {!!this.props.subscribers.length && 
+              {!!this.props.subscribers.length &&
                 <ManageSubscribersTable data={this.state.subscribers} />
               }
               {this.props.isGetting && <div className="overlay">
@@ -65,6 +68,6 @@ export default class ManageListSubscribers extends Component {
           </div>
         </section>
       </div>
-    )
+    );
   }
 }
