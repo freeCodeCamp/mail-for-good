@@ -25,7 +25,7 @@ module.exports = (req, res, io) => {
     const campaignInfo = yield campaignBelongsToUser(userId, campaignId);
 
     // 3. Get the user's Max24HourSend - SentLast24Hours to determine available email quota, then get MaxSendRate
-    const quotas = yield getEmailQuotas(accessKey, secretKey);
+    const quotas = yield getEmailQuotas(accessKey, secretKey, region);
 
     // 4. Count the number of list subscribers to message. If this is above the daily quota, send an error.
     const totalListSubscribers = yield countListSubscribers(campaignInfo.listId, quotas.AvailableToday);
@@ -99,11 +99,11 @@ module.exports = (req, res, io) => {
     });
   }
 
-  function getEmailQuotas(accessKey, secretKey) {
+  function getEmailQuotas(accessKey, secretKey, region) {
     const ses = new AWS.SES({
       accessKeyId: accessKey,
       secretAccessKey: secretKey,
-      region: `eu-west-1` //TODO: Get this from the client
+      region: region
     });
 
     ses.getSendQuota((err, data) => {
