@@ -94,7 +94,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
         listsubscriberId: task.id
       })
     }).then(newCampaignAnalyticsOpen => {
-      updatedCampaignInfo.emailBody = insertTrackingPixel(campaignInfo.emailBody, newCampaignAnalyticsOpen.dataValues.trackingId, campaignInfo.type);
+      updatedCampaignInfo.emailBody = insertTrackingPixel(updatedCampaignInfo.emailBody, newCampaignAnalyticsOpen.dataValues.trackingId, campaignInfo.type);
 
       updatedCampaignInfo.emailBody = insertUnsubscribeLink(updatedCampaignInfo.emailBody, task.unsubscribeKey, campaignInfo.type, whiteLabelUrl);
 
