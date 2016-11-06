@@ -27,7 +27,8 @@ export default class Settings extends Component {
     newSettings: {
       amazonSimpleEmailServiceAccessKey: '',
       amazonSimpleEmailServiceSecretKey: '',
-      region: ''
+      region: '',
+      whiteLabelUrl: ''
     },
     loading: false
   }
@@ -110,6 +111,17 @@ export default class Settings extends Component {
                         onChange={this.onDropdownChange.bind(this)} />
                     </div>
 
+                    <div className="form-group">
+                      <label htmlFor="whiteLabelUrl">White label url</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="whiteLabelUrl"
+                        name="whiteLabelUrl"
+                        value={this.state.newSettings.whiteLabelUrl}
+                        placeholder="Your domain"
+                      />
+                    </div>
                   </div>
 
                   <div className="box-footer">

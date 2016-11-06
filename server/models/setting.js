@@ -3,7 +3,8 @@ module.exports = function(sequelize, DataTypes) {
   var setting = sequelize.define('setting', {
     amazonSimpleEmailServiceAccessKey: { type: DataTypes.STRING, defaultValue: '' },
     amazonSimpleEmailServiceSecretKey: { type: DataTypes.STRING, defaultValue: '' },
-    region: { type: DataTypes.STRING, defaultValue: '' }
+    region: { type: DataTypes.STRING, defaultValue: '' },
+    whiteLabelUrl: { type: DataTypes.STRING, defaultValue: '' }
   }, {
     classMethods: {
       associate: function(models) {

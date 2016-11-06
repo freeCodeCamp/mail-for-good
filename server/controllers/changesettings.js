@@ -20,7 +20,8 @@ module.exports = function(req, res) {
   Setting.update({
     amazonSimpleEmailServiceAccessKey: settingsToChange.amazonSimpleEmailServiceAccessKey,
     amazonSimpleEmailServiceSecretKey: settingsToChange.amazonSimpleEmailServiceSecretKey,
-    region: settingsToChange.region
+    region: settingsToChange.region,
+    whiteLabelUrl: settingsToChange.whiteLabelUrl
   }, {
     where: {
       userId: req.user.id
