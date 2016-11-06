@@ -7,16 +7,24 @@ describe('amazon-ses analytics', () => {
   describe('wrapLink', () => {
     const body = '\ndear whoever,\nthis is a plaintext email body\ncheers.';
     const trackingId = 'd9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
+    const whiteLabelUrl = 'http://localhost:8080'
 
     it('wraps a plain into a clickthrough url in html emails', () => {
       const linkToWrap = '{this is a link/https://google.com}';
       const expectedBody = body + '\n<a href="http://localhost:8080/clickthrough?url=https://google.com&trackingId=d9ba38b2-7b52-449f-946c-7dfb7c97a3f3">this is a link</a>';
 
-      expect(wrapLink(body + '\n' + linkToWrap, trackingId, 'Html')).to.be.equal(expectedBody);
+      expect(wrapLink(body + '\n' + linkToWrap, trackingId, 'Html', whiteLabelUrl)).to.be.equal(expectedBody);
     })
 
     it('returns the original body if the email is plaintext', () => {
       expect(wrapLink(body, trackingId, 'Plaintext')).to.be.equal(body);
+    })
+
+    it('uses the given white label url', () => {
+      const linkToWrap = '{this is a link/https://google.com}';
+      const expectedBody = body + '\n<a href="https://reddit.com/clickthrough?url=https://google.com&trackingId=d9ba38b2-7b52-449f-946c-7dfb7c97a3f3">this is a link</a>';
+
+      expect(wrapLink(body + '\n' + linkToWrap, trackingId, 'Html', 'https://reddit.com')).to.be.equal(expectedBody);
     })
   })
 
@@ -24,17 +32,26 @@ describe('amazon-ses analytics', () => {
   describe('insertUnsubscribeLink', () => {
     const body = '\ndear whoever,\nthis is a plaintext email body\ncheers.';
     const unsubscribeLink = 'd9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
+    const whiteLabelUrl = 'http://localhost:8080'
 
     it('inserts an unsubscribe link at the end of a html email', () => {
       const expectedBody = body + '\n<a href="http://localhost:8080/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3">unsubscribe</a>';
 
-      expect(insertUnsubscribeLink(body, unsubscribeLink, 'Html')).to.be.equal(expectedBody);
+      expect(insertUnsubscribeLink(body, unsubscribeLink, 'Html', whiteLabelUrl)).to.be.equal(expectedBody);
     })
 
     it('inserts an unsubscribe url at the end of a plaintext email', () => {
       const expectedBody = body + '\nhttp://localhost:8080/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
 
-      expect(insertUnsubscribeLink(body, unsubscribeLink, 'Plaintext')).to.be.equal(expectedBody);
+      expect(insertUnsubscribeLink(body, unsubscribeLink, 'Plaintext', whiteLabelUrl)).to.be.equal(expectedBody);
+    })
+
+    it('uses the given white label url', () => {
+      let expectedBody = body + '\nhttp://google.com/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
+      expect(insertUnsubscribeLink(body, unsubscribeLink, 'Plaintext', 'http://google.com')).to.be.equal(expectedBody);
+
+      expectedBody = body + '\nhttps://reddit.com/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
+      expect(insertUnsubscribeLink(body, unsubscribeLink, 'Plaintext', 'https://reddit.com')).to.be.equal(expectedBody);
     })
   })
 

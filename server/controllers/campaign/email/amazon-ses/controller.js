@@ -49,7 +49,7 @@ Throttling error:
 
 */
 
-module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region) => {
+module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, whiteLabelUrl) => {
 
 
   const isDevMode = process.env.IS_DEV_MODE || false;
@@ -87,7 +87,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
       campaignanalyticId: campaignInfo.campaignAnalyticsId,  // consider refactoring these?
       listsubscriberId: task.id
     }).then(newCampaignAnalyticsLink => {
-      updatedCampaignInfo.emailBody = wrapLink(campaignInfo.emailBody, newCampaignAnalyticsLink.dataValues.trackingId, campaignInfo.type);
+      updatedCampaignInfo.emailBody = wrapLink(campaignInfo.emailBody, newCampaignAnalyticsLink.dataValues.trackingId, campaignInfo.type, whiteLabelUrl);
 
       return CampaignAnalyticsOpen.create({
         campaignanalyticId: campaignInfo.campaignAnalyticsId,
@@ -96,7 +96,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     }).then(newCampaignAnalyticsOpen => {
       updatedCampaignInfo.emailBody = insertTrackingPixel(campaignInfo.emailBody, newCampaignAnalyticsOpen.dataValues.trackingId, campaignInfo.type);
 
-      updatedCampaignInfo.emailBody = insertUnsubscribeLink(updatedCampaignInfo.emailBody, task.unsubscribeKey, campaignInfo.type);
+      updatedCampaignInfo.emailBody = insertUnsubscribeLink(updatedCampaignInfo.emailBody, task.unsubscribeKey, campaignInfo.type, whiteLabelUrl);
 
       const emailFormat = AmazonEmail(task, updatedCampaignInfo);
 

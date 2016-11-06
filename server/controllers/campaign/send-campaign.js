@@ -19,7 +19,7 @@ module.exports = (req, res, io) => {
     // NOTE: Current assumption is that the user is using Amazon SES. Can modularise and change this if necessary.
 
     // 1. Confirm user has set their keys & retrieve them
-    const { accessKey, secretKey, region } = yield getAmazonKeysAndRegion(userId);
+    const { accessKey, secretKey, region, whiteLabelUrl } = yield getAmazonKeysAndRegion(userId);
 
     // 2. Confirm the campaign id belongs to the user and retrieve the associated listId
     const campaignInfo = yield campaignBelongsToUser(userId, campaignId);
@@ -37,7 +37,7 @@ module.exports = (req, res, io) => {
     res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday, totalListSubscribers));
 
     // 7. Send the campaign. TODO: Clean up & condense these arguments
-    yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region);
+    yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, whiteLabelUrl);
 
     // 8. TODO: If there was an error, handle it here
 
@@ -86,12 +86,18 @@ module.exports = (req, res, io) => {
         res.status(500).send();
       } else {
         const settingObject = settingInstance.get({ plain:true });
-        const { amazonSimpleEmailServiceAccessKey: accessKey, amazonSimpleEmailServiceSecretKey: secretKey, region } = settingObject;
+        const {
+          amazonSimpleEmailServiceAccessKey: accessKey,
+          amazonSimpleEmailServiceSecretKey: secretKey,
+          region,
+          whiteLabelUrl
+        } = settingObject;
         // If either key is blank, the user needs to set their settings
         if (accessKey === '' || secretKey === '' || region === '' && !process.env.IS_DEV_MODE) {
           res.status(400).send({ message:'Please provide your details for your Amazon account under "Settings".' });
         } else {
-          generator.next({ accessKey, secretKey, region });
+          // handling of default whitelabel url?
+          generator.next({ accessKey, secretKey, region, whiteLabelUrl: whiteLabelUrl || 'http://localhost:8080' });
         }
       }
     }).catch(err => {
