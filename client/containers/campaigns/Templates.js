@@ -49,7 +49,7 @@ export default class Templates extends Component {
   }
 
   componentDidMount() {
-    // Update campaigns only if we need to
+    // Update templates only if we need to
     if (!this.props.templates.length) {
       this.props.getTemplates();
     }

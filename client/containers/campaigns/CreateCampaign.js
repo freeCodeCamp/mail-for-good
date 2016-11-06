@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import CreateCampaignForm from '../../components/campaigns/CreateCampaignForm';
 import PreviewCampaignForm from '../../components/campaigns/PreviewCampaignForm';
-import { postCreateCampaign } from '../../actions/campaignActions';
+import { postCreateCampaign, getTemplates } from '../../actions/campaignActions';
 import { getLists } from '../../actions/listActions';
 import FontAwesome from 'react-fontawesome';
 
@@ -12,11 +12,12 @@ function mapStateToProps(state) {
     form: state.form.createCampaign,
     isPosting: state.createCampaign.isPosting,
     lists: state.manageList.lists,
-    isGetting: state.manageList.isGetting
+    isGetting: state.manageList.isGetting,
+    templates: state.manageTemplates.templates
   };
 }
 
-@connect(mapStateToProps, { postCreateCampaign, getLists })
+@connect(mapStateToProps, { postCreateCampaign, getLists, getTemplates })
 export default class CreateCampaign extends Component {
 
   static propTypes = {
@@ -25,7 +26,9 @@ export default class CreateCampaign extends Component {
     postCreateCampaign: PropTypes.func.isRequired,
     getLists: PropTypes.func.isRequired,
     lists: PropTypes.array.isRequired,
-    isGetting: PropTypes.bool.isRequired
+    isGetting: PropTypes.bool.isRequired,
+    getTemplates: PropTypes.func.isRequired,
+    templates: PropTypes.array.isRequired
   }
 
   static contextTypes = {
@@ -51,6 +54,9 @@ export default class CreateCampaign extends Component {
     if (!this.props.lists.length) {
       this.props.getLists();
     }
+    if (!this.props.templates.length) {
+      this.props.getTemplates();
+    }
   }
 
   componentWillReceiveProps(props) {
@@ -72,7 +78,8 @@ export default class CreateCampaign extends Component {
   }
 
   render() {
-    const { page } = this.state;
+    const { page, initialFormValues } = this.state;
+    const { lists, templates, form, isGetting, isPosting } = this.props;
 
     return (
       <div>
@@ -85,11 +92,11 @@ export default class CreateCampaign extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateCampaignForm lists={this.props.lists} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
-              {page === 2 && <PreviewCampaignForm form={this.props.form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
+              {page === 1 && <CreateCampaignForm templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
+              {page === 2 && <PreviewCampaignForm form={form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
 
-            {this.props.isGetting || this.props.isPosting && <div className="overlay">
+            {isGetting || isPosting && <div className="overlay">
               <FontAwesome name="refresh" spin/>
             </div>}
           </div>
