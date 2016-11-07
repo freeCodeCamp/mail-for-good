@@ -6,9 +6,6 @@ module.exports = (req, res) => {
     where: {
       userId: req.user.id
     },
-    attributes: [
-      'name', 'createdAt', 'updatedAt', 'id'
-    ],
     raw: true
   }).then(instancesArray => {
     res.send(instancesArray);

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { initialize } from 'redux-form';
 import CreateCampaignForm from '../../components/campaigns/CreateCampaignForm';
 import PreviewCampaignForm from '../../components/campaigns/PreviewCampaignForm';
 import { postCreateCampaign, getTemplates } from '../../actions/campaignActions';
@@ -17,7 +18,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { postCreateCampaign, getLists, getTemplates })
+@connect(mapStateToProps, { postCreateCampaign, getLists, getTemplates, initialize })
 export default class CreateCampaign extends Component {
 
   static propTypes = {
@@ -40,6 +41,7 @@ export default class CreateCampaign extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.nextPage = this.nextPage.bind(this);
     this.lastPage = this.lastPage.bind(this);
+    this.applyTemplate = this.applyTemplate.bind(this);
   }
 
   state = {
@@ -69,6 +71,10 @@ export default class CreateCampaign extends Component {
     this.props.postCreateCampaign(JSON.stringify(this.props.form.values));
   }
 
+  applyTemplate(template) {
+    this.props.initialize('createCampaign', template);
+  }
+
   nextPage() {
     this.setState({ page: this.state.page + 1 });
   }
@@ -92,7 +98,7 @@ export default class CreateCampaign extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateCampaignForm templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
+              {page === 1 && <CreateCampaignForm applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
               {page === 2 && <PreviewCampaignForm form={form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
 

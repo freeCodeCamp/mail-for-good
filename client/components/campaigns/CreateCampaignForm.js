@@ -9,11 +9,9 @@ import { renderCombobox, renderField, renderTextEditor, renderRadio } from './Fo
 // Ref react-widgets https://jquense.github.io/react-widgets/ (for examples see https://github.com/erikras/redux-form/blob/master/examples/react-widgets/src/ReactWidgetsForm.js)
 // Ref react-rte https://github.com/sstur/react-rte
 
-// TODO: This should be a class, the applyForm function is a hack
-
 const CreateCampaignForm = props => {
 
-  const { touch, valid, pristine, submitting, nextPage, reset } = props;
+  const { touch, valid, pristine, submitting, nextPage, reset, applyTemplate } = props;
 
   const lists = props.lists.map(x => x.name);
   const templates = props.templates.map(x => x.name);
@@ -32,7 +30,12 @@ const CreateCampaignForm = props => {
 
   const applyForm = () => {
     const applyTemplateValue = document.getElementById('templates_input').value; // Get template name
-    const templateId = props.templates.find(x => x.name === applyTemplateValue).id; // Get the template's id
+    const foundTemplate = props.templates.find(x => x.name === applyTemplateValue);
+    if (!foundTemplate) { // Template does not exist
+
+    } else {
+      applyTemplate(foundTemplate);
+    }
   };
 
   return (
@@ -83,7 +86,8 @@ CreateCampaignForm.propTypes = {
   nextPage: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
   lists: PropTypes.array.isRequired,
-  templates: PropTypes.array.isRequired
+  templates: PropTypes.array.isRequired,
+  applyTemplate: PropTypes.func.isRequired
 };
 
 const validate = values => {
