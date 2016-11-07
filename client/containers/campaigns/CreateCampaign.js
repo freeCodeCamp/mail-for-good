@@ -29,7 +29,8 @@ export default class CreateCampaign extends Component {
     lists: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired,
     getTemplates: PropTypes.func.isRequired,
-    templates: PropTypes.array.isRequired
+    templates: PropTypes.array.isRequired,
+    initialize: PropTypes.func.isRequired
   }
 
   static contextTypes = {
