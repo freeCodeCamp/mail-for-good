@@ -1,7 +1,8 @@
 import React, { PropTypes } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import BSTyle from 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
+import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 import moment from 'moment';
+import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 
 // Ref: https://allenfang.github.io/react-bootstrap-table/docs.html
 const CampaignReportsTable = props => {
@@ -29,6 +30,11 @@ const CampaignReportsTable = props => {
     return moment(cell).format('lll');
   };
 
+  const filterDate = {
+    type: "DateFilter",
+    //defaultValue: //Default value on filter. If type is NumberFilter or DateFilter, this value will like { number||date: xxx, comparator: '>' }
+  };
+
   // ID will be used as the rowKey, but the column itself is hidden as it has no value. Slugs are also hidden.
   return (
     <BootstrapTable data={data}
@@ -45,8 +51,8 @@ const CampaignReportsTable = props => {
       <TableHeaderColumn dataField="slug" hidden={true}>Slug</TableHeaderColumn>
       <TableHeaderColumn dataField="name" dataAlign="center" dataSort={true}>Name</TableHeaderColumn>
       <TableHeaderColumn dataAlign="center" width="300">Tags (WIP)</TableHeaderColumn>
-      <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Created</TableHeaderColumn>
-      <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Updated</TableHeaderColumn>
+      <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150" filter={filterDate}>Created</TableHeaderColumn>
+      <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150" filter={filterDate}>Updated</TableHeaderColumn>
     </BootstrapTable>
   );
 };
