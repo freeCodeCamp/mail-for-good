@@ -2,9 +2,16 @@ const initialState = {
   createCampaign: {
     isPosting: false // Posting a new campaign?
   },
+  createTemplate: {
+    isPosting: false
+  },
   manageCampaign: {
     campaigns: [], // Array of objects for campaigns
     isGetting: false // Getting campaigns?
+  },
+  manageTemplates: {
+    templates: [],
+    isGetting: false
   },
   sendCampaign: {
     isPosting: false,
@@ -13,7 +20,7 @@ const initialState = {
   },
   createList: {
     list: [],
-    isPosting: false // Posting a file?
+    isPosting: false
   },
   manageList: {
     lists: [], // Array of objects for lists

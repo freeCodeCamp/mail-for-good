@@ -57,9 +57,9 @@ module.exports = (req, res) => {
         if (instance[0].$options.isNewRecord) {
           db.campaignanalytics.create({
             campaignId: instance[0].dataValues.id
-          }).then(newCampaignAnalytics => {
+          }).then(() => {
             res.send({message: 'New campaign successfully created'});
-          })
+          });
         } else {
           res.status(400).send(); // As before, form will be validated client side so no need for a response
         }
@@ -68,4 +68,4 @@ module.exports = (req, res) => {
       });
     }
   });
-}
+};

@@ -2,11 +2,9 @@ import React, { PropTypes } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 import moment from 'moment';
-import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 
 // Ref: https://allenfang.github.io/react-bootstrap-table/docs.html
-const CampaignReportsTable = props => {
-  const { data } = props;
+const ManageTemplatesTable = ({ data, deleteRows }) => {
 
   const selectRowProp = {
     mode: "checkbox",
@@ -15,24 +13,18 @@ const CampaignReportsTable = props => {
 
   const options = {
     clearSearch: true,
-    noDataText: 'You have not yet sent a campaign',
+    noDataText: 'You do not have any templates linked with your account',
     onRowClick: row => { // This fires on clicking a row. TODO: Needs to go to another route with the format /:[campaign-name-slug] where users can manage (edit, send, schedule, delete) the campaign
       // NOTE: Row is an object where keys are data fields
-      //getCampaignView(row);
     },
     afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
-      //deleteRows(rows);
+      deleteRows(rows);
     },
-    handleConfirmDeleteRow: next => {next();} // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
+    handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
   };
 
   const dateFormatter = cell => {
     return moment(cell).format('lll');
-  };
-
-  const filterDate = {
-    type: "DateFilter",
-    //defaultValue: //Default value on filter. If type is NumberFilter or DateFilter, this value will like { number||date: xxx, comparator: '>' }
   };
 
   // ID will be used as the rowKey, but the column itself is hidden as it has no value. Slugs are also hidden.
@@ -44,17 +36,20 @@ const CampaignReportsTable = props => {
       selectRow={selectRowProp}
       options={options}
       search={true}
-      searchPlaceholder="Filter campaigns"
+      searchPlaceholder="Filter templates"
       clearSearch={true}>
 
       <TableHeaderColumn dataField="id" hidden={true} isKey={true}>Id</TableHeaderColumn>
-      <TableHeaderColumn dataField="slug" hidden={true}>Slug</TableHeaderColumn>
       <TableHeaderColumn dataField="name" dataAlign="center" dataSort={true}>Name</TableHeaderColumn>
-      <TableHeaderColumn dataAlign="center" width="300">Tags (WIP)</TableHeaderColumn>
-      <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150" filter={filterDate}>Created</TableHeaderColumn>
-      <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150" filter={filterDate}>Updated</TableHeaderColumn>
+      <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Created</TableHeaderColumn>
+      <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Updated</TableHeaderColumn>
+
     </BootstrapTable>
   );
 };
 
-export default CampaignReportsTable;
+ManageTemplatesTable.propTypes = {
+  deleteRows: PropTypes.func.isRequired
+};
+
+export default ManageTemplatesTable;

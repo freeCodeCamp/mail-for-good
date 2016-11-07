@@ -8,7 +8,10 @@ import { getCampaigns, deleteCampaigns } from '../../actions/campaignActions';
 
 function mapStateToProps(state) {
   // State reducer @ state.manageCampaign
-  return {campaigns: state.manageCampaign.campaigns, isGetting: state.manageCampaign.isGetting};
+  return {
+    campaigns: state.manageCampaign.campaigns,
+    isGetting: state.manageCampaign.isGetting
+  };
 }
 
 @connect(mapStateToProps, {getCampaigns, deleteCampaigns})
@@ -17,7 +20,8 @@ export default class ManageCampaignsBox extends Component {
   static propTypes = {
     getCampaigns: PropTypes.func.isRequired,
     campaigns: PropTypes.array.isRequired,
-    isGetting: PropTypes.bool.isRequired
+    isGetting: PropTypes.bool.isRequired,
+    deleteCampaigns: PropTypes.func.isRequired
   }
 
   static contextTypes = {

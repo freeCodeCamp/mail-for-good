@@ -4,9 +4,12 @@ const multer = require('multer')({dest: 'server/controllers/list/uploads/'});
 const auth = require('./auth');
 
 const createCampaign = require('../controllers/campaign/create-campaign');
+const createTemplate = require('../controllers/campaign/create-template');
 const getCampaigns = require('../controllers/campaign/get-campaigns');
+const getTemplates = require('../controllers/campaign/get-templates');
 const sendCampaign = require('../controllers/campaign/send-campaign');
 const deleteCampaigns = require('../controllers/campaign/delete-campaigns');
+const deleteTemplates = require('../controllers/campaign/delete-templates');
 
 const addSubscribers = require('../controllers/list/add-subscribers');
 const importCSV = require('../controllers/list/import-csv');
@@ -53,11 +56,21 @@ module.exports = (app, passport, io) => {
     getCampaigns(req, res);
   });
 
+  // Get a list of all templates
+  app.get('/api/campaign/template', apiIsAuth, (req, res) => {
+    getTemplates(req, res);
+  });
+
   /* POST */
 
   // Create new campaign
   app.post('/api/campaign', apiIsAuth, parseJson, (req, res) => {
     createCampaign(req, res);
+  });
+
+  // Create new template
+  app.post('/api/campaign/template', apiIsAuth, parseJson, (req, res) => {
+    createTemplate(req, res);
   });
 
   // Send campaign
@@ -69,6 +82,10 @@ module.exports = (app, passport, io) => {
 
   app.delete('/api/campaign', apiIsAuth, parseJson, (req, res) => {
     deleteCampaigns(req, res);
+  });
+
+  app.delete('/api/campaign/template', apiIsAuth, parseJson, (req, res) => {
+    deleteTemplates(req, res);
   });
 
   /* Lists */
@@ -127,7 +144,7 @@ module.exports = (app, passport, io) => {
   // Open/pixel tracking
   app.get('/trackopen', (req, res) => {
     open(req, res);
-  })
+  });
 
   // temporary
   app.get('/api/analytics/clickthrough', apiIsAuth, (req, res) => {

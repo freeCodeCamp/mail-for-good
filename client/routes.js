@@ -8,6 +8,7 @@ import Dashboard from './containers/Dashboard';
 import CreateCampaign from './containers/campaigns/CreateCampaign';
 import ManageCampaigns from './components/campaigns/ManageCampaigns';
 import CampaignView from './containers/campaigns/CampaignView';
+import Templates from './containers/campaigns/Templates';
 
 import CreateList from './containers/lists/CreateList';
 import ManageLists from './components/lists/ManageLists';
@@ -28,6 +29,7 @@ export default(
       <Route path="create" component={CreateCampaign}/>
       <Route path="manage" component={ManageCampaigns}/>
       <Route path="manage/:slug" component={CampaignView}/>
+      <Route path="templates" component={Templates}/>
     </Route>
 
     <Route path="lists">

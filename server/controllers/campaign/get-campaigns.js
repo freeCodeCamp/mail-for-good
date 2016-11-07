@@ -30,4 +30,4 @@ module.exports = (req, res) => {
   }).then(instancesArray => {
     res.send(instancesArray);
   });
-}
+};
