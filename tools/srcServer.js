@@ -10,8 +10,16 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import config from '../webpack.config.dev';
+import proxy from 'http-proxy-middleware';
 
 const bundler = webpack(config);
+
+const serverProxy = proxy(['/api', '/auth', '/login'], {
+    target: 'http://localhost:8080',
+    changeOrigin: true,
+    ws: true,
+    logLevel: 'debug'
+});
 
 // Run Browsersync and use middleware for Hot Module Replacement
 browserSync({
@@ -23,6 +31,7 @@ browserSync({
     baseDir: 'client',
 
     middleware: [
+      serverProxy,
       historyApiFallback(),
 
       webpackDevMiddleware(bundler, {
