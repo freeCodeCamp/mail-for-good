@@ -9,12 +9,10 @@
   "scripts": {
     "client:start": "npm-run-all --parallel client:test:watch client:open:src client:lint:watch",
     "client:open:src": "babel-node tools/srcServer.js",
-    "client:open:dist": "babel-node tools/distServer.js",
     "client:lint": "esw webpack.config.* client tools --color",
     "client:lint:watch": "npm run client:lint -- --watch",
     "client:clean-dist": "npm run client:remove-dist && mkdir dist",
     "client:remove-dist": "rimraf ./dist",
-    "client:build": "babel-node tools/build.js && npm run client:open:dist",
     "client:test": "mocha tools/testSetup.js \"client/**/*.spec.js\" --reporter progress",
     "client:test:cover": "babel-node node_modules/isparta/bin/isparta cover --root client--report html node_modules/mocha/bin/_mocha -- --require ./tools/testSetup.js \"client/**/*.spec.js\" --reporter progress",
     "client:test:cover:travis": "babel-node node_modules/isparta/bin/isparta cover --root client--report lcovonly _mocha -- --require ./tools/testSetup.js \"client/**/*.spec.js\" && cat ./coverage/lcov.info | node_modules/coveralls/bin/coveralls.js",
@@ -24,7 +22,7 @@
     "start": "node server/index.js",
     "dev": "IS_DEV_MODE=true npm start",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel-node tools/buildServer.js",
+    "build": "babel-node tools/build.js",
     "email:test:amazon": "node server/controllers/campaign/email/amazon-ses/test-server.js"
   },
   "repository": {
