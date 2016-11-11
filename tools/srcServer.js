@@ -14,7 +14,7 @@ import proxy from 'http-proxy-middleware';
 
 const bundler = webpack(config);
 
-const serverProxy = proxy(['/api', '/auth', '/login'], {
+const serverProxy = proxy(['/api', '/auth', '/login', '/public'], {
     target: 'http://localhost:8080',
     changeOrigin: true,
     ws: true,
