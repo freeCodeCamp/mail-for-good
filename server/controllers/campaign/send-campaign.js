@@ -34,7 +34,7 @@ module.exports = (req, res, io) => {
     campaignInfo.campaignAnalyticsId = yield updateAnalytics(campaignInfo.campaignId, userId, totalListSubscribers);
 
     // 6. At this stage, we've ready to send the campaign. Respond that the request was successful.
-    res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday, totalListSubscribers));
+    res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday, quotas.MaxSendRate));
 
     // 7. Send the campaign. TODO: Clean up & condense these arguments
     yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, whiteLabelUrl);
@@ -148,7 +148,7 @@ module.exports = (req, res, io) => {
     }).then(() => {
       return db.campaignanalytics.findOne(
         { where: { campaignId } }
-      )
+      );
     }).then(result => {
       generator.next(result.dataValues.id);
     }).catch(err => {
@@ -157,8 +157,8 @@ module.exports = (req, res, io) => {
     });
   }
 
-  function howLongEmailingWillTake(totalListSubscribers, AvailableToday) {
-    const timeTaken = (totalListSubscribers / 14 / 60);
+  function howLongEmailingWillTake(totalListSubscribers, AvailableToday, MaxSendRate) {
+    const timeTaken = (totalListSubscribers / MaxSendRate / 60);
     const emailsLeftAfterSend = AvailableToday - totalListSubscribers;
     let formattedMessage = 'Your email is being sent, it should take ';
 
