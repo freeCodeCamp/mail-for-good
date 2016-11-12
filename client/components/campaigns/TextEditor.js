@@ -22,7 +22,7 @@ export default class TextEditor extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.input.value) { // Has the input prop been updated by the initialize action creator (called when applying templates)?
+    if (props.input.value && !this.props.input.value) { // Has the input prop been updated by the initialize action creator (called when applying templates)?
       this.setState({ value: RichTextEditor.createValueFromString(props.input.value, 'html') });
     }
   }
@@ -30,6 +30,7 @@ export default class TextEditor extends Component {
   onChange(value) {
     this.setState({ value });
     this.props.input.onChange(value.toString('html'));
+    console.log(RichTextEditor);
   }
 
   render() {
