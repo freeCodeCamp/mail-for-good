@@ -6,6 +6,10 @@ import { renderField, renderDropdownList } from '../components/common/FormRender
 import FontAwesome from 'react-fontawesome';
 import 'react-widgets/dist/css/react-widgets.css';
 
+// NOTE: At present, the 'password' type of the secretAccessKey field has been removed. This is because it causes browsers to attempt to
+// Save the form details as if they were a login. There's no simply solution around this. Should we need this functionality, the best approach
+// Is probably to store the input and displayed state separately
+
 const regions = ['us-west-2', 'us-east-1', 'eu-west-1']; // AWS SES regions
 
 function getState(state) {
@@ -108,7 +112,7 @@ export default class Settings extends Component {
                   <div className="box-body">
 
                     <Field name="accessKey" component={renderField} label="Access Key" type="text" placeholder="Your service access key" />
-                    <Field name="secretAccessKey" component={renderField} label="Secret Access Key" type="password" placeholder="Your service secret key" />
+                    <Field name="secretAccessKey" component={renderField} label="Secret Access Key" type="text" placeholder="Your service secret key" />
                     <Field name="region" component={renderDropdownList} data={regions} label="Amazon region associated with this email" />
                     <Field name="whiteLabelUrl" component={renderField} label="White Label URL" type="text" placeholder="Your domain" />
 
