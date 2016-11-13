@@ -29,10 +29,6 @@ export default class Templates extends Component {
     deleteTemplates: PropTypes.func.isRequired
   }
 
-  static contextTypes = {
-    router: PropTypes.object.isRequired
-  }
-
   constructor() {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -57,7 +53,7 @@ export default class Templates extends Component {
 
   componentWillReceiveProps(props) {
     if (this.props.isPosting === true && props.isPosting === false) { // Fires when template has been successfully created
-      this.context.router.push(`/campaigns/create`);
+      this.setState({ page: 1 });
     }
   }
 

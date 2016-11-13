@@ -73,6 +73,7 @@ export function postCreateTemplate(form) {
     xhr.open('POST', API_TEMPLATE_ENDPOINT);
     xhr.onload = () => {
       dispatch(completePostCreateTemplate());
+      dispatch(getTemplates());
     };
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(form);
@@ -87,7 +88,6 @@ export function postCreateCampaign(form) {
     xhr.open('POST', API_CAMPAIGN_ENDPOINT);
     xhr.onload = () => {
       dispatch(completePostCreateCampaign());
-      // Update campaigns so that the user can see the new campaign under manage campaigns
       dispatch(getCampaigns());
     };
     xhr.setRequestHeader('Content-Type', 'application/json');
