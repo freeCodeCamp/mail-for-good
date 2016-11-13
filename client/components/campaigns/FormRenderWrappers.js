@@ -1,5 +1,6 @@
+/* eslint-disable */
 import React from 'react';
-import { Combobox } from 'react-widgets';
+import { Combobox, DropdownList } from 'react-widgets';
 import { Field } from 'redux-form';
 import TextEditor from '../../containers/campaigns/TextEditor';
 
@@ -18,6 +19,16 @@ const renderMultiselect = ({ input, ...rest }) =>
     value={input.value || []} // requires value to be an array
     {...rest}/>;
 */
+
+export const renderDropdownList = ({ input, label, type, meta: { touched, error, warning }, ...data }) => (
+  <div>
+    <label>{label}</label>
+    <div>
+      <DropdownList {...input} {...data} />
+      {touched && ((error && <span className="text-red"><i className="fa fa-exclamation" /> {error}</span>) || (warning && <span>{warning}</span>))}
+    </div>
+  </div>
+);
 
 export const renderCombobox = ({ input, label, type, meta: { touched, error, warning }, ...data }) => (
   <div>

@@ -1,8 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Field, reduxForm } from 'redux-form';
 import FontAwesome from 'react-fontawesome';
-import { DropdownList } from 'react-widgets';
 import 'react-widgets/dist/css/react-widgets.css';
+
+// TODO: Move renderWrapper elsewhere
+import { renderField, renderDropdownList } from '../components/campaigns/FormRenderWrappers';
 
 import { changeSettings } from '../actions/settingsActions';
 
@@ -15,51 +18,44 @@ function getState(state) {
   };
 }
 
+const validate = values => {
+  const errors = {};
+  /*if (!values.listName) {
+    errors.listName = 'Required';
+  }*/
+  return errors;
+};
+
 @connect(getState, {changeSettings})
+@reduxForm({ form: 'settings',  destroyOnUnmount: false, validate })
 export default class Settings extends Component {
 
   static propTypes = {
+    // connect
     changeSettings: PropTypes.func.isRequired,
-    loading: PropTypes.bool
+    loading: PropTypes.bool.isRequired,
+    // reduxForm
+    touch: PropTypes.func.isRequired,
+    valid: PropTypes.bool.isRequired,
+    pristine: PropTypes.bool.isRequired,
+    submitting: PropTypes.bool.isRequired,
+    reset: PropTypes.func.isRequired,
   }
 
-  state = {
-    newSettings: {
-      amazonSimpleEmailServiceAccessKey: '',
-      amazonSimpleEmailServiceSecretKey: '',
-      region: '',
-      whiteLabelUrl: ''
-    },
-    loading: false
-  }
+  resetFormAndSubmit(e) {
+    const nameArray = ['accessKey', 'secretAccessKey', 'region', 'whiteLabelUrl'];
 
-  componentWillReceiveProps(newProps) {
-    this.setState({
-      loading: newProps.loading
-    });
-  }
-
-  handleChange(e) {
-    // Preserve the previous settings
-    const newSettings = {...this.state.newSettings,
-      [e.target.name]: e.target.value
-    };
-
-    this.setState({ newSettings });
-  }
-
-  handleSubmit(e) {
     e.preventDefault();
-    this.props.changeSettings(this.state.newSettings);
-  }
-
-  onDropdownChange(value) {
-    const changeState = this.state;
-    changeState.newSettings.region = value;
-    this.setState(changeState);
+    if (this.props.valid) {
+      this.props.changeSettings(); // Submit
+    } else {
+      this.props.touch(...nameArray);
+    }
   }
 
   render() {
+    const { pristine, submitting, reset } = this.props;
+
     return (
       <div>
         <section className="content-header">
@@ -77,61 +73,24 @@ export default class Settings extends Component {
                   <h3 className="box-title">Amazon SES credentials</h3>
                 </div>
 
-                <form role="form" ref="form" onChange={this.handleChange.bind(this)} onSubmit={this.handleSubmit.bind(this)} autoComplete="off">
+                <form onSubmit={this.resetFormAndSubmit}>
                   <div className="box-body">
 
-                    <div className="form-group">
-                      <label htmlFor="example">Access Key</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="amazonSimpleEmailServiceAccessKey"  // better way to do this?
-                        name="amazonSimpleEmailServiceAccessKey"
-                        value={this.state.newSettings.amazonSimpleEmailServiceAccessKey}
-                        placeholder="Your service access key"
-                      />
+                    <Field name="accessKey" component={renderField} label="Access Key" type="text" placeholder="Your service access key" />
+                    <Field name="secretAccessKey" component={renderField} label="Secret Access Key" type="password" placeholder="Your service secret key" />
+                    <Field name="region" component={renderDropdownList} data={regions} label="Amazon region associated with this email" />
+                    <Field name="whiteLabelUrl" component={renderField} label="White Label URL" type="text" placeholder="Your domain" />
+
+                    <br/>
+                    <div className="box-footer">
+                      <button className="btn btn-primary btn-lg pull-left" type="submit" disabled={pristine || submitting}>Submit</button>
+                      <button className="btn btn-danger btn-lg pull-right" type="button" disabled={pristine || submitting} onClick={reset}>Reset</button>
                     </div>
 
-                    <div className="form-group">
-                      <label htmlFor="amazonSimpleEmailServiceSecretKey">Secret Access Key</label>
-                      <input
-                        type="password"
-                        className="form-control"
-                        id="amazonSimpleEmailServiceSecretKey"
-                        name="amazonSimpleEmailServiceSecretKey"
-                        value={this.state.newSettings.amazonSimpleEmailServiceSecretKey}
-                        placeholder="Your service secret key"
-                      />
-                    </div>
-
-                    <div>
-                      <label>Amazon Region associated with this email</label>
-                      <DropdownList name="region"
-                        data={regions}
-                        onChange={this.onDropdownChange.bind(this)} />
-                    </div>
-
-                    <div className="form-group">
-                      <label htmlFor="whiteLabelUrl">White label url</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="whiteLabelUrl"
-                        name="whiteLabelUrl"
-                        value={this.state.newSettings.whiteLabelUrl}
-                        placeholder="Your domain"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="box-footer">
-                    <button type="submit"
-                            className="btn btn-primary">
-                      Submit
-                    </button>
                   </div>
                 </form>
-                {this.props.loading &&  // show the loading spinner appropriately
+
+                {this.props.loading &&
                   <div className="overlay">
                     <FontAwesome name="refresh" spin/>
                 </div>}
