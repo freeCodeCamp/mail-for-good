@@ -5,6 +5,7 @@ import CreateTemplateForm from '../../components/campaigns/CreateTemplateForm';
 import PreviewTemplateForm from '../../components/campaigns/PreviewTemplateForm';
 import ManageTemplatesTable from '../../components/campaigns/ManageTemplatesTable';
 import { getTemplates, postCreateTemplate, deleteTemplates } from '../../actions/campaignActions';
+import { notify } from '../../actions/notificationActions';
 
 function mapStateToProps(state) {
   // State reducer @ state.form.createTemplate & state.createTemplate
@@ -16,7 +17,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getTemplates, postCreateTemplate, deleteTemplates })
+@connect(mapStateToProps, { getTemplates, postCreateTemplate, deleteTemplates, notify })
 export default class Templates extends Component {
 
   static propTypes = {
@@ -26,7 +27,8 @@ export default class Templates extends Component {
     getTemplates: PropTypes.func.isRequired,
     templates: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired,
-    deleteTemplates: PropTypes.func.isRequired
+    deleteTemplates: PropTypes.func.isRequired,
+    notify: PropTypes.func.isRequired
   }
 
   constructor() {
@@ -54,6 +56,10 @@ export default class Templates extends Component {
   componentWillReceiveProps(props) {
     if (this.props.isPosting === true && props.isPosting === false) { // Fires when template has been successfully created
       this.setState({ page: 1 });
+      this.props.notify({
+        message: 'Your template was successfully created!',
+        colour: 'green'
+      });
     }
   }
 
