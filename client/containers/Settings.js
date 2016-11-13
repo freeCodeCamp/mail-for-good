@@ -15,26 +15,35 @@ function getState(state) {
   };
 }
 
-const validate = values => {
+const validate = values=> {
   // See ref https://docs.aws.amazon.com/IAM/latest/APIReference/API_AccessKey.html
-  console.log(values);
   const errors = {};
 
-  if (values.accessKey.length < 16 || values.accessKey.length > 32) {
-    errors.accessKey = 'Your Access Key is too short';
+  if (values.accessKey) {
+    if (values.accessKey.length < 16 || values.accessKey.length > 32) {
+      errors.accessKey = 'Your Access Key is too short';
+    }
   }
 
-  if (values.secretAccessKey.length < 40) {
-    errors.secretAccessKey = "Your Secret Access Key is too short";
+  if (values.secretAccessKey) {
+    if (values.secretAccessKey.length < 40) {
+      errors.secretAccessKey = "Your Secret Access Key is too short";
+    }
+    else if (/[0-9a-f]{40}/.test(values.secretAccessKey)) {
+      errors.secretAccessKey = "Your Secret Access Key is incorrect";
+    }
   }
-  else if (/[0-9a-f]{40}/.text(values.secretAccessKey)) {
-    errors.secretAccessKey = "Your Secret Access Key is incorrect";
+
+  if (values.regions) {
+    if (~regions.indexOf(values.regions)) {
+      errors.secretAccessKey = "This region does not exist";
+    }
   }
 
   return errors;
 };
 
-@reduxForm({ form: 'settings',  destroyOnUnmount: false })
+@reduxForm({ form: 'settings',  destroyOnUnmount: false, validate })
 @connect(getState, { changeSettings })
 export default class Settings extends Component {
 
