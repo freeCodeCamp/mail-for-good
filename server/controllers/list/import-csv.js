@@ -36,6 +36,11 @@ module.exports = (req, res, io) => {
   const listName = req.body.list; // Name of the list from the user
   const userPrimaryKey = req.user.id; // User's ID stored in session
 
+  function validateEmail(email) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+
   // Validate the list name. This should also be handled client side so there's no need for a message response.
   if (listName === '') {
     res.status(400).send();
@@ -67,10 +72,15 @@ module.exports = (req, res, io) => {
 
     const q = queue((task, callback) => {
       // Where task has object format { header: field } - e.g. { email: bob@bobmail.com }
-      db.listsubscriber.upsert({ email: task.email, listId: listId })
-        .then(() => { // Where created = true if created, false if updated
-          callback();
-      });
+      // Checks that the email is valid prior to saving to the db
+      if (!validateEmail(task.email)) {
+        callback();
+      } else {
+        db.listsubscriber.upsert({ email: task.email, listId: listId })
+          .then(() => { // Where created = true if created, false if updated
+            callback();
+        });
+      }
     }, concurrency);
 
     /* Config csv parser */
