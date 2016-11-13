@@ -54,8 +54,12 @@ export function getCampaigns() {
     xhr.open('GET', API_CAMPAIGN_ENDPOINT);
     xhr.onload = () => {
       // Convert response from JSON
-      const campaignsArray = JSON.parse(xhr.responseText);
-      dispatch(completeGetCampaign(campaignsArray));
+      if (xhr.responseText) {
+        const campaignsArray = JSON.parse(xhr.responseText);
+        dispatch(completeGetCampaign(campaignsArray));
+      } else {
+        dispatch(completeGetCampaign([]));
+      }
     };
     xhr.send();
   };

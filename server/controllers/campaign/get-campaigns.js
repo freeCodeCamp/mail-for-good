@@ -28,6 +28,12 @@ module.exports = (req, res) => {
     ],
     raw: true
   }).then(instancesArray => {
-    res.send(instancesArray);
+    if(instancesArray) {
+      res.send(instancesArray);
+    } else {
+      res.send();
+    }
+  }).catch(() => {
+    res.send();
   });
 };

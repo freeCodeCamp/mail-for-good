@@ -14,7 +14,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, {getCampaigns, deleteCampaigns})
+@connect(mapStateToProps, { getCampaigns, deleteCampaigns })
 export default class ManageCampaignsBox extends Component {
 
   static propTypes = {
@@ -60,7 +60,8 @@ export default class ManageCampaignsBox extends Component {
 
         <div className="box-body">
 
-          <ManageCampaignsTable data={this.props.campaigns} deleteRows={this.deleteRows} getCampaignView={this.getCampaignView}/> {this.props.isGetting && <div className="overlay">
+          <ManageCampaignsTable data={this.props.campaigns} deleteRows={this.deleteRows} getCampaignView={this.getCampaignView}/>
+          {this.props.isGetting && <div className="overlay">
             <FontAwesome name="refresh" spin/>
           </div>}
         </div>
