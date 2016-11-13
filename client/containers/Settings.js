@@ -51,12 +51,23 @@ export default class Settings extends Component {
     reset: PropTypes.func.isRequired,
   }
 
-  resetFormAndSubmit(e) {
-    const { valid, changeSettings, touch, form, reset } = this.props;
+  constructor() {
+    super();
+    this.resetFormAndSubmit = this.resetFormAndSubmit.bind(this);
+  }
 
+  resetFormAndSubmit(e) {
     e.preventDefault();
+    const { valid, changeSettings, touch, form: { values }, reset } = this.props;
+
     if (valid) {
-      changeSettings(form.values);
+      const formattedFormValues = { // Format values in alignment with server expectations
+        amazonSimpleEmailServiceAccessKey: values.accessKey,
+        amazonSimpleEmailServiceSecretKey: values.secretAccessKey,
+        region: values.region,
+        whiteLabelUrl: values.whiteLabelUrl
+      };
+      changeSettings(formattedFormValues);
       reset();
     } else {
       const nameArray = ['accessKey', 'secretAccessKey', 'region', 'whiteLabelUrl'];
