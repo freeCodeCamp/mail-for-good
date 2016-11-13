@@ -2,15 +2,14 @@ import React, { Component, PropTypes } from 'react';
 import RichTextEditor from 'react-rte';
 import '../../styles/campaign-text-form.scss';
 
-// Also see ref for Draft JS https://facebook.github.io/draft-js/docs/api-reference-editor.html#content
 export default class TextEditor extends Component {
+
   static propTypes = {
     input: PropTypes.object
   }
 
   constructor() {
     super();
-    this.focus = () => this.refs.editor.focus();
   }
 
   state = {
@@ -22,7 +21,7 @@ export default class TextEditor extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.input.value && !this.props.input.value) { // Has the input prop been updated by the initialize action creator (called when applying templates)?
+    if (props.input.value && props.meta.pristine) { // Has the input prop been updated by the initialize action creator (called when applying templates)?
       this.setState({ value: RichTextEditor.createValueFromString(props.input.value, 'html') });
     }
   }
@@ -30,17 +29,17 @@ export default class TextEditor extends Component {
   onChange(value) {
     this.setState({ value });
     this.props.input.onChange(value.toString('html'));
-    console.log(RichTextEditor);
   }
 
   render() {
-    console.log(this.props);
-    return (<RichTextEditor
+    return (
+      <RichTextEditor
       value={this.state.value}
       onChange={this.onChange.bind(this)}
       placeholder="Write your email"
       spellCheck={true}
       editorClassName="text-editor"
-      />);
+      />
+    );
   }
 }

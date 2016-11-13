@@ -17,8 +17,6 @@ const CreateCampaignForm = props => {
   const templates = props.templates.map(x => x.name);
   const nameArray = ['listName', 'campaignName', 'fromName', 'fromEmail', 'emailSubject', 'emailBody', 'type']; // A list of all fields that need to show errors/warnings
 
-  console.log(templates);
-
   const resetFormAndSubmit = e => {
     e.preventDefault();
     if (valid) {
