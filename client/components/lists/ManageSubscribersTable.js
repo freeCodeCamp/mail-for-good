@@ -43,6 +43,7 @@ export default class ManageSubscribersTable extends React.Component {
 
         <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
         <TableHeaderColumn dataField="email">Email</TableHeaderColumn>
+        <TableHeaderColumn dataField="mostRecentStatus" dataSort={true} width="150">Status</TableHeaderColumn>
         <TableHeaderColumn dataField="createdAt" dataFormat={this.formatDate} dataSort={true} width="150">Created</TableHeaderColumn>
         <TableHeaderColumn dataField="updatedAt" dataFormat={this.formatDate} dataSort={true} width="150">Updated</TableHeaderColumn>
         <TableHeaderColumn dataField="subscribed"
