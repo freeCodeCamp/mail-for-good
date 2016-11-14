@@ -33,6 +33,18 @@ export default class ManageSubscribersTable extends React.Component {
     return moment(cell).format('lll');
   }
 
+  formatStatus(status) {
+    if (status === 'bounce:transient') {
+      return `<span class="label label-warning">Bounce: transient</span>`;
+    } else if (status.includes('bounce')) {
+      return `<span class="label label-danger">Bounce: permanent</span>`;
+    } else if (status === 'complaint') {
+      return `<span class="label label-danger">Complaint</span>`;
+    } else if (status === 'unconfirmed') {
+      return `<span class="label label-default">Unconfirmed</span>`;
+    }
+  }
+
   render() {
     return (
       <BootstrapTable data={this.state.data}
@@ -43,7 +55,7 @@ export default class ManageSubscribersTable extends React.Component {
 
         <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
         <TableHeaderColumn dataField="email">Email</TableHeaderColumn>
-        <TableHeaderColumn dataField="mostRecentStatus" dataSort={true} width="150">Status</TableHeaderColumn>
+        <TableHeaderColumn dataField="mostRecentStatus" dataFormat={this.formatStatus} dataSort={true} width="150">Status</TableHeaderColumn>
         <TableHeaderColumn dataField="createdAt" dataFormat={this.formatDate} dataSort={true} width="150">Created</TableHeaderColumn>
         <TableHeaderColumn dataField="updatedAt" dataFormat={this.formatDate} dataSort={true} width="150">Updated</TableHeaderColumn>
         <TableHeaderColumn dataField="subscribed"
