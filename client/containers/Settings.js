@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { changeSettings } from '../actions/settingsActions';
+import { notify } from '../actions/notificationActions';
 import { renderField, renderDropdownList } from '../components/common/FormRenderWrappers';
 import FontAwesome from 'react-fontawesome';
 import 'react-widgets/dist/css/react-widgets.css';
@@ -48,7 +49,7 @@ const validate = values=> {
 };
 
 @reduxForm({ form: 'settings',  destroyOnUnmount: false, validate })
-@connect(getState, { changeSettings })
+@connect(getState, { changeSettings, notify })
 export default class Settings extends Component {
 
   static propTypes = {
@@ -62,6 +63,7 @@ export default class Settings extends Component {
     pristine: PropTypes.bool.isRequired,
     submitting: PropTypes.bool.isRequired,
     reset: PropTypes.func.isRequired,
+    notify: PropTypes.func.isRequired
   }
 
   constructor() {
@@ -71,7 +73,7 @@ export default class Settings extends Component {
 
   resetFormAndSubmit(e) {
     e.preventDefault();
-    const { valid, changeSettings, touch, form: { values }, reset } = this.props;
+    const { valid, changeSettings, touch, form: { values }, reset, notify } = this.props;
 
     if (valid) {
       const formattedFormValues = { // Format values in alignment with server expectations
@@ -82,6 +84,10 @@ export default class Settings extends Component {
       };
       changeSettings(formattedFormValues);
       reset();
+      notify({
+        message: 'Your settings have been saved!',
+        colour: 'green'
+      });
     } else {
       const nameArray = ['accessKey', 'secretAccessKey', 'region', 'whiteLabelUrl'];
       touch(...nameArray);

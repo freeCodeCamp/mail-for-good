@@ -16,7 +16,7 @@ export default class Notifications extends Component {
     notifications: PropTypes.array.isRequired,
     consume: PropTypes.func.isRequired
   }
-  
+
   constructor(props) {
     super(props);
 
@@ -54,9 +54,17 @@ export default class Notifications extends Component {
         }
       });
     }, []);
-    
+
+    const activeBarStyleFactory = (index, style) => {
+      return Object.assign(
+        {},
+        style,
+        { bottom: `${6 + index * 4}rem` }
+      );
+    };
+
     return (
-      <NotificationStack notifications={notifications} onDismiss={this.props.consume.bind(this)}/>
+      <NotificationStack notifications={notifications} onDismiss={this.props.consume.bind(this)} activeBarStyleFactory={activeBarStyleFactory} />
     );
   }
 }

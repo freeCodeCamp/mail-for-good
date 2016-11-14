@@ -5,7 +5,7 @@ export function notify(notification) {
     type: RECEIVE_NOTIFICATION,
     notification: {
       message: notification.message,
-      dismissAfter: 10000,
+      dismissAfter: 5000,
       isActive: true,
       activeBarStyle: {
         background: notification.colour === 'green' ? 'green' : 'crimson',
