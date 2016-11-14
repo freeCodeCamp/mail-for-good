@@ -111,6 +111,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
           CampaignSubscriber.create({
             campaignId: campaignInfo.campaignId,
             messageId: data.MessageId,
+            listsubscriberId: task.id,
             email: task.email
           }).then(() => {
             CampaignAnalytics.findById(campaignInfo.campaignAnalyticsId).then(foundCampaignAnalytics => {
