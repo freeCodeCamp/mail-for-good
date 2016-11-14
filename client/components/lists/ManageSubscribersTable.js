@@ -55,7 +55,24 @@ export default class ManageSubscribersTable extends React.Component {
 
         <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
         <TableHeaderColumn dataField="email">Email</TableHeaderColumn>
-        <TableHeaderColumn dataField="mostRecentStatus" dataFormat={this.formatStatus} dataSort={true} width="150">Status</TableHeaderColumn>
+        <TableHeaderColumn
+          dataField="mostRecentStatus"
+          dataFormat={this.formatStatus}
+          dataSort={true}
+          width="150"
+          filter={{
+            type: 'SelectFilter',
+            options: {
+              'bounce:permanent': 'Bounce: permanent',
+              'bounce:transient': 'Bounce: transient',
+              'bounce:undetermined': 'Bounce: undetermined',
+              'complaint': 'Complaint',
+              'unconfirmed': 'Unconfirmed'
+            }
+          }}
+        >
+          Status
+        </TableHeaderColumn>
         <TableHeaderColumn dataField="createdAt" dataFormat={this.formatDate} dataSort={true} width="150">Created</TableHeaderColumn>
         <TableHeaderColumn dataField="updatedAt" dataFormat={this.formatDate} dataSort={true} width="150">Updated</TableHeaderColumn>
         <TableHeaderColumn dataField="subscribed"
