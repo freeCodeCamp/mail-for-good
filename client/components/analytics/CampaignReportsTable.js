@@ -35,8 +35,6 @@ const CampaignReportsTable = props => {
     //defaultValue: //Default value on filter. If type is NumberFilter or DateFilter, this value will like { number||date: xxx, comparator: '>' }
   };
 
-  data[0].createdAt = new Date(data[0].createdAt);
-  data[0].updatedAt = new Date(data[0].updatedAt);
   // ID will be used as the rowKey, but the column itself is hidden as it has no value. Slugs are also hidden.
   return (
     <BootstrapTable data={data}

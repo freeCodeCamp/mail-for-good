@@ -55,7 +55,12 @@ export function getCampaigns() {
     xhr.onload = () => {
       // Convert response from JSON
       if (xhr.responseText) {
-        const campaignsArray = JSON.parse(xhr.responseText);
+        const campaignsArray = JSON.parse(xhr.responseText).map(x => {
+          x.createdAt = new Date(x.createdAt);
+          x.updatedAt = new Date(x.updatedAt);
+          return x;
+        });
+
         dispatch(completeGetCampaign(campaignsArray));
       } else {
         dispatch(completeGetCampaign([]));

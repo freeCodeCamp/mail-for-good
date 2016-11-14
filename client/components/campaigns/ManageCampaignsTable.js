@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import BSTyle from 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
+import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 import moment from 'moment';
 
 // Ref: https://allenfang.github.io/react-bootstrap-table/docs.html
@@ -49,9 +49,6 @@ const ManageCampaignsTable = (props) => {
     //defaultValue: //Default value on filter. If type is NumberFilter or DateFilter, this value will like { number||date: xxx, comparator: '>' }
   };
 
-  data[0].createdAt = new Date(data[0].createdAt);
-  data[0].updatedAt = new Date(data[0].updatedAt);
-  console.log(data);
   // ID will be used as the rowKey, but the column itself is hidden as it has no value. Slugs are also hidden.
   return (
     <BootstrapTable data={data}
