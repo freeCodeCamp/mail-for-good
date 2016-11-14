@@ -44,6 +44,14 @@ const ManageCampaignsTable = (props) => {
     return total - failed;
   };
 
+  const filterDate = {
+    type: "DateFilter",
+    //defaultValue: //Default value on filter. If type is NumberFilter or DateFilter, this value will like { number||date: xxx, comparator: '>' }
+  };
+
+  data[0].createdAt = new Date(data[0].createdAt);
+  data[0].updatedAt = new Date(data[0].updatedAt);
+  console.log(data);
   // ID will be used as the rowKey, but the column itself is hidden as it has no value. Slugs are also hidden.
   return (
     <BootstrapTable data={data}
@@ -67,8 +75,8 @@ const ManageCampaignsTable = (props) => {
       <TableHeaderColumn dataField="campaignanalytic.clickthroughCount" dataAlign="center" dataSort={true} csvHeader="clickthroughs">Clickthroughs</TableHeaderColumn>
       <TableHeaderColumn dataField="campaignanalytic.openCount" dataAlign="center" dataSort={true} csvHeader="opens">Opens</TableHeaderColumn>
       <TableHeaderColumn export ={false} dataAlign="center" width="100">Tags (WIP)</TableHeaderColumn>
-      <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Created</TableHeaderColumn>
-      <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150">Updated</TableHeaderColumn>
+      <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150" filter={filterDate}>Created</TableHeaderColumn>
+      <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150" filter={filterDate}>Updated</TableHeaderColumn>
 
     </BootstrapTable>
   );
