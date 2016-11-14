@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk');
 const CampaignSubscriber = require('../../models').campaignsubscriber;
 const CampaignAnalytics = require('../../models').campaignanalytics;
+const ListSubscriber = require('../../models').listsubscriber;
 
 module.exports = function(req, res) {
 
@@ -58,16 +59,22 @@ module.exports = function(req, res) {
               const updatedCampaignSubscriber = result[1][0];
 
               let incrementField = '';
+              let recentStatus = 'unconfirmed';
               if (notificationType === 'Bounce') {
+                recentStatus = 'bounce:';
                 if (bounceType === 'Permanent') {
                   incrementField = 'permanentBounceCount'
+                  recentStatus += 'permanent';
                 } else if (bounceType === 'Transient') {
                   incrementField = 'transientBounceCount';
+                  recentStatus += 'transient';
                 } else {
                   incrementField = 'undeterminedBounceCount';
+                  recentStatus = 'undetermined';
                 }
               } else if (notificationType === 'Complaint') {
                 incrementField = 'complaintCount'
+                recentStatus = 'complaint';
               }
 
               if (incrementField) {
@@ -76,8 +83,13 @@ module.exports = function(req, res) {
                 }).then(ParentCampaignAnalytics => {
                   return ParentCampaignAnalytics.increment(incrementField);
                 }).then(result => {
+                  return ListSubscriber.findById(updatedCampaignSubscriber.dataValues.listsubscriberId)
+                }).then(listSubscriber => {
+                  listSubscriber.mostRecentStatus = recentStatus;
+                  return listSubscriber.save();
+                }).then(result => {
                   console.log("updated CampaignAnalytics");
-                })
+                });
               }
             }
             sqs.deleteMessage({
