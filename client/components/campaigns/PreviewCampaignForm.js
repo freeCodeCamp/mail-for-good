@@ -21,9 +21,10 @@ const PreviewCampaignForm = props => {
 
       <hr />
 
-      <button className="btn btn-lg btn-primary pull-left" type="button" onClick={lastPage}>Go back</button>
-      <button className="btn btn-lg btn-success pull-right" type="button" onClick={handleSubmit}>Create</button>
-
+      <div className="box-footer">
+        <button className="btn btn-lg btn-primary pull-left" type="button" onClick={lastPage}>Go back</button>
+        <button className="btn btn-lg btn-success pull-right" type="button" onClick={handleSubmit}>Create</button>
+      </div>
     </div>
   );
 };

@@ -40,7 +40,7 @@ const CreateTemplateForm = props => {
       <Field name="emailSubject" component={renderField} label="Subject" type="text" />
       <Field name="emailBody" component={renderTextEditor} label="Write Email*" />
       <br/>
-      <div>
+      <div className="box-footer">
         <button className="btn btn-primary btn-lg pull-left" type="submit" disabled={pristine || submitting}>Preview</button>
         <button className="btn btn-danger btn-lg pull-right" type="button" disabled={pristine || submitting} onClick={reset}>Reset</button>
       </div>
