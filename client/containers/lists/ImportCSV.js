@@ -37,8 +37,7 @@ export default class ImportCSV extends Component {
 
   handleErrorWithFile(err) { // Err is a string informing user of an issue with the csv
     this.props.notification({ // Ref https://github.com/pburtchaell/react-notification & https://github.com/pburtchaell/react-notification/blob/master/src/notification.js
-      message: err,
-      colour: 'red'
+      message: err
     });
   }
 

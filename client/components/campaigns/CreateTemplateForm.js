@@ -9,7 +9,7 @@ import 'react-widgets/dist/css/react-widgets.css';
 
 const CreateTemplateForm = props => {
 
-  const { touch, valid, pristine, submitting, nextPage, reset } = props;
+  const { touch, valid, pristine, submitting, nextPage, reset, validationFailed } = props;
 
   const nameArray = ['templateName', 'fromName', 'fromEmail', 'emailSubject', 'emailBody', 'type'];
 
@@ -19,6 +19,7 @@ const CreateTemplateForm = props => {
       nextPage();
     } else {
       touch(...nameArray);
+      validationFailed('Form is invalid, please review fields with errors')
     }
   };
 
@@ -54,7 +55,8 @@ CreateTemplateForm.propTypes = {
   submitting: PropTypes.bool.isRequired,
   nextPage: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
-  lists: PropTypes.array.isRequired
+  lists: PropTypes.array.isRequired,
+  validationFailed: PropTypes.func.isRequired
 };
 
 const validate = values => {

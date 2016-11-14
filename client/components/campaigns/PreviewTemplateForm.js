@@ -15,15 +15,13 @@ const PreviewCampaignForm = props => {
       <h3>From - {`${form.fromName || 'Not set'} <${form.fromEmail || 'Not set'}>`}</h3>
       <h4>Subject - {`${form.emailSubject || 'Not set'}`}</h4>
       <blockquote>
-        <p>
-          <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
-        </p>
+        <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
       </blockquote>
 
       <hr />
 
       <button className="btn btn-lg btn-primary pull-left" type="button" onClick={lastPage}>Go back</button>
-      <button className="btn btn-lg btn-success pull-right" type="button" onClick={handleSubmit}>Create</button>
+      <button className="btn btn-lg btn-success pull-right" type="button" onClick={handleSubmit}>Save as a template</button>
 
     </div>
   );

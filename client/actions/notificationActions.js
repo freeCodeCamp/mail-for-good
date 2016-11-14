@@ -8,7 +8,7 @@ export function notify(notification) {
       dismissAfter: 10000,
       isActive: true,
       activeBarStyle: {
-        background: notification.colour === 'green' ? 'green' : 'red',
+        background: notification.colour === 'green' ? 'green' : 'crimson',
         left: ''
       }
   }};

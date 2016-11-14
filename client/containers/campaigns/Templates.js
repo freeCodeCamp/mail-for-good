@@ -37,6 +37,7 @@ export default class Templates extends Component {
     this.deleteRows = this.deleteRows.bind(this);
     this.nextPage = this.nextPage.bind(this);
     this.lastPage = this.lastPage.bind(this);
+    this.validationFailed = this.validationFailed.bind(this);
   }
 
   state = {
@@ -80,6 +81,12 @@ export default class Templates extends Component {
     this.props.deleteTemplates(jsonCampaignIds);
   }
 
+  validationFailed(reason) {
+    this.props.notify({
+      message: reason
+    });
+  }
+
   render() {
     const { page } = this.state;
 
@@ -104,7 +111,7 @@ export default class Templates extends Component {
 
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateTemplateForm nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
+              {page === 1 && <CreateTemplateForm validationFailed={this.validationFailed} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
               {page === 2 && <PreviewTemplateForm form={this.props.form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
             {this.props.isPosting || this.props.isGetting && <div className="overlay">
