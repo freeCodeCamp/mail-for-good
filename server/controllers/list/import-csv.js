@@ -126,7 +126,9 @@ module.exports = (req, res, io) => {
           icon: 'fa-list-alt',
           iconColour: 'text-green'
         };
-        io.sockets.connected[req.session.passport.socket].emit('notification', importSuccess);
+        if (io.sockets.connected[req.session.passport.socket]) {
+          io.sockets.connected[req.session.passport.socket].emit('notification', importSuccess);
+        }
       });
     });
 

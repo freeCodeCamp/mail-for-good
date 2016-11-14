@@ -41,13 +41,16 @@ module.exports = (req, res, io) => {
 
     // 8. TODO: If there was an error, handle it here
 
-    // 9. Push a notification regarding the success of the operation
-    const emailSuccess = {
-      message: `Campaign "${campaignInfo.name}" has been sent`,
-      icon: 'fa-envelope',
-      iconColour: 'text-green'
-    };
-    io.sockets.connected[req.session.passport.socket].emit('notification', emailSuccess);
+    // 9. Push a notification regarding the success of the operation to the user if they're connected
+    if (io.sockets.connected[req.session.passport.socket]) {
+      const emailSuccess = {
+        message: `Campaign "${campaignInfo.name}" has been sent`,
+        icon: 'fa-envelope',
+        iconColour: 'text-green'
+      };
+
+      io.sockets.connected[req.session.passport.socket].emit('notification', emailSuccess);
+    }
   }
 
   const generator = sendCampaign();
