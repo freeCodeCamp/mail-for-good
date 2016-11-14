@@ -36,8 +36,10 @@ export default class ManageSubscribersTable extends React.Component {
   formatStatus(status) {
     if (status === 'bounce:transient') {
       return `<span class="label label-warning">Bounce: transient</span>`;
-    } else if (status.includes('bounce')) {
+    } else if (status === 'bounce:permanent') {
       return `<span class="label label-danger">Bounce: permanent</span>`;
+    } else if (status === 'bounce:undetermined') {
+      return `<span class="label label-warning">Bounce: undetermined</span>`;
     } else if (status === 'complaint') {
       return `<span class="label label-danger">Complaint</span>`;
     } else if (status === 'unconfirmed') {
