@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 
 import ManageSubscribersTable from '../../components/lists/ManageSubscribersTable';
-import { getListSubscribers } from '../../actions/listActions';
+import { deleteListSubscribers, getListSubscribers } from '../../actions/listActions';
 
 function mapStateToProps(state) {
   return {
@@ -12,12 +12,13 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getListSubscribers })
+@connect(mapStateToProps, { deleteListSubscribers, getListSubscribers })
 export default class ManageListSubscribers extends Component {
 
   static propTypes = {
     subscribers: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired,
+    deleteListSubscribers: PropTypes.func.isRequired,
     getListSubscribers: PropTypes.func.isRequired,
     params: PropTypes.object
   }

@@ -31,6 +31,18 @@ export function completeGetListSubscribers(subscribers) {
   return { type: COMPLETE_GET_LIST_SUBSCRIBERS, subscribers };
 }
 
+export function deleteListSubscribers(listSubscribers) {
+  return dispatch => {
+    axios.delete(API_LISTSUBSCRIBERS_ENDPOINT, {
+      params: JSON.stringify({ listSubscribers })
+    }).then(response => {
+      dispatch(notify({ message: response.message }));
+    }).catch(response => {
+      dispatch(notify({ message: response.message }));
+    })
+  }
+}
+
 export function getListSubscribers(listId) {
   return dispatch => {
     dispatch(requestGetListSubscribers(listId));
