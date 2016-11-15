@@ -36,9 +36,9 @@ export function deleteListSubscribers(listSubscribers) {
     axios.delete(API_LISTSUBSCRIBERS_ENDPOINT, {
       data: { listSubscribers }
     }).then(response => {
-      dispatch(notify({ message: response.message }));
+      dispatch(notify({ message: response.data }));
     }).catch(response => {
-      dispatch(notify({ message: response.message }));
+      dispatch(notify({ message: response.data }));
     })
   }
 }
