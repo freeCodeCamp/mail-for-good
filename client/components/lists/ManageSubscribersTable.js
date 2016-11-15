@@ -77,6 +77,7 @@ export default class ManageSubscribersTable extends React.Component {
                       selectRow={this.selectRowProp}
                       pagination={true}
                       hover={true}
+                      maintainSelected={true}
                       exportCSV={true}
                       csvFileName="subscribers">
 
