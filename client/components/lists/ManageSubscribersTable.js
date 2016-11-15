@@ -34,7 +34,6 @@ export default class ManageSubscribersTable extends React.Component {
     deleteRows: PropTypes.func.isRequired,
   }
 
-
   componentWillReceiveProps(newProps) {
     this.setState({
       data: newProps.data

@@ -34,7 +34,7 @@ export function completeGetListSubscribers(subscribers) {
 export function deleteListSubscribers(listSubscribers) {
   return dispatch => {
     axios.delete(API_LISTSUBSCRIBERS_ENDPOINT, {
-      params: JSON.stringify({ listSubscribers })
+      data: { listSubscribers }
     }).then(response => {
       dispatch(notify({ message: response.message }));
     }).catch(response => {
