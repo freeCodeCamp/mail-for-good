@@ -43,6 +43,10 @@ export default class ManageListSubscribers extends Component {
     });
   }
 
+ deleteRows(listSubscribers) { // listSubscriberIds [...Numbers]
+    this.props.deleteListSubscribers(listSubscribers);
+  }
+
   render() {
     return (
       <div>
@@ -60,7 +64,7 @@ export default class ManageListSubscribers extends Component {
 
             <div className="box-body">
               {!!this.props.subscribers.length &&
-                <ManageSubscribersTable data={this.state.subscribers} />
+                <ManageSubscribersTable data={this.state.subscribers} deleteRows={this.deleteRows.bind(this)}/>
               }
               {this.props.isGetting && <div className="overlay">
                 <FontAwesome name="refresh" spin/>

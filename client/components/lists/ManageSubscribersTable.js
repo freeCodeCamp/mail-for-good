@@ -4,13 +4,36 @@ import BSTyle from 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 import moment from 'moment';
 
 export default class ManageSubscribersTable extends React.Component {
-  static propTypes = {
-    data: PropTypes.array.isRequired
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      data: this.props.data || []
+    }
+
+    this.options = {
+      clearSearch: true,
+      noDataText: 'This list has no subscribers',
+      onRowClick: row => {
+      },
+      afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
+        this.props.deleteRows(rows);
+      },
+      handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
+    };
+
+    this.selectRowProp = {
+      mode: "checkbox",
+      bgColor: "rgb(176, 224, 230)"
+    };
   }
 
-  state = {
-    data: this.props.data || []
+  static propTypes = {
+    data: PropTypes.array.isRequired,
+    deleteListSubscribers: PropTypes.func.isRequired,
+    deleteRows: PropTypes.func.isRequired,
   }
+
 
   componentWillReceiveProps(newProps) {
     this.setState({
@@ -50,6 +73,9 @@ export default class ManageSubscribersTable extends React.Component {
   render() {
     return (
       <BootstrapTable data={this.state.data}
+                      options={this.options}
+                      deleteRow={true}
+                      selectRow={this.selectRowProp}
                       pagination={true}
                       hover={true}
                       exportCSV={true}
@@ -89,7 +115,6 @@ export default class ManageSubscribersTable extends React.Component {
             }
           }}>Status
         </TableHeaderColumn>
-
       </BootstrapTable>
     );
   }
