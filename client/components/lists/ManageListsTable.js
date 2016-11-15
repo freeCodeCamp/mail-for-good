@@ -50,6 +50,7 @@ export default class ManageListsTable extends React.Component {
 
         <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
         <TableHeaderColumn dataField="name" dataSort={true}>Name</TableHeaderColumn>
+        <TableHeaderColumn dataField="subscribeKey" dataSort={true}>Subscription Key</TableHeaderColumn>
         <TableHeaderColumn dataField="createdAt" dataSort={true} dataFormat={this.formatFieldDate}>Created</TableHeaderColumn>
         <TableHeaderColumn dataField="updatedAt" dataSort={true} dataFormat={this.formatFieldDate}>Updated</TableHeaderColumn>
         <TableHeaderColumn dataAlign="center" width="150" dataFormat={this.formatFieldManageSubscribers}>Subscribers</TableHeaderColumn>
