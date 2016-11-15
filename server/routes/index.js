@@ -16,6 +16,7 @@ const deleteSubscribers = require('../controllers/list/delete-subscribers');
 const importCSV = require('../controllers/list/import-csv');
 const getLists = require('../controllers/list/get-lists');
 const getListSubscribers = require('../controllers/list/get-list-subscribers');
+const subscribeToList = require('../controllers/list/subscribe');
 
 const unsubscribe = require('../controllers/subscriber/unsubscribe');
 
@@ -113,6 +114,11 @@ module.exports = (app, passport, io) => {
   app.post('/api/list/add/csv', apiIsAuth, multer.single('csv'), (req, res) => {
     importCSV(req, res, io);
   });
+
+  // Subscribe a single email using the list subscription key
+  app.get('/api/list/subscribe', (req, res) => {
+    subscribeToList(req, res);
+  })
 
   /* DELETE */
 
