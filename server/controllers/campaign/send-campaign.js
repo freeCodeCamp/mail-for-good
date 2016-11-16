@@ -170,8 +170,7 @@ module.exports = (req, res, io) => {
     const timeTo = moment(new Date).to(newTime);
 
     formattedMessage += `${timeTo}. `;
-
-    formattedMessage += ` Your Amazon limit for today is now ${emailsLeftAfterSend} emails.`;
+    formattedMessage += ` Your Amazon limit for today is now ${emailsLeftAfterSend.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} emails.`;
 
     return { message: formattedMessage };
   }
