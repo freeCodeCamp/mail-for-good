@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { notify } from '../../actions/notificationActions';
 import FontAwesome from 'react-fontawesome';
-import { getCampaigns, postSendCampaign } from '../../actions/campaignActions';
 import { Modal, Button } from 'react-bootstrap';
+import { getCampaigns, postSendCampaign } from '../../actions/campaignActions';
+import { notify } from '../../actions/notificationActions';
+import PreviewCampaignForm from '../../components/campaigns/PreviewCampaignForm';
 
 function mapStateToProps(state) {
   // State reducer @ state.manageCampaign
@@ -24,7 +25,7 @@ export default class CampaignView extends Component {
     getCampaigns: PropTypes.func.isRequired,
     campaigns: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired,
-    sendCampaign: PropTypes.func.isRequired,
+    sendCampaign: PropTypes.func,
     isPosting: PropTypes.bool.isRequired,
     sendCampaignResponse: PropTypes.string.isRequired,
     sendCampaignStatus: PropTypes.number.isRequired,
@@ -42,10 +43,11 @@ export default class CampaignView extends Component {
 
   state = {
     thisCampaign: {},
-    showModal: false
+    showModal: false,
+    haveShownMessage: false
   }
 
-  componentDidMount() {
+  componentWillMount() {
     // Update campaigns only if we need to
     if (!this.props.campaigns.length) {
       this.props.getCampaigns();
@@ -60,7 +62,9 @@ export default class CampaignView extends Component {
       this.getSingleCampaign(props);
     }
     // Show success/failure toast
-    if (props.sendCampaignResponse) {
+    console.log(props);
+    if (props.sendCampaignResponse && !props.isPosting) {
+      this.setState({ haveShownMessage: true });
       if (props.sendCampaignStatus === 200) {
         this.props.notify({
           message: 'Your campaign is being sent',
@@ -121,12 +125,14 @@ export default class CampaignView extends Component {
 
             <div className="box-body">
 
-              {this.props.sendCampaignResponse &&
+              {(this.props.sendCampaignResponse && this.state.haveShownMessage) &&
                 <p className={this.props.sendCampaignStatus === 200 ? 'text-green' : 'text-red'}>
                   <i className={this.props.sendCampaignStatus === 200 ? 'fa fa-check' : 'fa fa-exclamation'}/> {this.props.sendCampaignResponse}
                 </p>}
 
-              <button className="btn btn-primary" type="button" onClick={this.open}>Send</button>
+              <PreviewCampaignForm campaignView={this.state.thisCampaign} />
+
+              <button className="btn btn-primary btn-lg" type="button" onClick={this.open}>Send</button>
 
               <Modal show={this.state.showModal} onHide={this.close}>
                 <Modal.Header closeButton>

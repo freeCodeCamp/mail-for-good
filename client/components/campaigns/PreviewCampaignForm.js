@@ -2,14 +2,19 @@ import React, { PropTypes } from 'react';
 import DOMPurify from 'dompurify';
 
 const PreviewCampaignForm = props => {
-  const { handleSubmit, lastPage, form:{ values: form } } = props;
+  const { handleSubmit, lastPage } = props;
+  if (props.form) {
+    var { form:{ values: form } } = props;
+  } else {
+    var form = props.campaignView;
+  }
   // { listName, campaignName, fromName, fromEmail, emailSubject, emailBody, type }
   const cleanHtml = DOMPurify.sanitize(form.emailBody); // Purify xss to prevent xss attacks
 
   return (
     <div>
-      <h3><i className="fa fa-list text-green" aria-hidden="true" /> - {form.listName}</h3>
-      <h3><i className="fa fa-flag text-green" aria-hidden="true" /> - {form.campaignName}</h3>
+      {form.listName && <h3><i className="fa fa-list text-green" aria-hidden="true" /> - {form.listName}</h3>}
+      <h3><i className="fa fa-flag text-green" aria-hidden="true" /> - {form.campaignName || form.name}</h3>
 
       <hr />
 
@@ -21,18 +26,19 @@ const PreviewCampaignForm = props => {
 
       <hr />
 
+      {(lastPage && handleSubmit) &&
       <div className="box-footer">
         <button className="btn btn-lg btn-primary pull-left" type="button" onClick={lastPage}>Go back</button>
         <button className="btn btn-lg btn-success pull-right" type="button" onClick={handleSubmit}>Create</button>
-      </div>
+      </div>}
     </div>
   );
 };
 
 PreviewCampaignForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  lastPage: PropTypes.func.isRequired,
-  form: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func,
+  lastPage: PropTypes.func,
+  form: PropTypes.object
 };
 
 export default PreviewCampaignForm;

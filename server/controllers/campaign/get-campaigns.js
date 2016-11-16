@@ -24,7 +24,7 @@ module.exports = (req, res) => {
       }
     ],
     attributes: [
-      'name', 'createdAt', 'updatedAt', 'id', 'slug'
+      'name', 'fromName', 'fromEmail', 'emailSubject', 'emailBody', 'createdAt', 'updatedAt', 'id', 'slug'
     ],
     raw: true
   }).then(instancesArray => {
