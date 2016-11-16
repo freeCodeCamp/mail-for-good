@@ -66,9 +66,14 @@ export function getLists() {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', API_MANAGELIST_ENDPOINT);
     xhr.onload = () => {
-      // Convert response from JSON
-      const listsArray = JSON.parse(xhr.responseText);
-      dispatch(completeGetList(listsArray));
+      if (xhr.responseText) {
+        // Convert response from JSON
+        const listsArray = JSON.parse(xhr.responseText);
+        dispatch(completeGetList(listsArray));
+      } else {
+        dispatch(completeGetList([]));
+      }
+
     };
     xhr.send();
   };

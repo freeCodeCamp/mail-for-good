@@ -53,8 +53,8 @@ export function getCampaigns() {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', API_CAMPAIGN_ENDPOINT);
     xhr.onload = () => {
-      // Convert response from JSON
       if (xhr.responseText) {
+        // Convert response from JSON
         const campaignsArray = JSON.parse(xhr.responseText).map(x => {
           x.createdAt = new Date(x.createdAt);
           x.updatedAt = new Date(x.updatedAt);

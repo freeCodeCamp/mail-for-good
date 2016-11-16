@@ -23,7 +23,7 @@
     "dev": "IS_DEV_MODE=true npm start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel-node tools/build.js",
-    "email:test:amazon": "node server/controllers/campaign/email/amazon-ses/test-server.js"
+    "test:server": "node server/controllers/campaign/email/amazon-ses/test-server.js"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 
 import ManageCampaignsTable from '../../components/campaigns/ManageCampaignsTable';

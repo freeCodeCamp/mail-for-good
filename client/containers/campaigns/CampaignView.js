@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { notify } from '../../actions/notificationActions';
 import FontAwesome from 'react-fontawesome';
 import { getCampaigns, postSendCampaign } from '../../actions/campaignActions';
 import { Modal, Button, FormControl } from 'react-bootstrap';
@@ -16,7 +17,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getCampaigns, postSendCampaign })
+@connect(mapStateToProps, { getCampaigns, postSendCampaign, notify })
 export default class CampaignView extends Component {
 
   static PropTypes = {
@@ -26,7 +27,8 @@ export default class CampaignView extends Component {
     sendCampaign: PropTypes.func.isRequired,
     isPosting: PropTypes.bool.isRequired,
     sendCampaignResponse: PropTypes.string.isRequired,
-    sendCampaignStatus: PropTypes.number.isRequired
+    sendCampaignStatus: PropTypes.number.isRequired,
+    notify: PropTypes.func.isRequired
   }
 
   constructor() {
