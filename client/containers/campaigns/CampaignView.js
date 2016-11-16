@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { notify } from '../../actions/notificationActions';
 import FontAwesome from 'react-fontawesome';
 import { getCampaigns, postSendCampaign } from '../../actions/campaignActions';
-import { Modal, Button, FormControl } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 
 function mapStateToProps(state) {
   // State reducer @ state.manageCampaign
@@ -20,7 +20,7 @@ function mapStateToProps(state) {
 @connect(mapStateToProps, { getCampaigns, postSendCampaign, notify })
 export default class CampaignView extends Component {
 
-  static PropTypes = {
+  static propTypes = {
     getCampaigns: PropTypes.func.isRequired,
     campaigns: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired,
@@ -28,7 +28,9 @@ export default class CampaignView extends Component {
     isPosting: PropTypes.bool.isRequired,
     sendCampaignResponse: PropTypes.string.isRequired,
     sendCampaignStatus: PropTypes.number.isRequired,
-    notify: PropTypes.func.isRequired
+    notify: PropTypes.func.isRequired,
+    params: PropTypes.object.isRequired,
+    postSendCampaign: PropTypes.func.isRequired
   }
 
   constructor() {
@@ -43,20 +45,32 @@ export default class CampaignView extends Component {
     showModal: false
   }
 
-  componentWillReceiveProps(props) {
-    // Set thisCampaign from campaigns once we have it
-    console.log(props);
-    if (props.campaigns && props.campaigns.length && !this.props.campaigns.length) { // Guarded and statement that confirms campaigns is in the new props, confirms the array isn't empty, and then confirms that current props do not exist
-      this.getSingleCampaign(props);
-    }
-  }
-
   componentDidMount() {
     // Update campaigns only if we need to
     if (!this.props.campaigns.length) {
       this.props.getCampaigns();
     } else {
       this.getSingleCampaign(this.props);
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    // Set thisCampaign from campaigns once we have it
+    if (props.campaigns && props.campaigns.length && !this.props.campaigns.length) { // Guarded and statement that confirms campaigns is in the new props, confirms the array isn't empty, and then confirms that current props do not exist
+      this.getSingleCampaign(props);
+    }
+    // Show success/failure toast
+    if (props.sendCampaignResponse) {
+      if (props.sendCampaignStatus === 200) {
+        this.props.notify({
+          message: 'Your campaign is being sent',
+          colour: 'green'
+        });
+      } else {
+        this.props.notify({
+          message: 'There was an error sending your campaign'
+        });
+      }
     }
   }
 
