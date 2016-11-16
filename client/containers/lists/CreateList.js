@@ -17,16 +17,20 @@ export default class CreateList extends Component {
 
   constructor() {
     super();
-
     this.handleCSVSubmit = this.handleCSVSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  state = {
+    title: ''
   }
 
   notification(notification) {
     this.props.notify(notification);
   }
 
-  handleCSVSubmit(file, headers) { // Get the csv file, headers of said file & then get the name of the list
-    const title = document.getElementById('list-id').value;
+  handleCSVSubmit(file, headers) {
+    const { title } = this.state;
     // List title should not be empty
     if (title === '') {
       this.notification({ // Ref https://github.com/pburtchaell/react-notification & https://github.com/pburtchaell/react-notification/blob/master/src/notification.js
@@ -37,7 +41,18 @@ export default class CreateList extends Component {
       }); // Validation complete, send to server
     } else {
       this.props.submitCSV(file, headers, title);
+      this.setState({ title: '' });
+      this.props.notify({
+        message: 'Your CSV is being uploaded',
+        colour: 'green'
+      });
     }
+  }
+
+  handleChange(e) {
+    this.setState({
+      [e.target.id]: e.target.value
+    });
   }
 
   render() {
@@ -79,7 +94,7 @@ export default class CreateList extends Component {
                         <div className="box-body">
 
                           <div className="form-group">
-                            <input className="form-control" id="list-id" placeholder="The name of this list" type="text"/>
+                            <input className="form-control" id="title" placeholder="The name of this list" type="text" value={this.state.title} onChange={this.handleChange} />
                           </div>
 
                         </div>
