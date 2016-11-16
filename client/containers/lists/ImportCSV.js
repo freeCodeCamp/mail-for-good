@@ -122,7 +122,7 @@ export default class ImportCSV extends Component {
               <div className="box">
                 <div className="box-header with-border">
                   <h2>Import CSV</h2>
-                  <h3 className="box-title"><i className="fa fa-exclamation-circle text-red"/> Please ensure the first row of the CSV file contains column names. This row must contain an email header.</h3>
+                  <h3 className="box-title">Please ensure the first row of the CSV file contains column names. This row must contain an email header.</h3>
                 </div>
 
                 <div className="box-body">
