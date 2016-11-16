@@ -1,6 +1,7 @@
 const db = require('../../models');
 const email = require('./email');
 const AWS = require('aws-sdk');
+const moment = require('moment');
 
 // TODO: Validate contents abide to Amazon's limits https://docs.aws.amazon.com/ses/latest/DeveloperGuide/limits.html
 
@@ -163,17 +164,12 @@ module.exports = (req, res, io) => {
   function howLongEmailingWillTake(totalListSubscribers, AvailableToday, MaxSendRate) {
     const timeTaken = (totalListSubscribers / MaxSendRate / 60);
     const emailsLeftAfterSend = AvailableToday - totalListSubscribers;
-    let formattedMessage = 'Your email is being sent, it should take ';
+    let formattedMessage = 'Your email is being sent, it should be done ';
 
-    if (timeTaken < 1) { // Less than a minute
-      formattedMessage += 'less than a minute.';
-    } else if (timeTaken > 1 && timeTaken < 60) { // More than a minute, less than an hour
-      formattedMessage += `around ${Math.floor(timeTaken)} minute${Math.floor(timeTaken) === 1 ? '' : 's'}.`;
-    } else if (timeTaken >= 60) { // An hour or more
-      formattedMessage += `around ${(timeTaken / 60).toFixed(1)} hours.`;
-    } else { // Shouldn't fire
-      formattedMessage += 'some time.';
-    }
+    const newTime = moment(new Date(new Date().getTime() + timeTaken * 60000));
+    const timeTo = moment(new Date).to(newTime);
+
+    formattedMessage += `${timeTo}. `;
 
     formattedMessage += ` Your Amazon limit for today is now ${emailsLeftAfterSend} emails.`;
 
