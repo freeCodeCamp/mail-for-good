@@ -23,7 +23,6 @@ module.exports = (req, res, io) => {
         Outstanding issues:
         TODO: TSV & other files are not accounted for. The current method only works with CSV files. There's also no current validation of CSV files in terms of both the information within and the actual file type.
         TODO: Currently, only emails are stored from the header/email labeled 'email'. Everything else is ignored. This should be changed to store other fields.
-        TODO: Notification of the actual success of upserting all data needs to happen later.
     */
 
   /*
@@ -65,6 +64,8 @@ module.exports = (req, res, io) => {
   Promise.all([validateListBelongsToUser]).then(values => {
     let [listInstance] = values; // Get variables from the values array
     const concurrency = 5000; // Number of rows and upserts to handle concurrently. Arbitrary number.
+    let numberProcessed = 0, targetProcessed = 1000; // Vars for tracking how many CSVs have been processed. Sends a WS notification per 1k processed emails.
+    const crudeRandomId = (Math.random() * 100000).toString(); // This doesn't really need to be unique as only one CSV should ever be uploaded at any one time by a client
 
     listInstance = listInstance[0];
     const listIsNew = listInstance.$options.isNewRecord;
@@ -78,6 +79,25 @@ module.exports = (req, res, io) => {
       } else {
         db.listsubscriber.upsert({ email: task.email, listId: listId })
           .then(() => { // Where created = true if created, false if updated
+
+            numberProcessed++;
+
+            if (numberProcessed >= targetProcessed) {
+              const rowsParsed = {
+                message: `Processed ${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows...`,
+                isUpdate: true, // Mark this notification as an update for an existing notification to the client
+                id: crudeRandomId, // Unique identified for use on client side (in the reducer)
+                icon: 'fa-upload',
+                iconColour: 'text-blue'
+              };
+              if (io.sockets.connected[req.session.passport.socket]) {
+                io.sockets.connected[req.session.passport.socket].emit('notification', rowsParsed);
+              }
+
+              numberProcessed = targetProcessed;
+              targetProcessed += 1000;
+            }
+
             callback();
         });
       }
