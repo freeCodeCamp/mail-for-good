@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 
-const WSNotification = (props) => { // eslint-disable-line no-unused-vars
+const WSNotification = props => { // eslint-disable-line no-unused-vars
   const { message, icon, iconColour, consumeNotification, index } = props;
-
+  console.log(props);
   return (
     <li onClick={() => consumeNotification(index)}>
       <a href="#">

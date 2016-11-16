@@ -33,7 +33,7 @@ const Header = (props) => { // eslint-disable-line no-unused-vars
                   }}>
 
                   {ws_notification.map((notification, i) => {
-                    return <WSNotification key={`ws-notification${i}`} message={notification.message} consumeNotification={consumeNotification} index={i} />;
+                    return <WSNotification key={`ws-notification${i}`} message={notification.message} consumeNotification={consumeNotification} index={i} icon={notification.icon} iconColour={notification.iconColour} />;
                   })}
 
                   </ul>
