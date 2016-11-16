@@ -14,8 +14,11 @@ import proxy from 'http-proxy-middleware';
 
 const bundler = webpack(config);
 
-const serverProxy = proxy(['/api', '/auth', '/login', '/public'], {
+const serverProxy = proxy(['/api', '/auth', '/login', '/public', '/socket.io', '/browser-sync'], {
     target: 'http://localhost:8080',
+    pathRewrite: {
+      '^/browser-sync' : '/socket.io'
+    },
     changeOrigin: true,
     ws: true,
     logLevel: 'debug'
