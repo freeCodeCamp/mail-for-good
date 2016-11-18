@@ -63,8 +63,6 @@ module.exports = (req, res, io) => {
 
   Promise.all([validateListBelongsToUser]).then(values => {
     let [listInstance] = values; // Get variables from the values array
-    const concurrency = 1000; // Number of rows and upserts to handle concurrently. Arbitrary number.
-    let numberProcessed = 0, targetProcessed = 1000; // Vars for tracking how many CSVs have been processed. Sends a WS notification per 1k processed emails.
     const crudeRandomId = (Math.random() * 100000).toString(); // This doesn't really need to be unique as only one CSV should ever be uploaded at any one time by a client
 
     listInstance = listInstance[0];
@@ -72,11 +70,12 @@ module.exports = (req, res, io) => {
     const listId = listInstance.dataValues.id;
 
     let bufferArray = [];
-    const bufferLength = 1000;
+    const bufferLength = 5000;
+    let numberProcessed = 0, targetProcessed = bufferLength; // Vars for tracking how many CSVs have been processed. Sends a WS notification per 1k processed emails.
 
     const c = cargo((tasks, callback) => {
 
-      db.listsubscriber.bulkCreate(tasks, { logging: true })
+      db.listsubscriber.bulkCreate(tasks, { logging: false })
         .then(() => {
 
 
@@ -92,7 +91,7 @@ module.exports = (req, res, io) => {
           }
 
           numberProcessed = targetProcessed;
-          targetProcessed += 1000;
+          targetProcessed += bufferLength;
 
           callback();
         })
@@ -100,12 +99,12 @@ module.exports = (req, res, io) => {
           console.log('Oh dear');
         });
 
-    }, concurrency);
+    }, bufferLength);
 
     /* Config csv parser */
     const parser = csv.parse({ columns: true, skip_empty_lines: true }); // Write object with headers as object keys, and skip empty rows
     const transformerOptions = {
-      parallel: concurrency
+      parallel: bufferLength
     };
     /* ///////////////// */
 
@@ -120,14 +119,16 @@ module.exports = (req, res, io) => {
         bufferArray.push(row);
 
         if (bufferArray.length >= bufferLength) {
+          // Check that the cargo process isn't overloaded. If it is (length > bufferLength * 3)
           c.push(bufferArray, err => {
             if (err)
               throw err;
+              callback();
           });
           bufferArray = [];
+        } else {
+          callback();
         }
-        callback();
-
       }
     }, transformerOptions);
 
