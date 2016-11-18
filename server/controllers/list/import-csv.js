@@ -1,7 +1,7 @@
 const path = require('path');
 const csv = require('csv');
 const fs = require('fs');
-const queue = require('async/queue');
+const cargo = require('async/cargo');
 
 const db = require('../../models');
 
@@ -63,7 +63,7 @@ module.exports = (req, res, io) => {
 
   Promise.all([validateListBelongsToUser]).then(values => {
     let [listInstance] = values; // Get variables from the values array
-    const concurrency = 5000; // Number of rows and upserts to handle concurrently. Arbitrary number.
+    const concurrency = 1000; // Number of rows and upserts to handle concurrently. Arbitrary number.
     let numberProcessed = 0, targetProcessed = 1000; // Vars for tracking how many CSVs have been processed. Sends a WS notification per 1k processed emails.
     const crudeRandomId = (Math.random() * 100000).toString(); // This doesn't really need to be unique as only one CSV should ever be uploaded at any one time by a client
 
@@ -71,36 +71,35 @@ module.exports = (req, res, io) => {
     const listIsNew = listInstance.$options.isNewRecord;
     const listId = listInstance.dataValues.id;
 
-    const q = queue((task, callback) => {
-      // Where task has object format { header: field } - e.g. { email: bob@bobmail.com }
-      // Checks that the email is valid prior to saving to the db
-      if (!validateEmail(task.email)) {
-        callback();
-      } else {
-        db.listsubscriber.upsert({ email: task.email, listId: listId })
-          .then(() => { // Where created = true if created, false if updated
+    let bufferArray = [];
+    const bufferLength = 1000;
 
-            numberProcessed++;
+    const c = cargo((tasks, callback) => {
 
-            if (numberProcessed >= targetProcessed) {
-              const rowsParsed = {
-                message: `Processed ${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows...`,
-                isUpdate: true, // Mark this notification as an update for an existing notification to the client
-                id: crudeRandomId, // Unique identified for use on client side (in the reducer)
-                icon: 'fa-upload',
-                iconColour: 'text-blue'
-              };
-              if (io.sockets.connected[req.session.passport.socket]) {
-                io.sockets.connected[req.session.passport.socket].emit('notification', rowsParsed);
-              }
+      db.listsubscriber.bulkCreate(tasks, { logging: true })
+        .then(() => {
 
-              numberProcessed = targetProcessed;
-              targetProcessed += 1000;
-            }
 
-            callback();
+          const rowsParsed = {
+            message: `Processed ${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows...`,
+            isUpdate: true, // Mark this notification as an update for an existing notification to the client
+            id: crudeRandomId, // Unique identified for use on client side (in the reducer)
+            icon: 'fa-upload',
+            iconColour: 'text-blue'
+          };
+          if (io.sockets.connected[req.session.passport.socket]) {
+            io.sockets.connected[req.session.passport.socket].emit('notification', rowsParsed);
+          }
+
+          numberProcessed = targetProcessed;
+          targetProcessed += 1000;
+
+          callback();
+        })
+        .catch(() => {
+          console.log('Oh dear');
         });
-      }
+
     }, concurrency);
 
     /* Config csv parser */
@@ -112,15 +111,23 @@ module.exports = (req, res, io) => {
 
     const transformer = csv.transform((row, callback) => {
       // If row has no email field (though it should), skip the line. Implicit conversion from both undefined & '' is assumed.
-      if (!row.email) {
+      if (!row.email || !validateEmail(row.email)) {
         callback();
       } else {
-        // Push the row to function ref q. Callback when q invokes its own callback.
-        q.push(row, err => {
-          if (err)
-            throw err;
-          callback();
-        });
+        // Add fields to row
+        row['listId'] = listId;
+
+        bufferArray.push(row);
+
+        if (bufferArray.length >= bufferLength) {
+          c.push(bufferArray, err => {
+            if (err)
+              throw err;
+          });
+          bufferArray = [];
+        }
+        callback();
+
       }
     }, transformerOptions);
 
