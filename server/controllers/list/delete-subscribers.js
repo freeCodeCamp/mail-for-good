@@ -3,8 +3,7 @@ const ListSubscriber = require('../../models').listsubscriber;
 
 module.exports = (req, res) => {
   const userId = req.user.id;
-
-  const listSubscriberIds = req.body.listSubscribers
+  const listSubscriberIds = req.body.listSubscribers;
 
   List.findAll({
     where: { userId },
@@ -12,7 +11,7 @@ module.exports = (req, res) => {
   }).then(result => {
     const ownedListIds = result.map(list => {
       return list.id;
-    })
+    });
 
     ListSubscriber.destroy({
       where: {
@@ -21,15 +20,12 @@ module.exports = (req, res) => {
       }
     }).then(numDeleted => {
       if (numDeleted) {
-        res.send('subscribers deleted');
+        res.send('Subscribers deleted');
       } else {
-        res.status(404).send();
+        res.status(404).send('Subscribers not found');
       }
     })
-  }).catch(err => {
-    throw err;
-    res.status(500).send('failed to delete subscribers');
-  });
-
-
+    .catch(() => res.status(500).send('Failed to delete subscribers'));
+  })
+  .catch(() => res.status(500).send('Failed to delete subscribers'));
 };

@@ -1,9 +1,13 @@
-import React from 'react';
-import { Table, Button } from 'react-bootstrap';
-import FontAwesome from 'react-fontawesome';
+import React, { Component, PropTypes } from 'react';
+import { Table } from 'react-bootstrap';
 
+export default class SubscribersTable extends Component {
 
-export default class SubscribersTable extends React.Component {
+  propTypes = {
+    subscribers: PropTypes.array,
+    fields: PropTypes.array
+  }
+
   constructor(props) {
     super(props);
 
@@ -21,7 +25,7 @@ export default class SubscribersTable extends React.Component {
   }
 
   render() {  // should add key props to these 3 loops
-    const metaFields = ['delete'];
+    // const metaFields = ['delete'];
 
     return (
       <div>

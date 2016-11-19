@@ -1,9 +1,14 @@
 import axios from 'axios';
-import { API_SUBSCRIBERS_ENDPOINT, API_IMPORTCSV_ENDPOINT, API_MANAGELIST_ENDPOINT, API_LISTSUBSCRIBERS_ENDPOINT } from '../constants/endpoints';
+import {
+  API_IMPORTCSV_ENDPOINT,
+  API_MANAGELIST_ENDPOINT,
+  API_LISTSUBSCRIBERS_ENDPOINT
+} from '../constants/endpoints';
 import {
   REQUEST_ADD_SUBSCRIBERS, COMPLETE_ADD_SUBSCRIBERS,
   REQUEST_GET_LISTS, COMPLETE_GET_LISTS,
-  REQUEST_GET_LIST_SUBSCRIBERS, COMPLETE_GET_LIST_SUBSCRIBERS
+  REQUEST_GET_LIST_SUBSCRIBERS, COMPLETE_GET_LIST_SUBSCRIBERS,
+  COMPLETE_DELETE_LIST_SUBSCRIBERS
 } from '../constants/actionTypes';
 import { notify } from '../actions/notificationActions';
 
@@ -31,16 +36,23 @@ export function completeGetListSubscribers(subscribers) {
   return { type: COMPLETE_GET_LIST_SUBSCRIBERS, subscribers };
 }
 
-export function deleteListSubscribers(listSubscribers) {
+export function completeDeleteListSubscribers(lists) {
+  return { type: COMPLETE_DELETE_LIST_SUBSCRIBERS, lists };
+}
+
+export function deleteListSubscribers(listSubscribers, subscribers) {
   return dispatch => {
     axios.delete(API_LISTSUBSCRIBERS_ENDPOINT, {
       data: { listSubscribers }
     }).then(response => {
-      dispatch(notify({ message: response.data }));
-    }).catch(response => {
-      dispatch(notify({ message: response.data }));
-    })
-  }
+      dispatch(notify({ message: 'Subscribers(s) deleted', colour: 'green' }));
+      // Remove deleted listSubscribers from state
+      const filterLists = subscribers.filter(sub => ~subscribers.indexOf(sub.id));
+      dispatch(completeDeleteListSubscribers(filterLists));
+    }).catch(err => {
+      dispatch(notify({ message: 'An error occurred when deleting this email' }));
+    });
+  };
 }
 
 export function getListSubscribers(listId) {
@@ -56,8 +68,8 @@ export function getListSubscribers(listId) {
       .catch(response => {
         dispatch(completeGetListSubscribers([]));
         dispatch(notify({ message: response.message }));
-      })
-  }
+      });
+  };
 }
 
 export function getLists() {
@@ -94,9 +106,6 @@ export function submitCSV(file, headers, list) {
 
     xhr.onreadystatechange = () => {
       switch (xhr.readyState) {
-        case 3: { // Loading
-
-        }
         case 4: { // Done
             dispatch(completeAddSubscribers());
             // Update lists so that the user can see the new list under manage lists

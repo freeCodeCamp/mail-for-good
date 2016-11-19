@@ -2,7 +2,8 @@ import initialState from './initialState';
 import {
   COMPLETE_ADD_SUBSCRIBERS, REQUEST_ADD_SUBSCRIBERS,
   REQUEST_GET_LISTS, COMPLETE_GET_LISTS,
-  REQUEST_GET_LIST_SUBSCRIBERS, COMPLETE_GET_LIST_SUBSCRIBERS
+  REQUEST_GET_LIST_SUBSCRIBERS, COMPLETE_GET_LIST_SUBSCRIBERS,
+  COMPLETE_DELETE_LIST_SUBSCRIBERS
 } from '../constants/actionTypes';
 
 export function manageListSubscribers(state = initialState.manageListSubscribers, action) {
@@ -54,6 +55,11 @@ export function manageList(state = initialState.manageList, action) {
           lists: action.lists,
           isGetting: false
         };
+    }
+    case COMPLETE_DELETE_LIST_SUBSCRIBERS: {
+      return {...state,
+        lists: action.lists
+      };
     }
     default:
       return state;

@@ -1,20 +1,26 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes, Component } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import BSTyle from 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
+import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 import moment from 'moment';
 
-export default class ManageSubscribersTable extends React.Component {
+export default class ManageSubscribersTable extends Component {
+
+  static propTypes = {
+    data: PropTypes.array.isRequired,
+    deleteRows: PropTypes.func.isRequired,
+  }
+
   constructor(props) {
     super(props);
 
     this.state = {
       data: this.props.data || []
-    }
+    };
 
     this.options = {
       clearSearch: true,
       noDataText: 'This list has no subscribers',
-      onRowClick: row => {
+      onRowClick: () => {
       },
       afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
         this.props.deleteRows(rows);
@@ -26,12 +32,6 @@ export default class ManageSubscribersTable extends React.Component {
       mode: "checkbox",
       bgColor: "rgb(176, 224, 230)"
     };
-  }
-
-  static propTypes = {
-    data: PropTypes.array.isRequired,
-    deleteListSubscribers: PropTypes.func.isRequired,
-    deleteRows: PropTypes.func.isRequired,
   }
 
   componentWillReceiveProps(newProps) {

@@ -69,29 +69,45 @@ module.exports = (req, res, io) => {
     const listIsNew = listInstance.$options.isNewRecord;
     const listId = listInstance.dataValues.id;
 
+    const filename = req.file.originalname;
     let bufferArray = [];
     const bufferLength = 5000;
-    let numberProcessed = 0, targetProcessed = bufferLength; // Vars for tracking how many CSVs have been processed. Sends a WS notification per 1k processed emails.
+    let numberProcessed = 0; // Var for tracking how many CSVs have been processed. Sends a WS notification per 'bufferLength' processed emails.
+
+    function sendFinalNotification() {
+      if (io.sockets.connected[req.session.passport.socket]) {
+        const importSuccess = {
+          message: `Your file ${filename} has finished uploading`,
+          icon: 'fa-list-alt',
+          iconColour: 'text-green'
+        };
+        io.sockets.connected[req.session.passport.socket].emit('notification', importSuccess);
+      }
+    }
 
     const c = cargo((tasks, callback) => {
-
+      const tasksLength = tasks.length;
       db.listsubscriber.bulkCreate(tasks, { logging: false })
         .then(() => {
 
+          // Track how many emails we've processed so far.
+          numberProcessed += tasksLength;
 
-          const rowsParsed = {
-            message: `Processed ${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows...`,
-            isUpdate: true, // Mark this notification as an update for an existing notification to the client
-            id: crudeRandomId, // Unique identified for use on client side (in the reducer)
-            icon: 'fa-upload',
-            iconColour: 'text-blue'
-          };
-          if (io.sockets.connected[req.session.passport.socket]) {
-            io.sockets.connected[req.session.passport.socket].emit('notification', rowsParsed);
+          // Send a notification if this isn't the final batch (since if it is, the user will receive a 'success')
+          if (tasksLength === bufferLength) {
+            const rowsParsed = {
+              message: `Processed ${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows...`,
+              isUpdate: true, // Mark this notification as an update for an existing notification to the client
+              id: crudeRandomId, // Unique identified for use on client side (in the reducer)
+              icon: 'fa-upload',
+              iconColour: 'text-blue'
+            };
+            if (io.sockets.connected[req.session.passport.socket]) {
+              io.sockets.connected[req.session.passport.socket].emit('notification', rowsParsed);
+            }
+          } else {
+            sendFinalNotification();
           }
-
-          numberProcessed = targetProcessed;
-          targetProcessed += bufferLength;
 
           callback();
         })
@@ -145,17 +161,18 @@ module.exports = (req, res, io) => {
       // Do nothing with the data. Let it be garbage collected.
     }).on('end', () => {
       // Delete CSV
-      const filename = req.file.originalname;
       fs.unlink(`${path.resolve(req.file.path)}`, err => {
-        // IDEA: Post success to a field in the user model called 'notifications' & push through websocket
         if (err) throw err;
-        const importSuccess = {
-          message: `Your file ${filename} has finished uploading`,
-          icon: 'fa-list-alt',
-          iconColour: 'text-green'
-        };
-        if (io.sockets.connected[req.session.passport.socket]) {
-          io.sockets.connected[req.session.passport.socket].emit('notification', importSuccess);
+
+        // If bufferArray.length != 0, there are still some emails to save
+        if (bufferArray.length) {
+          c.push(bufferArray, err => {
+            if (err)
+              throw err;
+          });
+          bufferArray = [];
+        } else {
+          sendFinalNotification();
         }
       });
     });
