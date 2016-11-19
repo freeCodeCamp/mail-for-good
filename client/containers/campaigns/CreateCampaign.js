@@ -4,6 +4,7 @@ import { initialize } from 'redux-form';
 import CreateCampaignForm from '../../components/campaigns/CreateCampaignForm';
 import PreviewCampaignForm from '../../components/campaigns/PreviewCampaignForm';
 import { postCreateCampaign, getTemplates } from '../../actions/campaignActions';
+import { notify } from '../../actions/notificationActions';
 import { getLists } from '../../actions/listActions';
 import FontAwesome from 'react-fontawesome';
 
@@ -18,7 +19,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { postCreateCampaign, getLists, getTemplates, initialize })
+@connect(mapStateToProps, { postCreateCampaign, getLists, getTemplates, initialize, notify })
 export default class CreateCampaign extends Component {
 
   static propTypes = {
@@ -30,7 +31,8 @@ export default class CreateCampaign extends Component {
     isGetting: PropTypes.bool.isRequired,
     getTemplates: PropTypes.func.isRequired,
     templates: PropTypes.array.isRequired,
-    initialize: PropTypes.func.isRequired
+    initialize: PropTypes.func.isRequired,
+    notify: PropTypes.func.isRequired
   }
 
   static contextTypes = {
@@ -70,6 +72,10 @@ export default class CreateCampaign extends Component {
 
   handleSubmit() {
     this.props.postCreateCampaign(JSON.stringify(this.props.form.values));
+    this.props.notify({
+      message: 'Your campaign was created successfully',
+      colour: 'green'
+    });
   }
 
   applyTemplate(template) {
