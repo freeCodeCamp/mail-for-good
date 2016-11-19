@@ -2,34 +2,41 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const multer = require('multer')({dest: 'server/controllers/list/uploads/'});
 const auth = require('./auth');
+const parseJson = bodyParser.json();
 
-const createCampaign = require('../controllers/campaign/create-campaign');
-const createTemplate = require('../controllers/campaign/create-template');
+// Campaigns
 const getCampaigns = require('../controllers/campaign/get-campaigns');
-const getTemplates = require('../controllers/campaign/get-templates');
-const sendCampaign = require('../controllers/campaign/send-campaign');
+const createCampaign = require('../controllers/campaign/create-campaign');
 const deleteCampaigns = require('../controllers/campaign/delete-campaigns');
+
+// Send campaign
+const sendCampaign = require('../controllers/campaign/send-campaign');
+
+// Templates
+const getTemplates = require('../controllers/campaign/get-templates');
+const createTemplate = require('../controllers/campaign/create-template');
 const deleteTemplates = require('../controllers/campaign/delete-templates');
 
-const addSubscribers = require('../controllers/list/add-subscribers');
-const deleteSubscribers = require('../controllers/list/delete-subscribers');
-const importCSV = require('../controllers/list/import-csv');
+// Lists
 const getLists = require('../controllers/list/get-lists');
 const getListSubscribers = require('../controllers/list/get-list-subscribers');
+const addSubscribers = require('../controllers/list/add-subscribers');
+const importCSV = require('../controllers/list/import-csv');
 const subscribeToList = require('../controllers/list/subscribe');
-
+const deleteSubscribers = require('../controllers/list/delete-subscribers');
 const unsubscribe = require('../controllers/subscriber/unsubscribe');
 
+// Analytics
+const getClickthroughs = require('../controllers/analytics/get-clickthroughs');
 const refresh = require('../controllers/analytics/refresh');
 const open = require('../controllers/analytics/open');
 const clickthrough = require('../controllers/analytics/clickthrough');
-const getClickthroughs = require('../controllers/analytics/get-clickthroughs');
 
-const getProfile = require('../controllers/websockets/get-profile');
-
+// Settings
 const changeSettings = require('../controllers/changesettings');
 
-const parseJson = bodyParser.json();
+// Websocket notifications
+const getProfile = require('../controllers/websockets/get-profile');
 
 module.exports = (app, passport, io) => {
 
@@ -49,94 +56,75 @@ module.exports = (app, passport, io) => {
   ////////////////////
 
   /* Campaigns */
-
-  /* GET */
-
   // Get a list of all campaigns
   app.get('/api/campaign', apiIsAuth, (req, res) => {
     getCampaigns(req, res);
   });
-
-  // Get a list of all templates
-  app.get('/api/campaign/template', apiIsAuth, (req, res) => {
-    getTemplates(req, res);
-  });
-
-  /* POST */
-
-  // Create new campaign
+  // Post new campaign
   app.post('/api/campaign', apiIsAuth, parseJson, (req, res) => {
     createCampaign(req, res);
   });
-
-  // Create new template
-  app.post('/api/campaign/template', apiIsAuth, parseJson, (req, res) => {
-    createTemplate(req, res);
-  });
-
-  // Send campaign
-  app.post('/api/campaign/send', apiIsAuth, parseJson, (req, res) => {
-    sendCampaign(req, res, io);
-  });
-
-  /* DELETE */
-
+  // Delete campaign(s)
   app.delete('/api/campaign', apiIsAuth, parseJson, (req, res) => {
     deleteCampaigns(req, res);
   });
 
-  app.delete('/api/campaign/template', apiIsAuth, parseJson, (req, res) => {
+  /* Send */
+  // Post to send campaign
+  app.post('/api/send', apiIsAuth, parseJson, (req, res) => {
+    sendCampaign(req, res, io);
+  });
+
+  /* Templates */
+  // Get a list of all templates
+  app.get('/api/template', apiIsAuth, (req, res) => {
+    getTemplates(req, res);
+  });
+  // Post a new template
+  app.post('/api/template', apiIsAuth, parseJson, (req, res) => {
+    createTemplate(req, res);
+  });
+  // Delete template(s)
+  app.delete('/api/template', apiIsAuth, parseJson, (req, res) => {
     deleteTemplates(req, res);
   });
 
   /* Lists */
-
-  /* GET */
-
-  // Send user their lists
+  // Get all lists
   app.get('/api/list/manage', apiIsAuth, (req, res) => {
     getLists(req, res);
   });
-
-  // Get the subscribers of a specified list
+  // Get all subscribers of a list
   app.get('/api/list/subscribers', apiIsAuth, (req, res) => {
     getListSubscribers(req, res);
   });
+  // Get a single email using the list subscription key
+  app.get('/api/list/subscribe', (req, res) => {
+    subscribeToList(req, res);
+  });
 
-  /* POST */
-
-  // Add subscribers
+  // Post new subscribers
   app.post('/api/list/add/subscribers', apiIsAuth, (req, res) => {
     addSubscribers(req, res);
   });
-
-  // Import csv
+  // Post new list via csv import
   app.post('/api/list/add/csv', apiIsAuth, multer.single('csv'), (req, res) => {
     importCSV(req, res, io);
   });
-
-  // Subscribe a single email using the list subscription key
-  app.get('/api/list/subscribe', (req, res) => {
-    subscribeToList(req, res);
-  })
-
-  /* DELETE */
 
   // Delete subscribers
   app.delete('/api/list/subscribers', apiIsAuth, parseJson, (req, res) => {
     deleteSubscribers(req, res);
   });
 
-
   /* Settings */
-
-  // Change settings
+  // Post to change new settings
   app.post('/api/settings', apiIsAuth, parseJson, (req, res) => {
     changeSettings(req, res);
   });
 
   /* Subscribers */
-
+  // Get to unsubscribe an email based on the unsubscribeKey parameter
   app.get('/unsubscribe/:unsubscribeKey', (req, res) => {
     unsubscribe(req, res);
   });
@@ -149,17 +137,14 @@ module.exports = (app, passport, io) => {
   app.get('/api/analytics/refresh', (req, res) => {
     refresh(req, res);
   });
-
   // Clickthrough
   app.get('/clickthrough', (req, res) => {
     clickthrough(req, res);
   });
-
   // Open/pixel tracking
   app.get('/trackopen', (req, res) => {
     open(req, res);
   });
-
   // temporary
   app.get('/api/analytics/clickthrough', apiIsAuth, (req, res) => {
     getClickthroughs(req, res);
@@ -171,7 +156,7 @@ module.exports = (app, passport, io) => {
 
   app.get('/*', isAuth, (req, res) => {
     res.sendFile(path.resolve('dist/index.html'));
-
+    // On initial client connection, store the user's websocket info in their authenticated session
     io.on('connection', socket => {
       socket.on('login', () => {
         req.session.passport.socket = socket.id;
@@ -181,12 +166,11 @@ module.exports = (app, passport, io) => {
         });
       });
     });
-
   });
-
 };
 
-// Helper function for verifying authentication
+/* Helper functions for verifying authentication */
+// Check user is allowed to load SPA
 function isAuth(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
@@ -194,7 +178,7 @@ function isAuth(req, res, next) {
     res.redirect('/login');
   }
 }
-
+// Check user accessing API route is authenticated
 function apiIsAuth(req, res, next) {
   if (req.isAuthenticated()) {
     return next();

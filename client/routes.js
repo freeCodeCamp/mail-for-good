@@ -29,7 +29,11 @@ export default(
       <Route path="create" component={CreateCampaign}/>
       <Route path="manage" component={ManageCampaigns}/>
       <Route path="manage/:slug" component={CampaignView}/>
-      <Route path="templates" component={Templates}/>
+    </Route>
+
+    <Route path="templates">
+      <Route path="create" component={Templates}/>
+      <Route path="manage" component={Templates}/>
     </Route>
 
     <Route path="lists">

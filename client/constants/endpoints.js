@@ -4,8 +4,8 @@ export const BASE_URL = window.location.origin;
 
 // Campaigns
 export const API_CAMPAIGN_ENDPOINT = BASE_URL + '/api/campaign'; // REST (post = new campaign, get = get list of campaigns, put = update campaign, del = delete campaign)
-export const API_SEND_CAMPAIGN_ENDPOINT = BASE_URL + '/api/campaign/send';
-export const API_TEMPLATE_ENDPOINT = BASE_URL + '/api/campaign/template';
+export const API_SEND_CAMPAIGN_ENDPOINT = BASE_URL + '/api/send';
+export const API_TEMPLATE_ENDPOINT = BASE_URL + '/api/template';
 
 // Lists
 // should refactor above variables for consistency (API_...)
