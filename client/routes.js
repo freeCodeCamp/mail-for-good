@@ -2,20 +2,22 @@ import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 
 import App from './containers/App';
-
+// Dashboard
 import Dashboard from './containers/Dashboard';
-
+// Campaigns
 import CreateCampaign from './containers/campaigns/CreateCampaign';
 import ManageCampaigns from './components/campaigns/ManageCampaigns';
 import CampaignView from './containers/campaigns/CampaignView';
-import Templates from './containers/campaigns/Templates';
-
+// Templates
+import CreateTemplate from './containers/templates/CreateTemplate';
+import ManageTemplates from './containers/templates/ManageTemplates';
+// Lists
 import CreateList from './containers/lists/CreateList';
 import ManageLists from './components/lists/ManageLists';
 import ManageListSubscribers from './containers/lists/ManageListSubscribers';
-
+// Analytics
 import CampaignReports from './containers/analytics/CampaignReports';
-
+// Settings
 import Settings from './containers/Settings';
 
 // import AddEmail from './containers/AddEmail';
@@ -32,8 +34,8 @@ export default(
     </Route>
 
     <Route path="templates">
-      <Route path="create" component={Templates}/>
-      <Route path="manage" component={Templates}/>
+      <Route path="create" component={CreateTemplate}/>
+      <Route path="manage" component={ManageTemplates}/>
     </Route>
 
     <Route path="lists">

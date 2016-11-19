@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import SidebarLink from '../common/SidebarLink';
 import SidebarTreeview from '../common/SidebarTreeview';
@@ -47,6 +47,10 @@ const Sidebar = (props) => { // eslint-disable-line no-unused-vars
       </section>
     </aside>
   );
+};
+
+Sidebar.propTypes = {
+  user: PropTypes.object
 };
 
 export default Sidebar;

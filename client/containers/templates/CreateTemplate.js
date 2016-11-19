@@ -1,10 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
-import CreateTemplateForm from '../../components/campaigns/CreateTemplateForm';
-import PreviewTemplateForm from '../../components/campaigns/PreviewTemplateForm';
-import ManageTemplatesTable from '../../components/campaigns/ManageTemplatesTable';
-import { getTemplates, postCreateTemplate, deleteTemplates } from '../../actions/campaignActions';
+import CreateTemplateForm from '../../components/templates/CreateTemplateForm';
+import PreviewTemplateForm from '../../components/templates/PreviewTemplateForm';
+import { getTemplates, postCreateTemplate } from '../../actions/campaignActions';
 import { notify } from '../../actions/notificationActions';
 
 function mapStateToProps(state) {
@@ -17,7 +16,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getTemplates, postCreateTemplate, deleteTemplates, notify })
+@connect(mapStateToProps, { getTemplates, postCreateTemplate, notify })
 export default class Templates extends Component {
 
   static propTypes = {
@@ -27,14 +26,12 @@ export default class Templates extends Component {
     getTemplates: PropTypes.func.isRequired,
     templates: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired,
-    deleteTemplates: PropTypes.func.isRequired,
     notify: PropTypes.func.isRequired
   }
 
   constructor() {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.deleteRows = this.deleteRows.bind(this);
     this.nextPage = this.nextPage.bind(this);
     this.lastPage = this.lastPage.bind(this);
     this.validationFailed = this.validationFailed.bind(this);
@@ -76,11 +73,6 @@ export default class Templates extends Component {
     this.setState({ page: this.state.page - 1 });
   }
 
-  deleteRows(templateIds) { // templateIds [...Numbers]
-    const jsonCampaignIds = JSON.stringify({ data: templateIds });
-    this.props.deleteTemplates(jsonCampaignIds);
-  }
-
   validationFailed(reason) {
     this.props.notify({
       message: reason
@@ -99,16 +91,6 @@ export default class Templates extends Component {
         </div>
 
         <section className="content">
-
-          <div className="box box-primary">
-            <div className="box-body">
-              <ManageTemplatesTable data={this.props.templates} deleteRows={this.deleteRows} />
-            </div>
-            {this.props.isPosting || this.props.isGetting && <div className="overlay">
-              <FontAwesome name="refresh" spin/>
-            </div>}
-          </div>
-
           <div className="box box-primary">
             <div className="box-body">
               {page === 1 && <CreateTemplateForm validationFailed={this.validationFailed} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}

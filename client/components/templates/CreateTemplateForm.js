@@ -19,7 +19,7 @@ const CreateTemplateForm = props => {
       nextPage();
     } else {
       touch(...nameArray);
-      validationFailed('Form is invalid, please review fields with errors')
+      validationFailed('Form is invalid, please review fields with errors');
     }
   };
 
@@ -55,7 +55,6 @@ CreateTemplateForm.propTypes = {
   submitting: PropTypes.bool.isRequired,
   nextPage: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
-  lists: PropTypes.array.isRequired,
   validationFailed: PropTypes.func.isRequired
 };
 
