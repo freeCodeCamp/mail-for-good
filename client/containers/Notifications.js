@@ -19,7 +19,6 @@ export default class Notifications extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       notifications: []
     };
@@ -38,19 +37,26 @@ export default class Notifications extends Component {
     this.setState({notifications: newNotifications});
   }
 
-
   render() {
     let left = '25rem';
     if (document.body.classList.contains('sidebar-collapse')) {
       left = '6rem';
     }
 
-    const notifications = this.state.notifications.reduce((prev, notification) => {
+    const notifications = this.state.notifications.reduce((prev, notification, i) => {
       return prev.concat({
         ...notification,
+        key: `stack${i}`,
+        action: 'Dismiss',
+        onClick: () => {
+          this.props.consume.bind(this)();
+        },
         activeBarStyle: {
           ...notification.activeBarStyle,
           left
+        },
+        actionStyle: {
+          color: 'white'
         }
       });
     }, []);
@@ -59,7 +65,10 @@ export default class Notifications extends Component {
       return Object.assign(
         {},
         style,
-        { bottom: `${6 + index * 4}rem` }
+        {
+          bottom: `${6 + index * 4}rem`,
+          font: '1.5rem normal Roboto, sans-serif'
+        }
       );
     };
 
