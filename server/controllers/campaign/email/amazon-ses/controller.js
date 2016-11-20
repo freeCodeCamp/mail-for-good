@@ -52,7 +52,7 @@ Throttling error:
 module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, whiteLabelUrl) => {
 
 
-  const isDevMode = process.env.IS_DEV_MODE || false;
+  const isDevMode = process.env.NODE_ENV === 'development' || false;
 
   let rateLimit = process.env.DEV_SEND_RATE || quotas.MaxSendRate > 50 ? 50 : quotas.MaxSendRate; // The number of emails to send per second
   let pushByRateLimitInterval = 0;
