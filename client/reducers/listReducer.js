@@ -3,7 +3,7 @@ import {
   COMPLETE_ADD_SUBSCRIBERS, REQUEST_ADD_SUBSCRIBERS,
   REQUEST_GET_LISTS, COMPLETE_GET_LISTS,
   REQUEST_GET_LIST_SUBSCRIBERS, COMPLETE_GET_LIST_SUBSCRIBERS,
-  COMPLETE_DELETE_LIST_SUBSCRIBERS
+  COMPLETE_DELETE_LIST_SUBSCRIBERS, COMPLETE_DELETE_LISTS
 } from '../constants/actionTypes';
 
 export function manageListSubscribers(state = initialState.manageListSubscribers, action) {
@@ -21,6 +21,11 @@ export function manageListSubscribers(state = initialState.manageListSubscribers
         subscribers: action.subscribers
       };
     }
+    case COMPLETE_DELETE_LIST_SUBSCRIBERS: {
+      return {...state,
+        subscribers: action.subscribers
+      };
+    }
     default:
       return state;
   }
@@ -29,14 +34,14 @@ export function manageListSubscribers(state = initialState.manageListSubscribers
 export function createList(state = initialState.createList, action) {
   switch (action.type) {
     case REQUEST_ADD_SUBSCRIBERS: {
-        return {...state,
-          isPosting: true
-        };
+      return {...state,
+        isPosting: true
+      };
     }
     case COMPLETE_ADD_SUBSCRIBERS: {
-        return {...state,
-          isPosting: false
-        };
+      return {...state,
+        isPosting: false
+      };
     }
     default:
       return state;
@@ -46,17 +51,17 @@ export function createList(state = initialState.createList, action) {
 export function manageList(state = initialState.manageList, action) {
   switch (action.type) {
     case REQUEST_GET_LISTS: {
-        return {...state,
-          isGetting: true
-        };
+      return {...state,
+        isGetting: true
+      };
     }
     case COMPLETE_GET_LISTS: {
-        return {...state,
-          lists: action.lists,
-          isGetting: false
-        };
+      return {...state,
+        lists: action.lists,
+        isGetting: false
+      };
     }
-    case COMPLETE_DELETE_LIST_SUBSCRIBERS: {
+    case COMPLETE_DELETE_LISTS: {
       return {...state,
         lists: action.lists
       };

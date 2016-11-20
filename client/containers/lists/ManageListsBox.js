@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 
-import { getLists } from '../../actions/listActions';
+import { getLists, deleteLists } from '../../actions/listActions';
 import ManageListsTable from '../../components/lists/ManageListsTable';
 
 function mapStateToProps(state) {
@@ -13,13 +13,19 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getLists })
+@connect(mapStateToProps, { getLists, deleteLists })
 export default class ManageList extends Component {
 
   static propTypes = {
     getLists: PropTypes.func.isRequired,
     lists: PropTypes.array.isRequired,
-    isGetting: PropTypes.bool.isRequired
+    isGetting: PropTypes.bool.isRequired,
+    deleteLists: PropTypes.func.isRequired
+  }
+
+  constructor() {
+    super();
+    this.deleteRows = this.deleteRows.bind(this);
   }
 
   componentDidMount() {
@@ -27,6 +33,10 @@ export default class ManageList extends Component {
     if (!this.props.lists.length) {
       this.props.getLists();
     }
+  }
+
+  deleteRows(listIds) {
+    this.props.deleteLists(listIds, this.props.lists);
   }
 
   render() {
@@ -37,7 +47,7 @@ export default class ManageList extends Component {
         </div>
 
         <div className="box-body">
-          <ManageListsTable data={this.props.lists}/>
+          <ManageListsTable data={this.props.lists} deleteRows={this.deleteRows} />
 
           {this.props.isGetting && <div className="overlay">
             <FontAwesome name="refresh" spin/>

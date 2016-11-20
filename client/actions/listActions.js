@@ -8,7 +8,7 @@ import {
   REQUEST_ADD_SUBSCRIBERS, COMPLETE_ADD_SUBSCRIBERS,
   REQUEST_GET_LISTS, COMPLETE_GET_LISTS,
   REQUEST_GET_LIST_SUBSCRIBERS, COMPLETE_GET_LIST_SUBSCRIBERS,
-  COMPLETE_DELETE_LIST_SUBSCRIBERS
+  COMPLETE_DELETE_LIST_SUBSCRIBERS, COMPLETE_DELETE_LISTS
 } from '../constants/actionTypes';
 import { notify } from '../actions/notificationActions';
 
@@ -36,8 +36,12 @@ export function completeGetListSubscribers(subscribers) {
   return { type: COMPLETE_GET_LIST_SUBSCRIBERS, subscribers };
 }
 
-export function completeDeleteListSubscribers(lists) {
-  return { type: COMPLETE_DELETE_LIST_SUBSCRIBERS, lists };
+export function completeDeleteListSubscribers(subscribers) {
+  return { type: COMPLETE_DELETE_LIST_SUBSCRIBERS, subscribers };
+}
+
+export function completeDeleteLists(lists) {
+  return { type: COMPLETE_DELETE_LISTS, lists };
 }
 
 export function getListSubscribers(listId) {
@@ -102,15 +106,30 @@ export function submitCSV(file, headers, list) {
   };
 }
 
-export function deleteListSubscribers(listSubscribers, subscribers) {
+export function deleteListSubscribers(listSubscriberIds, subscribers) {
   return dispatch => {
     axios.delete(API_LISTSUBSCRIBERS_ENDPOINT, {
-      data: { listSubscribers }
+      data: { listSubscribers: listSubscriberIds }
     }).then(response => {
       dispatch(notify({ message: response.data, colour: 'green' }));
       // Remove deleted listSubscribers from state
-      const filterLists = subscribers.filter(sub => ~subscribers.indexOf(sub.id));
-      dispatch(completeDeleteListSubscribers(filterLists));
+      const filterListSubscribers = subscribers.filter(sub => !~listSubscriberIds.indexOf(sub.id));
+      dispatch(completeDeleteListSubscribers(filterListSubscribers));
+    }).catch(() => {
+      dispatch(notify({ message: 'There was an error completing this request.' }));
+    });
+  };
+}
+
+export function deleteLists(listIds, lists) {
+  return dispatch => {
+    axios.delete(API_MANAGELIST_ENDPOINT, {
+      data: { lists: listIds }
+    }).then(response => {
+      dispatch(notify({ message: response.data, colour: 'green' }));
+      // Remove deleted lists from state
+      const filterLists = lists.filter(list => !~lists.indexOf(list.id));
+      dispatch(completeDeleteLists(filterLists));
     }).catch(() => {
       dispatch(notify({ message: 'There was an error completing this request.' }));
     });
