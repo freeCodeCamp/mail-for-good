@@ -128,7 +128,7 @@ export function deleteLists(listIds, lists) {
     }).then(response => {
       dispatch(notify({ message: response.data, colour: 'green' }));
       // Remove deleted lists from state
-      const filterLists = lists.filter(list => !~lists.indexOf(list.id));
+      const filterLists = lists.filter(list => !~listIds.indexOf(list.id));
       dispatch(completeDeleteLists(filterLists));
     }).catch(() => {
       dispatch(notify({ message: 'There was an error completing this request.' }));

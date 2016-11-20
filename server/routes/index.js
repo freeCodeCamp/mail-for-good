@@ -24,6 +24,7 @@ const addSubscribers = require('../controllers/list/add-subscribers');
 const importCSV = require('../controllers/list/import-csv');
 const subscribeToList = require('../controllers/list/subscribe');
 const deleteSubscribers = require('../controllers/list/delete-subscribers');
+const deleteLists = require('../controllers/list/delete-lists');
 const unsubscribe = require('../controllers/subscriber/unsubscribe');
 
 // Analytics
@@ -115,6 +116,10 @@ module.exports = (app, passport, io) => {
   // Delete subscribers
   app.delete('/api/list/subscribers', apiIsAuth, parseJson, (req, res) => {
     deleteSubscribers(req, res);
+  });
+  // Delete lists
+  app.delete('/api/list/manage', apiIsAuth, parseJson, (req, res) => {
+    deleteLists(req, res);
   });
 
   /* Settings */
