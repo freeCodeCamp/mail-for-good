@@ -7,7 +7,10 @@ import ManageListsTable from '../../components/lists/ManageListsTable';
 
 function mapStateToProps(state) {
   // State reducer @ state.manageList
-  return {lists: state.manageList.lists, isGetting: state.manageList.isGetting};
+  return {
+    lists: state.manageList.lists,
+    isGetting: state.manageList.isGetting
+  };
 }
 
 @connect(mapStateToProps, { getLists })

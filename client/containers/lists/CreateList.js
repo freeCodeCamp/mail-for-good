@@ -1,18 +1,30 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
+import FontAwesome from 'react-fontawesome';
 
 import ImportCSV from './ImportCSV';
 
-import { submitCSV } from '../../actions/listActions';
+import { submitCSV, getLists } from '../../actions/listActions';
 import { notify } from '../../actions/notificationActions';
 
-@connect(null, { submitCSV, notify })
+function mapStateToProps(state) {
+  // State reducer @ state.manageList
+  return {
+    lists: state.manageList.lists,
+    isGetting: state.manageList.isGetting
+  };
+}
+
+@connect(mapStateToProps, { submitCSV, notify, getLists })
 export default class CreateList extends Component {
 
   static propTypes = {
     submitCSV: PropTypes.func.isRequired,
-    notify: PropTypes.func.isRequired
+    notify: PropTypes.func.isRequired,
+    getLists: PropTypes.func.isRequired,
+    lists: PropTypes.array.isRequired,
+    isGetting: PropTypes.bool.isRequired
   }
 
   constructor() {
@@ -25,6 +37,13 @@ export default class CreateList extends Component {
     title: ''
   }
 
+  componentDidMount() {
+    // Update lists only if we need to
+    if (!this.props.lists.length) {
+      this.props.getLists();
+    }
+  }
+
   notification(notification) {
     this.props.notify(notification);
   }
@@ -33,13 +52,13 @@ export default class CreateList extends Component {
     const { title } = this.state;
     // List title should not be empty
     if (title === '') {
-      this.notification({ // Ref https://github.com/pburtchaell/react-notification & https://github.com/pburtchaell/react-notification/blob/master/src/notification.js
-        message: 'Please provide a name for this list',
-        activeBarStyle: {
-          background: 'red'
-        }
-      }); // Validation complete, send to server
-    } else {
+      this.props.notify({ message: 'Please provide a name for this list' });
+    }
+    else if (this.props.lists.some(x => x.name === title)) {
+      // Notify if list name exists
+      this.props.notify({ message: 'This list already exists, please provide a unique name' });
+    }
+    else {
       this.props.submitCSV(file, headers, title);
       this.setState({ title: '' });
       this.props.notify({
@@ -120,6 +139,11 @@ export default class CreateList extends Component {
               </div>
             </Col>
           </Row>
+
+          {this.props.isGetting && <div className="overlay">
+            <FontAwesome name="refresh" spin/>
+          </div>}
+
         </section>
       </div>
     );

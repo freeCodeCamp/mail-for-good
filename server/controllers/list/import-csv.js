@@ -80,7 +80,7 @@ module.exports = (req, res, io) => {
         let filenameWithoutExtension = filename.substr(0, filename.lastIndexOf('.'));
         filenameWithoutExtension = filenameWithoutExtension.length > 10 ? `${filenameWithoutExtension.substr(0, 10)}...` : filenameWithoutExtension;
         const importSuccess = {
-          message: `"${filenameWithoutExtension}" finished uploading`,
+          message: `"${filenameWithoutExtension}" successfully uploaded`,
           icon: 'fa-list-alt',
           iconColour: 'text-green'
         };

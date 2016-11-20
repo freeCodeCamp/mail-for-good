@@ -40,21 +40,6 @@ export function completeDeleteListSubscribers(lists) {
   return { type: COMPLETE_DELETE_LIST_SUBSCRIBERS, lists };
 }
 
-export function deleteListSubscribers(listSubscribers, subscribers) {
-  return dispatch => {
-    axios.delete(API_LISTSUBSCRIBERS_ENDPOINT, {
-      data: { listSubscribers }
-    }).then(response => {
-      dispatch(notify({ message: response.data, colour: 'green' }));
-      // Remove deleted listSubscribers from state
-      const filterLists = subscribers.filter(sub => ~subscribers.indexOf(sub.id));
-      dispatch(completeDeleteListSubscribers(filterLists));
-    }).catch(() => {
-      dispatch(notify({ message: 'There was an error completing this request.' }));
-    });
-  };
-}
-
 export function getListSubscribers(listId) {
   return dispatch => {
     dispatch(requestGetListSubscribers(listId));
@@ -112,9 +97,22 @@ export function submitCSV(file, headers, list) {
             dispatch(getLists());
         }
       }
-
     };
-
     xhr.send(formData);
+  };
+}
+
+export function deleteListSubscribers(listSubscribers, subscribers) {
+  return dispatch => {
+    axios.delete(API_LISTSUBSCRIBERS_ENDPOINT, {
+      data: { listSubscribers }
+    }).then(response => {
+      dispatch(notify({ message: response.data, colour: 'green' }));
+      // Remove deleted listSubscribers from state
+      const filterLists = subscribers.filter(sub => ~subscribers.indexOf(sub.id));
+      dispatch(completeDeleteListSubscribers(filterLists));
+    }).catch(() => {
+      dispatch(notify({ message: 'There was an error completing this request.' }));
+    });
   };
 }
