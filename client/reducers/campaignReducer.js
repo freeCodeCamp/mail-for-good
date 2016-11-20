@@ -4,7 +4,8 @@ import {
   REQUEST_GET_CAMPAIGNS, COMPLETE_GET_CAMPAIGNS,
   REQUEST_POST_SENDCAMPAIGN, COMPLETE_POST_SENDCAMPAIGN,
   REQUEST_POST_CREATETEMPLATE, COMPLETE_POST_CREATETEMPLATE,
-  REQUEST_GET_TEMPLATES, COMPLETE_GET_TEMPLATES
+  REQUEST_GET_TEMPLATES, COMPLETE_GET_TEMPLATES,
+  COMPLETE_DELETE_CAMPAIGNS
 } from '../constants/actionTypes';
 
 export function createCampaign(state = initialState.createCampaign, action) {
@@ -53,6 +54,11 @@ export function manageCampaign(state = initialState.manageCampaign, action) {
           campaigns: action.campaigns,
           isGetting: false
         };
+    }
+    case COMPLETE_DELETE_CAMPAIGNS: {
+      return {...state,
+        campaigns: action.campaigns
+      };
     }
     default:
       return state;

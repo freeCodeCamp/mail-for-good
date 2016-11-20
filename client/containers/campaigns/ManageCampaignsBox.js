@@ -18,9 +18,9 @@ function mapStateToProps(state) {
 export default class ManageCampaignsBox extends Component {
 
   static propTypes = {
-    getCampaigns: PropTypes.func.isRequired,
     campaigns: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired,
+    getCampaigns: PropTypes.func.isRequired,
     deleteCampaigns: PropTypes.func.isRequired
   }
 
@@ -42,8 +42,7 @@ export default class ManageCampaignsBox extends Component {
   }
 
   deleteRows(campaignIds) { // campaignIds [...Numbers]
-    const jsonCampaignIds = JSON.stringify({data: campaignIds});
-    this.props.deleteCampaigns(jsonCampaignIds);
+    this.props.deleteCampaigns(campaignIds, this.props.campaigns);
   }
 
   getCampaignView(row) {
