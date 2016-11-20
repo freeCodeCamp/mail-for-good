@@ -1,5 +1,7 @@
 const express = require('express');
+const redis = require("redis");
 const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
 const passport = require('passport');
 const path = require('path');
 const app = express();
@@ -14,9 +16,16 @@ const routes = require('./routes');
 // Config
 require('./config/passport')(passport);
 
-const sessionConfig = session({ secret: secret.sessionSecret, resave: false, saveUninitialized: true });
+const client = redis.createClient();
 
-app.use(sessionConfig);
+client.on("error", err => console.log(`Error: ${err} - Are you running redis?`));
+
+app.use(session({
+  store: new RedisStore({ client }),
+  secret: secret.sessionSecret,
+  resave: false,
+  saveUninitialized: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
