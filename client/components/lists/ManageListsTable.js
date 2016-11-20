@@ -2,59 +2,58 @@ import React, { PropTypes } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Link } from 'react-router';
 import moment from 'moment';
-import BSTyle from 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
+import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
-export default class ManageListsTable extends React.Component {
-  static propTypes = {
-    data: PropTypes.array.isRequired
-  }
+const ManageListsTable = ({ data, deleteRows }) => {
 
-  constructor(props) {
-    super(props);
+  const selectRowProp = {
+    mode: "checkbox",
+    bgColor: "rgb(176, 224, 230)"
+  };
 
-    this.state = {
-      data: this.props.data || []
-    };
+  const options = {
+    clearSearch: true,
+    noDataText: 'You do not have any lists linked with your account',
+    afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
+      deleteRows(rows);
+    },
+    handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
+  };
 
-    this.options = {
-      noDataText: 'You do not have any lists linked with your account'
-    };
-  }
+  const formatFieldDate = cell => moment(cell).format('lll');
 
-  componentWillReceiveProps(newProps) {
-    this.setState({
-      data: newProps.data
-    });
-  }
-
-  formatFieldDate(cell) {
-    return moment(cell).format('lll');
-  }
-
-  formatFieldManageSubscribers(cell, row) {
-    return (
+  const formatFieldManageSubscribers = (cell, row) => (
       <Link to={`/lists/manage/${row.id}`}>
       <button type="button" className="btn btn-default btn-flat">
           <i className="fa fa-user" />
       </button>
       </Link>
-    );
-  }
+  );
 
-  render() {
-    return (
-      <BootstrapTable data={this.state.data}
-                      pagination={true}
-                      options={this.options}
-                      hover={true}>
+  return (
+    <BootstrapTable data={data}
+      pagination={true}
+      hover={true}
+      deleteRow={true}
+      selectRow={selectRowProp}
+      options={options}
+      search={true}
+      searchPlaceholder="Filter lists"
+      clearSearch={true}>
 
-        <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
-        <TableHeaderColumn dataField="name" dataSort={true}>Name</TableHeaderColumn>
-        <TableHeaderColumn dataField="subscribeKey" dataSort={true}>Subscription Key</TableHeaderColumn>
-        <TableHeaderColumn dataField="createdAt" dataSort={true} dataFormat={this.formatFieldDate}>Created</TableHeaderColumn>
-        <TableHeaderColumn dataField="updatedAt" dataSort={true} dataFormat={this.formatFieldDate}>Updated</TableHeaderColumn>
-        <TableHeaderColumn dataAlign="center" width="150" dataFormat={this.formatFieldManageSubscribers}>Subscribers</TableHeaderColumn>
-      </BootstrapTable>
-    );
-  }
-}
+      <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
+      <TableHeaderColumn dataField="name" dataSort={true}>Name</TableHeaderColumn>
+      <TableHeaderColumn dataField="subscribeKey" dataSort={true}>Subscription Key</TableHeaderColumn>
+      <TableHeaderColumn dataField="createdAt" dataSort={true} dataFormat={formatFieldDate}>Created</TableHeaderColumn>
+      <TableHeaderColumn dataField="updatedAt" dataSort={true} dataFormat={formatFieldDate}>Updated</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" width="150" dataFormat={formatFieldManageSubscribers}>Subscribers</TableHeaderColumn>
+    </BootstrapTable>
+  );
+};
+
+ManageListsTable.propTypes = {
+  data: PropTypes.array.isRequired,
+  deleteRows: PropTypes.func.isRequired
+};
+
+export default ManageListsTable;

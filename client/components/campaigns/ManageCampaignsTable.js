@@ -4,8 +4,7 @@ import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 import moment from 'moment';
 
 // Ref: https://allenfang.github.io/react-bootstrap-table/docs.html
-const ManageCampaignsTable = (props) => {
-  const { data, deleteRows, getCampaignView } = props;
+const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
 
   const selectRowProp = {
     mode: "checkbox",
