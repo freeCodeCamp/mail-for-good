@@ -45,12 +45,12 @@ export function deleteListSubscribers(listSubscribers, subscribers) {
     axios.delete(API_LISTSUBSCRIBERS_ENDPOINT, {
       data: { listSubscribers }
     }).then(response => {
-      dispatch(notify({ message: 'Subscribers(s) deleted', colour: 'green' }));
+      dispatch(notify({ message: response.data, colour: 'green' }));
       // Remove deleted listSubscribers from state
       const filterLists = subscribers.filter(sub => ~subscribers.indexOf(sub.id));
       dispatch(completeDeleteListSubscribers(filterLists));
-    }).catch(err => {
-      dispatch(notify({ message: 'An error occurred when deleting this email' }));
+    }).catch(() => {
+      dispatch(notify({ message: 'There was an error completing this request.' }));
     });
   };
 }

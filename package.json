@@ -19,8 +19,8 @@
     "client:test:watch": "npm run client:test -- --watch",
     "client:open:cover": "npm run test:cover && open coverage/index.html",
     "server:test": "mocha tools/testSetup.js \"server/**/*.spec.js\" --reporter progress",
-    "start": "node server/index.js",
-    "dev": "IS_DEV_MODE=true npm start",
+    "start": "NODE_ENV=production node server/index.js",
+    "dev": "NODE_ENV=development IS_DEV_MODE=true npm start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel-node tools/build.js",
     "test:server": "node server/controllers/campaign/email/amazon-ses/test-server.js"

@@ -23,28 +23,16 @@ export default class ManageListSubscribers extends Component {
     params: PropTypes.object
   }
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      subscribers: this.props.subscribers,
-      isGetting: this.props.isGetting
-    };
+  constructor() {
+    super();
   }
 
   componentDidMount() {
     this.props.getListSubscribers(this.props.params.listId, this.props.subscribers);
   }
 
-  componentWillReceiveProps(newProps) {
-    this.setState({
-      subscribers: newProps.subscribers,
-      isGetting: newProps.isGetting
-    });
-  }
-
  deleteRows(listSubscribers) { // listSubscriberIds [...Numbers(ids)]
-    this.props.deleteListSubscribers(listSubscribers);
+    this.props.deleteListSubscribers(listSubscribers, this.props.subscribers);
   }
 
   render() {
@@ -65,7 +53,7 @@ export default class ManageListSubscribers extends Component {
 
             <div className="box-body">
               {!!this.props.subscribers.length &&
-                <ManageSubscribersTable data={this.state.subscribers} deleteRows={this.deleteRows.bind(this)} />
+                <ManageSubscribersTable data={this.props.subscribers} deleteRows={this.deleteRows.bind(this)} />
               }
               {this.props.isGetting && <div className="overlay">
                 <FontAwesome name="refresh" spin/>

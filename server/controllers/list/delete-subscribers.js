@@ -3,6 +3,7 @@ const ListSubscriber = require('../../models').listsubscriber;
 
 module.exports = (req, res) => {
   const userId = req.user.id;
+
   const listSubscriberIds = req.body.listSubscribers;
 
   List.findAll({
@@ -22,10 +23,12 @@ module.exports = (req, res) => {
       if (numDeleted) {
         res.send('Subscribers deleted');
       } else {
-        res.status(404).send('Subscribers not found');
+        res.status(404).send();
       }
-    })
-    .catch(() => res.status(500).send('Failed to delete subscribers'));
-  })
-  .catch(() => res.status(500).send('Failed to delete subscribers'));
+    });
+  }).catch(() => {
+    res.status(500).send('Failed to delete subscribers');
+  });
+
+
 };

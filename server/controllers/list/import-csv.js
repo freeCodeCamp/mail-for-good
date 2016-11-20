@@ -87,7 +87,7 @@ module.exports = (req, res, io) => {
 
     const c = cargo((tasks, callback) => {
       const tasksLength = tasks.length;
-      db.listsubscriber.bulkCreate(tasks, { logging: false })
+      db.listsubscriber.bulkCreate(tasks)
         .then(() => {
 
           // Track how many emails we've processed so far.
