@@ -5,7 +5,7 @@ import {
   REQUEST_POST_SENDCAMPAIGN, COMPLETE_POST_SENDCAMPAIGN,
   REQUEST_POST_CREATETEMPLATE, COMPLETE_POST_CREATETEMPLATE,
   REQUEST_GET_TEMPLATES, COMPLETE_GET_TEMPLATES,
-  COMPLETE_DELETE_CAMPAIGNS
+  COMPLETE_DELETE_CAMPAIGNS, COMPLETE_DELETE_TEMPLATES
 } from '../constants/actionTypes';
 
 export function createCampaign(state = initialState.createCampaign, action) {
@@ -77,6 +77,11 @@ export function manageTemplates(state = initialState.manageTemplates, action) {
           templates: action.templates,
           isGetting: false
         };
+    }
+    case COMPLETE_DELETE_TEMPLATES: {
+      return {...state,
+        templates: action.templates
+      };
     }
     default:
       return state;

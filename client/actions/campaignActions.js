@@ -4,7 +4,7 @@ import {
   REQUEST_POST_SENDCAMPAIGN, COMPLETE_POST_SENDCAMPAIGN,
   REQUEST_POST_CREATETEMPLATE, COMPLETE_POST_CREATETEMPLATE,
   REQUEST_GET_TEMPLATES, COMPLETE_GET_TEMPLATES,
-  COMPLETE_DELETE_CAMPAIGNS
+  COMPLETE_DELETE_CAMPAIGNS, COMPLETE_DELETE_TEMPLATES
 } from '../constants/actionTypes';
 import { API_CAMPAIGN_ENDPOINT, API_SEND_CAMPAIGN_ENDPOINT, API_TEMPLATE_ENDPOINT } from '../constants/endpoints';
 
@@ -48,8 +48,12 @@ export function completeGetTemplates(templates) {
   return { type: COMPLETE_GET_TEMPLATES, templates };
 }
 
+// Delete campaign/template
 export function completeDeleteCampaigns(campaigns) {
   return { type: COMPLETE_DELETE_CAMPAIGNS, campaigns };
+}
+export function completeDeleteTemplates(templates) {
+  return { type: COMPLETE_DELETE_TEMPLATES, templates };
 }
 
 export function getCampaigns() {
@@ -148,11 +152,16 @@ export function getTemplates() {
   };
 }
 
-export function deleteTemplates(templateIds) {
-  return () => {
+export function deleteTemplates(templateIds, templates) {
+  return dispatch => {
+    const jsonCampaignIds = JSON.stringify({ data: templateIds });
     const xhr = new XMLHttpRequest();
     xhr.open('DELETE', API_TEMPLATE_ENDPOINT);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(templateIds);
+    xhr.send(jsonCampaignIds);
+    xhr.onload = () => {
+      const filterTemplates = templates.filter(temp => !~templateIds.indexOf(temp.id));
+      dispatch(completeDeleteTemplates(filterTemplates));
+    };
   };
 }

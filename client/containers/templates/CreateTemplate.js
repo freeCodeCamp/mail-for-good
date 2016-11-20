@@ -55,7 +55,7 @@ export default class Templates extends Component {
     if (this.props.isPosting === true && props.isPosting === false) { // Fires when template has been successfully created
       this.setState({ page: 1 });
       this.props.notify({
-        message: 'Your template was successfully created!',
+        message: 'Your template was created successfully',
         colour: 'green'
       });
     }

@@ -40,8 +40,7 @@ export default class Templates extends Component {
   }
 
   deleteRows(templateIds) { // templateIds [...Numbers]
-    const jsonCampaignIds = JSON.stringify({ data: templateIds });
-    this.props.deleteTemplates(jsonCampaignIds);
+    this.props.deleteTemplates(templateIds, this.props.templates);
   }
 
   render() {
