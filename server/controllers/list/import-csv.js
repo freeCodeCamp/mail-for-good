@@ -76,8 +76,11 @@ module.exports = (req, res, io) => {
 
     function sendFinalNotification() {
       if (io.sockets.connected[req.session.passport.socket]) {
+        // Truncate filename
+        let filenameWithoutExtension = filename.substr(0, filename.lastIndexOf('.'));
+        filenameWithoutExtension = filenameWithoutExtension.length > 10 ? `${filenameWithoutExtension.substr(0, 10)}...` : filenameWithoutExtension;
         const importSuccess = {
-          message: `Your file ${filename} has finished uploading`,
+          message: `"${filenameWithoutExtension}" finished uploading`,
           icon: 'fa-list-alt',
           iconColour: 'text-green'
         };
