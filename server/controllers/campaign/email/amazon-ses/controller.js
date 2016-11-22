@@ -226,6 +226,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
       where: {
         listId: campaignInfo.listId
       },
+      order: [ ['id', 'ASC'] ],
       raw: true
     }).then(list => {
       return startGenerator.next(list.id);
