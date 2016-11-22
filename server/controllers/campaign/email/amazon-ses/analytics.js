@@ -14,11 +14,12 @@ function wrapLink(body, trackingId, type, whiteLabelUrl) {
 
 function insertUnsubscribeLink(body, unsubscribeId, type, whiteLabelUrl) {
   const unsubscribeUrl = `${whiteLabelUrl}/unsubscribe/${unsubscribeId}`;
+
   if (type === 'Plaintext') {
-    return body + '\n' + unsubscribeUrl;
+    return body + '\t\r\n\t\r\n\t\r\n\t\r\n\t\r\n\t\r\n' + unsubscribeUrl;
   }
 
-  return body + `\n<a href="${unsubscribeUrl}">unsubscribe</a>`
+  return body + "<br/><br/><br/><br/><br/>" + `<a href="${unsubscribeUrl}">unsubscribe</a>`
 }
 
 function insertTrackingPixel(body, trackingId, type) {
