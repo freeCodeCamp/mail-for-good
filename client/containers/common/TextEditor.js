@@ -5,7 +5,8 @@ import '../../styles/campaign-text-form.scss';
 export default class TextEditor extends Component {
 
   static propTypes = {
-    input: PropTypes.object
+    input: PropTypes.object,
+    onEditor: PropTypes.func
   }
 
   constructor() {
@@ -26,6 +27,7 @@ export default class TextEditor extends Component {
   render() {
     return (
       <ReactTrixEditor
+        onEditor={this.props.onEditor}
         onChange={this.onChange}
         placeholder="Write your email"
         />

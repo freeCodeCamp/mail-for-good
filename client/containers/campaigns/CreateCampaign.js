@@ -45,13 +45,15 @@ export default class CreateCampaign extends Component {
     this.nextPage = this.nextPage.bind(this);
     this.lastPage = this.lastPage.bind(this);
     this.applyTemplate = this.applyTemplate.bind(this);
+    this.onEditor = this.onEditor.bind(this);
   }
 
   state = {
     page: 1,
     initialFormValues: {
       type: 'Plaintext'
-    }
+    },
+    editor: null
   }
 
   componentDidMount() {
@@ -79,7 +81,12 @@ export default class CreateCampaign extends Component {
   }
 
   applyTemplate(template) {
-    this.props.initialize('createCampaign', template);
+    if (template) {
+      const { editor } = this.state;
+      this.props.initialize('createCampaign', template);
+      console.log(editor);
+      editor.loadHTML(template.emailBody);
+    }
   }
 
   nextPage() {
@@ -88,6 +95,11 @@ export default class CreateCampaign extends Component {
 
   lastPage() {
     this.setState({ page: this.state.page - 1 });
+  }
+
+  onEditor(editor) {
+    //@params editor = Trix editor object bound to the CreateCampaignForm text editor
+    this.setState({ editor });
   }
 
   render() {
@@ -105,7 +117,7 @@ export default class CreateCampaign extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateCampaignForm applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
+              {page === 1 && <CreateCampaignForm onEditor={this.onEditor} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
               {page === 2 && <PreviewCampaignForm form={form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
 

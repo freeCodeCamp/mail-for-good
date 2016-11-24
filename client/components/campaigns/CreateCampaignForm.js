@@ -11,7 +11,7 @@ import { renderCombobox, renderField, renderTextEditor, renderRadio } from '../c
 
 const CreateCampaignForm = props => {
 
-  const { touch, valid, pristine, submitting, nextPage, reset, applyTemplate } = props;
+  const { touch, valid, pristine, submitting, nextPage, reset, applyTemplate, onEditor } = props;
 
   const lists = props.lists.map(x => x.name);
   const templates = props.templates.map(x => x.name);
@@ -64,7 +64,7 @@ const CreateCampaignForm = props => {
         <h3>Create email</h3>
         <Field name="type" component={renderRadio} label="Type" />
         <Field name="emailSubject" component={renderField} label="Subject" type="text" />
-        <Field name="emailBody" component={renderTextEditor} label="Write Email" />
+        <Field name="emailBody" component={renderTextEditor} label="Write Email" onEditor={onEditor} />
 
         <br/>
         <div className="box-footer">
@@ -85,7 +85,8 @@ CreateCampaignForm.propTypes = {
   reset: PropTypes.func.isRequired,
   lists: PropTypes.array.isRequired,
   templates: PropTypes.array.isRequired,
-  applyTemplate: PropTypes.func.isRequired
+  applyTemplate: PropTypes.func.isRequired,
+  onEditor: PropTypes.func.isRequired
 };
 
 const validate = values => {
