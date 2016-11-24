@@ -97,7 +97,7 @@ module.exports = (req, res, io) => {
           whiteLabelUrl
         } = settingObject;
         // If either key is blank, the user needs to set their settings
-        if (accessKey === '' || secretKey === '' || region === '' && process.env.NODE_ENV === 'production') {
+        if ((accessKey === '' || secretKey === '' || region === '') && process.env.NODE_ENV === 'production') {
           res.status(400).send({ message:'Please provide your details for your Amazon account under "Settings".' });
         } else {
           // handling of default whitelabel url?
@@ -117,7 +117,7 @@ module.exports = (req, res, io) => {
     });
 
     ses.getSendQuota((err, data) => {
-      if (err && !process.env.DEV_SEND_RATE) { // Either access keys are wrong here or the request is being placed too quickly
+      if (err) { // Either access keys are wrong here or the request is being placed too quickly
         res.status(400).send({ message: 'Please confirm your Amazon SES settings and try again later.' });
       } else {
         const { Max24HourSend, SentLast24Hours, MaxSendRate } = data;
