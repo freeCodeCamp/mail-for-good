@@ -14,13 +14,8 @@ export default class TextEditor extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  componentWillReceiveProps(props) {
-    if (props.input.value && props.meta.pristine) { // Has the input prop been updated by the initialize action creator (called when applying templates)?
-      // this.setState({ value: RichTextEditor.createValueFromString(props.input.value, 'html') });
-    }
-  }
-
   onChange(value) {
+    // Update redux form
     this.props.input.onChange(value);
   }
 

@@ -100,7 +100,7 @@ export default class CreateCampaign extends Component {
     this.setState({ editor });
     // When the text editor loads, check if there's a value stored for it. If so, apply it.
     if (this.props.form && this.props.form.values.emailBody) {
-      this.state.editor.loadHTML(this.props.form.values.emailBody);
+      editor.loadHTML(this.props.form.values.emailBody);
     }
   }
 

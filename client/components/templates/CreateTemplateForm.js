@@ -9,7 +9,7 @@ import 'react-widgets/dist/css/react-widgets.css';
 
 const CreateTemplateForm = props => {
 
-  const { touch, valid, pristine, submitting, nextPage, reset, validationFailed } = props;
+  const { touch, valid, pristine, submitting, nextPage, reset, validationFailed, onEditor } = props;
 
   const nameArray = ['templateName', 'fromName', 'fromEmail', 'emailSubject', 'emailBody', 'type'];
 
@@ -38,7 +38,7 @@ const CreateTemplateForm = props => {
       <h3>Create email</h3>
       <Field name="type" component={renderRadio} label="Type" />
       <Field name="emailSubject" component={renderField} label="Subject" type="text" />
-      <Field name="emailBody" component={renderTextEditor} label="Write Email*" />
+      <Field name="emailBody" component={renderTextEditor} label="Write Email*" onEditor={onEditor} />
       <br/>
       <div className="box-footer">
         <button className="btn btn-primary btn-lg pull-left" type="submit" disabled={pristine || submitting}>Preview</button>
@@ -55,7 +55,8 @@ CreateTemplateForm.propTypes = {
   submitting: PropTypes.bool.isRequired,
   nextPage: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
-  validationFailed: PropTypes.func.isRequired
+  validationFailed: PropTypes.func.isRequired,
+  onEditor: PropTypes.func.isRequired
 };
 
 const validate = values => {

@@ -35,13 +35,15 @@ export default class Templates extends Component {
     this.nextPage = this.nextPage.bind(this);
     this.lastPage = this.lastPage.bind(this);
     this.validationFailed = this.validationFailed.bind(this);
+    this.onEditor = this.onEditor.bind(this);
   }
 
   state = {
     page: 1,
     initialFormValues: {
       type: 'Plaintext'
-    }
+    },
+    editor: ''
   }
 
   componentDidMount() {
@@ -79,6 +81,15 @@ export default class Templates extends Component {
     });
   }
 
+  onEditor(editor) {
+    //@params editor = Trix editor object bound to the CreateCampaignForm text editor
+    this.setState({ editor });
+    // When the text editor loads, check if there's a value stored for it. If so, apply it.
+    if (this.props.form && this.props.form.values.emailBody) {
+      editor.loadHTML(this.props.form.values.emailBody);
+    }
+  }
+
   render() {
     const { page } = this.state;
 
@@ -93,7 +104,7 @@ export default class Templates extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateTemplateForm validationFailed={this.validationFailed} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
+              {page === 1 && <CreateTemplateForm onEditor={this.onEditor} validationFailed={this.validationFailed} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
               {page === 2 && <PreviewTemplateForm form={this.props.form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
             {this.props.isPosting || this.props.isGetting && <div className="overlay">
