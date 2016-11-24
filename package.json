@@ -20,7 +20,7 @@
     "client:open:cover": "npm run test:cover && open coverage/index.html",
     "server:test": "mocha tools/testSetup.js \"server/**/*.spec.js\" --reporter progress",
     "start": "NODE_ENV=production node server/index.js",
-    "dev": "NODE_ENV=development npm start",
+    "dev": "NODE_ENV=development node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel-node tools/build.js",
     "test:server": "node server/controllers/campaign/email/amazon-ses/test-server.js"
