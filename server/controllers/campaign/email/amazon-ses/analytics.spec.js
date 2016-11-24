@@ -35,22 +35,25 @@ describe('amazon-ses analytics', () => {
     const whiteLabelUrl = 'http://localhost:8080'
 
     it('inserts an unsubscribe link at the end of a html email', () => {
-      const expectedBody = body + '\n<a href="http://localhost:8080/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3">unsubscribe</a>';
+      const expectedBody = body + "<br/><br/><br/><br/><br/>" + '<a href="http://localhost:8080/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3">unsubscribe</a>';
 
       expect(insertUnsubscribeLink(body, unsubscribeLink, 'Html', whiteLabelUrl)).to.be.equal(expectedBody);
     })
 
     it('inserts an unsubscribe url at the end of a plaintext email', () => {
-      const expectedBody = body + '\nhttp://localhost:8080/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
+      const lineBreaks = '\t\r\n\t\r\n\t\r\n\t\r\n\t\r\n\t\r\n';
+      const expectedBody = body + lineBreaks + 'http://localhost:8080/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
 
       expect(insertUnsubscribeLink(body, unsubscribeLink, 'Plaintext', whiteLabelUrl)).to.be.equal(expectedBody);
     })
 
     it('uses the given white label url', () => {
-      let expectedBody = body + '\nhttp://google.com/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
+      const lineBreaks = '\t\r\n\t\r\n\t\r\n\t\r\n\t\r\n\t\r\n';
+
+      let expectedBody = body + lineBreaks + 'http://google.com/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
       expect(insertUnsubscribeLink(body, unsubscribeLink, 'Plaintext', 'http://google.com')).to.be.equal(expectedBody);
 
-      expectedBody = body + '\nhttps://reddit.com/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
+      expectedBody = body + lineBreaks + 'https://reddit.com/unsubscribe/d9ba38b2-7b52-449f-946c-7dfb7c97a3f3';
       expect(insertUnsubscribeLink(body, unsubscribeLink, 'Plaintext', 'https://reddit.com')).to.be.equal(expectedBody);
     })
   })
