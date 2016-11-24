@@ -21,7 +21,7 @@ export default class App extends Component {
     children: PropTypes.element.isRequired,
     emitProfileRequest: PropTypes.func.isRequired,
     consumeNotification: PropTypes.func.isRequired,
-    user: PropTypes.object.isRequired,
+    user: PropTypes.object,
     ws_notification: PropTypes.array.isRequired
   }
 
