@@ -82,10 +82,8 @@ export default class CreateCampaign extends Component {
 
   applyTemplate(template) {
     if (template) {
-      const { editor } = this.state;
       this.props.initialize('createCampaign', template);
-      console.log(editor);
-      editor.loadHTML(template.emailBody);
+      this.state.editor.loadHTML(template.emailBody);
     }
   }
 
@@ -100,6 +98,10 @@ export default class CreateCampaign extends Component {
   onEditor(editor) {
     //@params editor = Trix editor object bound to the CreateCampaignForm text editor
     this.setState({ editor });
+    // When the text editor loads, check if there's a value stored for it. If so, apply it.
+    if (this.props.form && this.props.form.values.emailBody) {
+      this.state.editor.loadHTML(this.props.form.values.emailBody);
+    }
   }
 
   render() {
