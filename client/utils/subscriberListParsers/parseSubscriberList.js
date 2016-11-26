@@ -10,7 +10,6 @@ export default function previewCSV(file, callback) {
         complete: function(results) { // Can also take 2nd 'file' parameter
             // Filter results to get rid of empty arrays. This occurs when files with less than 10 (or 11) rows are provided.
             results.data = results.data.filter(i => i.email !== '');
-            console.log(results);
             callback(results);
         }
     });

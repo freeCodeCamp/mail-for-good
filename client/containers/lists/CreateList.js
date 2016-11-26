@@ -31,6 +31,7 @@ export default class CreateList extends Component {
     super();
     this.handleCSVSubmit = this.handleCSVSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.notification = this.notification.bind(this);
   }
 
   state = {
