@@ -54,7 +54,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
   const isDevMode = process.env.NODE_ENV === 'development' || false;
 
-  let rateLimit = process.env.DEV_SEND_RATE || quotas.MaxSendRate > 50 ? 50 : quotas.MaxSendRate; // The number of emails to send per second
+  let rateLimit = process.env.DEV_SEND_RATE || quotas.MaxSendRate; // The number of emails to send per second
   let pushByRateLimitInterval = 0;
   let listCalls = 0;
   let processedEmails = 0;

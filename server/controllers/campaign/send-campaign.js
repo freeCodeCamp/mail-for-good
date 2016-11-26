@@ -102,6 +102,7 @@ module.exports = (req, res, io) => {
         } else {
           // handling of default whitelabel url?
           generator.next({ accessKey, secretKey, region, whiteLabelUrl: whiteLabelUrl || 'http://localhost:8080' });
+          return null;
         }
       }
     }).catch(err => {
@@ -139,6 +140,7 @@ module.exports = (req, res, io) => {
       } else {
         generator.next(total);
       }
+      return null;
     }).catch(err => {
       res.status(500).send(err);
     });
@@ -155,6 +157,7 @@ module.exports = (req, res, io) => {
       );
     }).then(result => {
       generator.next(result.dataValues.id);
+      return null;
     }).catch(err => {
       console.log(err);
       res.status(500).send(err);

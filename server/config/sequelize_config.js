@@ -4,7 +4,8 @@ module.exports = {
     "password": process.env.PSQL_PASSWORD,
     "database": process.env.PSQL_DATABASE,
     "host": process.env.PSQL_HOST || "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "logging": false
   },
   "test": {
     "username": process.env.PSQL_USERNAME,

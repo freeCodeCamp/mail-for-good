@@ -10,6 +10,7 @@ module.exports = (passport) => {
   passport.deserializeUser(function(id, done) {
     db.user.findById(id).then(user => {
       done(null, user);
+      return null;
     }).catch(err => {
       if (err) { throw err; }
       }
