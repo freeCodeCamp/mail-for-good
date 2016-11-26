@@ -107,7 +107,8 @@ export default class CreateCampaign extends Component {
   render() {
     const { page, initialFormValues } = this.state;
     const { lists, templates, form, isGetting, isPosting } = this.props;
-
+    const type = (this.props.form && this.props.form.values.type) || this.state.initialFormValues.type;
+    
     return (
       <div>
         <div className="content-header">
@@ -119,7 +120,7 @@ export default class CreateCampaign extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateCampaignForm onEditor={this.onEditor} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
+              {page === 1 && <CreateCampaignForm textEditorType={type} onEditor={this.onEditor} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
               {page === 2 && <PreviewCampaignForm form={form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
 
