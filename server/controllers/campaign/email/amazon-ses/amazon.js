@@ -3,9 +3,9 @@ module.exports = (task, campaignInfo) => {
   // Ref https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SES.html#sendEmail-property
 
   const email = {
-    Source: campaignInfo.fromEmail, // From email
+    Source: `"${campaignInfo.fromName}" <${task.email}>`, // From email
     Destination: { // To email
-      ToAddresses: [`"${campaignInfo.fromName}" <${task.email}>`] // Set name as follows https://docs.aws.amazon.com/ses/latest/DeveloperGuide/email-format.html
+      ToAddresses: [`<${task.email}>`] // Set name as follows https://docs.aws.amazon.com/ses/latest/DeveloperGuide/email-format.html
     },
     Message: {
       Body: {},
