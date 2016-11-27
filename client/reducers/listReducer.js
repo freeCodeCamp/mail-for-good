@@ -35,12 +35,14 @@ export function createList(state = initialState.createList, action) {
   switch (action.type) {
     case REQUEST_ADD_SUBSCRIBERS: {
       return {...state,
-        isPosting: true
+        isPosting: true,
+        upload: action.upload
       };
     }
     case COMPLETE_ADD_SUBSCRIBERS: {
       return {...state,
-        isPosting: false
+        isPosting: false,
+        upload: null
       };
     }
     default:

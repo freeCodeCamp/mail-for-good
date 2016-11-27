@@ -10,7 +10,10 @@ import previewCSV from '../../utils/subscriberListParsers/parseSubscriberList';
 
 function mapStateToProps(state) {
   // State reducer @ state.createList
-  return { isPosting: state.createList.isPosting };
+  return {
+    isPosting: state.createList.isPosting,
+    upload: state.createList.upload
+  };
 }
 
 @connect(mapStateToProps, null)
@@ -19,7 +22,8 @@ export default class ImportCSV extends Component {
   static propTypes = {
     handleCSVSubmit: PropTypes.func.isRequired,
     isPosting: PropTypes.bool.isRequired,
-    notification: PropTypes.func.isRequired
+    notification: PropTypes.func.isRequired,
+    upload: PropTypes.oneOfType([PropTypes.number, PropTypes.object])
   }
 
   state = {
@@ -105,6 +109,13 @@ export default class ImportCSV extends Component {
                 <div className="box box-primary">
                   <div className="box-header with-border">
                     <h3 className="box-title">Your CSV file is uploading ...</h3>
+
+                    <div className="progress">
+                      <div style={{ width: `${this.props.upload}%` }} className="progress-bar progress-bar-aqua" role="progressbar" aria-valuenow={this.props.upload} aria-valuemin="0" aria-valuemax="100">
+                        <span className="sr-only">{this.props.upload}% Complete</span>
+                      </div>
+                    </div>
+
                   </div>
 
                   <div className="box-body">

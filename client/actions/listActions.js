@@ -12,8 +12,8 @@ import {
 } from '../constants/actionTypes';
 import { notify } from '../actions/notificationActions';
 
-export function requestAddSubscribers() {
-  return { type: REQUEST_ADD_SUBSCRIBERS };
+export function requestAddSubscribers(upload) {
+  return { type: REQUEST_ADD_SUBSCRIBERS, upload };
 }
 
 export function completeAddSubscribers() {
@@ -82,26 +82,30 @@ export function getLists() {
 
 export function submitCSV(file, headers, list) {
   return dispatch => {
-    dispatch(requestAddSubscribers());
+    dispatch(requestAddSubscribers(0));
 
     const formData = new FormData();
     formData.append('csv', file);
     formData.append('headers', JSON.stringify(headers));
     formData.append('list', list);
 
+    let percentComplete = 0;
     const xhr = new XMLHttpRequest();
 
-    xhr.open('POST', API_IMPORTCSV_ENDPOINT);
-
-    xhr.onreadystatechange = () => {
-      switch (xhr.readyState) {
-        case 4: { // Done
-            dispatch(completeAddSubscribers());
-            // Update lists so that the user can see the new list under manage lists
-            dispatch(getLists());
-        }
+    xhr.upload.addEventListener("progress", e => {
+      if (e.lengthComputable) {
+        percentComplete = Math.round((e.loaded * 100) / e.total);
+        dispatch(requestAddSubscribers(percentComplete));
       }
-    };
+    }, false);
+
+    xhr.upload.addEventListener("load", () => {
+      dispatch(completeAddSubscribers());
+      // Update lists so that the user can see the new list under manage lists
+      dispatch(getLists());
+    }, false);
+
+    xhr.open('POST', API_IMPORTCSV_ENDPOINT);
     xhr.send(formData);
   };
 }

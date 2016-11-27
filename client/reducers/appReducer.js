@@ -30,7 +30,6 @@ export function profile(state = initialState.profile, action) {
         sliceState.splice(ws_notification_exists, 1, action.notification);
         newState = sliceState;
       }
-      console.log(newState, ws_notification_exists, action.notification);
       return {...state,
         ws_notification: newState
       };

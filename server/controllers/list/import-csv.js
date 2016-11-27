@@ -113,6 +113,7 @@ module.exports = (req, res, io) => {
           }
 
           callback();
+          return null;
         })
         .catch(() => {
           console.log('Oh dear');
@@ -185,6 +186,7 @@ module.exports = (req, res, io) => {
       : `List: ${listName} - Successfully updated`;
     res.status(202).send({message: message});
 
+    return null;
   }, err => {
     throw err;
   });

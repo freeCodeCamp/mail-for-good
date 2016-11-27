@@ -20,7 +20,8 @@ const initialState = {
   },
   createList: {
     list: [],
-    isPosting: false
+    isPosting: false,
+    upload: null // int 0-100 regarding % completion of CSV upload
   },
   manageList: {
     lists: [], // Array of objects for lists

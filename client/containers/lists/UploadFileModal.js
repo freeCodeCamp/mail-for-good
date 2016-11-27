@@ -61,7 +61,7 @@ export default class UploadFileModal extends React.Component {
           </Modal.Header>
 
           <Modal.Body>
-            <FormControl className="btn" type="file" onChange={this.onUpload.bind(this)} help="nope"/>
+            <FormControl className="btn" type="file" onChange={this.onUpload.bind(this)} />
           </Modal.Body>
 
           <Modal.Footer>
