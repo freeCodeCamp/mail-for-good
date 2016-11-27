@@ -9,13 +9,14 @@ import 'react-widgets/dist/css/react-widgets.css';
 
 const CreateTemplateForm = props => {
 
-  const { touch, valid, pristine, submitting, nextPage, reset, validationFailed, onEditor, textEditorType } = props;
+  const { touch, valid, pristine, submitting, nextPage, reset, validationFailed, onEditor, textEditorType, passResetToState } = props;
 
   const nameArray = ['templateName', 'fromName', 'fromEmail', 'emailSubject', 'emailBody', 'type'];
 
   const resetFormAndSubmit = (e) => {
     e.preventDefault();
     if (valid) {
+      passResetToState(reset);
       nextPage();
     } else {
       touch(...nameArray);
@@ -57,7 +58,8 @@ CreateTemplateForm.propTypes = {
   reset: PropTypes.func.isRequired,
   validationFailed: PropTypes.func.isRequired,
   onEditor: PropTypes.func.isRequired,
-  textEditorType: PropTypes.string.isRequired
+  textEditorType: PropTypes.string.isRequired,
+  passResetToState: PropTypes.func.isRequired
 };
 
 const validate = values => {

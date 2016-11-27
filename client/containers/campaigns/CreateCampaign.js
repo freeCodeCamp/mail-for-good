@@ -46,6 +46,7 @@ export default class CreateCampaign extends Component {
     this.lastPage = this.lastPage.bind(this);
     this.applyTemplate = this.applyTemplate.bind(this);
     this.onEditor = this.onEditor.bind(this);
+    this.passResetToState = this.passResetToState.bind(this);
   }
 
   state = {
@@ -53,7 +54,8 @@ export default class CreateCampaign extends Component {
     initialFormValues: {
       type: 'Plaintext'
     },
-    editor: null
+    editor: null,
+    reset: null
   }
 
   componentDidMount() {
@@ -73,7 +75,7 @@ export default class CreateCampaign extends Component {
   }
 
   handleSubmit() {
-    this.props.postCreateCampaign(JSON.stringify(this.props.form.values));
+    this.props.postCreateCampaign(JSON.stringify(this.props.form.values), this.state.reset);
     this.props.notify({
       message: 'Your campaign was created successfully',
       colour: 'green'
@@ -104,11 +106,15 @@ export default class CreateCampaign extends Component {
     }
   }
 
+  passResetToState(reset) {
+    this.setState({ reset });
+  }
+
   render() {
     const { page, initialFormValues } = this.state;
     const { lists, templates, form, isGetting, isPosting } = this.props;
     const type = (this.props.form && this.props.form.values.type) || this.state.initialFormValues.type;
-    
+
     return (
       <div>
         <div className="content-header">
@@ -120,7 +126,7 @@ export default class CreateCampaign extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateCampaignForm textEditorType={type} onEditor={this.onEditor} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
+              {page === 1 && <CreateCampaignForm passResetToState={this.passResetToState} textEditorType={type} onEditor={this.onEditor} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
               {page === 2 && <PreviewCampaignForm form={form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
 

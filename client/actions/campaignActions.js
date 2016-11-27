@@ -79,7 +79,7 @@ export function getCampaigns() {
   };
 }
 
-export function postCreateTemplate(form) {
+export function postCreateTemplate(form, reset) {
   return dispatch => {
     dispatch(requestPostCreateTemplate());
 
@@ -88,13 +88,14 @@ export function postCreateTemplate(form) {
     xhr.onload = () => {
       dispatch(completePostCreateTemplate());
       dispatch(getTemplates());
+      reset();
     };
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(form);
   };
 }
 
-export function postCreateCampaign(form) {
+export function postCreateCampaign(form, reset) {
   return dispatch => {
     dispatch(requestPostCreateCampaign());
 
@@ -103,6 +104,7 @@ export function postCreateCampaign(form) {
     xhr.onload = () => {
       dispatch(completePostCreateCampaign());
       dispatch(getCampaigns());
+      reset();
     };
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(form);

@@ -11,7 +11,7 @@ import { renderCombobox, renderField, renderTextEditor, renderRadio } from '../c
 
 const CreateCampaignForm = props => {
 
-  const { touch, valid, pristine, submitting, nextPage, reset, applyTemplate, onEditor, textEditorType } = props;
+  const { touch, valid, pristine, submitting, nextPage, reset, applyTemplate, onEditor, textEditorType, passResetToState } = props;
 
   const lists = props.lists.map(x => x.name);
   const templates = props.templates.map(x => x.name);
@@ -20,6 +20,7 @@ const CreateCampaignForm = props => {
   const resetFormAndSubmit = e => {
     e.preventDefault();
     if (valid) {
+      passResetToState(reset);
       nextPage();
     } else {
       touch(...nameArray);
@@ -87,7 +88,8 @@ CreateCampaignForm.propTypes = {
   templates: PropTypes.array.isRequired,
   applyTemplate: PropTypes.func.isRequired,
   onEditor: PropTypes.func.isRequired,
-  textEditorType: PropTypes.string.isRequired
+  textEditorType: PropTypes.string.isRequired,
+  passResetToState: PropTypes.func.isRequired
 };
 
 const validate = values => {

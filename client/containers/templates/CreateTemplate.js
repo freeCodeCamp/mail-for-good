@@ -36,6 +36,7 @@ export default class Templates extends Component {
     this.lastPage = this.lastPage.bind(this);
     this.validationFailed = this.validationFailed.bind(this);
     this.onEditor = this.onEditor.bind(this);
+    this.passResetToState = this.passResetToState.bind(this);
   }
 
   state = {
@@ -43,7 +44,8 @@ export default class Templates extends Component {
     initialFormValues: {
       type: 'Plaintext'
     },
-    editor: ''
+    editor: '',
+    reset: null
   }
 
   componentDidMount() {
@@ -64,7 +66,7 @@ export default class Templates extends Component {
   }
 
   handleSubmit() {
-    this.props.postCreateTemplate(JSON.stringify(this.props.form.values));
+    this.props.postCreateTemplate(JSON.stringify(this.props.form.values), this.state.reset);
   }
 
   nextPage() {
@@ -90,8 +92,13 @@ export default class Templates extends Component {
     }
   }
 
+  passResetToState(reset) {
+    this.setState({ reset });
+  }
+
   render() {
     const { page } = this.state;
+    const type = (this.props.form && this.props.form.values.type) || this.state.initialFormValues.type;
 
     return (
       <div>
@@ -104,7 +111,7 @@ export default class Templates extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateTemplateForm textEditorType={this.props.form.values.type} onEditor={this.onEditor} validationFailed={this.validationFailed} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
+              {page === 1 && <CreateTemplateForm passResetToState={this.passResetToState} textEditorType={type} onEditor={this.onEditor} validationFailed={this.validationFailed} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
               {page === 2 && <PreviewTemplateForm form={this.props.form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
             {this.props.isPosting || this.props.isGetting && <div className="overlay">
