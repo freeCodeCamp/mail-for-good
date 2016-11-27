@@ -76,6 +76,7 @@
     "redis": "^2.6.3",
     "redux": "3.5.2",
     "redux-form": "^6.0.5",
+    "redux-localstorage": "^0.4.1",
     "redux-thunk": "2.1.0",
     "sequelize": "^3.24.3",
     "slug": "^0.9.1",
