@@ -70,7 +70,7 @@ const Header = (props) => { // eslint-disable-line no-unused-vars
 };
 
 Header.propTypes = {
-  user: PropTypes.object.isRequired,
+  user: PropTypes.object,
   ws_notification: PropTypes.array.isRequired,
   consumeNotification: PropTypes.func.isRequired
 };

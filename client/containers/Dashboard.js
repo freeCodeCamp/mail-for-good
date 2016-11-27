@@ -32,5 +32,5 @@ export default class Dashboard extends Component {
 
 Dashboard.propTypes = {
   children: PropTypes.element,
-  user: PropTypes.object.isRequired
+  user: PropTypes.object
 };

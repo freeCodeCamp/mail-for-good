@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 
-import TextEditorRich from './TextEditorRich';
-import TextEditorPlain from './TextEditorPlain';
+import TextEditorRich from '../../components/common/TextEditorRich';
+import TextEditorPlain from '../../components/common/TextEditorPlain';
 
 export default class TextEditor extends Component {
 
@@ -23,7 +23,7 @@ export default class TextEditor extends Component {
 
   render() {
     const isPlaintext = this.props.textEditorType === 'Plaintext';
-    console.log(this.props.textEditorType);
+
     return (
       <div>
       {isPlaintext
