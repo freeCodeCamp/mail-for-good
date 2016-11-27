@@ -30,11 +30,7 @@ const CreateCampaignForm = props => {
   const applyForm = () => {
     const applyTemplateValue = document.getElementById('templates_input').value; // Get template name
     const foundTemplate = props.templates.find(x => x.name === applyTemplateValue);
-    if (!foundTemplate) { // Template does not exist
-
-    } else {
-      applyTemplate(foundTemplate);
-    }
+    applyTemplate(foundTemplate);
   };
 
   return (

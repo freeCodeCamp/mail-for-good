@@ -86,8 +86,11 @@ export default class CreateCampaign extends Component {
 
   applyTemplate(template) {
     if (template) {
-      this.props.initialize('createCampaign', template);
+      const applyTemplateOnTopOfCurrentValues = Object.assign({}, this.props.form.values, template);
+      this.props.initialize('createCampaign', applyTemplateOnTopOfCurrentValues);
       this.state.editor.loadHTML(template.emailBody);
+    } else {
+      this.props.notify({ message: 'You have not selected a valid template' });
     }
   }
 
