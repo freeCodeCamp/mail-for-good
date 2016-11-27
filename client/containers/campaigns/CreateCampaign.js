@@ -7,6 +7,7 @@ import { postCreateCampaign, getTemplates } from '../../actions/campaignActions'
 import { notify } from '../../actions/notificationActions';
 import { getLists } from '../../actions/listActions';
 import FontAwesome from 'react-fontawesome';
+import moment from 'moment';
 
 function mapStateToProps(state) {
   // State reducer @ state.form & state.createCampaign & state.manageLists
@@ -52,6 +53,7 @@ export default class CreateCampaign extends Component {
   state = {
     page: 1,
     initialFormValues: {
+      campaignName: `Campaign - ${moment().format('l')}`,
       type: 'Plaintext'
     },
     editor: null,

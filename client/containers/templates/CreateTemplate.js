@@ -5,6 +5,7 @@ import CreateTemplateForm from '../../components/templates/CreateTemplateForm';
 import PreviewTemplateForm from '../../components/templates/PreviewTemplateForm';
 import { getTemplates, postCreateTemplate } from '../../actions/campaignActions';
 import { notify } from '../../actions/notificationActions';
+import moment from 'moment';
 
 function mapStateToProps(state) {
   // State reducer @ state.form.createTemplate & state.createTemplate
@@ -42,6 +43,7 @@ export default class Templates extends Component {
   state = {
     page: 1,
     initialFormValues: {
+      templateName: `Template - ${moment().format('l')}`,
       type: 'Plaintext'
     },
     editor: '',
