@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { RouteTransition } from 'react-router-transition';
-import spring from 'react-motion/lib/spring';
 
 import Header from '../components/admin-lte/Header.js';
 import Sidebar from '../components/admin-lte/Sidebar.js';
@@ -15,21 +14,6 @@ function mapStateToProps(state) {
     ws_notification: state.profile.ws_notification
   };
 }
-
-
-const fadeConfig = { stiffness: 200, damping: 22 };
-
-const fade = {
-  atEnter: {
-    opacity: 0
-  },
-  atLeave: {
-    opacity: spring(0, fadeConfig)
-  },
-  atActive: {
-    opacity: spring(1, fadeConfig)
-  }
-};
 
 @connect(mapStateToProps, { emitProfileRequest, consumeNotification })
 export default class App extends Component {
@@ -60,11 +44,13 @@ export default class App extends Component {
 
         <div className="content-wrapper">
           <RouteTransition
-          pathname={this.props.location.pathname}
-          {...fade}
-          >
-          {this.props.children}
-        </RouteTransition>
+            pathname={this.props.location.pathname}
+            atEnter={{ opacity: 0 }}
+            atLeave={{ opacity: 2 }}
+            atActive={{ opacity: 1 }}
+            mapStyles={styles => styles.opacity > 1 ? { "display": "none" } : { "opacity": styles.opacity }} >
+            {this.props.children}
+          </RouteTransition>
         </div>
 
         <Notifications />
