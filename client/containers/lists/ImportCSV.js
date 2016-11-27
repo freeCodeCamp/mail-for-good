@@ -145,9 +145,9 @@ export default class ImportCSV extends Component {
                 </div>
 
                 <div className="box-footer">
-                  {(this.state.subscribers || this.state.errors) && <Button onClick={this.cancelImport.bind(this)}>Cancel</Button>}
+                  {this.state.subscribers && <button className="btn pull-left btn-lg btn-success" type="submit" onClick={this.handleSubmit.bind(this)}>Submit</button>}
 
-                  {this.state.subscribers && <Button className="pull-right" bsStyle="primary" type="submit" onClick={this.handleSubmit.bind(this)}>Submit</Button>}
+                  {(this.state.subscribers || this.state.errors) && <button className="btn pull-right btn-lg btn-danger" onClick={this.cancelImport.bind(this)}>Cancel</button>}
                 </div>
               </div>
 

@@ -21,8 +21,8 @@ const PreviewCampaignForm = props => {
       <hr />
 
       <div className="box-footer">
-        <button className="btn btn-lg btn-primary pull-left" type="button" onClick={lastPage}>Go back</button>
-        <button className="btn btn-lg btn-success pull-right" type="button" onClick={handleSubmit}>Save as a template</button>
+        <button className="btn btn-lg btn-success pull-left" type="button" onClick={handleSubmit}>Save Template</button>
+        <button className="btn btn-lg btn-primary pull-right" type="button" onClick={lastPage}>Go back</button>
       </div>
 
     </div>

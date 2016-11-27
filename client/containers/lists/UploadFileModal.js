@@ -51,9 +51,7 @@ export default class UploadFileModal extends React.Component {
     return (
       <div>
         {/* This should really be in the ImportSubscribers container...*/}
-        <Button bsSize="large" bsStyle="primary" onClick={this.open.bind(this)}>
-          Import
-        </Button>
+        <button className="btn pull-left btn-lg btn-primary" type="submit" onClick={this.open.bind(this)}>Import</button>
 
         <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
           <Modal.Header closeButton>
@@ -65,8 +63,8 @@ export default class UploadFileModal extends React.Component {
           </Modal.Body>
 
           <Modal.Footer>
-            <Button onClick={this.close.bind(this)}>Cancel</Button>
-            <Button bsStyle="primary" onClick={this.handleSubmit.bind(this)}>Upload</Button>
+            <button className="btn pull-left btn-lg btn-success" type="submit" onClick={this.handleSubmit.bind(this)}>Upload</button>
+            <button className="btn pull-right btn-lg btn-danger" type="submit" onClick={this.close.bind(this)}>Cancel</button>
           </Modal.Footer>
         </Modal>
       </div>

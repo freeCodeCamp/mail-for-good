@@ -132,7 +132,7 @@ export default class CampaignView extends Component {
 
               <PreviewCampaignForm campaignView={this.state.thisCampaign} />
 
-              <button className="btn btn-primary btn-lg" type="button" onClick={this.open}>Send</button>
+              <button className="btn btn-success btn-lg" type="button" onClick={this.open}>Send</button>
 
               <Modal show={this.state.showModal} onHide={this.close}>
                 <Modal.Header closeButton>

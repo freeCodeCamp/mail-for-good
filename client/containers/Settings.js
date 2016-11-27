@@ -124,7 +124,7 @@ export default class Settings extends Component {
 
                     <br/>
                     <div className="box-footer">
-                      <button className="btn btn-primary btn-lg pull-left" type="submit" disabled={pristine || submitting}>Submit</button>
+                      <button className="btn btn-success btn-lg pull-left" type="submit" disabled={pristine || submitting}>Submit</button>
                       <button className="btn btn-danger btn-lg pull-right" type="button" disabled={pristine || submitting} onClick={reset}>Reset</button>
                     </div>
 
