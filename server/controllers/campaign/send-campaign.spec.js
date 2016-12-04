@@ -14,8 +14,11 @@ describe('sendCampaign', () => {
     });
 
     it('shows how many subscribers the campaign will be sent to', () => {
-      const expectedMessage  = 'Your campaign is being sent to 10 subscribers, it should be done in a few seconds.  Your Amazon limit for today is now 190 emails.'
+      let expectedMessage  = 'Your campaign is being sent to 10 subscribers, it should be done in a few seconds.  Your Amazon limit for today is now 190 emails.'
       expect(howLongEmailingWillTake(10, 200, 100).message).to.be.equal(expectedMessage);
+
+      expectedMessage  = 'Your campaign is being sent to 1,000 subscribers, it should be done in a few seconds.  Your Amazon limit for today is now 199,000 emails.'
+      expect(howLongEmailingWillTake(1000, 200000, 100).message).to.be.equal(expectedMessage);
     });
   });
 });
