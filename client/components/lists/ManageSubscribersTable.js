@@ -82,6 +82,10 @@ export default class ManageSubscribersTable extends Component {
       filters.subscribed = rawFilters.subscribed.value;
     }
 
+    if (Object.keys(rawFilters).includes('mostRecentStatus')) {
+      filters.mostRecentStatus = rawFilters.mostRecentStatus.value;
+    }
+
     this.props.onPageChange(this.state.page, this.state.sizePerPage, filters)
   }
 

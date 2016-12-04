@@ -32,6 +32,11 @@ module.exports = (req, res) => {
         where.subscribed = false;
       }
 
+      const statusFilters = ['bounce:permanent', 'bounce:transient', 'bounce:undetermined', 'complaint', 'unconfirmed']
+      if (statusFilters.includes(filters.mostRecentStatus)) {
+        where.mostRecentStatus = filters.mostRecentStatus;
+      }
+
       listsubscriber.findAll({
         where,
         offset: ( offset - 1) * limit,
