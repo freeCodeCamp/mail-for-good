@@ -5,6 +5,8 @@ module.exports = (req, res) => {
   // Find all subscribers belonging to a list
   const userId = req.user.id;
   const listId = req.query.listId;
+  const offset = req.query.offset;
+  const limit = req.query.limit;
 
   list.findOne({
     where: {
@@ -23,6 +25,9 @@ module.exports = (req, res) => {
     } else {
       listsubscriber.findAll({
         where: { listId },
+        offset: ( offset - 1) * limit,
+        limit,
+        order: [ ['id', 'ASC'] ],
         attributes: ['id', 'email', 'subscribed', 'createdAt', 'updatedAt', 'mostRecentStatus'],
         raw: true
       }).then(instancesArray => {

@@ -44,12 +44,12 @@ export function completeDeleteLists(lists) {
   return { type: COMPLETE_DELETE_LISTS, lists };
 }
 
-export function getListSubscribers(listId) {
+export function getListSubscribers(listId, offset=1, limit=10) {
   return dispatch => {
     dispatch(requestGetListSubscribers(listId));
 
     axios.get(API_LISTSUBSCRIBERS_ENDPOINT, {
-      params: { listId }
+      params: { listId, offset, limit }
     })
       .then(response => {
         dispatch(completeGetListSubscribers(response.data.subscribers));

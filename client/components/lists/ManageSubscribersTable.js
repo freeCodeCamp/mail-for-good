@@ -8,18 +8,23 @@ export default class ManageSubscribersTable extends Component {
   static propTypes = {
     data: PropTypes.array.isRequired,
     deleteRows: PropTypes.func.isRequired,
+    onPageChange: PropTypes.func.isRequired
   }
 
   constructor(props) {
     super(props);
 
     this.state = {
-      data: this.props.data || []
+      data: this.props.data || [],
+      currentPage: 1
     };
 
     this.options = {
       clearSearch: true,
       noDataText: 'This list has no subscribers',
+      onPageChange: this.onPageChange.bind(this),
+      sizePerPage: 10,
+      page: this.state.currentPage,
       onRowClick: () => {
       },
       afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
@@ -43,7 +48,6 @@ export default class ManageSubscribersTable extends Component {
   formatFieldSubscribed(subscribed) {
     // this is a placeholder for now, since we are not yet handling
     // user subscription state
-    console.log(subscribed);
     if (subscribed) {
       return '<span class="label label-success">Subscribed</span>';
     } else {
@@ -69,9 +73,19 @@ export default class ManageSubscribersTable extends Component {
     }
   }
 
+  onPageChange(page, sizePerPage) {
+    this.props.onPageChange(page, sizePerPage);
+
+    this.setState({
+      currentPage: page
+    });
+  }
+
   render() {
     return (
       <BootstrapTable data={this.state.data}
+                      remote={true}
+                      fetchInfo={ { dataTotalSize: 500 } }
                       options={this.options}
                       deleteRow={true}
                       selectRow={this.selectRowProp}

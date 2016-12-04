@@ -28,11 +28,15 @@ export default class ManageListSubscribers extends Component {
   }
 
   componentDidMount() {
-    this.props.getListSubscribers(this.props.params.listId, this.props.subscribers);
+    this.props.getListSubscribers(this.props.params.listId);
   }
 
  deleteRows(listSubscribers) { // listSubscriberIds [...Numbers(ids)]
     this.props.deleteListSubscribers(listSubscribers, this.props.subscribers);
+  }
+
+  onPageChange(page, sizePerPage) {
+    this.props.getListSubscribers(this.props.params.listId, page, sizePerPage)
   }
 
   render() {
@@ -53,7 +57,7 @@ export default class ManageListSubscribers extends Component {
 
             <div className="box-body">
               {!!this.props.subscribers.length &&
-                <ManageSubscribersTable data={this.props.subscribers} deleteRows={this.deleteRows.bind(this)} />
+                <ManageSubscribersTable onPageChange={this.onPageChange.bind(this)} data={this.props.subscribers} deleteRows={this.deleteRows.bind(this)} />
               }
               {this.props.isGetting && <div className="overlay">
                 <FontAwesome name="refresh" spin/>
