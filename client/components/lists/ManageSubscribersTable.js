@@ -153,6 +153,4 @@ export default class ManageSubscribersTable extends Component {
       </BootstrapTable>
     );
   }
-
-
 }

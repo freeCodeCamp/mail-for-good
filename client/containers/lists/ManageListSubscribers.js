@@ -32,7 +32,7 @@ export default class ManageListSubscribers extends Component {
     this.props.getListSubscribers(this.props.params.listId);
   }
 
- deleteRows(listSubscribers) { // listSubscriberIds [...Numbers(ids)]
+  deleteRows(listSubscribers) { // listSubscriberIds [...Numbers(ids)]
     this.props.deleteListSubscribers(listSubscribers, this.props.subscribers);
   }
 
@@ -41,7 +41,6 @@ export default class ManageListSubscribers extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div>
         <div className="content-header">
@@ -57,14 +56,12 @@ export default class ManageListSubscribers extends Component {
             </div>
 
             <div className="box-body">
-              {!!this.props.subscribers.length &&
-                <ManageSubscribersTable
-                  onPageChange={this.onPageChange.bind(this)}
-                  data={this.props.subscribers}
-                  deleteRows={this.deleteRows.bind(this)}
-                  total={this.props.totalListSubscribers}
-                />
-              }
+              <ManageSubscribersTable
+                onPageChange={this.onPageChange.bind(this)}
+                data={this.props.subscribers}
+                deleteRows={this.deleteRows.bind(this)}
+                total={this.props.totalListSubscribers}
+              />
               {this.props.isGetting && <div className="overlay">
                 <FontAwesome name="refresh" spin/>
               </div>}
