@@ -16,21 +16,8 @@ export default class ManageSubscribersTable extends Component {
 
     this.state = {
       data: this.props.data || [],
-      currentPage: 1
-    };
-
-    this.options = {
-      clearSearch: true,
-      noDataText: 'This list has no subscribers',
-      onPageChange: this.onPageChange.bind(this),
-      sizePerPage: 10,
-      page: this.state.currentPage,
-      onRowClick: () => {
-      },
-      afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
-        this.props.deleteRows(rows);
-      },
-      handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
+      currentPage: 1,
+      sizePerPage: 10
     };
 
     this.selectRowProp = {
@@ -81,12 +68,34 @@ export default class ManageSubscribersTable extends Component {
     });
   }
 
+  onSizePerPageList(sizePerPage) {
+    this.props.onPageChange(this.state.page, sizePerPage);
+
+    this.setState({
+      sizePerPage
+    });
+  }
+
   render() {
     return (
       <BootstrapTable data={this.state.data}
                       remote={true}
                       fetchInfo={ { dataTotalSize: this.props.total } }
-                      options={this.options}
+                      options={{
+                        clearSearch: true,
+                        noDataText: 'This list has no subscribers',
+                        onPageChange: this.onPageChange.bind(this),
+                        onSizePerPageList: this.onSizePerPageList.bind(this),
+                        sizePerPage: this.state.sizePerPage,
+                        sizePerPageList: [ 10, 25, 50, 100 ],
+                        page: this.state.currentPage,
+                        onRowClick: () => {
+                        },
+                        afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
+                          this.props.deleteRows(rows);
+                        },
+                        handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
+                      }}
                       deleteRow={true}
                       selectRow={this.selectRowProp}
                       pagination={true}
