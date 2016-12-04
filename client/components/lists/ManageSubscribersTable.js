@@ -89,6 +89,10 @@ export default class ManageSubscribersTable extends Component {
     this.props.onPageChange(this.state.page, this.state.sizePerPage, filters)
   }
 
+  onExportToCSV() {
+    window.location = `${window.location.origin}/api/list/subscribers/csv?listId=${this.props.listId}`;
+  }
+
   render() {
     return (
       <BootstrapTable data={this.state.data}
@@ -97,6 +101,7 @@ export default class ManageSubscribersTable extends Component {
                       options={{
                         clearSearch: true,
                         noDataText: 'This list has no subscribers',
+                        onExportToCSV: this.onExportToCSV.bind(this),
                         onFilterChange: this.onFilterChange.bind(this),
                         onPageChange: this.onPageChange.bind(this),
                         onSizePerPageList: this.onSizePerPageList.bind(this),

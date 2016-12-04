@@ -57,6 +57,7 @@ export default class ManageListSubscribers extends Component {
 
             <div className="box-body">
               <ManageSubscribersTable
+                listId={this.props.params.listId}
                 onPageChange={this.onPageChange.bind(this)}
                 data={this.props.subscribers}
                 deleteRows={this.deleteRows.bind(this)}

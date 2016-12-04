@@ -20,6 +20,7 @@ const deleteTemplates = require('../controllers/campaign/delete-templates');
 // Lists
 const getLists = require('../controllers/list/get-lists');
 const getListSubscribers = require('../controllers/list/get-list-subscribers');
+const exportListSubscribersCSV = require('../controllers/list/export-list-subscribers-csv');
 const addSubscribers = require('../controllers/list/add-subscribers');
 const importCSV = require('../controllers/list/import-csv');
 const subscribeToList = require('../controllers/list/subscribe');
@@ -103,6 +104,10 @@ module.exports = (app, passport, io) => {
   app.get('/api/list/subscribe', (req, res) => {
     subscribeToList(req, res);
   });
+  // temp route for testing csv export of list subscribers
+  app.get('/api/list/subscribers/csv', apiIsAuth, (req, res) => {
+    exportListSubscribersCSV(req, res);
+  })
 
   // Post new subscribers
   app.post('/api/list/add/subscribers', apiIsAuth, (req, res) => {
