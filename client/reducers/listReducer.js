@@ -18,7 +18,8 @@ export function manageListSubscribers(state = initialState.manageListSubscribers
       return {
         ...state,
         isGetting: false,
-        subscribers: action.subscribers
+        subscribers: action.subscribers,
+        totalListSubscribers: action.totalListSubscribers
       };
     }
     case COMPLETE_DELETE_LIST_SUBSCRIBERS: {

@@ -8,6 +8,7 @@ import { deleteListSubscribers, getListSubscribers } from '../../actions/listAct
 function mapStateToProps(state) {
   return {
     subscribers: state.manageListSubscribers.subscribers,
+    totalListSubscribers: state.manageListSubscribers.totalListSubscribers,
     isGetting: state.manageListSubscribers.isGetting
   };
 }
@@ -57,7 +58,12 @@ export default class ManageListSubscribers extends Component {
 
             <div className="box-body">
               {!!this.props.subscribers.length &&
-                <ManageSubscribersTable onPageChange={this.onPageChange.bind(this)} data={this.props.subscribers} deleteRows={this.deleteRows.bind(this)} />
+                <ManageSubscribersTable
+                  onPageChange={this.onPageChange.bind(this)}
+                  data={this.props.subscribers}
+                  deleteRows={this.deleteRows.bind(this)}
+                  total={this.props.totalListSubscribers}
+                />
               }
               {this.props.isGetting && <div className="overlay">
                 <FontAwesome name="refresh" spin/>

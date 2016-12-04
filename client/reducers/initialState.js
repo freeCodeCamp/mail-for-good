@@ -30,7 +30,8 @@ const initialState = {
   manageListSubscribers: {
     listId: null,
     subscribers: [],
-    isGetting: false
+    isGetting: false,
+    totalListSubscribers: 0
   },
   settings: {
     loading: false

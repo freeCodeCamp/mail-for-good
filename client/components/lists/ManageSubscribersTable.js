@@ -85,7 +85,7 @@ export default class ManageSubscribersTable extends Component {
     return (
       <BootstrapTable data={this.state.data}
                       remote={true}
-                      fetchInfo={ { dataTotalSize: 500 } }
+                      fetchInfo={ { dataTotalSize: this.props.total } }
                       options={this.options}
                       deleteRow={true}
                       selectRow={this.selectRowProp}

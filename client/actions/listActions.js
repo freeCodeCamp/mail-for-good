@@ -32,8 +32,8 @@ export function requestGetListSubscribers(listId) {
   return { type: REQUEST_GET_LIST_SUBSCRIBERS, listId };
 }
 
-export function completeGetListSubscribers(subscribers) {
-  return { type: COMPLETE_GET_LIST_SUBSCRIBERS, subscribers };
+export function completeGetListSubscribers(subscribers, totalListSubscribers ) {
+  return { type: COMPLETE_GET_LIST_SUBSCRIBERS, subscribers, totalListSubscribers };
 }
 
 export function completeDeleteListSubscribers(subscribers) {
@@ -52,7 +52,7 @@ export function getListSubscribers(listId, offset=1, limit=10) {
       params: { listId, offset, limit }
     })
       .then(response => {
-        dispatch(completeGetListSubscribers(response.data.subscribers));
+        dispatch(completeGetListSubscribers(response.data.subscribers, response.data.total));
       })
       .catch(response => {
         dispatch(completeGetListSubscribers([]));

@@ -31,7 +31,11 @@ module.exports = (req, res) => {
         attributes: ['id', 'email', 'subscribed', 'createdAt', 'updatedAt', 'mostRecentStatus'],
         raw: true
       }).then(instancesArray => {
-        res.send({ subscribers: instancesArray });
+        listsubscriber.count({
+          where: { listId }
+        }).then(total => {
+          res.send({ subscribers: instancesArray, total });
+        })
       });
     }
   });
