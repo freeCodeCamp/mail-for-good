@@ -27,8 +27,7 @@ const CreateCampaignForm = props => {
     }
   };
 
-  const applyForm = () => {
-    const applyTemplateValue = document.getElementById('templates_input').value; // Get template name
+  const applyForm = (applyTemplateValue) => {
     const foundTemplate = props.templates.find(x => x.name === applyTemplateValue);
     applyTemplate(foundTemplate);
   };
@@ -36,10 +35,8 @@ const CreateCampaignForm = props => {
   return (
     <div>
       <h3>Apply template</h3>
-      <Combobox id="templates" data={templates} suggest={true} filter="contains" />
+      <Combobox id="templates" data={templates} suggest={true} onSelect={value => applyForm(value)} filter="contains" />
       <br/>
-      <button type="button" onClick={applyForm} className="btn btn-success btn-lg">Apply</button>
-
 
       <form onSubmit={resetFormAndSubmit}>
         <h3>List and region</h3>
