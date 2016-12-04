@@ -96,7 +96,7 @@ module.exports = (app, passport, io) => {
     getLists(req, res);
   });
   // Get all subscribers of a list
-  app.get('/api/list/subscribers', apiIsAuth, (req, res) => {
+  app.get('/api/list/subscribers', apiIsAuth, parseJson, (req, res) => {
     getListSubscribers(req, res);
   });
   // Get a single email using the list subscription key

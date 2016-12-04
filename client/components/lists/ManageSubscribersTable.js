@@ -76,6 +76,15 @@ export default class ManageSubscribersTable extends Component {
     });
   }
 
+  onFilterChange(rawFilters) {
+    let filters = {};
+    if (Object.keys(rawFilters).includes('subscribed')) {
+      filters.subscribed = rawFilters.subscribed.value;
+    }
+
+    this.props.onPageChange(this.state.page, this.state.sizePerPage, filters)
+  }
+
   render() {
     return (
       <BootstrapTable data={this.state.data}
@@ -84,6 +93,7 @@ export default class ManageSubscribersTable extends Component {
                       options={{
                         clearSearch: true,
                         noDataText: 'This list has no subscribers',
+                        onFilterChange: this.onFilterChange.bind(this),
                         onPageChange: this.onPageChange.bind(this),
                         onSizePerPageList: this.onSizePerPageList.bind(this),
                         sizePerPage: this.state.sizePerPage,
@@ -106,12 +116,11 @@ export default class ManageSubscribersTable extends Component {
 
         <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
         <TableHeaderColumn dataField="email">Email</TableHeaderColumn>
-        <TableHeaderColumn dataField="createdAt" dataFormat={this.formatDate} dataSort={true} width="150">Created</TableHeaderColumn>
-        <TableHeaderColumn dataField="updatedAt" dataFormat={this.formatDate} dataSort={true} width="150">Updated</TableHeaderColumn>
+        <TableHeaderColumn dataField="createdAt" dataFormat={this.formatDate} width="150">Created</TableHeaderColumn>
+        <TableHeaderColumn dataField="updatedAt" dataFormat={this.formatDate} width="150">Updated</TableHeaderColumn>
         <TableHeaderColumn
           dataField="mostRecentStatus"
           dataFormat={this.formatStatus}
-          dataSort={true}
           dataAlign="center"
           width="150"
           filter={{
@@ -129,7 +138,6 @@ export default class ManageSubscribersTable extends Component {
           dataFormat={this.formatFieldSubscribed}
           width="150"
           dataAlign="center"
-          dataSort={true}
           filter={{
             type: 'SelectFilter',
             options: {

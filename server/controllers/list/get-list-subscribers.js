@@ -5,8 +5,10 @@ module.exports = (req, res) => {
   // Find all subscribers belonging to a list
   const userId = req.user.id;
   const listId = req.query.listId;
+
   const offset = req.query.offset;
   const limit = req.query.limit;
+  const filters = JSON.parse(req.query.filters) || {};
 
   list.findOne({
     where: {
@@ -23,8 +25,15 @@ module.exports = (req, res) => {
         });
       return;
     } else {
+      let where = { listId };
+      if (filters.subscribed === 'true') {
+        where.subscribed = true;
+      } else if (filters.subscribed === 'false') {
+        where.subscribed = false;
+      }
+
       listsubscriber.findAll({
-        where: { listId },
+        where,
         offset: ( offset - 1) * limit,
         limit,
         order: [ ['id', 'ASC'] ],
@@ -32,7 +41,7 @@ module.exports = (req, res) => {
         raw: true
       }).then(instancesArray => {
         listsubscriber.count({
-          where: { listId }
+          where
         }).then(total => {
           res.send({ subscribers: instancesArray, total });
         })

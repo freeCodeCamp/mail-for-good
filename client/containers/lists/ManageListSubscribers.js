@@ -36,8 +36,8 @@ export default class ManageListSubscribers extends Component {
     this.props.deleteListSubscribers(listSubscribers, this.props.subscribers);
   }
 
-  onPageChange(page, sizePerPage) {
-    this.props.getListSubscribers(this.props.params.listId, page, sizePerPage)
+  onPageChange(page, sizePerPage, filters={}) {
+    this.props.getListSubscribers(this.props.params.listId, page, sizePerPage, filters)
   }
 
   render() {
