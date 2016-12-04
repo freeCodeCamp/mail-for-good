@@ -131,6 +131,7 @@
     "react-fontawesome": "^1.2.0",
     "redux-immutable-state-invariant": "1.2.3",
     "replace": "0.3.0",
+    "rewire": "^2.5.2",
     "rimraf": "2.5.4",
     "sass-loader": "4.0.0",
     "sequelize-cli": "^2.4.0",

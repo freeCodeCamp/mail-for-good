@@ -162,10 +162,12 @@ module.exports = (req, res, io) => {
     });
   }
 
-  function howLongEmailingWillTake(totalListSubscribers, AvailableToday, MaxSendRate) {
+};
+
+function howLongEmailingWillTake(totalListSubscribers, AvailableToday, MaxSendRate) {
     const timeTaken = (totalListSubscribers / MaxSendRate / 60);
     const emailsLeftAfterSend = AvailableToday - totalListSubscribers;
-    let formattedMessage = 'Your email is being sent, it should be done ';
+    let formattedMessage = `Your campaign is being sent to ${totalListSubscribers} subscribers, it should be done `;
 
     const newTime = moment(new Date(new Date().getTime() + timeTaken * 60000));
     const timeTo = moment(new Date).to(newTime);
@@ -175,5 +177,3 @@ module.exports = (req, res, io) => {
 
     return { message: formattedMessage };
   }
-
-};
