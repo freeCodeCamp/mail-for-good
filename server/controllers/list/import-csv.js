@@ -2,6 +2,7 @@ const path = require('path');
 const csv = require('csv');
 const fs = require('fs');
 const cargo = require('async/cargo');
+const _ = require('lodash');
 
 const db = require('../../models');
 
@@ -34,6 +35,7 @@ module.exports = (req, res, io) => {
 
   const listName = req.body.list; // Name of the list from the user
   const userPrimaryKey = req.user.id; // User's ID stored in session
+  const additionalFields = _.without(JSON.parse(req.body.headers), 'email');  // e.g. name, location, sex, (excluding email header)
 
   function validateEmail(email) {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -50,6 +52,9 @@ module.exports = (req, res, io) => {
     where: {
       name: listName,
       userId: userPrimaryKey
+    },
+    defaults: {
+      additionalFields
     }
   }).then(listInstance => {
     if (listInstance) {
