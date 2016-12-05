@@ -15,9 +15,11 @@ module.exports = (req, res) => {
       userId,
       id: listId
     },
-    attributes: ['name', 'createdAt', 'updatedAt'],
+    attributes: ['name', 'createdAt', 'updatedAt', 'additionalFields'],
     raw: true
   }).then(instancesArray => {
+    const additionalFields = instancesArray.additionalFields;
+
     if (!instancesArray) {
       res.status(401)  //??
         .send({
@@ -42,13 +44,13 @@ module.exports = (req, res) => {
         offset: ( offset - 1) * limit,
         limit,
         order: [ ['id', 'ASC'] ],
-        attributes: ['id', 'email', 'subscribed', 'createdAt', 'updatedAt', 'mostRecentStatus'],
+        attributes: ['id', 'email', 'subscribed', 'createdAt', 'updatedAt', 'mostRecentStatus', 'additionalData'],
         raw: true
       }).then(instancesArray => {
         listsubscriber.count({
           where
         }).then(total => {
-          res.send({ subscribers: instancesArray, total });
+          res.send({ subscribers: instancesArray, total, additionalFields });
         })
       });
     }
