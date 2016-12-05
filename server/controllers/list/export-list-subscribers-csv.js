@@ -6,6 +6,8 @@ module.exports = (req, res) => {
   const userId = req.user.id;
   const listId = req.query.listId;
 
+  const filters = JSON.parse(req.query.filters) || {};
+
   List.findOne({
     where: {
       userId,
@@ -29,9 +31,21 @@ module.exports = (req, res) => {
 
       sendSubscribers();
 
-      function sendSubscribers(offset=0, limit=10000) {  // limit is how many rows to
-        ListSubscriber.findAll({                         // hold in memory at once
-          where: { listId },
+      function sendSubscribers(offset=0, limit=10000) {  // limit is how many rows to hold in memory
+        // Construct filter query
+        let where = { listId };
+        if (filters.subscribed === 'true') {
+          where.subscribed = true;
+        } else if (filters.subscribed === 'false') {
+          where.subscribed = false;
+        }
+        const statusFilters = ['bounce:permanent', 'bounce:transient', 'bounce:undetermined', 'complaint', 'unconfirmed']
+        if (statusFilters.includes(filters.mostRecentStatus)) {
+          where.mostRecentStatus = filters.mostRecentStatus;
+        }
+
+        ListSubscriber.findAll({
+          where,
           offset,
           limit,
           attributes: ['email', 'subscribed', 'mostRecentStatus']

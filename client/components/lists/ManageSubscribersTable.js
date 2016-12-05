@@ -14,6 +14,7 @@ export default class ManageSubscribersTable extends Component {
   constructor(props) {
     super(props);
 
+    this.filters = {};
     this.state = {
       data: this.props.data || [],
       currentPage: 1,
@@ -85,12 +86,14 @@ export default class ManageSubscribersTable extends Component {
     if (Object.keys(rawFilters).includes('mostRecentStatus')) {
       filters.mostRecentStatus = rawFilters.mostRecentStatus.value;
     }
+    this.filters = filters;
 
     this.props.onPageChange(this.state.page, this.state.sizePerPage, filters)
   }
 
   onExportToCSV() {
-    window.location = `${window.location.origin}/api/list/subscribers/csv?listId=${this.props.listId}`;
+    let downloadUrl = `${window.location.origin}/api/list/subscribers/csv?listId=${this.props.listId}&filters=${JSON.stringify(this.filters)}`;
+    window.location = encodeURI(downloadUrl);
   }
 
   render() {
