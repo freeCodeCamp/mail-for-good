@@ -27,7 +27,7 @@ module.exports = (req, res) => {
       res.setHeader('Content-type', 'text/csv');
 
       // CSV file header row
-      res.write('email,subscribed,mostrecentstatus');
+      res.write('email,subscribed,mostrecentstatus\n');
 
       sendSubscribers();
 
