@@ -99,7 +99,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
       updatedCampaignInfo.emailBody = insertUnsubscribeLink(updatedCampaignInfo.emailBody, task.unsubscribeKey, campaignInfo.type, whiteLabelUrl);
 
-      updatedCampaignInfo.emailBody = mailMerge(task, campaignInfo);
+      updatedCampaignInfo.emailBody = mailMerge(task, updatedCampaignInfo);
 
       const emailFormat = AmazonEmail(task, updatedCampaignInfo);
 
