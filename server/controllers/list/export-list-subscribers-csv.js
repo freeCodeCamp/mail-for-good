@@ -20,25 +20,40 @@ module.exports = (req, res) => {
           message: 'not authorised to view list or list does not exist'
         });
     } else {
+      // Request headers
       res.setHeader('Content-disposition', 'attachment; filename=listsubscribers.csv');
       res.setHeader('Content-type', 'text/csv');
+
+      // CSV file header row
       res.write('email,subscribed,mostrecentstatus');
 
       sendSubscribers();
 
-      function sendSubscribers(offset=0, limit=5000) {
-        ListSubscriber.findAll({
+      function sendSubscribers(offset=0, limit=10000) {  // limit is how many rows to
+        ListSubscriber.findAll({                         // hold in memory at once
           where: { listId },
           offset,
           limit,
           attributes: ['email', 'subscribed', 'mostRecentStatus']
         }).then(listSubscribers => {
           if (listSubscribers.length) {
+            let chunk = '';
+
+            // Build csv rows from the data
             listSubscribers.forEach(listSubscriber => {
-              const data = listSubscriber.dataValues;
-              res.write(`${data.email},${data.subscribed},${data.mostRecentStatus}\n`);
-            })
-            sendSubscribers(offset + limit)
+              const result = listSubscriber.dataValues;
+              chunk += `${result.email},${result.subscribed},${result.mostRecentStatus}\n`;
+            });
+
+            // Make sure that the response buffer is empty before fetching and sending more
+            // rows. Otherwise we will run out of memory by filling up the buffer
+            if (res.write(chunk)) {
+              sendSubscribers(offset + limit);
+            } else {
+              res.once('drain', () => {
+                sendSubscribers(offset + limit);
+              })
+            }
           } else {
             res.end();
             return;
