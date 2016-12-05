@@ -5,6 +5,7 @@ const backoff = require('backoff');
 const wrapLink = require('./analytics').wrapLink;
 const insertUnsubscribeLink = require('./analytics').insertUnsubscribeLink;
 const insertTrackingPixel = require('./analytics').insertTrackingPixel;
+const mailMerge = require('./mail-merge');
 
 const db = require('../../../../models');
 const AmazonEmail = require('./amazon');
@@ -97,6 +98,8 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
       updatedCampaignInfo.emailBody = insertTrackingPixel(updatedCampaignInfo.emailBody, newCampaignAnalyticsOpen.dataValues.trackingId, campaignInfo.type);
 
       updatedCampaignInfo.emailBody = insertUnsubscribeLink(updatedCampaignInfo.emailBody, task.unsubscribeKey, campaignInfo.type, whiteLabelUrl);
+
+      updatedCampaignInfo.emailBody = mailMerge(task, campaignInfo);
 
       const emailFormat = AmazonEmail(task, updatedCampaignInfo);
 
