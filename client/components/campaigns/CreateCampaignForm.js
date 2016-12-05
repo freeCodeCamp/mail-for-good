@@ -62,8 +62,10 @@ const CreateCampaignForm = props => {
 
         <br/>
         <div className="box-footer">
-          <button className="btn btn-success btn-lg pull-left" type="submit" disabled={pristine || submitting}>Next Step</button>
-          <button className="btn btn-danger btn-lg pull-right" type="button" disabled={pristine || submitting} onClick={reset}>Reset</button>
+          <div className="btn-group">
+            <button className="btn btn-success btn-lg" type="submit" disabled={pristine || submitting}>Next Step</button>
+            <button className="btn btn-danger btn-lg" type="button" disabled={pristine || submitting} onClick={reset}>Reset</button>
+          </div>
         </div>
       </form>
     </div>
