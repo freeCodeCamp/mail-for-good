@@ -23,7 +23,7 @@ module.exports = (req, res, io) => {
   /*
         Outstanding issues:
         TODO: TSV & other files are not accounted for. The current method only works with CSV files. There's also no current validation of CSV files in terms of both the information within and the actual file type.
-        TODO: Currently, only emails are stored from the header/email labeled 'email'. Everything else is ignored. This should be changed to store other fields.
+        TODO: Validate additional fields
     */
 
   /*
@@ -139,9 +139,11 @@ module.exports = (req, res, io) => {
         callback();
       } else {
         // Add fields to row
-        row['listId'] = listId;
-
-        bufferArray.push(row);
+        bufferArray.push({
+          listId,
+          email: row.email,
+          additionalData: _.omit(row, 'email')
+        });
 
         if (bufferArray.length >= bufferLength) {
           // Check that the cargo process isn't overloaded. If it is (length > bufferLength * 3)
