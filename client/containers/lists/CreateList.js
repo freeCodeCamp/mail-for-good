@@ -63,7 +63,7 @@ export default class CreateList extends Component {
       this.props.submitCSV(file, headers, title);
       this.setState({ title: '' });
       this.props.notify({
-        message: 'Your CSV is being uploaded',
+        message: 'Uploaded initiated - check notifications for progress',
         colour: 'green'
       });
     }

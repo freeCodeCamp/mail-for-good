@@ -108,7 +108,7 @@ export default class ImportCSV extends Component {
 
                 <div className="box box-primary">
                   <div className="box-header with-border">
-                    <h3 className="box-title">Your CSV file is uploading ...</h3>
+                    <h3 className="box-title">Initiating upload...</h3>
 
                     <div className="progress">
                       <div style={{ width: `${this.props.upload}%` }} className="progress-bar progress-bar-aqua" role="progressbar" aria-valuenow={this.props.upload} aria-valuemin="0" aria-valuemax="100">
