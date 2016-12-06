@@ -157,7 +157,6 @@ module.exports = (req, res, io) => {
       generator.next(result.dataValues.id);
       return null;
     }).catch(err => {
-      console.log(err);
       res.status(500).send(err);
     });
   }

@@ -1,0 +1,97 @@
+const AWS = require('aws-sdk');
+const db = require('../../../../models');
+const AmazonEmail = require('./amazon');
+
+module.exports = (req, res) => {
+
+  const { testEmail, campaignId } = req.body;
+  const userId = req.user.id;
+
+  let campaign = {}; // eslint-disable-line
+  let amazonSettings = {}; // eslint-disable-line
+
+  const campaignBelongsToUser = new Promise((resolve, reject) => {
+    return db.campaign.findOne({
+      where: {
+        id: campaignId,
+        userId: userId
+      }
+    }).then(campaignInstance => {
+      if (!campaignInstance) {
+        reject();
+        res.status(401).send();
+      } else {
+        const campaignObject = campaignInstance.get({ plain:true });
+        const listId = campaignObject.listId;
+        const { fromName, fromEmail, emailSubject, emailBody, type, name } = campaignObject;
+
+        campaign = { listId, fromName, fromEmail, emailSubject, emailBody, campaignId, type, name };
+        resolve();
+      }
+    }).catch(err => {
+      reject();
+      throw err;
+    });
+  });
+
+  const getAmazonKeysAndRegion = new Promise((resolve, reject) => {
+    return db.setting.findOne({
+      where: {
+        userId: userId
+      }
+    }).then(settingInstance => {
+      if (!settingInstance) {
+        // This should never happen as settings are created on account creation
+        reject();
+        res.status(500).send();
+      } else {
+        const settingObject = settingInstance.get({ plain:true });
+        const {
+          amazonSimpleEmailServiceAccessKey: accessKey,
+          amazonSimpleEmailServiceSecretKey: secretKey,
+          region
+        } = settingObject;
+        // If either key is blank, the user needs to set their settings
+        if ((accessKey === '' || secretKey === '' || region === '') && process.env.NODE_ENV === 'production') {
+          res.status(400).send({ message:'Please provide your details for your Amazon account under "Settings".' });
+          reject();
+        } else {
+          // handling of default whitelabel url?
+          amazonSettings = { accessKey, secretKey, region };
+          resolve();
+          return null;
+        }
+      }
+    }).catch(err => {
+      reject();
+      res.status(500).send(err);
+    });
+  });
+
+  Promise.all([campaignBelongsToUser, getAmazonKeysAndRegion])
+    .then(() => {
+      console.log(amazonSettings, campaign);
+      const { accessKey, secretKey, region } = amazonSettings;
+      const isDevMode = process.env.NODE_ENV === 'development' || false;
+
+      const ses = isDevMode
+        ? new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region, endpoint: 'http://localhost:9999' })
+        : new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region });
+
+      const emailFormat = AmazonEmail({ email: testEmail }, campaign);
+
+      ses.sendEmail(emailFormat, err => {
+        if (err)
+          res.status(400).send(err);
+        else
+          res.send();
+      });
+
+    })
+    .catch(err => {
+      res.status(500).send(err);
+      throw err;
+    });
+
+
+};

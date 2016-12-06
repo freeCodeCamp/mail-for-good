@@ -11,6 +11,7 @@ const deleteCampaigns = require('../controllers/campaign/delete-campaigns');
 
 // Send campaign
 const sendCampaign = require('../controllers/campaign/send-campaign');
+const sendTestEmail = require('../controllers/campaign/email/amazon-ses/send-test');
 
 // Templates
 const getTemplates = require('../controllers/campaign/get-templates');
@@ -76,6 +77,10 @@ module.exports = (app, passport, io) => {
   app.post('/api/send', apiIsAuth, parseJson, (req, res) => {
     sendCampaign(req, res, io);
   });
+  // Post to send a test email
+  app.post('/api/test', apiIsAuth, parseJson, (req, res) => {
+    sendTestEmail(req, res);
+  });
 
   /* Templates */
   // Get a list of all templates
@@ -107,7 +112,7 @@ module.exports = (app, passport, io) => {
   // temp route for testing csv export of list subscribers
   app.get('/api/list/subscribers/csv', apiIsAuth, (req, res) => {
     exportListSubscribersCSV(req, res);
-  })
+  });
 
   // Post new subscribers
   app.post('/api/list/add/subscribers', apiIsAuth, (req, res) => {

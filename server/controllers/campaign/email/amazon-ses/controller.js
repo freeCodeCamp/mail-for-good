@@ -60,7 +60,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   let listCalls = 0;
   let processedEmails = 0;
   let isBackingOff = false;
-  let isRunning = false;
+  let isRunning = false; // eslint-disable-line
 
   let ListSubscriberIndexPointer = 0;
 
@@ -95,7 +95,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
       return CampaignAnalyticsOpen.create({
         campaignanalyticId: campaignInfo.campaignAnalyticsId,
         listsubscriberId: task.id
-      })
+      });
     }).then(newCampaignAnalyticsOpen => {
       if (campaignInfo.trackingPixelEnabled) {
         updatedCampaignInfo.emailBody = insertTrackingPixel(updatedCampaignInfo.emailBody, newCampaignAnalyticsOpen.dataValues.trackingId, campaignInfo.type);
@@ -124,11 +124,11 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
             email: task.email
           }).then(() => {
             CampaignAnalytics.findById(campaignInfo.campaignAnalyticsId).then(foundCampaignAnalytics => {
-              foundCampaignAnalytics.increment('totalSentCount').then(result => {
+              foundCampaignAnalytics.increment('totalSentCount').then(() => {
                 done(); // Accept new email from pool
                 processedEmails++;
-              })
-            })
+              });
+            });
           });
         }
       });
@@ -223,7 +223,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
           ListSubscriberIndexPointer++;
         }
       } else {
-        console.timeEnd('sending');
+        console.timeEnd('sending'); // eslint-disable-line
         generator.next(null);
         clearInterval(pushByRateLimitInterval);
       }
@@ -245,7 +245,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   };
 
   function *startSending() {
-    console.time('sending');
+    console.time('sending'); // eslint-disable-line
     ListSubscriberIndexPointer = yield getInitialListSubscriberId();
     pushByRateLimit();
   }
