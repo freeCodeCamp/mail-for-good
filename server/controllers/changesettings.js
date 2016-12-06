@@ -13,6 +13,7 @@ module.exports = function(req, res) {
   /*
     NOTE: There's no need to include any response message as the settings are validated client side
     TODO: Need to encrypt these keys
+    TODO: Validate SQS url
  */
 
   // Quick function to create a new object selectProvidedFields that contains keys from settingsToChange whose property was not an empty string (or otherwise falsey value)

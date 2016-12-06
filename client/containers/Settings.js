@@ -80,7 +80,8 @@ export default class Settings extends Component {
         amazonSimpleEmailServiceAccessKey: values.accessKey,
         amazonSimpleEmailServiceSecretKey: values.secretAccessKey,
         region: values.region,
-        whiteLabelUrl: values.whiteLabelUrl
+        whiteLabelUrl: values.whiteLabelUrl,
+        amazonSimpleQueueServiceUrl: values.queueUrl
       };
       changeSettings(formattedFormValues);
       reset();
@@ -89,7 +90,7 @@ export default class Settings extends Component {
         colour: 'green'
       });
     } else {
-      const nameArray = ['accessKey', 'secretAccessKey', 'region', 'whiteLabelUrl'];
+      const nameArray = ['accessKey', 'secretAccessKey', 'region', 'whiteLabelUrl', 'queueUrl'];
       touch(...nameArray);
     }
   }
@@ -119,6 +120,7 @@ export default class Settings extends Component {
 
                     <Field name="accessKey" component={renderField} label="Access Key" type="text" placeholder="Your service access key" />
                     <Field name="secretAccessKey" component={renderField} label="Secret Access Key" type="text" placeholder="Your service secret key" />
+                    <Field name="queueUrl" component={renderField} label="SQS URL" type="text" placeholder="Your Amazon SQS queue URL for email feedback" />
                     <Field name="region" component={renderDropdownList} data={regions} label="Amazon region associated with this email" />
                     <Field name="whiteLabelUrl" component={renderField} label="White Label URL" type="text" placeholder="Your domain" />
 
