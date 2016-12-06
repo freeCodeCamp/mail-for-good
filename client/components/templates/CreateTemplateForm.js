@@ -11,7 +11,17 @@ const CreateTemplateForm = props => {
 
   const { touch, valid, pristine, submitting, nextPage, reset, validationFailed, onEditor, textEditorType, passResetToState } = props;
 
-  const nameArray = ['templateName', 'fromName', 'fromEmail', 'emailSubject', 'emailBody', 'type'];
+  const nameArray = [
+    'templateName',
+    'fromName',
+    'fromEmail',
+    'emailSubject',
+    'emailBody',
+    'type',
+    'trackingPixelEnabled',
+    'trackLinksEnabled',
+    'unsubscribeLinkEnabled'
+  ];
 
   const resetFormAndSubmit = (e) => {
     e.preventDefault();
@@ -34,6 +44,12 @@ const CreateTemplateForm = props => {
       <h3>Campaign details</h3>
       <Field name="fromName" component={renderField} label="From Name" type="text" />
       <Field name="fromEmail" component={renderField} label="From Email" type="email" />
+      <hr/>
+
+      <h3>Analytics</h3>
+      <div><label><Field name="trackingPixelEnabled" component="input" type="checkbox" /> Insert tracking pixel</label></div>
+      <div><label><Field name="trackLinksEnabled" component="input" type="checkbox" /> Track link clickthroughs</label></div>
+      <div><label><Field name="unsubscribeLinkEnabled" component="input" type="checkbox" /> Add unsubscribe link</label></div>
       <hr/>
 
       <h3>Create email</h3>
