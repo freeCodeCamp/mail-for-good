@@ -64,8 +64,8 @@ export default class ManageSubscribersTable extends Component {
     }
   }
 
-  formatAdditionalData(field, row) {
-    return JSON.stringify(field)
+  formatAdditionalData(cell, row, extra) {
+    return eval(`row.${extra}`);
   }
 
   onPageChange(page, sizePerPage) {
@@ -104,6 +104,49 @@ export default class ManageSubscribersTable extends Component {
   }
 
   render() {
+    // create an array of columns and map over them
+    // - need to generate columns at the same time rather than using an inline {this.state.additionalFields.map(...)}
+    // see https://github.com/AllenFang/react-bootstrap-table/issues/410
+
+    let additionalColumns = this.state.additionalFields.map(field => {
+      // dynamically generate additional columns for custom data (stored in data[additionalData][{dataField}].
+      // we use formatExtraData to access the nested values - see https://github.com/AllenFang/react-bootstrap-table/issues/50
+      return <TableHeaderColumn dataField={'additionalData.'+field} dataFormat={this.formatAdditionalData} formatExtraData={'additionalData.'+field}>{field}</TableHeaderColumn>
+    });
+
+    let columns = [
+      <TableHeaderColumn dataField="id" hidden={true}>id</TableHeaderColumn>,
+      <TableHeaderColumn dataField="email">Email</TableHeaderColumn>,
+      <TableHeaderColumn dataField="createdAt" dataFormat={this.formatDate} width="150">Created</TableHeaderColumn>,
+      <TableHeaderColumn dataField="updatedAt" dataFormat={this.formatDate} width="150">Updated</TableHeaderColumn>,
+      <TableHeaderColumn
+        dataField="mostRecentStatus"
+        dataFormat={this.formatStatus}
+        dataAlign="center"
+        width="150"
+        filter={{
+          type: 'SelectFilter',
+          options: {
+            'bounce:permanent': 'Bounce: permanent',
+            'bounce:transient': 'Bounce: transient',
+            'bounce:undetermined': 'Bounce: undetermined',
+            'complaint': 'Complaint',
+            'unconfirmed': 'Unconfirmed'
+          }
+        }}>Feedback</TableHeaderColumn>,
+      <TableHeaderColumn dataField="subscribed"
+                         dataFormat={this.formatFieldSubscribed}
+                         width="150"
+                         dataAlign="center"
+                         filter={{
+                           type: 'SelectFilter',
+                           options: {
+                             'true': 'Subscribed',
+                             'false': 'Unsubscribed'
+                           }
+                         }}>Status</TableHeaderColumn>
+    ].concat(additionalColumns)
+
     return (
       <BootstrapTable data={this.state.data}
                       remote={true}
@@ -131,41 +174,12 @@ export default class ManageSubscribersTable extends Component {
                       hover={true}
                       maintainSelected={true}
                       exportCSV={true}
-                      csvFileName="subscribers">
-
-        <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
-        <TableHeaderColumn dataField="email">Email</TableHeaderColumn>
-        <TableHeaderColumn dataField="createdAt" dataFormat={this.formatDate} width="150">Created</TableHeaderColumn>
-        <TableHeaderColumn dataField="updatedAt" dataFormat={this.formatDate} width="150">Updated</TableHeaderColumn>
-        <TableHeaderColumn dataField="additionalData" dataFormat={this.formatAdditionalData} width="150">Custom</TableHeaderColumn>
-        <TableHeaderColumn
-          dataField="mostRecentStatus"
-          dataFormat={this.formatStatus}
-          dataAlign="center"
-          width="150"
-          filter={{
-            type: 'SelectFilter',
-            options: {
-              'bounce:permanent': 'Bounce: permanent',
-              'bounce:transient': 'Bounce: transient',
-              'bounce:undetermined': 'Bounce: undetermined',
-              'complaint': 'Complaint',
-              'unconfirmed': 'Unconfirmed'
-            }
-          }}>Feedback
-        </TableHeaderColumn>
-        <TableHeaderColumn dataField="subscribed"
-          dataFormat={this.formatFieldSubscribed}
-          width="150"
-          dataAlign="center"
-          filter={{
-            type: 'SelectFilter',
-            options: {
-              'true': 'Subscribed',
-              'false': 'Unsubscribed'
-            }
-          }}>Status
-        </TableHeaderColumn>
+                      csvFileName="subscribers"
+                      keyField="id"
+      >
+        {
+          columns.map(c => { return c })
+        }
       </BootstrapTable>
     );
   }
