@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 
 import UploadFileModal from './UploadFileModal';
 import SubscribersTable from '../../components/lists/SubscribersTable';
