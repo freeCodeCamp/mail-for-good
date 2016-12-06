@@ -123,6 +123,8 @@ export default class CampaignView extends Component {
     }
     const form = { testEmail, campaignId };
     this.props.postTestEmail(JSON.stringify(form));
+    this.props.notify({ message: 'Your test email has been sent', colour: 'green' });
+    this.setState({ testEmail: '' });
   }
 
   handleChange(e) {
