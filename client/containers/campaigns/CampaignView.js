@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 import { Modal, Button } from 'react-bootstrap';
-import { getCampaigns, postSendCampaign } from '../../actions/campaignActions';
+import { getCampaigns, postSendCampaign, postTestEmail } from '../../actions/campaignActions';
 import { notify } from '../../actions/notificationActions';
 import PreviewCampaignForm from '../../components/campaigns/PreviewCampaignForm';
 
@@ -18,20 +18,24 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getCampaigns, postSendCampaign, notify })
+@connect(mapStateToProps, { getCampaigns, postSendCampaign, postTestEmail, notify })
 export default class CampaignView extends Component {
 
   static propTypes = {
+    // actions
+    postSendCampaign: PropTypes.func.isRequired,
+    postTestEmail: PropTypes.func.isRequired,
     getCampaigns: PropTypes.func.isRequired,
+    notify: PropTypes.func.isRequired,
+    // redux
     campaigns: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired,
     sendCampaign: PropTypes.func,
     isPosting: PropTypes.bool.isRequired,
     sendCampaignResponse: PropTypes.string.isRequired,
     sendCampaignStatus: PropTypes.number.isRequired,
-    notify: PropTypes.func.isRequired,
-    params: PropTypes.object.isRequired,
-    postSendCampaign: PropTypes.func.isRequired
+    // route path
+    params: PropTypes.object.isRequired
   }
 
   constructor() {
@@ -39,12 +43,15 @@ export default class CampaignView extends Component {
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.sendTestEmail = this.sendTestEmail.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   state = {
     thisCampaign: {},
     showModal: false,
-    haveShownMessage: false
+    haveShownMessage: false,
+    testEmail: ''
   }
 
   componentWillMount() {
@@ -107,12 +114,29 @@ export default class CampaignView extends Component {
     });
   }
 
+  sendTestEmail() {
+    // Get the test email & campaignId then dispatch to the action controller
+    const { testEmail, thisCampaign: { id: campaignId } } = this.state;
+    if (!testEmail) {
+      this.props.notify({ message: 'Please provide an email' });
+      return;
+    }
+    const form = { testEmail, campaignId };
+    this.props.postTestEmail(JSON.stringify(form));
+  }
+
+  handleChange(e) {
+    this.setState({
+      [e.target.id]: e.target.value
+    });
+  }
+
   render() {
     return (
       <div>
         <div className="content-header">
-          <h1>View your campaign
-            <small>Edit, delete and see stats about this campaign</small>
+          <h1>Your Campaign
+            <small>View and send your campaign</small>
           </h1>
         </div>
 
@@ -131,7 +155,11 @@ export default class CampaignView extends Component {
 
               <PreviewCampaignForm campaignView={this.state.thisCampaign} />
 
-              <button className="btn btn-success btn-lg" type="button" onClick={this.open}>Send</button>
+              <div className="form-inline">
+                <button className="btn btn-success btn-lg" type="button" onClick={this.open}>Send</button>
+                <button style={{ "margin-left": "1rem" }} className="btn btn-info" type="button" onClick={this.sendTestEmail}>Send a test email</button>
+                <input id="testEmail" style={{ "margin-left": "1rem" }} className="form-control" placeholder="Send a test email to:" type="email" value={this.state.testEmail} onChange={this.handleChange} />
+              </div>
 
               <Modal show={this.state.showModal} onHide={this.close}>
                 <Modal.Header closeButton>

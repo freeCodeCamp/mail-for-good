@@ -96,13 +96,10 @@ export default class CreateList extends Component {
               <div className="nav-tabs-custom">
                 <ul className="nav nav-tabs pull-right">
                   <li className="">
-                    <a href="#tab_1-1" data-toggle="tab" aria-expanded="false">Tab 1 (Add email)</a>
-                  </li>
-                  <li>
-                    <a href="#tab_2-2" data-toggle="tab">Tab 2 (Segment list)</a>
+                    <a href="#tab_1-1" data-toggle="tab">Add single email</a>
                   </li>
                   <li className="active">
-                    <a href="#tab_3-2" data-toggle="tab" aria-expanded="true">Import CSV</a>
+                    <a href="#tab_3-2" data-toggle="tab">Import CSV</a>
                   </li>
                   <li className="pull-left header"><i className="fa fa-th"/>
                     Import a list</li>

@@ -6,7 +6,7 @@ import {
   REQUEST_GET_TEMPLATES, COMPLETE_GET_TEMPLATES,
   COMPLETE_DELETE_CAMPAIGNS, COMPLETE_DELETE_TEMPLATES
 } from '../constants/actionTypes';
-import { API_CAMPAIGN_ENDPOINT, API_SEND_CAMPAIGN_ENDPOINT, API_TEMPLATE_ENDPOINT } from '../constants/endpoints';
+import { API_CAMPAIGN_ENDPOINT, API_SEND_CAMPAIGN_ENDPOINT, API_TEMPLATE_ENDPOINT, API_TEST_SEND_CAMPAIGN_ENDPOINT } from '../constants/endpoints';
 
 // Create new campaign
 export function requestPostCreateCampaign() {
@@ -137,6 +137,16 @@ export function postSendCampaign(campaign) {
     };
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(campaign);
+  };
+}
+
+export function postTestEmail(form) {
+  return () => {
+    // This function is very simple and should purely pass a single testEmail and campaignId to the test campaign endpoints
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', API_TEST_SEND_CAMPAIGN_ENDPOINT);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(form);
   };
 }
 
