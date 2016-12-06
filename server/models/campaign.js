@@ -7,7 +7,10 @@ module.exports = function(sequelize, DataTypes) {
     emailSubject: DataTypes.STRING,
     emailBody: DataTypes.TEXT,
     type: DataTypes.STRING,
-    slug: DataTypes.STRING
+    slug: DataTypes.STRING,
+    trackingPixelEnabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+    trackLinksEnabled: { type: DataTypes.BOOLEAN, defaultValue: false },
+    unsubscribeLinkEnabled: { type: DataTypes.BOOLEAN, defaultValue: false }
   }, {
     classMethods: {
       associate: function(models) {

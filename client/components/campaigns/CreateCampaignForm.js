@@ -15,7 +15,7 @@ const CreateCampaignForm = props => {
 
   const lists = props.lists.map(x => x.name);
   const templates = props.templates.map(x => x.name);
-  const nameArray = ['listName', 'campaignName', 'fromName', 'fromEmail', 'emailSubject', 'emailBody', 'type']; // A list of all fields that need to show errors/warnings
+  const nameArray = ['listName', 'campaignName', 'fromName', 'fromEmail', 'emailSubject', 'emailBody', 'type', 'trackingPixelEnabled', 'trackLinksEnabled', 'unsubscribeLinkEnabled']; // A list of all fields that need to show errors/warnings
 
   const resetFormAndSubmit = e => {
     e.preventDefault();
@@ -53,6 +53,12 @@ const CreateCampaignForm = props => {
         <Field name="fromName" component={renderField} label="From Name" type="text" />
         <Field name="fromEmail" component={renderField} label="From Email" type="email" />
 
+        <hr/>
+
+        <h3>Analytics</h3>
+        <div><label><Field name="trackingPixelEnabled" component="input" type="checkbox" /> Insert tracking pixel</label></div>
+        <div><label><Field name="trackLinksEnabled" component="input" type="checkbox" /> Track link clickthroughs</label></div>
+        <div><label><Field name="unsubscribeLinkEnabled" component="input" type="checkbox" /> Add unsubscribe link</label></div>
         <hr/>
 
         <h3>Create email</h3>

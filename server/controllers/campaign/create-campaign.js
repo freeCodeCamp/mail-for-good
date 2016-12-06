@@ -49,6 +49,9 @@ module.exports = (req, res) => {
           emailSubject: req.body.emailSubject,
           emailBody: emailBodyType,
           type: req.body.type,
+          trackingPixelEnabled: req.body.trackingPixelEnabled,
+          trackLinksEnabled: req.body.trackLinksEnabled,
+          unsubscribeLinkEnabled: req.body.unsubscribeLinkEnabled,
           userId: req.user.id,
           listId: valueFromValidation.listId,
           slug: slug(req.body.campaignName)
