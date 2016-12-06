@@ -19,7 +19,8 @@ export function manageListSubscribers(state = initialState.manageListSubscribers
         ...state,
         isGetting: false,
         subscribers: action.subscribers,
-        totalListSubscribers: action.totalListSubscribers
+        totalListSubscribers: action.totalListSubscribers,
+        additionalFields: action.additionalFields
       };
     }
     case COMPLETE_DELETE_LIST_SUBSCRIBERS: {

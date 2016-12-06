@@ -9,7 +9,8 @@ function mapStateToProps(state) {
   return {
     subscribers: state.manageListSubscribers.subscribers,
     totalListSubscribers: state.manageListSubscribers.totalListSubscribers,
-    isGetting: state.manageListSubscribers.isGetting
+    isGetting: state.manageListSubscribers.isGetting,
+    additionalFields: state.manageListSubscribers.additionalFields
   };
 }
 
@@ -61,6 +62,7 @@ export default class ManageListSubscribers extends Component {
                 onPageChange={this.onPageChange.bind(this)}
                 data={this.props.subscribers}
                 deleteRows={this.deleteRows.bind(this)}
+                additionalFields={this.props.additionalFields}
                 total={this.props.totalListSubscribers}
               />
               {this.props.isGetting && <div className="overlay">

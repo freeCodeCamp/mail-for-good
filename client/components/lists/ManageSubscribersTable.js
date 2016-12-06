@@ -8,7 +8,8 @@ export default class ManageSubscribersTable extends Component {
   static propTypes = {
     data: PropTypes.array.isRequired,
     deleteRows: PropTypes.func.isRequired,
-    onPageChange: PropTypes.func.isRequired
+    onPageChange: PropTypes.func.isRequired,
+    additionalFields: PropTypes.array.isRequired
   }
 
   constructor(props) {
@@ -17,6 +18,7 @@ export default class ManageSubscribersTable extends Component {
     this.filters = {};
     this.state = {
       data: this.props.data || [],
+      additionalFields: this.props.additionalFields || [],
       currentPage: 1,
       sizePerPage: 10
     };
@@ -29,7 +31,8 @@ export default class ManageSubscribersTable extends Component {
 
   componentWillReceiveProps(newProps) {
     this.setState({
-      data: newProps.data
+      data: newProps.data,
+      additionalFields: newProps.additionalFields || []
     });
   }
 
@@ -59,6 +62,10 @@ export default class ManageSubscribersTable extends Component {
     } else if (status === 'unconfirmed') {
       return `<span class="label label-default">Unconfirmed</span>`;
     }
+  }
+
+  formatAdditionalData(field, row) {
+    return JSON.stringify(field)
   }
 
   onPageChange(page, sizePerPage) {
@@ -130,6 +137,7 @@ export default class ManageSubscribersTable extends Component {
         <TableHeaderColumn dataField="email">Email</TableHeaderColumn>
         <TableHeaderColumn dataField="createdAt" dataFormat={this.formatDate} width="150">Created</TableHeaderColumn>
         <TableHeaderColumn dataField="updatedAt" dataFormat={this.formatDate} width="150">Updated</TableHeaderColumn>
+        <TableHeaderColumn dataField="additionalData" dataFormat={this.formatAdditionalData} width="150">Custom</TableHeaderColumn>
         <TableHeaderColumn
           dataField="mostRecentStatus"
           dataFormat={this.formatStatus}

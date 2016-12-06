@@ -31,6 +31,7 @@ const initialState = {
     listId: null,
     subscribers: [],
     isGetting: false,
+    additionalFields: [],
     totalListSubscribers: 0
   },
   settings: {
