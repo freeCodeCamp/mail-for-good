@@ -24,7 +24,18 @@ module.exports = (req, res) => {
       }
     ],
     attributes: [
-      'name', 'fromName', 'fromEmail', 'emailSubject', 'emailBody', 'createdAt', 'updatedAt', 'id', 'slug'
+      'name',
+      'fromName',
+      'fromEmail',
+      'emailSubject',
+      'emailBody',
+      'createdAt',
+      'updatedAt',
+      'id',
+      'slug',
+      'trackingPixelEnabled',
+      'trackLinksEnabled',
+      'unsubscribeLinkEnabled'
     ],
     raw: true
   }).then(instancesArray => {

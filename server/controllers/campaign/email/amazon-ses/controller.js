@@ -88,16 +88,22 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
       campaignanalyticId: campaignInfo.campaignAnalyticsId,  // consider refactoring these?
       listsubscriberId: task.id
     }).then(newCampaignAnalyticsLink => {
-      updatedCampaignInfo.emailBody = wrapLink(campaignInfo.emailBody, newCampaignAnalyticsLink.dataValues.trackingId, campaignInfo.type, whiteLabelUrl);
+      if (campaignInfo.trackLinksEnabled) {
+        updatedCampaignInfo.emailBody = wrapLink(campaignInfo.emailBody, newCampaignAnalyticsLink.dataValues.trackingId, campaignInfo.type, whiteLabelUrl);
+      }
 
       return CampaignAnalyticsOpen.create({
         campaignanalyticId: campaignInfo.campaignAnalyticsId,
         listsubscriberId: task.id
       })
     }).then(newCampaignAnalyticsOpen => {
-      updatedCampaignInfo.emailBody = insertTrackingPixel(updatedCampaignInfo.emailBody, newCampaignAnalyticsOpen.dataValues.trackingId, campaignInfo.type);
+      if (campaignInfo.trackingPixelEnabled) {
+        updatedCampaignInfo.emailBody = insertTrackingPixel(updatedCampaignInfo.emailBody, newCampaignAnalyticsOpen.dataValues.trackingId, campaignInfo.type);
+      }
 
-      updatedCampaignInfo.emailBody = insertUnsubscribeLink(updatedCampaignInfo.emailBody, task.unsubscribeKey, campaignInfo.type, whiteLabelUrl);
+      if (campaignInfo.unsubscribeLinkEnabled) {
+        updatedCampaignInfo.emailBody = insertUnsubscribeLink(updatedCampaignInfo.emailBody, task.unsubscribeKey, campaignInfo.type, whiteLabelUrl);
+      }
 
       updatedCampaignInfo.emailBody = mailMerge(task, updatedCampaignInfo);
 

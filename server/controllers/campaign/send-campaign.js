@@ -68,9 +68,9 @@ module.exports = (req, res, io) => {
       } else {
         const campaignObject = campaignInstance.get({ plain:true });
         const listId = campaignObject.listId;
-        const { fromName, fromEmail, emailSubject, emailBody, type, name } = campaignObject;
+        const { fromName, fromEmail, emailSubject, emailBody, type, name, trackingPixelEnabled, trackLinksEnabled, unsubscribeLinkEnabled } = campaignObject;
 
-        generator.next({ listId, fromName, fromEmail, emailSubject, emailBody, campaignId, type, name });
+        generator.next({ listId, fromName, fromEmail, emailSubject, emailBody, campaignId, type, name, trackingPixelEnabled, trackLinksEnabled, unsubscribeLinkEnabled  });
       }
     }).catch(err => {
       throw err;
