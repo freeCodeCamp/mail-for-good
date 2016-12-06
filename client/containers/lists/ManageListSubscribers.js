@@ -45,9 +45,7 @@ export default class ManageListSubscribers extends Component {
     return (
       <div>
         <div className="content-header">
-          <h1>Manage List Subscribers: listname
-            <small>alksjd</small>
-          </h1>
+          <h1>Manage List Subscribers</h1>
         </div>
 
         <section className="content">

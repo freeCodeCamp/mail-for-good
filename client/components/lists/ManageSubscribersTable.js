@@ -116,7 +116,8 @@ export default class ManageSubscribersTable extends Component {
 
     let columns = [
       <TableHeaderColumn dataField="id" hidden={true}>id</TableHeaderColumn>,
-      <TableHeaderColumn dataField="email">Email</TableHeaderColumn>,
+      <TableHeaderColumn dataField="email">Email</TableHeaderColumn>
+    ].concat(additionalColumns).concat([
       <TableHeaderColumn dataField="createdAt" dataFormat={this.formatDate} width="150">Created</TableHeaderColumn>,
       <TableHeaderColumn dataField="updatedAt" dataFormat={this.formatDate} width="150">Updated</TableHeaderColumn>,
       <TableHeaderColumn
@@ -145,7 +146,7 @@ export default class ManageSubscribersTable extends Component {
                              'false': 'Unsubscribed'
                            }
                          }}>Status</TableHeaderColumn>
-    ].concat(additionalColumns)
+    ])
 
     return (
       <BootstrapTable data={this.state.data}
