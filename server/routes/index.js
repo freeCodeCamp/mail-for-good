@@ -14,9 +14,9 @@ const sendCampaign = require('../controllers/campaign/send-campaign');
 const sendTestEmail = require('../controllers/campaign/email/amazon-ses/send-test');
 
 // Templates
-const getTemplates = require('../controllers/campaign/get-templates');
-const createTemplate = require('../controllers/campaign/create-template');
-const deleteTemplates = require('../controllers/campaign/delete-templates');
+const getTemplates = require('../controllers/template/get-templates');
+const createTemplate = require('../controllers/template/create-template');
+const deleteTemplates = require('../controllers/template/delete-templates');
 
 // Lists
 const getLists = require('../controllers/list/get-lists');
