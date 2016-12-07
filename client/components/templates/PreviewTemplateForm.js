@@ -12,8 +12,8 @@ const PreviewCampaignForm = props => {
 
       <hr />
 
-      <h3>From - {`${form.fromName || 'Not set'} <${form.fromEmail || 'Not set'}>`}</h3>
-      <h4>Subject - {`${form.emailSubject || 'Not set'}`}</h4>
+      <h3><strong>From: {`${form.fromName || 'Not set'} <${form.fromEmail || 'Not set'}>`}</strong></h3>
+      <h4><strong>Subject: {`${form.emailSubject || 'Not set'}`}</strong></h4>
       <blockquote>
         <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
       </blockquote>
