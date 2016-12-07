@@ -39,9 +39,8 @@ const CreateCampaignForm = props => {
       <br/>
 
       <form onSubmit={resetFormAndSubmit}>
-        <h3>List and region</h3>
+        <h3>Select a List</h3>
         <div>
-          <label>Select a List</label>
           <Field name="listName" component={renderCombobox} data={lists} />
         </div>
 
