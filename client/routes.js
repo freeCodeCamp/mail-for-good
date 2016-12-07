@@ -11,6 +11,7 @@ import CampaignView from './containers/campaigns/CampaignView';
 // Templates
 import CreateTemplate from './containers/templates/CreateTemplate';
 import ManageTemplates from './containers/templates/ManageTemplates';
+import TemplateView from './containers/templates/TemplateView';
 // Lists
 import CreateList from './containers/lists/CreateList';
 import ManageLists from './components/lists/ManageLists';
@@ -36,6 +37,7 @@ export default(
     <Route path="templates">
       <Route path="create" component={CreateTemplate}/>
       <Route path="manage" component={ManageTemplates}/>
+      <Route path="manage/:slug" component={TemplateView}/>
     </Route>
 
     <Route path="lists">
