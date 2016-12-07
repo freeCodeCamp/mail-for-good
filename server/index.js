@@ -7,6 +7,7 @@ const path = require('path');
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+const csrf = require('csurf');
 
 require('dotenv').config();
 
@@ -18,7 +19,7 @@ require('./config/passport')(passport);
 
 const client = redis.createClient();
 
-client.on("error", err => console.log(`Error: ${err} - Are you running redis?`));
+client.on("error", err => console.log(`Error: ${err} - Are you running redis?`)); // eslint-disable-line
 
 app.use(session({
   store: new RedisStore({ client }),
@@ -28,6 +29,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(csrf()); // Inject CSRF token to req.session
 
 // Use dirs appropriately, with a separation of concerns for the public & dist dirs
 app.use('/public', express.static(path.join(__dirname, '../public')));
@@ -39,5 +41,5 @@ routes(app, passport, io);
 // Server
 const port = process.env.PORT || 8080;
 server.listen(port, function() {
-  console.log(`Email service live on port ${port}`);
+  console.log(`Email service live on port ${port}`); // eslint-disable-line
 });
