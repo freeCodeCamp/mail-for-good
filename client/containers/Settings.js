@@ -16,6 +16,7 @@ const regions = ['us-west-2', 'us-east-1', 'eu-west-1']; // AWS SES regions
 function getState(state) {
   return {
     loading: state.settings.loading,
+    fieldsExist: state.settings.fieldsExist,
     form: state.form.settings
   };
 }
@@ -56,10 +57,12 @@ export default class Settings extends Component {
     // connect
     getBooleanForAssignedSettings: PropTypes.func.isRequired,
     changeSettings: PropTypes.func.isRequired,
-    loading: PropTypes.bool.isRequired,
     notify: PropTypes.func.isRequired,
-    // reduxForm
+    // redux
     form: PropTypes.object, // Not required as it's only created when needed
+    loading: PropTypes.bool.isRequired,
+    fieldsExist: PropTypes.object.isRequired,
+    // reduxForm
     touch: PropTypes.func.isRequired,
     valid: PropTypes.bool.isRequired,
     pristine: PropTypes.bool.isRequired,
@@ -102,7 +105,7 @@ export default class Settings extends Component {
 
   render() {
     const { pristine, submitting, reset } = this.props;
-
+    console.log(this.props.fieldsExist);
     return (
       <div>
         <section className="content-header">

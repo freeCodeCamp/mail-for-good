@@ -35,7 +35,8 @@ const initialState = {
     totalListSubscribers: 0
   },
   settings: {
-    loading: false
+    loading: false,
+    fieldsExist: {}
   },
   notifications: { // Internal notifcations for things such as errors on importing CSV files and so forth
     stack: []
