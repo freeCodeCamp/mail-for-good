@@ -36,7 +36,8 @@ const open = require('../controllers/analytics/open');
 const clickthrough = require('../controllers/analytics/clickthrough');
 
 // Settings
-const changeSettings = require('../controllers/changesettings');
+const getSettings = require('../controllers/settings/get-settings');
+const changeSettings = require('../controllers/settings/changesettings');
 
 // Websocket notifications
 const getProfile = require('../controllers/websockets/get-profile');
@@ -133,6 +134,10 @@ module.exports = (app, passport, io) => {
   });
 
   /* Settings */
+  // Get boolean values designating assigned fields
+  app.get('/api/settings', apiIsAuth, (req, res) => {
+    getSettings(req, res);
+  });
   // Post to change new settings
   app.post('/api/settings', apiIsAuth, parseJson, (req, res) => {
     changeSettings(req, res);

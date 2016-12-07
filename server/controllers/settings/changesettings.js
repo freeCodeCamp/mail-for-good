@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const Setting = require('../models').setting;
+const Setting = require('../../models').setting;
 
 module.exports = function(req, res) {
   const settingsToChange = _.pickBy(req.body);

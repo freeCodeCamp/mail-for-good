@@ -12,6 +12,15 @@ export function receiveChangeSettings(status) {
     }};
 }
 
+export function getBooleanForAssignedSettings() {
+  return dispatch => {
+    axios.get(API_SETTINGS_ENDPOINT).
+      then(res => {
+        console.log(res);
+      });
+  };
+}
+
 export function changeSettings(newSettings) {
   return function(dispatch) {
     dispatch(requestChangeSettings());

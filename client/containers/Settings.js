@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import { changeSettings } from '../actions/settingsActions';
+import { getBooleanForAssignedSettings, changeSettings } from '../actions/settingsActions';
 import { notify } from '../actions/notificationActions';
 import { renderField, renderDropdownList } from '../components/common/FormRenderWrappers';
 import FontAwesome from 'react-fontawesome';
@@ -49,26 +49,31 @@ const validate = values=> {
 };
 
 @reduxForm({ form: 'settings',  destroyOnUnmount: false, validate })
-@connect(getState, { changeSettings, notify })
+@connect(getState, { getBooleanForAssignedSettings, changeSettings, notify })
 export default class Settings extends Component {
 
   static propTypes = {
     // connect
+    getBooleanForAssignedSettings: PropTypes.func.isRequired,
     changeSettings: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,
-    form: PropTypes.object, // Not required as it's only created when needed
+    notify: PropTypes.func.isRequired,
     // reduxForm
+    form: PropTypes.object, // Not required as it's only created when needed
     touch: PropTypes.func.isRequired,
     valid: PropTypes.bool.isRequired,
     pristine: PropTypes.bool.isRequired,
     submitting: PropTypes.bool.isRequired,
-    reset: PropTypes.func.isRequired,
-    notify: PropTypes.func.isRequired
+    reset: PropTypes.func.isRequired
   }
 
   constructor() {
     super();
     this.resetFormAndSubmit = this.resetFormAndSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.getBooleanForAssignedSettings();
   }
 
   resetFormAndSubmit(e) {
