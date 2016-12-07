@@ -1,4 +1,5 @@
 const db = require('../../models');
+const slug = require('slug');
 const htmlToText = require('html-to-text');
 
 module.exports = (req, res) => {
@@ -36,7 +37,8 @@ module.exports = (req, res) => {
       trackLinksEnabled: req.body.trackLinksEnabled,
       unsubscribeLinkEnabled: req.body.unsubscribeLinkEnabled,
       type: req.body.type,
-      userId: req.user.id
+      userId: req.user.id,
+      slug: slug(req.body.templateName)
     }
   }).then(templateInstance => {
     if (templateInstance) { // Does the template already exist?

@@ -27,9 +27,14 @@ export default class Templates extends Component {
     notify: PropTypes.func.isRequired
   }
 
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
+
   constructor() {
     super();
     this.deleteRows = this.deleteRows.bind(this);
+    this.getTemplateView = this.getTemplateView.bind(this);
   }
 
   componentDidMount() {
@@ -41,6 +46,11 @@ export default class Templates extends Component {
 
   deleteRows(templateIds) { // templateIds [...Numbers]
     this.props.deleteTemplates(templateIds, this.props.templates);
+  }
+
+  getTemplateView(row) {
+    // Send user to the campaign view container
+    this.context.router.push(`/campaigns/manage/${row.slug}`);
   }
 
   render() {
@@ -55,7 +65,7 @@ export default class Templates extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              <ManageTemplatesTable data={this.props.templates} deleteRows={this.deleteRows} />
+              <ManageTemplatesTable data={this.props.templates} deleteRows={this.deleteRows} getTemplateView={this.getTemplateView}/>
             </div>
             {this.props.isGetting && <div className="overlay">
               <FontAwesome name="refresh" spin/>
