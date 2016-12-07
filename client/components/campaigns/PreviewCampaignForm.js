@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import showdown from 'showdown'; // Lib to convert from markdown to html
 import DOMPurify from 'dompurify';
 
 const PreviewCampaignForm = props => {
@@ -7,7 +8,12 @@ const PreviewCampaignForm = props => {
   if (props.form) {
     var { form:{ values: form } } = props; // eslint-disable-line
   } else {
-    var form = props.campaignView; // eslint-disable-line
+    // In this case, the preview is rendered within the CampaignView container
+    // We may receive markdown or html from the server. If it's markdown, we'll need to convert it using showdown.
+    form = props.campaignView; // eslint-disable-line
+    if (props.campaignView.type === 'Plaintext') {
+      form.emailBody = new showdown.Converter().makeHtml(props.campaignView.emailBody); // eslint-disable-line
+    }
   }
   // { listName, campaignName, fromName, fromEmail, emailSubject, emailBody, type }
   const cleanHtml = DOMPurify.sanitize(form.emailBody); // Purify xss to prevent xss attacks

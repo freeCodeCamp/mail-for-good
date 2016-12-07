@@ -35,7 +35,8 @@ module.exports = (req, res) => {
       'slug',
       'trackingPixelEnabled',
       'trackLinksEnabled',
-      'unsubscribeLinkEnabled'
+      'unsubscribeLinkEnabled',
+      'type'
     ],
     raw: true
   }).then(instancesArray => {
