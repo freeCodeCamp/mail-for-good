@@ -8,6 +8,8 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const csrf = require('csurf');
+const helmet = require('helmet');
+
 
 require('dotenv').config();
 
@@ -30,6 +32,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(csrf()); // Inject CSRF token to req.session
+app.use(helmet()); // Implements various security tweaks to http response headers
 
 // Use dirs appropriately, with a separation of concerns for the public & dist dirs
 app.use('/public', express.static(path.join(__dirname, '../public')));
