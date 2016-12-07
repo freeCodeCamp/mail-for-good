@@ -40,6 +40,7 @@ const PreviewCampaignForm = props => {
           <button className="btn btn-lg btn-primary pull-right" type="button" onClick={lastPage}>Go back</button>
         </div>
       </div>}
+
     </div>
   );
 };
@@ -47,7 +48,8 @@ const PreviewCampaignForm = props => {
 PreviewCampaignForm.propTypes = {
   handleSubmit: PropTypes.func,
   lastPage: PropTypes.func,
-  form: PropTypes.object
+  form: PropTypes.object,
+  campaignView: PropTypes.object
 };
 
 export default PreviewCampaignForm;

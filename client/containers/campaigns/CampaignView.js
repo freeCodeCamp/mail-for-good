@@ -87,9 +87,9 @@ export default class CampaignView extends Component {
   getSingleCampaign(props) {
     // This method retrieves a single campaign from this.props.campaigns based on the parameter in the url
     const slug = this.props.params.slug;
-    const getCampaignbySlug = props.campaigns.find(campaign => campaign.slug === slug);
+    const getCampaignBySlug = props.campaigns.find(campaign => campaign.slug === slug);
     this.setState({
-      thisCampaign: getCampaignbySlug
+      thisCampaign: getCampaignBySlug
     });
   }
 

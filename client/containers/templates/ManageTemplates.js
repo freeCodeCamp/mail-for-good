@@ -50,7 +50,7 @@ export default class Templates extends Component {
 
   getTemplateView(row) {
     // Send user to the campaign view container
-    this.context.router.push(`/campaigns/manage/${row.slug}`);
+    this.context.router.push(`/templates/manage/${row.slug}`);
   }
 
   render() {
