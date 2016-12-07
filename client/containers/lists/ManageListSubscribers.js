@@ -22,7 +22,8 @@ export default class ManageListSubscribers extends Component {
     isGetting: PropTypes.bool.isRequired,
     deleteListSubscribers: PropTypes.func.isRequired,
     getListSubscribers: PropTypes.func.isRequired,
-    params: PropTypes.object
+    params: PropTypes.object,
+    totalListSubscribers: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
   }
 
   constructor() {
@@ -38,7 +39,7 @@ export default class ManageListSubscribers extends Component {
   }
 
   onPageChange(page, sizePerPage, filters={}) {
-    this.props.getListSubscribers(this.props.params.listId, page, sizePerPage, filters)
+    this.props.getListSubscribers(this.props.params.listId, page, sizePerPage, filters);
   }
 
   render() {

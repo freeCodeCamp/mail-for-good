@@ -62,7 +62,6 @@ export default class CampaignView extends Component {
       this.getSingleCampaign(props);
     }
     // Show success/failure toast
-    console.log(props);
     if (props.sendCampaignResponse && !props.isPosting) {
       this.setState({ haveShownMessage: true });
       if (props.sendCampaignStatus === 200) {

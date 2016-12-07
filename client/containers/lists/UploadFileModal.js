@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, FormControl } from 'react-bootstrap';
+import { Modal, FormControl } from 'react-bootstrap';
 
 
 export default class UploadFileModal extends React.Component {

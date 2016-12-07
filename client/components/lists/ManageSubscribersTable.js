@@ -9,7 +9,9 @@ export default class ManageSubscribersTable extends Component {
     data: PropTypes.array.isRequired,
     deleteRows: PropTypes.func.isRequired,
     onPageChange: PropTypes.func.isRequired,
-    additionalFields: PropTypes.array.isRequired
+    additionalFields: PropTypes.array.isRequired,
+    listId: PropTypes.number.isRequired,
+    total: PropTypes.number.isRequired
   }
 
   constructor(props) {
@@ -95,7 +97,7 @@ export default class ManageSubscribersTable extends Component {
     }
     this.filters = filters;
 
-    this.props.onPageChange(this.state.page, this.state.sizePerPage, filters)
+    this.props.onPageChange(this.state.page, this.state.sizePerPage, filters);
   }
 
   onExportToCSV() {
@@ -146,12 +148,12 @@ export default class ManageSubscribersTable extends Component {
                              'false': 'Unsubscribed'
                            }
                          }}>Status</TableHeaderColumn>
-    ])
+    ]);
 
     return (
       <BootstrapTable data={this.state.data}
                       remote={true}
-                      fetchInfo={ { dataTotalSize: this.props.total } }
+                      fetchInfo={{ dataTotalSize: this.props.total }}
                       options={{
                         clearSearch: true,
                         noDataText: 'This list has no subscribers',
@@ -179,7 +181,7 @@ export default class ManageSubscribersTable extends Component {
                       keyField="id"
       >
         {
-          columns.map(c => { return c })
+          columns.map(c => { return c; })
         }
       </BootstrapTable>
     );

@@ -3,10 +3,11 @@ import DOMPurify from 'dompurify';
 
 const PreviewCampaignForm = props => {
   const { handleSubmit, lastPage } = props;
+
   if (props.form) {
-    var { form:{ values: form } } = props;
+    var { form:{ values: form } } = props; // eslint-disable-line
   } else {
-    var form = props.campaignView;
+    var form = props.campaignView; // eslint-disable-line
   }
   // { listName, campaignName, fromName, fromEmail, emailSubject, emailBody, type }
   const cleanHtml = DOMPurify.sanitize(form.emailBody); // Purify xss to prevent xss attacks

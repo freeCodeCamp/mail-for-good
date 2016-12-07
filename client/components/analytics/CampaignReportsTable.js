@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 import moment from 'moment';
-import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 
 // Ref: https://allenfang.github.io/react-bootstrap-table/docs.html
 const CampaignReportsTable = props => {
@@ -16,11 +15,11 @@ const CampaignReportsTable = props => {
   const options = {
     clearSearch: true,
     noDataText: 'You have not yet sent a campaign',
-    onRowClick: row => { // This fires on clicking a row. TODO: Needs to go to another route with the format /:[campaign-name-slug] where users can manage (edit, send, schedule, delete) the campaign
+    onRowClick: () => { // This fires on clicking a row. TODO: Needs to go to another route with the format /:[campaign-name-slug] where users can manage (edit, send, schedule, delete) the campaign
       // NOTE: Row is an object where keys are data fields
       //getCampaignView(row);
     },
-    afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
+    afterDeleteRow: () => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
       //deleteRows(rows);
     },
     handleConfirmDeleteRow: next => {next();} // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
@@ -55,6 +54,10 @@ const CampaignReportsTable = props => {
       <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150" filter={filterDate}>Updated</TableHeaderColumn>
     </BootstrapTable>
   );
+};
+
+CampaignReportsTable.propTypes = {
+  data: PropTypes.array.isRequired
 };
 
 export default CampaignReportsTable;
