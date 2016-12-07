@@ -19,8 +19,8 @@ const PreviewCampaignForm = props => {
 
       <hr />
 
-      <h4>From: {`${form.fromName} <${form.fromEmail}>`}</h4>
-      <h4>Subject: {`${form.emailSubject}`}</h4>
+      <h4><strong>From: {`${form.fromName} <${form.fromEmail}>`}</strong></h4>
+      <h4><strong>Subject: {`${form.emailSubject}`}</strong></h4>
       <blockquote>
         <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
       </blockquote>

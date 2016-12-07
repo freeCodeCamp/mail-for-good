@@ -63,14 +63,14 @@ const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
 
       <TableHeaderColumn dataField="id" hidden={true} isKey={true}>Id</TableHeaderColumn>
       <TableHeaderColumn dataField="slug" hidden={true}>Slug</TableHeaderColumn>
-      <TableHeaderColumn dataField="name" dataAlign="center" dataSort={true}>Name</TableHeaderColumn>
+      <TableHeaderColumn dataField="name" dataAlign="center" dataSort={true} width="450">Name</TableHeaderColumn>
       <TableHeaderColumn dataField="campaignanalytic.totalSentCount" dataAlign="center" dataSort={true} csvHeader="sent">Sent</TableHeaderColumn>
       <TableHeaderColumn dataField="delivered" dataAlign="center" dataSort={true} dataFormat={deliveredFormatter} csvFormat={deliveredFormatter}>Delivered</TableHeaderColumn>
       <TableHeaderColumn dataField="bounced" dataAlign="center" dataSort={true} dataFormat={bouncedFormatter} csvFormat={bouncedFormatter}>Bounced</TableHeaderColumn>
       <TableHeaderColumn dataField="campaignanalytic.complaintCount" dataAlign="center" dataSort={true} csvHeader="complaints">Complaints</TableHeaderColumn>
       <TableHeaderColumn dataField="campaignanalytic.clickthroughCount" dataAlign="center" dataSort={true} csvHeader="clickthroughs">Clickthroughs</TableHeaderColumn>
       <TableHeaderColumn dataField="campaignanalytic.openCount" dataAlign="center" dataSort={true} csvHeader="opens">Opens</TableHeaderColumn>
-      <TableHeaderColumn export ={false} dataAlign="center" width="100">Tags (WIP)</TableHeaderColumn>
+      {/*<TableHeaderColumn export ={false} dataAlign="center" width="100">Tags (WIP)</TableHeaderColumn>*/}
       <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150" filter={filterDate}>Created</TableHeaderColumn>
       <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150" filter={filterDate}>Updated</TableHeaderColumn>
 
