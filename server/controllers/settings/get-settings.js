@@ -9,11 +9,21 @@ module.exports = function(req, res) {
   Setting.findOne({
     where:{
       userId: req.user.id
-    }
+    },
+    attributes: [
+      'amazonSimpleEmailServiceAccessKey',
+      'amazonSimpleEmailServiceSecretKey',
+      'amazonSimpleQueueServiceUrl',
+      'region',
+      'whiteLabelUrl'
+    ]
   }).then(settingsInstance => {
     const settingsObject = settingsInstance.get({ plain:true });
     const settingsObjectToBool = {};
-    Object.keys(settingsObject).forEach(key => settingsObjectToBool[key] = true);
+    Object.keys(settingsObject).forEach(key => {
+      if (settingsObject[key])
+        settingsObjectToBool[key] = true;
+    });
     res.send(settingsObjectToBool);
   }).catch(err => res.status(500).send(err));
 

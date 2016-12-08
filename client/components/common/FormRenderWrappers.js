@@ -20,9 +20,9 @@ const renderMultiselect = ({ input, ...rest }) =>
     {...rest}/>;
 */
 
-export const renderDropdownList = ({ input, label, type, meta: { touched, error, warning }, ...data }) => (
+export const renderDropdownList = ({ input, label, type, meta: { touched, error, warning }, exists, ...data }) => (
   <div>
-    <label>{label}</label>
+    <label>{label} - {exists ? <i className="fa fa-check-circle text-green" aria-hidden="true" /> : <i className="fa fa-times-circle text-red" aria-hidden="true" />}</label>
     <div>
       <DropdownList {...input} {...data} />
       {touched && ((error && <span className="text-red"><i className="fa fa-exclamation" /> {error}</span>) || (warning && <span>{warning}</span>))}
@@ -40,15 +40,16 @@ export const renderCombobox = ({ input, label, type, meta: { touched, error, war
   </div>
 );
 
-export const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
+export const renderField = ({ input, label, type, meta: { touched, error, warning }, exists }) => {
+  return (
   <div>
-    <label>{label}</label>
+    <label>{label} - {exists ? <i className="fa fa-check-circle text-green" aria-hidden="true" /> : <i className="fa fa-times-circle text-red" aria-hidden="true" />}</label>
     <div>
       <input className="form-control" {...input} placeholder={label} type={type}/>
       {touched && ((error && <span className="text-red"><i className="fa fa-exclamation" /> {error}</span>) || (warning && <span>{warning}</span>))}
     </div>
   </div>
-);
+)};
 
 export const renderRadio = ({ input, label, type, meta: { touched, error, warning } }) => (
   <div>

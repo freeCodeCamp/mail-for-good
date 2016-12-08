@@ -22,5 +22,6 @@ module.exports = {
     consumerKey: process.env.GOOGLE_CONSUMER_KEY,
     consumerSecret: process.env.GOOGLE_CONSUMER_SECRET,
     callbackURL: process.env.GOOGLE_CALLBACK || '/auth/google/callback'
-  }
+  },
+
 };
