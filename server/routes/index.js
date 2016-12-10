@@ -29,6 +29,9 @@ const deleteSubscribers = require('../controllers/list/delete-subscribers');
 const deleteLists = require('../controllers/list/delete-lists');
 const unsubscribe = require('../controllers/subscriber/unsubscribe');
 
+// Permissions
+const offerPermission = require('../controllers/permissions/offer-permission');
+
 // Analytics
 const getClickthroughs = require('../controllers/analytics/get-clickthroughs');
 const refresh = require('../controllers/analytics/refresh');
@@ -131,6 +134,12 @@ module.exports = (app, passport, io) => {
   // Delete lists
   app.delete('/api/list/manage', apiIsAuth, parseJson, (req, res) => {
     deleteLists(req, res);
+  });
+
+  /* Permissions */
+  // Post to change new settings
+  app.post('/api/permissions', apiIsAuth, parseJson, (req, res) => {
+    offerPermission(req, res);
   });
 
   /* Settings */

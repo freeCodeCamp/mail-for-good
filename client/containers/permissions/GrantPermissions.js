@@ -12,7 +12,7 @@ import FontAwesome from 'react-fontawesome';
 function mapStateToProps(state) {
   // State reducer @ state.form & state.offerPermission
   return {
-    form: state.form.grantPermission,
+    form: state.form.grantPermission.values,
     isPosting: state.offerPermission.isPosting,
     response: state.offerPermission.response
   };
@@ -36,7 +36,7 @@ export default class GrantPermissions extends Component {
   }
 
   handleSubmit() {
-
+    this.props.postPermissionOffer(JSON.stringify(this.props.form));
   }
 
   render() {
