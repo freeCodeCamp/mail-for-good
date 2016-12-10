@@ -7,7 +7,8 @@ import { postPermissionOffer } from '../../actions/permissionActions';
 //permissionActions
 import FontAwesome from 'react-fontawesome';
 
-export default class CreateCampaign extends Component {
+@connect(null, { postPermissionOffer })
+export default class GrantPermissions extends Component {
 
   static propTypes = {
     postPermissionOffer: PropTypes.func.isRequired

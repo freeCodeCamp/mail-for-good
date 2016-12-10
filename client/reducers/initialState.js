@@ -44,6 +44,10 @@ const initialState = {
   profile: {
     user: {},
     ws_notification: []
+  },
+  offerPermission: { // Refers to GrantPermissions container
+    isPosting: false,
+    response: {}
   }
 };
 

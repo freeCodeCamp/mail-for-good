@@ -7,6 +7,7 @@ import { createList, manageList, manageListSubscribers } from './listReducer';
 import { profile } from './appReducer';
 import settings from './settingsReducer';
 import notifications from './notificationsReducer';
+import { offerPermission } from './permissionReducer';
 
 const rootReducer = combineReducers({
   createCampaign,
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   settings,
   notifications,
   profile,
+  offerPermission,
   routing: routerReducer,
   form: formReducer
 });
