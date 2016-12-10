@@ -4,7 +4,9 @@ import { initialize } from 'redux-form';
 
 import { notify } from '../../actions/notificationActions';
 import { postPermissionOffer } from '../../actions/permissionActions';
-//permissionActions
+
+import GrantPermissionForm from '../../components/permissions/GrantPermissionForm';
+
 import FontAwesome from 'react-fontawesome';
 
 @connect(null, { postPermissionOffer })
@@ -31,7 +33,7 @@ export default class GrantPermissions extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              Grant permissions to a user
+              <GrantPermissionForm />
             </div>
 
             {/*<div className="overlay">
