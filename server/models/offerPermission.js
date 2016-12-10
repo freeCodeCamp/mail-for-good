@@ -1,7 +1,7 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var offerPermission = sequelize.define('offerPermission', {
-    toUserEmail: DataTypes.STRING,
+    toUserId: DataTypes.STRING,
     campaigns: DataTypes.STRING
   }, {
     classMethods: {
