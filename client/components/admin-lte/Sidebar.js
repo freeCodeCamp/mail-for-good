@@ -42,6 +42,11 @@ const Sidebar = (props) => { // eslint-disable-line no-unused-vars
             <SidebarLink to="/analytics/reports">Campaign Reports</SidebarLink> {/* Bounce rate, click rate, open rate, unsub no., etc */}
           </SidebarTreeview>
 
+          <SidebarTreeview name="Permissions" icon="fa-users">
+              <SidebarLink to="/permissions/grant">Grant permissions</SidebarLink> {/* Ability to grant others permissions */}
+              <SidebarLink to="/permissions/manage">Manage permissions</SidebarLink> {/* Ability to manage own perimissions */}
+          </SidebarTreeview>
+
           <SidebarLink to="/settings" icon="fa-cog">Settings</SidebarLink>
         </ul>
       </section>
