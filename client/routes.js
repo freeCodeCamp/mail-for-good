@@ -20,6 +20,7 @@ import ManageListSubscribers from './containers/lists/ManageListSubscribers';
 import CampaignReports from './containers/analytics/CampaignReports';
 // Permissions
 import GrantPermissions from './containers/permissions/GrantPermissions';
+import ManagePermissions from './containers/permissions/ManagePermissions';
 // Settings
 import Settings from './containers/Settings';
 
@@ -54,6 +55,7 @@ export default(
 
     <Route path="permissions">
       <Route path="grant" component={GrantPermissions}/>
+      <Route path="manage" component={ManagePermissions}/>
     </Route>
 
     <Route path="settings" component={Settings}/>
