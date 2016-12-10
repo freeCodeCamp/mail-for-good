@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { notify } from '../../actions/notificationActions';
 import { postPermissionOffer } from '../../actions/permissionActions';
 
+
 import GrantPermissionForm from '../../components/permissions/GrantPermissionForm';
 
 import FontAwesome from 'react-fontawesome';
@@ -40,6 +41,9 @@ export default class GrantPermissions extends Component {
 
   render() {
     const { isPosting } = this.props;
+
+    const initialValues = { campaigns: 'None' };
+
     return (
       <div>
         <div className="content-header">
@@ -51,7 +55,7 @@ export default class GrantPermissions extends Component {
         <section className="content col-md-6">
           <div className="box box-primary">
             <div className="box-body">
-              <GrantPermissionForm handleSubmit={this.handleSubmit}/>
+              <GrantPermissionForm handleSubmit={this.handleSubmit} initialValues={initialValues} />
             </div>
 
             {isPosting && <div className="overlay">

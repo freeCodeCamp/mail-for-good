@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import 'react-widgets/dist/css/react-widgets.css';
 
-import { renderField, renderRadio } from '../common/FormRenderWrappers';
+import { renderField, renderDropdownList } from '../common/FormRenderWrappers';
 
 // Ref redux-form http://redux-form.com/6.0.5/docs/GettingStarted.md/
 // Ref react-widgets https://jquense.github.io/react-widgets/ (for examples see https://github.com/erikras/redux-form/blob/master/examples/react-widgets/src/ReactWidgetsForm.js)
@@ -11,7 +11,7 @@ import { renderField, renderRadio } from '../common/FormRenderWrappers';
 const GrantPermissionForm = props => {
 
   const { touch, valid, pristine, submitting, reset, handleSubmit } = props;
-  const nameArray = ['listName', 'campaignName', 'fromName'];
+  const nameArray = ['email', 'campaigns'];
 
   const resetFormAndSubmit = e => {
     e.preventDefault();
@@ -22,6 +22,8 @@ const GrantPermissionForm = props => {
     }
   };
 
+  const permissions = ['None', 'Read', 'Write'];
+
   return (
     <div>
 
@@ -29,11 +31,8 @@ const GrantPermissionForm = props => {
 
         <h3>Grant a user permissions:</h3>
 
-        <Field name="trackingPixelEnabled" component={renderField} type="input" />
-
-        <div><label><Field name="trackingPixelEnabled" component="input" type="checkbox" /> Insert tracking pixel</label></div>
-        <div><label><Field name="trackLinksEnabled" component="input" type="checkbox" /> Track link clickthroughs</label></div>
-        <div><label><Field name="unsubscribeLinkEnabled" component="input" type="checkbox" /> Add unsubscribe link</label></div>
+        <Field name="email" component={renderField} type="email" label="User's email" />
+        <Field name="campaigns" component={renderDropdownList} data={permissions} label="Campaign access" />
 
         <br/>
         <div className="box-footer">
@@ -60,8 +59,11 @@ GrantPermissionForm.propTypes = {
 const validate = values => {
   const errors = {};
 
-  if (!values.listName) {
-    errors.listName = 'Required';
+  if (!values.email) {
+    errors.email = 'Required';
+  }
+  if (!values.campaigns) {
+    errors.campaigns = 'Required';
   }
 
   return errors;
