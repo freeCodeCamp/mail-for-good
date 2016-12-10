@@ -17,6 +17,9 @@ export const API_LISTSUBSCRIBERS_ENDPOINT = BASE_URL + '/api/list/subscribers';
 
 // Analytics
 
+// Permissions
+export const API_PERMISSIONS_ENDPOINT = '/api/permissions';
+
 // Settings
 export const SETTINGS_URL_RELATIVE = '/api/settings';
 export const API_SETTINGS_ENDPOINT = BASE_URL + SETTINGS_URL_RELATIVE;
