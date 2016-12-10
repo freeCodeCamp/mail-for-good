@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { initialize } from 'redux-form';
 
 import { notify } from '../../actions/notificationActions';
 import { postPermissionOffer } from '../../actions/permissionActions';
@@ -9,10 +8,24 @@ import GrantPermissionForm from '../../components/permissions/GrantPermissionFor
 
 import FontAwesome from 'react-fontawesome';
 
-@connect(null, { postPermissionOffer })
+function mapStateToProps(state) {
+  // State reducer @ state.form & state.offerPermission
+  return {
+    form: state.form.grantPermission,
+    isPosting: state.offerPermission.isPosting,
+    response: state.offerPermission.lists
+  };
+}
+
+@connect(mapStateToProps, { postPermissionOffer })
 export default class GrantPermissions extends Component {
 
   static propTypes = {
+    // redux
+    form: PropTypes.object,
+    isPosting: PropTypes.bool.isRequired,
+    response: PropTypes.object.isRequired,
+    // actions
     postPermissionOffer: PropTypes.func.isRequired
   }
 
@@ -21,7 +34,7 @@ export default class GrantPermissions extends Component {
   }
 
   render() {
-
+    const { isPosting } = this.props;
     return (
       <div>
         <div className="content-header">
@@ -36,9 +49,9 @@ export default class GrantPermissions extends Component {
               <GrantPermissionForm />
             </div>
 
-            {/*<div className="overlay">
+            {isPosting && <div className="overlay">
               <FontAwesome name="refresh" spin/>
-            </div>*/}
+            </div>}
           </div>
         </section>
 
