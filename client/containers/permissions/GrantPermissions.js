@@ -13,7 +13,7 @@ function mapStateToProps(state) {
   return {
     form: state.form.grantPermission,
     isPosting: state.offerPermission.isPosting,
-    response: state.offerPermission.lists
+    response: state.offerPermission.response
   };
 }
 
@@ -31,6 +31,11 @@ export default class GrantPermissions extends Component {
 
   constructor() {
     super();
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit() {
+
   }
 
   render() {
@@ -43,10 +48,10 @@ export default class GrantPermissions extends Component {
           </h1>
         </div>
 
-        <section className="content">
+        <section className="content col-md-6">
           <div className="box box-primary">
             <div className="box-body">
-              <GrantPermissionForm />
+              <GrantPermissionForm handleSubmit={this.handleSubmit}/>
             </div>
 
             {isPosting && <div className="overlay">

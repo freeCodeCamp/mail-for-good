@@ -2,21 +2,21 @@ import React, { PropTypes } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import 'react-widgets/dist/css/react-widgets.css';
 
-import { renderCombobox, renderField, renderTextEditor, renderRadio } from '../common/FormRenderWrappers';
+import { renderField, renderRadio } from '../common/FormRenderWrappers';
 
 // Ref redux-form http://redux-form.com/6.0.5/docs/GettingStarted.md/
 // Ref react-widgets https://jquense.github.io/react-widgets/ (for examples see https://github.com/erikras/redux-form/blob/master/examples/react-widgets/src/ReactWidgetsForm.js)
 // Ref react-rte https://github.com/sstur/react-rte
 
-const CreateCampaignForm = props => {
+const GrantPermissionForm = props => {
 
-  const { touch, valid, pristine, submitting, submit, reset } = props;
+  const { touch, valid, pristine, submitting, reset, handleSubmit } = props;
   const nameArray = ['listName', 'campaignName', 'fromName'];
 
   const resetFormAndSubmit = e => {
     e.preventDefault();
     if (valid) {
-      submit();
+      handleSubmit();
     } else {
       touch(...nameArray);
     }
@@ -27,11 +27,13 @@ const CreateCampaignForm = props => {
 
       <form onSubmit={resetFormAndSubmit}>
 
-        <h3>Analytics</h3>
-          <div><label><Field name="trackingPixelEnabled" component="input" type="checkbox" /> Insert tracking pixel</label></div>
-          <div><label><Field name="trackLinksEnabled" component="input" type="checkbox" /> Track link clickthroughs</label></div>
-          <div><label><Field name="unsubscribeLinkEnabled" component="input" type="checkbox" /> Add unsubscribe link</label></div>
-        <hr/>
+        <h3>Grant a user permissions:</h3>
+
+        <Field name="trackingPixelEnabled" component={renderField} type="input" />
+
+        <div><label><Field name="trackingPixelEnabled" component="input" type="checkbox" /> Insert tracking pixel</label></div>
+        <div><label><Field name="trackLinksEnabled" component="input" type="checkbox" /> Track link clickthroughs</label></div>
+        <div><label><Field name="unsubscribeLinkEnabled" component="input" type="checkbox" /> Add unsubscribe link</label></div>
 
         <br/>
         <div className="box-footer">
@@ -46,13 +48,13 @@ const CreateCampaignForm = props => {
   );
 };
 
-CreateCampaignForm.propTypes = {
+GrantPermissionForm.propTypes = {
   touch: PropTypes.func.isRequired,
   valid: PropTypes.bool.isRequired,
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
   reset: PropTypes.func.isRequired,
-  submit: PropTypes.func.isRequired
+  handleSubmit: PropTypes.func.isRequired
 };
 
 const validate = values => {
@@ -69,4 +71,4 @@ export default reduxForm({
   form: 'grantPermission',
   destroyOnUnmount: false,
   validate
-})(CreateCampaignForm);
+})(GrantPermissionForm);

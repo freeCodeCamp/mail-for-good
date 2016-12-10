@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import { getBooleanForAssignedSettings, changeSettings } from '../actions/settingsActions';
 import { notify } from '../actions/notificationActions';
-import { renderField, renderDropdownList } from '../components/common/FormRenderWrappers';
+import { renderSettingsField, renderDropdownList } from '../components/common/FormRenderWrappers';
 import FontAwesome from 'react-fontawesome';
 import 'react-widgets/dist/css/react-widgets.css';
 
@@ -135,11 +135,11 @@ export default class Settings extends Component {
                 <form onSubmit={this.resetFormAndSubmit}>
                   <div className="box-body">
 
-                    <Field name="accessKey" component={renderField} exists={amazonSimpleEmailServiceAccessKey} label="Access Key" type="text" placeholder="Your service access key" />
-                    <Field exists={amazonSimpleEmailServiceSecretKey} name="secretAccessKey" component={renderField} label="Secret Access Key" type="text" placeholder="Your service secret key" />
-                    <Field exists={amazonSimpleQueueServiceUrl} name="queueUrl" component={renderField} label="SQS URL" type="text" placeholder="Your Amazon SQS queue URL for email feedback" />
+                    <Field name="accessKey" component={renderSettingsField} exists={amazonSimpleEmailServiceAccessKey} label="Access Key" type="text" placeholder="Your service access key" />
+                    <Field exists={amazonSimpleEmailServiceSecretKey} name="secretAccessKey" component={renderSettingsField} label="Secret Access Key" type="text" placeholder="Your service secret key" />
+                    <Field exists={amazonSimpleQueueServiceUrl} name="queueUrl" component={renderSettingsField} label="SQS URL" type="text" placeholder="Your Amazon SQS queue URL for email feedback" />
                     <Field exists={region} name="region" component={renderDropdownList} data={regions} label="Amazon region associated with this email" />
-                    <Field exists={whiteLabelUrl} name="whiteLabelUrl" component={renderField} label="White Label URL" type="text" placeholder="Your domain" />
+                    <Field exists={whiteLabelUrl} name="whiteLabelUrl" component={renderSettingsField} label="White Label URL" type="text" placeholder="Your domain" />
 
                     <br/>
                     <div className="box-footer">
