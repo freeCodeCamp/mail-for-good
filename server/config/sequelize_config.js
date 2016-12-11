@@ -8,9 +8,9 @@ module.exports = {
     "logging": false
   },
   "test": {
-    "username": process.env.PSQL_USERNAME,
-    "password": process.env.PSQL_PASSWORD,
-    "database": process.env.PSQL_DATABASE,
+    "username": "postgres",  // hacky fix for test envs
+    "password": "",
+    "database": "test",
     "host": process.env.PSQL_HOST || "127.0.0.1",
     "dialect": "postgres"
   },
