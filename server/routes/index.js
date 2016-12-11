@@ -32,7 +32,7 @@ const unsubscribe = require('../controllers/subscriber/unsubscribe');
 // Permissions
 const offerPermission = require('../controllers/permissions/offer-permission');
 
-const getReceivedPermissionOffers = 'get-received-permission-offers';
+const getReceivedPermissionOffers = require('../controllers/permissions/get-received-permission-offers');
 
 // Analytics
 const getClickthroughs = require('../controllers/analytics/get-clickthroughs');

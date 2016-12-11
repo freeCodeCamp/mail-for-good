@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { notify } from '../../actions/notificationActions';
+import { getReceivedPermissionOffers } from '../../actions/permissionActions';
 
 import FontAwesome from 'react-fontawesome';
 
@@ -13,16 +14,26 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, null)
+@connect(mapStateToProps, { getReceivedPermissionOffers })
 export default class GrantPermissions extends Component {
 
   static propTypes = {
+    // redux
     isGettingReceivedPermissionOffers: PropTypes.bool.isRequired,
-    receivedPermissionOffers: PropTypes.array.isRequired
+    receivedPermissionOffers: PropTypes.array.isRequired,
+    // actions
+    getReceivedPermissionOffers: PropTypes.func.isRequired
   }
 
   constructor() {
     super();
+  }
+
+  componentDidMount() {
+    // Update receivedPermissionOffers only if we need to
+    if (!this.props.receivedPermissionOffers.length) {
+      this.props.getReceivedPermissionOffers();
+    }
   }
 
   render() {

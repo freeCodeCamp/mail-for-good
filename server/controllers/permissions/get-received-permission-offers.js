@@ -4,13 +4,13 @@ module.exports = function(req, res) {
 
   OfferPermission.findAll({
     where: {
-      toUserId: req.user.id
+      toUserId: String(req.user.id)
     },
     raw: true
   })
   .then(receivedPermissionArray => {
     if (!receivedPermissionArray.length) {
-      res.send([]);
+      res.send();
     } else {
       res.send(receivedPermissionArray);
     }
