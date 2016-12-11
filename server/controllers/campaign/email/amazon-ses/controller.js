@@ -117,12 +117,13 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
           // Save the SES message ID so we can find its status later (bounced, recv, etc)
           // ~ Using the email field here is a bit of a hack, please change me
-          CampaignSubscriber.create({
-            campaignId: campaignInfo.campaignId,
-            messageId: data.MessageId,
-            listsubscriberId: task.id,
-            email: task.email
-          }).then(() => {
+          CampaignSubscriber.update(
+            { messageId: data.MessageId },
+            {
+              where: { listsubscriberId: task.id },
+              limit: 1
+            }
+          ).then(() => {
             CampaignAnalytics.findById(campaignInfo.campaignAnalyticsId).then(foundCampaignAnalytics => {
               foundCampaignAnalytics.increment('totalSentCount').then(() => {
                 done(); // Accept new email from pool
