@@ -6,11 +6,65 @@ const ManageReceivedPermissionOffersTable = ({ data, deleteRows }) => {
 
   const selectRowProp = {
     mode: "checkbox",
-    bgColor: "rgb(176, 224, 230)"
+    clickToSelect: true,
+    bgColor: "rgb(176, 224, 230)",
+    onSelect: onSelect,
+    onSelectAll: onSelectAll
   };
+
+  let rows = [];
+
+  function onSelect(row, isSelected) {
+    if (row) {
+      if (isSelected && !rows.find(x => x.id === row.id)) {
+        rows = [...rows, row];
+      } else {
+        rows = rows.filter(x => x.id !== row.id);
+      }
+    }
+  }
+
+  function onSelectAll(isSelected, selectedRows) {
+    if (selectedRows) {
+      if (isSelected) {
+        rows = selectedRows;
+      } else {
+        rows = [];
+      }
+    }
+  }
+
+  const acceptBid = () => {
+    console.log('Accept');
+  };
+
+  /* eslint-disable */
+  const createCustomInsertButton = onClick => {
+    return (
+      <InsertButton
+        btnContextual='btn-success'
+        onClick={ () => acceptBid() }>
+            <i className="fa fa-check" aria-hidden="true" />
+            Accept
+      </InsertButton>
+    );
+  }
+
+  const createCustomDeleteButton = onClick => {
+    return (
+      <DeleteButton
+        btnContextual='btn-danger'>
+            <i className="fa fa-times" aria-hidden="true" />
+            Reject
+      </DeleteButton>
+    );
+  }
+  /* eslint-enable */
 
   const options = {
     noDataText: 'You have not received any permission offers',
+    insertBtn: createCustomInsertButton,
+    deleteBtn: createCustomDeleteButton,
     afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
       deleteRows(rows);
     },
@@ -36,6 +90,7 @@ const ManageReceivedPermissionOffersTable = ({ data, deleteRows }) => {
     <BootstrapTable data={data}
       pagination={true}
       hover={true}
+      insertRow={true}
       deleteRow={true}
       selectRow={selectRowProp}
       options={options}
