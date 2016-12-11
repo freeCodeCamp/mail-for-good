@@ -20,7 +20,8 @@ export function postPermissionOffer(campaign) {
     xhr.open('POST', API_PERMISSIONS_ENDPOINT);
     xhr.onload = () => {
       const permissionResponse = JSON.parse(xhr.responseText);
-      dispatch(completePostPermissionOffer(permissionResponse));
+      const status = xhr.status;
+      dispatch(completePostPermissionOffer({ ...permissionResponse, status  }));
     };
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(campaign);

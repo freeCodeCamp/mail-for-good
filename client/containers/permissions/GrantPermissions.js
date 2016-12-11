@@ -18,7 +18,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { postPermissionOffer })
+@connect(mapStateToProps, { notify, postPermissionOffer })
 export default class GrantPermissions extends Component {
 
   static propTypes = {
@@ -27,12 +27,20 @@ export default class GrantPermissions extends Component {
     isPosting: PropTypes.bool.isRequired,
     response: PropTypes.object.isRequired,
     // actions
+    notify: PropTypes.func.isRequired,
     postPermissionOffer: PropTypes.func.isRequired
   }
 
   constructor() {
     super();
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.response.message && (nextProps.isPosting === false && this.props.isPosting)) {
+      const responseColour = nextProps.response.status === 200 ? 'green' : 'red';
+      this.props.notify({ message: nextProps.response.message, colour: responseColour });
+    }
   }
 
   handleSubmit() {
