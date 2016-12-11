@@ -7,6 +7,7 @@ module.exports = function(req, res) {
       toUserId: String(req.user.id)
     },
     attributes: [
+      'id',
       'toUserEmail',
       'campaigns',
       'createdAt',

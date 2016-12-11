@@ -1,10 +1,9 @@
 import React, { PropTypes } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import { Link } from 'react-router';
 import moment from 'moment';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
-const ManageListsTable = ({ data, deleteRows }) => {
+const ManageReceivedPermissionOffersTable = ({ data, deleteRows }) => {
 
   const selectRowProp = {
     mode: "checkbox",
@@ -12,8 +11,7 @@ const ManageListsTable = ({ data, deleteRows }) => {
   };
 
   const options = {
-    clearSearch: true,
-    noDataText: 'You do not have any lists linked with your account',
+    noDataText: 'You have not received any permission offers',
     afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
       deleteRows(rows);
     },
@@ -22,24 +20,17 @@ const ManageListsTable = ({ data, deleteRows }) => {
 
   const formatFieldDate = cell => moment(cell).format('lll');
 
-  const formatFieldManageSubscribers = (cell, row) => (
-      <Link to={`/lists/manage/${row.id}`}>
-      <button type="button" className="btn btn-default btn-flat">
-          <i className="fa fa-user" />
-      </button>
-      </Link>
-  );
-
   /*
   Each data item has form:
 
   {
-    toUserEmail: 'drewwalsh1@gmail.com',
+    id: '1',
+    toUserEmail: 'email@gmail.com',
     campaigns: 'Read',
     createdAt: '2016-12-11T02:27:30.152Z',
     updatedAt: '2016-12-11T02:27:30.152Z'
   }
-  
+
   */
 
   return (
@@ -49,23 +40,21 @@ const ManageListsTable = ({ data, deleteRows }) => {
       deleteRow={true}
       selectRow={selectRowProp}
       options={options}
-      search={true}
       searchPlaceholder="Filter lists"
       clearSearch={true}>
 
       <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
-      <TableHeaderColumn dataField="name" dataSort={true}>Name</TableHeaderColumn>
-      <TableHeaderColumn dataField="subscribeKey" dataSort={true}>Subscription Key</TableHeaderColumn>
-      <TableHeaderColumn dataField="createdAt" dataSort={true} dataFormat={formatFieldDate}>Created</TableHeaderColumn>
-      <TableHeaderColumn dataField="updatedAt" dataSort={true} dataFormat={formatFieldDate}>Updated</TableHeaderColumn>
-      <TableHeaderColumn dataAlign="center" width="150" dataFormat={formatFieldManageSubscribers}>Subscribers</TableHeaderColumn>
+      <TableHeaderColumn dataField="toUserEmail" dataSort={true}>Email</TableHeaderColumn>
+      <TableHeaderColumn dataField="campaigns" dataSort={true}>Campaign Access</TableHeaderColumn>
+      <TableHeaderColumn dataField="createdAt" dataSort={true} width="150" dataFormat={formatFieldDate}>Created</TableHeaderColumn>
+      <TableHeaderColumn dataField="updatedAt" dataSort={true} width="150" dataFormat={formatFieldDate}>Updated</TableHeaderColumn>
     </BootstrapTable>
   );
 };
 
-ManageListsTable.propTypes = {
+ManageReceivedPermissionOffersTable.propTypes = {
   data: PropTypes.array.isRequired,
   deleteRows: PropTypes.func.isRequired
 };
 
-export default ManageListsTable;
+export default ManageReceivedPermissionOffersTable;
