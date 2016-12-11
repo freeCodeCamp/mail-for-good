@@ -32,6 +32,8 @@ const unsubscribe = require('../controllers/subscriber/unsubscribe');
 // Permissions
 const offerPermission = require('../controllers/permissions/offer-permission');
 
+const getReceivedPermissionOffers = 'get-received-permission-offers';
+
 // Analytics
 const getClickthroughs = require('../controllers/analytics/get-clickthroughs');
 const refresh = require('../controllers/analytics/refresh');
@@ -140,6 +142,10 @@ module.exports = (app, passport, io) => {
   // Post to change new settings
   app.post('/api/permissions', apiIsAuth, parseJson, (req, res) => {
     offerPermission(req, res);
+  });
+
+  app.get('/api/received-permissions', apiIsAuth, (req, res) => {
+    getReceivedPermissionOffers(req, res);
   });
 
   /* Settings */

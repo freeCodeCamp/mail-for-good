@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 
 import { notify } from '../../actions/notificationActions';
 
-import GrantPermissionForm from '../../components/permissions/GrantPermissionForm';
-
 import FontAwesome from 'react-fontawesome';
 
 function mapStateToProps(state) {

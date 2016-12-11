@@ -1,0 +1,21 @@
+const OfferPermission = require('../../models').offerPermission;
+
+module.exports = function(req, res) {
+
+  OfferPermission.findAll({
+    where: {
+      toUserId: req.user.id
+    },
+    raw: true
+  })
+  .then(receivedPermissionArray => {
+    if (!receivedPermissionArray.length) {
+      res.send([]);
+    } else {
+      res.send(receivedPermissionArray);
+    }
+  })
+  .catch(err => {
+    throw err;
+  });
+};
