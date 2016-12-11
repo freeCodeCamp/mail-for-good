@@ -4,11 +4,14 @@ const ACL = require('../../models').acl;
 
 module.exports = function(req, res) {
 
-  const { offerIds } = req.body; // List of ids in offerPermission to accept
+  let { offerIds } = req.body.data; // List of ids in offerPermission to accept
+  offerIds = typeof offerIds === 'object' ? offerIds : [offerIds];
+  offerIds = offerIds.map(x => Number(x));
 
   OfferPermission.findAll({
     where: {
-      toUserId: { in: offerIds }
+      id: { in: offerIds },
+      toUserId: String(req.user.id)
     },
     raw: true
   })
@@ -18,11 +21,17 @@ module.exports = function(req, res) {
       return null;
     } else {
       return sequelize.transaction(transaction => {
-        ACL.bulkCreate(offerPermissions, { transaction });
-        OfferPermission.destroy({ where: { in: offerIds }}, { transaction });
+        return ACL.bulkCreate({ ...offerPermissions, userId: req.user.id }, { transaction })
+        .then(() => {
+          return OfferPermission.destroy({
+            where: {
+              id: { in: offerIds }
+            }
+          }, { transaction });
+        });
       })
       .then(() => res.send({ message: `Offer${offerIds.length > 1 ? 's' : ''} accepted, you have now been granted access` }))
-      .catch(() => res.status.send({ message: 'An error occurred, please refresh the page' }));
+      .catch(() => res.status(400).send({ message: 'An error occurred, please refresh the page' }));
     }
   })
   .catch(err => {
