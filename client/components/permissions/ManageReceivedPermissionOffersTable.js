@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import moment from 'moment';
 
-const ManageReceivedPermissionOffersTable = ({ data, deleteRows }) => {
+const ManageReceivedPermissionOffersTable = ({ data, rejectRows, acceptRows }) => {
 
   const selectRowProp = {
     mode: "checkbox",
@@ -35,11 +35,11 @@ const ManageReceivedPermissionOffersTable = ({ data, deleteRows }) => {
   }
 
   const acceptBid = () => {
-    console.log('Accept');
+    acceptRows(rows.map(x => x.id));
   };
 
   /* eslint-disable */
-  const createCustomInsertButton = onClick => {
+  const createCustomInsertButton = () => {
     return (
       <InsertButton
         btnContextual='btn-success'
@@ -53,7 +53,8 @@ const ManageReceivedPermissionOffersTable = ({ data, deleteRows }) => {
   const createCustomDeleteButton = onClick => {
     return (
       <DeleteButton
-        btnContextual='btn-danger'>
+        btnContextual='btn-danger'
+        onClick={ onClick }>
             <i className="fa fa-times" aria-hidden="true" />
             Reject
       </DeleteButton>
@@ -66,7 +67,7 @@ const ManageReceivedPermissionOffersTable = ({ data, deleteRows }) => {
     insertBtn: createCustomInsertButton,
     deleteBtn: createCustomDeleteButton,
     afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
-      deleteRows(rows);
+      rejectRows(rows);
     },
     handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
   };
@@ -108,7 +109,8 @@ const ManageReceivedPermissionOffersTable = ({ data, deleteRows }) => {
 
 ManageReceivedPermissionOffersTable.propTypes = {
   data: PropTypes.array.isRequired,
-  deleteRows: PropTypes.func.isRequired
+  rejectRows: PropTypes.func.isRequired,
+  acceptRows: PropTypes.func.isRequired
 };
 
 export default ManageReceivedPermissionOffersTable;

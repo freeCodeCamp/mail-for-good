@@ -1,9 +1,13 @@
 import {
   REQUEST_POST_PERMISSION_OFFER, COMPLETE_POST_PERMISSION_OFFER,
-  REQUEST_GET_RECEIVED_PERMISSION_OFFERS, COMPLETE_GET_RECEIVED_PERMISSION_OFFERS
+  REQUEST_GET_RECEIVED_PERMISSION_OFFERS, COMPLETE_GET_RECEIVED_PERMISSION_OFFERS,
+  REQUEST_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS, COMPLETE_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS
 } from '../constants/actionTypes';
 import { API_GRANT_PERMISSIONS_ENDPOINT, API_RECEIVED_PERMISSIONS_ENDPOINT } from '../constants/endpoints';
+import axios from 'axios';
+import { notify } from './notificationActions';
 
+// REST for granting quotes
 export function requestPostPermissionOffer() {
   return { type: REQUEST_POST_PERMISSION_OFFER };
 }
@@ -11,13 +15,38 @@ export function completePostPermissionOffer(payload) {
   return { type: COMPLETE_POST_PERMISSION_OFFER, payload };
 }
 
+// REST for received permission offers
 export function requestGetReceivedPermissionOffers() {
   return { type: REQUEST_GET_RECEIVED_PERMISSION_OFFERS };
 }
 export function completeGetReceivedPermissionOffers(payload) {
   return { type: COMPLETE_GET_RECEIVED_PERMISSION_OFFERS, payload };
 }
+export function requestPostAcceptReceivedPermissionOffers() {
+  return { type: REQUEST_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS };
+}
+export function completePostAcceptReceivedPermissionOffers(payload) {
+  return { type: COMPLETE_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS, payload };
+}
 
+// GRANT
+export function postPermissionOffer(campaign) {
+  return dispatch => {
+    dispatch(requestPostPermissionOffer());
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', API_GRANT_PERMISSIONS_ENDPOINT);
+    xhr.onload = () => {
+      const permissionResponse = JSON.parse(xhr.responseText);
+      const status = xhr.status;
+      dispatch(completePostPermissionOffer({ ...permissionResponse, status  }));
+    };
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(campaign);
+  };
+}
+
+// RECEIVE
 export function getReceivedPermissionOffers() {
   return dispatch => {
     dispatch(requestGetReceivedPermissionOffers());
@@ -41,18 +70,17 @@ export function getReceivedPermissionOffers() {
   };
 }
 
-export function postPermissionOffer(campaign) {
+export function postAcceptReceivedOffers(offerIds) {
   return dispatch => {
-    dispatch(requestPostPermissionOffer());
-
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', API_GRANT_PERMISSIONS_ENDPOINT);
-    xhr.onload = () => {
-      const permissionResponse = JSON.parse(xhr.responseText);
-      const status = xhr.status;
-      dispatch(completePostPermissionOffer({ ...permissionResponse, status  }));
-    };
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(campaign);
+    dispatch(requestPostAcceptReceivedPermissionOffers());
+    axios.post(API_RECEIVED_PERMISSIONS_ENDPOINT, {
+      data: { offerIds }
+    }).then(response => {
+      dispatch(notify({ message: response.data, colour: 'green' }));
+      dispatch(completePostAcceptReceivedPermissionOffers());
+    }).catch(() => {
+      dispatch(notify({ message: 'There was an error completing this request.' }));
+      dispatch(completePostAcceptReceivedPermissionOffers());
+    });
   };
 }

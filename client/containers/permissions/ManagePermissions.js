@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { notify } from '../../actions/notificationActions';
-import { getReceivedPermissionOffers } from '../../actions/permissionActions';
+import { getReceivedPermissionOffers, postAcceptReceivedOffers } from '../../actions/permissionActions';
 
 import FontAwesome from 'react-fontawesome';
 
@@ -16,7 +16,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getReceivedPermissionOffers })
+@connect(mapStateToProps, { getReceivedPermissionOffers, postAcceptReceivedOffers })
 export default class GrantPermissions extends Component {
 
   static propTypes = {
@@ -24,12 +24,14 @@ export default class GrantPermissions extends Component {
     isGettingReceivedPermissionOffers: PropTypes.bool.isRequired,
     receivedPermissionOffers: PropTypes.array.isRequired,
     // actions
-    getReceivedPermissionOffers: PropTypes.func.isRequired
+    getReceivedPermissionOffers: PropTypes.func.isRequired,
+    postAcceptReceivedOffers: PropTypes.func.isRequired
   }
 
   constructor() {
     super();
     this.deleteReceivedPermissionOfferRows = this.deleteReceivedPermissionOfferRows.bind(this);
+    this.acceptReceivedPermissionOfferRows = this.acceptReceivedPermissionOfferRows.bind(this);
   }
 
   componentDidMount() {
@@ -39,8 +41,12 @@ export default class GrantPermissions extends Component {
     }
   }
 
-  deleteReceivedPermissionOfferRows() {
+  deleteReceivedPermissionOfferRows(offerIds) {
+    console.log(offerIds);
+  }
 
+  acceptReceivedPermissionOfferRows(offerIds) {
+    console.log(offerIds);
   }
 
   render() {
@@ -61,7 +67,7 @@ export default class GrantPermissions extends Component {
             </div>
 
             <div className="box-body">
-              <ManageReceivedPermissionOffersTable data={receivedPermissionOffers} deleteRows={this.deleteReceivedPermissionOfferRows} />
+              <ManageReceivedPermissionOffersTable data={receivedPermissionOffers} rejectRows={this.deleteReceivedPermissionOfferRows} acceptRows={this.acceptReceivedPermissionOfferRows} />
             </div>
 
             {isGettingReceivedPermissionOffers && <div className="overlay">
@@ -76,7 +82,6 @@ export default class GrantPermissions extends Component {
             </div>
 
             <div className="box-body">
-              <ManageReceivedPermissionOffersTable data={receivedPermissionOffers} deleteRows={this.deleteReceivedPermissionOfferRows} />
             </div>
 
             {/*<div className="overlay">
