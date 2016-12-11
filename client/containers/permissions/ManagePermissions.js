@@ -7,6 +7,7 @@ import { getReceivedPermissionOffers, postAcceptReceivedOffers } from '../../act
 import FontAwesome from 'react-fontawesome';
 
 import ManageReceivedPermissionOffersTable from '../../components/permissions/ManageReceivedPermissionOffersTable';
+import ManagePermissionTable from '../../components/permissions/ManagePermissionTable';
 
 function mapStateToProps(state) {
   // State reducer @ state.receivedPermissionOffers
@@ -32,6 +33,7 @@ export default class GrantPermissions extends Component {
     super();
     this.deleteReceivedPermissionOfferRows = this.deleteReceivedPermissionOfferRows.bind(this);
     this.acceptReceivedPermissionOfferRows = this.acceptReceivedPermissionOfferRows.bind(this);
+    this.deletePermissionRows = this.deletePermissionRows.bind(this);
   }
 
   componentDidMount() {
@@ -47,6 +49,10 @@ export default class GrantPermissions extends Component {
 
   acceptReceivedPermissionOfferRows(offerIds) {
     this.props.postAcceptReceivedOffers(offerIds);
+  }
+
+  deletePermissionRows(offerIds) {
+    console.log(offerIds);
   }
 
   render() {
@@ -82,6 +88,7 @@ export default class GrantPermissions extends Component {
             </div>
 
             <div className="box-body">
+              <ManagePermissionTable data={receivedPermissionOffers} deleteRows={this.deletePermissionRows} />
             </div>
 
             {/*<div className="overlay">

@@ -2,70 +2,31 @@ import React, { PropTypes } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import moment from 'moment';
 
-const ManageReceivedPermissionOffersTable = ({ data, rejectRows, acceptRows }) => {
+const ManagePermissionTable = ({ data, deletePermissionRows }) => {
 
   const selectRowProp = {
     mode: "checkbox",
     clickToSelect: true,
-    bgColor: "rgb(176, 224, 230)",
-    onSelect: onSelect,
-    onSelectAll: onSelectAll
-  };
-
-  let rows = [];
-
-  function onSelect(row, isSelected) {
-    if (row) {
-      if (isSelected && !rows.find(x => x.id === row.id)) {
-        rows = [...rows, row];
-      } else {
-        rows = rows.filter(x => x.id !== row.id);
-      }
-    }
-  }
-
-  function onSelectAll(isSelected, selectedRows) {
-    if (selectedRows) {
-      if (isSelected) {
-        rows = selectedRows;
-      } else {
-        rows = [];
-      }
-    }
-  }
-
-  const acceptBid = () => {
-    acceptRows(rows.map(x => x.id));
+    bgColor: "rgb(176, 224, 230)"
   };
 
   /* eslint-disable */
-  const createCustomInsertButton = () => {
-    return (
-      <InsertButton
-        btnContextual='btn-success'
-        onClick={ () => acceptBid() }>
-            <i className="fa fa-check" aria-hidden="true" /> Accept
-      </InsertButton>
-    );
-  }
-
   const createCustomDeleteButton = onClick => {
     return (
       <DeleteButton
         btnContextual='btn-danger'
         onClick={ onClick }>
-            <i className="fa fa-times" aria-hidden="true" /> Reject
+            <i className="fa fa-times" aria-hidden="true" /> Remove access to selected permissions
       </DeleteButton>
     );
   }
   /* eslint-enable */
 
   const options = {
-    noDataText: 'You have not received any permission offers',
-    insertBtn: createCustomInsertButton,
+    noDataText: 'You have not been granted any permissions',
     deleteBtn: createCustomDeleteButton,
     afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
-      rejectRows(rows);
+      deletePermissionRows(rows);
     },
     handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
   };
@@ -89,7 +50,6 @@ const ManageReceivedPermissionOffersTable = ({ data, rejectRows, acceptRows }) =
     <BootstrapTable data={data}
       pagination={true}
       hover={true}
-      insertRow={true}
       deleteRow={true}
       selectRow={selectRowProp}
       options={options}
@@ -105,10 +65,9 @@ const ManageReceivedPermissionOffersTable = ({ data, rejectRows, acceptRows }) =
   );
 };
 
-ManageReceivedPermissionOffersTable.propTypes = {
+ManagePermissionTable.propTypes = {
   data: PropTypes.array.isRequired,
-  rejectRows: PropTypes.func.isRequired,
-  acceptRows: PropTypes.func.isRequired
+  deletePermissionRows: PropTypes.func.isRequired
 };
 
-export default ManageReceivedPermissionOffersTable;
+export default ManagePermissionTable;
