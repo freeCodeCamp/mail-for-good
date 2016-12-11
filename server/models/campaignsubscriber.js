@@ -5,7 +5,8 @@ module.exports = function(sequelize, DataTypes) {
     messageId: DataTypes.STRING,
     status: DataTypes.STRING,
     bounceType: DataTypes.STRING,
-    bounceSubType: DataTypes.STRING
+    bounceSubType: DataTypes.STRING,
+    sent: { type: DataTypes.BOOLEAN, defaultValue: false }
   }, {
     classMethods: {
       associate: function(models) {

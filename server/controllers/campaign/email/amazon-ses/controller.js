@@ -118,7 +118,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
           // Save the SES message ID so we can find its status later (bounced, recv, etc)
           // ~ Using the email field here is a bit of a hack, please change me
           CampaignSubscriber.update(
-            { messageId: data.MessageId },
+            { messageId: data.MessageId, sent: true },
             {
               where: { listsubscriberId: task.id },
               limit: 1
