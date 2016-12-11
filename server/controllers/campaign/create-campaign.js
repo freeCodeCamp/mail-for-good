@@ -1,6 +1,7 @@
 const db = require('../../models');
 const slug = require('slug');
 const htmlToText = require('html-to-text');
+const _ = require('lodash');
 
 module.exports = (req, res) => {
   /*
@@ -58,10 +59,36 @@ module.exports = (req, res) => {
         }
       }).then((instance) => {
         if (instance[0].$options.isNewRecord) {
+          const campaignId = instance[0].dataValues.id;
           db.campaignanalytics.create({
-            campaignId: instance[0].dataValues.id
+            campaignId
           }).then(() => {
-            res.send({message: 'New campaign successfully created'});
+            // Iterate through blocks of 10k ListSubscribers and bulk create CampaignSubscribers.
+            // Each time we write (bulk insert) 10k ListSubscribers, fetch the next 10k by recursively calling
+            // createCampaignSubscribers - ensures that we don't run out of ram by loading too many ListSubscribers
+            // at once.
+            function createCampaignSubscribers(offset=0, limit=10000) {
+              db.listsubscriber.findAll({
+                where: { listId: valueFromValidation.listId },
+                limit,
+                offset,
+                attributes: [ ['id', 'listsubscriberId'], 'email'],  // Nested array used to rename id to listsubscriberId
+                raw: true
+              }).then(listSubscribers => {
+                if (listSubscribers.length) {  // If length is 0 then there are no more ListSubscribers, so we can cleanup
+                  listSubscribers = listSubscribers.map(listSubscriber => {
+                    listSubscriber.campaignId = campaignId;
+                    return listSubscriber;
+                  });
+                  db.campaignsubscriber.bulkCreate(listSubscribers).then(() => {
+                    createCampaignSubscribers(offset + limit);
+                  });
+                } else {
+                  res.send({message: 'New campaign successfully created'});  // Should use notification/status rather than simple response
+                }
+              })
+            }
+            createCampaignSubscribers();  // Start creating CampaignSubscribers
           });
         } else {
           res.status(400).send(); // As before, form will be validated client side so no need for a response
@@ -72,3 +99,5 @@ module.exports = (req, res) => {
     }
   });
 };
+
+

@@ -3,6 +3,7 @@ const createCampaign = require('./create-campaign');
 const {
   sequelize,
   campaignanalytics: CampaignAnalytics,
+  campaignsubscriber: CampaignSubscriber,
   campaign: Campaign,
   user: User,
   list: List,
@@ -96,5 +97,18 @@ describe('createCampaign', () => {
         done();
       }))
     });
+
+    it('creates CampaignSubscriber entries', done => {
+      CampaignSubscriber.findAll({
+        where: {
+          campaignId: 1,
+          email: { $any: ['someone@someone.com', 'someone2@someone.com', 'someone3@someone.com'] },
+          listsubscriberId: { $any: [1, 2, 3] }
+        },
+      }).done(campaignSubscribers => {
+        expect(campaignSubscribers.length).to.be.equal(3);
+        done();
+      })
+    })
   })
 })
