@@ -1,5 +1,6 @@
 import initialState from './initialState';
 import {
+  REQUEST_GET_ACTIVE_PERMISSIONS, COMPLETE_GET_ACTIVE_PERMISSIONS,
   REQUEST_POST_PERMISSION_OFFER, COMPLETE_POST_PERMISSION_OFFER,
   REQUEST_GET_RECEIVED_PERMISSION_OFFERS, COMPLETE_GET_RECEIVED_PERMISSION_OFFERS
 } from '../constants/actionTypes';
@@ -40,7 +41,26 @@ export function receivedPermissionOffers(state = initialState.receivedPermission
   }
 }
 
+export function activePermissions(state = initialState.activePermissions, action) {
+  switch(action.type) {
+    case REQUEST_GET_ACTIVE_PERMISSIONS: {
+      return {...state,
+        isGetting: true
+      };
+    }
+    case COMPLETE_GET_ACTIVE_PERMISSIONS: {
+      return {...state,
+        isGetting: false,
+        activePermissions: action.payload
+      };
+    }
+    default:
+      return state;
+  }
+}
+
 export default {
   offerPermission,
-  receivedPermissionOffers
+  receivedPermissionOffers,
+  activePermissions
 };

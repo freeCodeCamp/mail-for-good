@@ -1,4 +1,5 @@
 import {
+  REQUEST_GET_ACTIVE_PERMISSIONS, COMPLETE_GET_ACTIVE_PERMISSIONS,
   REQUEST_POST_PERMISSION_OFFER, COMPLETE_POST_PERMISSION_OFFER,
   REQUEST_GET_RECEIVED_PERMISSION_OFFERS, COMPLETE_GET_RECEIVED_PERMISSION_OFFERS,
   REQUEST_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS, COMPLETE_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS
@@ -7,7 +8,13 @@ import { API_GRANT_PERMISSIONS_ENDPOINT, API_RECEIVED_PERMISSIONS_ENDPOINT } fro
 import axios from 'axios';
 import { notify } from './notificationActions';
 
-// REST for granting quotes
+// REST for granting permissions / managing active permissions
+export function requestGetActivePermissions() {
+  return { type: REQUEST_GET_ACTIVE_PERMISSIONS };
+}
+export function completeGetActivePermissions(payload) {
+  return { type: COMPLETE_GET_ACTIVE_PERMISSIONS, payload };
+}
 export function requestPostPermissionOffer() {
   return { type: REQUEST_POST_PERMISSION_OFFER };
 }

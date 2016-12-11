@@ -88,7 +88,7 @@ export default class GrantPermissions extends Component {
             </div>
 
             <div className="box-body">
-              <ManagePermissionTable data={receivedPermissionOffers} deleteRows={this.deletePermissionRows} />
+              <ManagePermissionTable data={receivedPermissionOffers} deletePermissionRows={this.deletePermissionRows} />
             </div>
 
             {/*<div className="overlay">
