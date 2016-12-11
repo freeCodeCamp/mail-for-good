@@ -33,6 +33,7 @@ const unsubscribe = require('../controllers/subscriber/unsubscribe');
 const offerPermission = require('../controllers/permissions/offer-permission');
 
 const getReceivedPermissionOffers = require('../controllers/permissions/get-received-permission-offers');
+const acceptPermissionOffer = require('../controllers/permissions/accept-permission-offer');
 
 // Analytics
 const getClickthroughs = require('../controllers/analytics/get-clickthroughs');
@@ -144,8 +145,13 @@ module.exports = (app, passport, io) => {
     offerPermission(req, res);
   });
 
+  // Get received permission offers
   app.get('/api/received-permissions', apiIsAuth, (req, res) => {
     getReceivedPermissionOffers(req, res);
+  });
+  // Post to accept a permission offer
+  app.post('/api/received-permissions', apiIsAuth, parseJson, (req, res) => {
+    acceptPermissionOffer(req, res);
   });
 
   /* Settings */

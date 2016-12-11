@@ -46,7 +46,7 @@ export default class GrantPermissions extends Component {
   }
 
   acceptReceivedPermissionOfferRows(offerIds) {
-    console.log(offerIds);
+    this.props.postAcceptReceivedOffers(offerIds);
   }
 
   render() {
