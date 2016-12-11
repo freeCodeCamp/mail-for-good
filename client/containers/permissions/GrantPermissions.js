@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { notify } from '../../actions/notificationActions';
 import { postPermissionOffer } from '../../actions/permissionActions';
 
-
 import GrantPermissionForm from '../../components/permissions/GrantPermissionForm';
 
 import FontAwesome from 'react-fontawesome';

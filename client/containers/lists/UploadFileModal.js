@@ -1,7 +1,6 @@
 import React from 'react';
 import { Modal, FormControl } from 'react-bootstrap';
 
-
 export default class UploadFileModal extends React.Component {
   constructor(props) {
     super(props);

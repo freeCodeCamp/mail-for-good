@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import 'react-widgets/dist/css/react-widgets.css';
 
 import { renderField, renderDropdownList } from '../common/FormRenderWrappers';
 

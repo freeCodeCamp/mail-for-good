@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Field, reduxForm} from 'redux-form';
 import { renderField, renderTextEditor, renderRadio } from '../common/FormRenderWrappers';
-import 'react-widgets/dist/css/react-widgets.css';
 
 // Ref redux-form http://redux-form.com/6.0.5/docs/GettingStarted.md/
 // Ref react-widgets https://jquense.github.io/react-widgets/ (for examples see https://github.com/erikras/redux-form/blob/master/examples/react-widgets/src/ReactWidgetsForm.js)

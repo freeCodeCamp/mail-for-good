@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import moment from 'moment';
-import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
 const ManageReceivedPermissionOffersTable = ({ data, deleteRows }) => {
 
