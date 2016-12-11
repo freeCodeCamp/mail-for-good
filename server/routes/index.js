@@ -8,6 +8,7 @@ const parseJson = bodyParser.json();
 const getCampaigns = require('../controllers/campaign/get-campaigns');
 const createCampaign = require('../controllers/campaign/create-campaign');
 const deleteCampaigns = require('../controllers/campaign/delete-campaigns');
+const exportSentUnsentCSV = require('../controllers/campaign/export-sent-unsent-csv');
 
 // Send campaign
 const sendCampaign = require('../controllers/campaign/send-campaign');
@@ -71,6 +72,10 @@ module.exports = (app, passport, io) => {
   // Delete campaign(s)
   app.delete('/api/campaign', apiIsAuth, parseJson, (req, res) => {
     deleteCampaigns(req, res);
+  });
+  // Export subscribers that emails were not sent/sent to during a campaign
+  app.get('/api/campaign/subscribers/csv', apiIsAuth, (req, res) => {
+    exportSentUnsentCSV(req, res);
   });
 
   /* Send */
