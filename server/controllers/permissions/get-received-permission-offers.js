@@ -6,6 +6,12 @@ module.exports = function(req, res) {
     where: {
       toUserId: String(req.user.id)
     },
+    attributes: [
+      'toUserEmail',
+      'campaigns',
+      'createdAt',
+      'updatedAt'
+    ],
     raw: true
   })
   .then(receivedPermissionArray => {

@@ -28,6 +28,7 @@ module.exports = function(req, res) {
         } else {
           OfferPermission.create({
             toUserId: String(userInstance.getDataValue('id')),
+            toUserEmail: email,
             campaigns
           })
           .then(() => res.send({ message: 'Your offer to grant this user these permissions has been sent' }))
