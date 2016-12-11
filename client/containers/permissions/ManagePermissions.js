@@ -8,9 +8,10 @@ import GrantPermissionForm from '../../components/permissions/GrantPermissionFor
 import FontAwesome from 'react-fontawesome';
 
 function mapStateToProps(state) {
-  // State reducer @
+  // State reducer @ state.receivedPermissionOffers
   return {
-
+    isGettingReceivedPermissionOffers: state.receivedPermissionOffers.isGetting,
+    receivedPermissionOffers: state.receivedPermissionOffers.receivedPermissionOffers
   };
 }
 
@@ -18,6 +19,8 @@ function mapStateToProps(state) {
 export default class GrantPermissions extends Component {
 
   static propTypes = {
+    isGettingReceivedPermissionOffers: PropTypes.bool.isRequired,
+    receivedPermissionOffers: PropTypes.array.isRequired
   }
 
   constructor() {
@@ -25,6 +28,7 @@ export default class GrantPermissions extends Component {
   }
 
   render() {
+
     return (
       <div>
         <div className="content-header">

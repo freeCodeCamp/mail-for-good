@@ -48,6 +48,10 @@ const initialState = {
   offerPermission: { // Refers to GrantPermissions container
     isPosting: false,
     response: {}
+  },
+  receivedPermissionOffers: { // Permission offers received from another user
+    isGetting: false,
+    receivedPermissionOffers: []
   }
 };
 
