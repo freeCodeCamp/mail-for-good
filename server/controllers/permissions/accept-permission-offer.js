@@ -21,7 +21,12 @@ module.exports = function(req, res) {
       return null;
     } else {
       return sequelize.transaction(transaction => {
-        return ACL.bulkCreate({ ...offerPermissions, userId: req.user.id }, { transaction })
+        offerPermissions = offerPermissions.map(x => {
+          x.userId = String(x.userId);
+          return x;
+        });
+        
+        return ACL.bulkCreate(offerPermissions, { transaction })
         .then(() => {
           return OfferPermission.destroy({
             where: {

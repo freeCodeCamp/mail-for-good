@@ -27,6 +27,7 @@ module.exports = function(req, res) {
           res.status(400).send({ message: 'You have already granted this user permissions. If you wish to change them, please delete them first' });
         } else {
           OfferPermission.create({
+            userId: req.user.id,
             toUserId: String(userInstance.getDataValue('id')),
             toUserEmail: email,
             campaigns

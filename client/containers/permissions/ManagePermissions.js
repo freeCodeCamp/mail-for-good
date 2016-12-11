@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { notify } from '../../actions/notificationActions';
-import { getReceivedPermissionOffers, postAcceptReceivedOffers } from '../../actions/permissionActions';
+import { getReceivedPermissionOffers, getActivePermissions, postAcceptReceivedOffers } from '../../actions/permissionActions';
 
 import FontAwesome from 'react-fontawesome';
 
@@ -20,7 +20,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getReceivedPermissionOffers, postAcceptReceivedOffers })
+@connect(mapStateToProps, { getReceivedPermissionOffers, getActivePermissions, postAcceptReceivedOffers })
 export default class GrantPermissions extends Component {
 
   static propTypes = {
@@ -31,6 +31,7 @@ export default class GrantPermissions extends Component {
     activePermissions: PropTypes.array.isRequired,
     // actions
     getReceivedPermissionOffers: PropTypes.func.isRequired,
+    getActivePermissions: PropTypes.func.isRequired,
     postAcceptReceivedOffers: PropTypes.func.isRequired
   }
 
@@ -45,6 +46,9 @@ export default class GrantPermissions extends Component {
     // Update receivedPermissionOffers only if we need to
     if (!this.props.receivedPermissionOffers.length) {
       this.props.getReceivedPermissionOffers();
+    }
+    if (!this.props.activePermissions.length) {
+      this.props.getActivePermissions();
     }
   }
 
@@ -61,7 +65,7 @@ export default class GrantPermissions extends Component {
   }
 
   render() {
-    const { receivedPermissionOffers, isGettingReceivedPermissionOffers } = this.props;
+    const { receivedPermissionOffers, isGettingReceivedPermissionOffers, isGettingActivePermissions, activePermissions } = this.props;
     return (
       <div>
         <div className="content-header">
@@ -93,12 +97,12 @@ export default class GrantPermissions extends Component {
             </div>
 
             <div className="box-body">
-              <ManagePermissionTable data={receivedPermissionOffers} deletePermissionRows={this.deletePermissionRows} />
+              <ManagePermissionTable data={activePermissions} deletePermissionRows={this.deletePermissionRows} />
             </div>
 
-            {/*<div className="overlay">
+            {isGettingActivePermissions && <div className="overlay">
               <FontAwesome name="refresh" spin/>
-            </div>*/}
+            </div>}
           </div>
         </section>
 

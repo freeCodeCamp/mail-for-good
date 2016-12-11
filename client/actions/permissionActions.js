@@ -8,18 +8,20 @@ import { API_GRANT_PERMISSIONS_ENDPOINT, API_RECEIVED_PERMISSIONS_ENDPOINT, API_
 import axios from 'axios';
 import { notify } from './notificationActions';
 
-// REST for granting permissions / managing active permissions
-export function requestGetActivePermissions() {
-  return { type: REQUEST_GET_ACTIVE_PERMISSIONS };
-}
-export function completeGetActivePermissions(payload) {
-  return { type: COMPLETE_GET_ACTIVE_PERMISSIONS, payload };
-}
+// REST for granting permissions
 export function requestPostPermissionOffer() {
   return { type: REQUEST_POST_PERMISSION_OFFER };
 }
 export function completePostPermissionOffer(payload) {
   return { type: COMPLETE_POST_PERMISSION_OFFER, payload };
+}
+
+// REST active permissions
+export function requestGetActivePermissions() {
+  return { type: REQUEST_GET_ACTIVE_PERMISSIONS };
+}
+export function completeGetActivePermissions(payload) {
+  return { type: COMPLETE_GET_ACTIVE_PERMISSIONS, payload };
 }
 
 // REST for received permission offers
@@ -56,7 +58,7 @@ export function postPermissionOffer(campaign) {
 // ACTIVE
 export function getActivePermissions() {
   return dispatch => {
-    dispatch(requestGetReceivedPermissionOffers());
+    dispatch(requestGetActivePermissions());
     const xhr = new XMLHttpRequest();
     xhr.open('GET', API_ACTIVE_PERMISSIONS_ENDPOINT);
     xhr.onload = () => {
