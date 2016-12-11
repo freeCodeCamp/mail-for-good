@@ -13,7 +13,10 @@ function mapStateToProps(state) {
   // State reducer @ state.receivedPermissionOffers
   return {
     isGettingReceivedPermissionOffers: state.receivedPermissionOffers.isGetting,
-    receivedPermissionOffers: state.receivedPermissionOffers.receivedPermissionOffers
+    receivedPermissionOffers: state.receivedPermissionOffers.receivedPermissionOffers,
+
+    isGettingActivePermissions: state.activePermissions.isGetting,
+    activePermissions: state.activePermissions.activePermissions
   };
 }
 
@@ -24,6 +27,8 @@ export default class GrantPermissions extends Component {
     // redux
     isGettingReceivedPermissionOffers: PropTypes.bool.isRequired,
     receivedPermissionOffers: PropTypes.array.isRequired,
+    isGettingActivePermissions: PropTypes.array.isRequired,
+    activePermissions: PropTypes.array.isRequired,
     // actions
     getReceivedPermissionOffers: PropTypes.func.isRequired,
     postAcceptReceivedOffers: PropTypes.func.isRequired

@@ -4,7 +4,7 @@ import {
   REQUEST_GET_RECEIVED_PERMISSION_OFFERS, COMPLETE_GET_RECEIVED_PERMISSION_OFFERS,
   REQUEST_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS, COMPLETE_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS
 } from '../constants/actionTypes';
-import { API_GRANT_PERMISSIONS_ENDPOINT, API_RECEIVED_PERMISSIONS_ENDPOINT } from '../constants/endpoints';
+import { API_GRANT_PERMISSIONS_ENDPOINT, API_RECEIVED_PERMISSIONS_ENDPOINT, API_ACTIVE_PERMISSIONS_ENDPOINT } from '../constants/endpoints';
 import axios from 'axios';
 import { notify } from './notificationActions';
 
@@ -53,10 +53,34 @@ export function postPermissionOffer(campaign) {
   };
 }
 
+// ACTIVE
+export function getActivePermissions() {
+  return dispatch => {
+    dispatch(requestGetReceivedPermissionOffers());
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', API_ACTIVE_PERMISSIONS_ENDPOINT);
+    xhr.onload = () => {
+      if (xhr.responseText) {
+        // Convert response from JSON
+        const permissionsArray = JSON.parse(xhr.responseText).map(x => {
+          x.createdAt = new Date(x.createdAt);
+          x.updatedAt = new Date(x.updatedAt);
+          return x;
+        });
+
+        dispatch(completeGetActivePermissions(permissionsArray));
+      } else {
+        dispatch(completeGetActivePermissions([]));
+      }
+    };
+    xhr.send();
+  };
+}
+
 // RECEIVE
 export function getReceivedPermissionOffers() {
   return dispatch => {
-    dispatch(requestGetReceivedPermissionOffers());
+    dispatch(requestGetActivePermissions());
     const xhr = new XMLHttpRequest();
     xhr.open('GET', API_RECEIVED_PERMISSIONS_ENDPOINT);
     xhr.onload = () => {

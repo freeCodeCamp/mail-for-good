@@ -32,6 +32,8 @@ const unsubscribe = require('../controllers/subscriber/unsubscribe');
 // Permissions
 const offerPermission = require('../controllers/permissions/offer-permission');
 
+const getActivePermissions = require('../controllers/permissions/get-active-permissions');
+
 const getReceivedPermissionOffers = require('../controllers/permissions/get-received-permission-offers');
 const acceptPermissionOffer = require('../controllers/permissions/accept-permission-offer');
 
@@ -143,6 +145,10 @@ module.exports = (app, passport, io) => {
   // Post to change new settings
   app.post('/api/permissions', apiIsAuth, parseJson, (req, res) => {
     offerPermission(req, res);
+  });
+
+  app.get('/api/active-permissions', apiIsAuth, (req, res) => {
+    getActivePermissions(req, res);
   });
 
   // Get received permission offers
