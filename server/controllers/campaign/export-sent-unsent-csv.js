@@ -50,7 +50,7 @@ module.exports = (req, res) => {
 
             // Build csv rows from the data
             listSubscribers.forEach(listSubscriber => {
-              chunk += `${listSubscriber.email},${listSubscriber.subscribed},${listSubscriber.mostRecentStatus}\n`;
+              chunk += `${listSubscriber.email}\n`;
             });
 
             // Make sure that the response buffer is empty before fetching and sending more
