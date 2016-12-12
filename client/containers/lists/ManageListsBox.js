@@ -4,6 +4,7 @@ import FontAwesome from 'react-fontawesome';
 
 import { getLists, deleteLists } from '../../actions/listActions';
 import ManageListsTable from '../../components/lists/ManageListsTable';
+import ListSignupFormCreator from '../../components/lists/ListSignupFormCreator';
 
 function mapStateToProps(state) {
   // State reducer @ state.manageList
@@ -26,6 +27,10 @@ export default class ManageList extends Component {
   constructor() {
     super();
     this.deleteRows = this.deleteRows.bind(this);
+    this.state = {
+      showListSignupFormCreator: false,
+      unsubscribeKey: ''
+    }
   }
 
   componentDidMount() {
@@ -39,15 +44,29 @@ export default class ManageList extends Component {
     this.props.deleteLists(listIds, this.props.lists);
   }
 
+  showListSignupFormCreator(unsubscribeKey) {
+    this.setState({
+      unsubscribeKey,
+      showListSignupFormCreator: true
+    });
+  }
+
+
   render() {
     return (
       <div className="box box-primary">
+        <ListSignupFormCreator unsubscribeKey={this.state.unsubscribeKey}
+                               showModal={this.state.showListSignupFormCreator}
+        />
         <div className="box-header">
           <h3 className="box-title">Your lists</h3>
         </div>
 
         <div className="box-body">
-          <ManageListsTable data={this.props.lists} deleteRows={this.deleteRows} />
+          <ManageListsTable data={this.props.lists}
+                            deleteRows={this.deleteRows}
+                            showListSignupFormCreator={this.showListSignupFormCreator.bind(this)}
+          />
 
           {this.props.isGetting && <div className="overlay">
             <FontAwesome name="refresh" spin/>

@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import moment from 'moment';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
-const ManageListsTable = ({ data, deleteRows }) => {
+const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
 
   const selectRowProp = {
     mode: "checkbox",
@@ -30,11 +30,15 @@ const ManageListsTable = ({ data, deleteRows }) => {
       </Link>
   );
 
-  const formatSignupFormButton = (cell, row) => (
-    <button type="button" className="btn btn-default btn-flat">
-      <i className="fa fa-address-card" />
-    </button>
-  )
+  const formatSignupFormButton = (cell, row) => {
+    console.log(showListSignupFormCreator)
+    return (
+      <button onClick={showListSignupFormCreator} type="button" className="btn btn-default btn-flat">
+        <i className="fa fa-address-card" />
+      </button>
+    )
+  }
+  console.log(showListSignupFormCreator)
 
   return (
     <BootstrapTable data={data}
