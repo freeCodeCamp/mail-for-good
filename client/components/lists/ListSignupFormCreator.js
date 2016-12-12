@@ -1,8 +1,12 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { connect } from 'react-redux';
+
+import { notify } from '../../actions/notificationActions';
 
 
+@connect(null, { notify })
 export default class ListSignupFormCreator extends React.Component {
   constructor(props) {
     super(props);
@@ -58,7 +62,7 @@ export default class ListSignupFormCreator extends React.Component {
           </div>
           <div className="modal-footer">
             <CopyToClipboard text={formBody}
-                             onCopy={() => {}}>
+                             onCopy={() => {this.props.notify({message: 'Copied to clipboard', colour: 'green'}).bind(this)}}>
               <button className="btn btn-primary">Copy to clipboard</button>
             </CopyToClipboard>
 
