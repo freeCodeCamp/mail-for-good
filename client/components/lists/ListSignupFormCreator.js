@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 
 export default class ListSignupFormCreator extends React.Component {
@@ -33,6 +34,14 @@ export default class ListSignupFormCreator extends React.Component {
 
   render() {
     const actionUrl = `${window.location.origin}/api/list/subscribe`;
+    const formBody = `
+              <form action="${actionUrl}" target="_blank">
+              <label for="signup-email">Email</label>
+              <input type="email" value="" name="email" label="signup-email">
+              <input type="hidden" name="subscribeKey" value="${this.state.subscribeKey}" />
+              <input type="submit" value="Subscribe" name="Subscribe">
+              </form>
+            `
 
     return (
       <Modal show={this.state.showModal} onHide={this.closeModal.bind(this)}>
@@ -44,17 +53,16 @@ export default class ListSignupFormCreator extends React.Component {
             <h4>Allow users to sign up to your mailing list by embedding this HTML code into your website</h4>
             <br/>
             <textarea className="form-control" rows="5">
-              {`
-              <form action="${actionUrl}" target="_blank">
-              <label for="signup-email">Email</label>
-              <input type="email" value="" name="email" label="signup-email">
-              <input type="hidden" name="subscribeKey" value="${this.state.subscribeKey}" />
-              <input type="submit" value="Subscribe" name="Subscribe">
-              </form>
-            `}
+              {formBody}
             </textarea>
           </div>
-          <div className="modal-footer"></div>
+          <div className="modal-footer">
+            <CopyToClipboard text={formBody}
+                             onCopy={() => {}}>
+              <button className="btn btn-primary">Copy to clipboard</button>
+            </CopyToClipboard>
+
+          </div>
         </div>
       </Modal>
     );
