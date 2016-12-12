@@ -23,6 +23,7 @@ export default class ManageReceivedPermissionOffersTable extends Component {
       };
 
       let rows = [];
+      let didAccept = false;
 
       function onSelect(row, isSelected) {
         if (row) {
@@ -45,6 +46,7 @@ export default class ManageReceivedPermissionOffersTable extends Component {
       }
 
       const acceptBid = () => {
+        didAccept = true;
         const rowIds = rows.map(x => x.id);
         acceptRows(rowIds);
         this.refs.mrpo.handleDropRow(rowIds);
@@ -77,7 +79,11 @@ export default class ManageReceivedPermissionOffersTable extends Component {
         insertBtn: createCustomInsertButton,
         deleteBtn: createCustomDeleteButton,
         afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
-          rejectRows(rows);
+          if (didAccept) {
+            didAccept = false;
+          } else {
+            rejectRows(rows);
+          }
         },
         handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
       };

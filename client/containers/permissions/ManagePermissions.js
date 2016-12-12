@@ -27,7 +27,7 @@ export default class GrantPermissions extends Component {
     // redux
     isGettingReceivedPermissionOffers: PropTypes.bool.isRequired,
     receivedPermissionOffers: PropTypes.array.isRequired,
-    isGettingActivePermissions: PropTypes.array.isRequired,
+    isGettingActivePermissions: PropTypes.bool.isRequired,
     activePermissions: PropTypes.array.isRequired,
     // actions
     getReceivedPermissionOffers: PropTypes.func.isRequired,
@@ -58,7 +58,7 @@ export default class GrantPermissions extends Component {
   }
 
   acceptReceivedPermissionOfferRows(offerIds) {
-    this.props.postAcceptReceivedOffers(offerIds);
+    this.props.postAcceptReceivedOffers(offerIds, this.props.receivedPermissionOffers);
   }
 
   deletePermissionRows(offerIds) {

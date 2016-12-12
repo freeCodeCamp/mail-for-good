@@ -114,14 +114,15 @@ export function getReceivedPermissionOffers() {
   };
 }
 
-export function postAcceptReceivedOffers(offerIds) {
+export function postAcceptReceivedOffers(offerIds, receivedOffers) {
   return dispatch => {
     dispatch(requestPostAcceptReceivedPermissionOffers());
     axios.post(API_RECEIVED_PERMISSIONS_ENDPOINT, {
       data: { offerIds }
     }).then(response => {
-      dispatch(notify({ message: response.data, colour: 'green' }));
-      dispatch(completePostAcceptReceivedPermissionOffers());
+      dispatch(notify({ message: response.data.message, colour: 'green' }));
+      const filterReceivedOfferIds = receivedOffers.filter(offer => !~offerIds.indexOf(offer.id));
+      dispatch(completePostAcceptReceivedPermissionOffers(filterReceivedOfferIds));
     }).catch(() => {
       dispatch(notify({ message: 'There was an error completing this request.' }));
       dispatch(completePostAcceptReceivedPermissionOffers());
@@ -129,15 +130,15 @@ export function postAcceptReceivedOffers(offerIds) {
   };
 }
 
-export function deleteRejectReceivedOffers(receivedOfferIds, receivedOffers) {
+export function deleteRejectReceivedOffers(offerIds, receivedOffers) {
   return dispatch => {
     dispatch(requestDeleteRejectReceivedPermissionOffers());
     axios.delete(API_RECEIVED_PERMISSIONS_ENDPOINT, {
-      data: { receivedOfferIds: receivedOfferIds }
+      data: { offerIds }
     }).then(response => {
-      dispatch(notify({ message: response.data, colour: 'green' }));
+      dispatch(notify({ message: response.data.message, colour: 'green' }));
       // Remove deleted lists from state
-      const filterReceivedOfferIds = receivedOffers.filter(offer => !~receivedOfferIds.indexOf(offer.id));
+      const filterReceivedOfferIds = receivedOffers.filter(offer => !~offerIds.indexOf(offer.id));
       dispatch(completeDeleteRejectReceivedPermissionOffers(filterReceivedOfferIds));
     }).catch(() => {
       dispatch(notify({ message: 'There was an error completing this request.' }));
