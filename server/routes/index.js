@@ -36,6 +36,7 @@ const getActivePermissions = require('../controllers/permissions/get-active-perm
 
 const getReceivedPermissionOffers = require('../controllers/permissions/get-received-permission-offers');
 const acceptPermissionOffer = require('../controllers/permissions/accept-permission-offer');
+const rejectPermissionOffer = require('../controllers/permissions/reject-permission-offers');
 
 // Analytics
 const getClickthroughs = require('../controllers/analytics/get-clickthroughs');
@@ -155,9 +156,13 @@ module.exports = (app, passport, io) => {
   app.get('/api/received-permissions', apiIsAuth, (req, res) => {
     getReceivedPermissionOffers(req, res);
   });
-  // Post to accept a permission offer
+  // Post to accept permission offers
   app.post('/api/received-permissions', apiIsAuth, parseJson, (req, res) => {
     acceptPermissionOffer(req, res);
+  });
+  // Delete to reject permission offers
+  app.delete('/api/received-permissions', apiIsAuth, parseJson, (req, res) => {
+    rejectPermissionOffer(req, res);
   });
 
   /* Settings */

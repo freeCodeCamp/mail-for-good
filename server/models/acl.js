@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
     campaigns: DataTypes.STRING
   }, {
     classMethods: {
-      associate: function(models) {
+      associate: function() {
         // associations can be defined here
       }
     }

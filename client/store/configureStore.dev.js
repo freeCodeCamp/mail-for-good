@@ -19,7 +19,7 @@ export default function configureStore(initialState) {
   const store = createStore(rootReducer, initialState, compose(
     applyMiddleware(...middewares),
     // Save subset of state to local storage
-    //persistState(['form']),
+    persistState(['form']),
     window.devToolsExtension ? window.devToolsExtension() : f => f // add support for Redux dev tools
     )
   );

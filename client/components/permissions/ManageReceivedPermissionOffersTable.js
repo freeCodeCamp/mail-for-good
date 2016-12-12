@@ -123,4 +123,4 @@ export default class ManageReceivedPermissionOffersTable extends Component {
       </BootstrapTable>
     );
   }
-};
+}
