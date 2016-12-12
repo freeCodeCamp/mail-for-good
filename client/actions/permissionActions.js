@@ -101,6 +101,7 @@ export function getActivePermissions() {
 
 export function deleteActivePermissions(offerIds, activePermissions) {
   return dispatch => {
+    console.log(offerIds, activePermissions);
     dispatch(requestDeleteActivePermissions());
     axios.delete(API_ACTIVE_PERMISSIONS_ENDPOINT, {
       data: { offerIds }

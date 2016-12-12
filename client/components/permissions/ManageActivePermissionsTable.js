@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import moment from 'moment';
 
-const ManagePermissionTable = ({ data, deletePermissionRows }) => {
+const ManageActivePermissionsTable = ({ data, deletePermissionRows }) => {
 
   const selectRowProp = {
     mode: "checkbox",
@@ -52,9 +52,7 @@ const ManagePermissionTable = ({ data, deletePermissionRows }) => {
       hover={true}
       deleteRow={true}
       selectRow={selectRowProp}
-      options={options}
-      searchPlaceholder="Filter lists"
-      clearSearch={true}>
+      options={options}>
 
       <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
       <TableHeaderColumn dataField="toUserEmail" dataSort={true}>Email</TableHeaderColumn>
@@ -65,9 +63,9 @@ const ManagePermissionTable = ({ data, deletePermissionRows }) => {
   );
 };
 
-ManagePermissionTable.propTypes = {
+ManageActivePermissionsTable.propTypes = {
   data: PropTypes.array.isRequired,
   deletePermissionRows: PropTypes.func.isRequired
 };
 
-export default ManagePermissionTable;
+export default ManageActivePermissionsTable;

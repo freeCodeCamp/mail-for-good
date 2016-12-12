@@ -111,8 +111,6 @@ export default class ManageReceivedPermissionOffersTable extends Component {
         deleteRow={true}
         selectRow={selectRowProp}
         options={options}
-        searchPlaceholder="Filter lists"
-        clearSearch={true}
         ref="mrpo">
 
         <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>

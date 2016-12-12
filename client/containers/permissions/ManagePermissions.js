@@ -13,7 +13,8 @@ import {
 import FontAwesome from 'react-fontawesome';
 
 import ManageReceivedPermissionOffersTable from '../../components/permissions/ManageReceivedPermissionOffersTable';
-import ManagePermissionTable from '../../components/permissions/ManagePermissionTable';
+import ManageActivePermissionsTable from '../../components/permissions/ManageActivePermissionsTable';
+import ManageGrantedPermissionsTable from '../../components/permissions/ManageGrantedPermissionsTable';
 
 function mapStateToProps(state) {
   // State reducer @ state.receivedPermissionOffers
@@ -47,7 +48,8 @@ export default class GrantPermissions extends Component {
     super();
     this.deleteReceivedPermissionOfferRows = this.deleteReceivedPermissionOfferRows.bind(this);
     this.acceptReceivedPermissionOfferRows = this.acceptReceivedPermissionOfferRows.bind(this);
-    this.deletePermissionRows = this.deletePermissionRows.bind(this);
+    this.deleteActivePermissionRows = this.deleteActivePermissionRows.bind(this);
+    this.deleteGrantedPermissionRows = this.deleteGrantedPermissionRows.bind(this);
   }
 
   componentDidMount() {
@@ -68,8 +70,12 @@ export default class GrantPermissions extends Component {
     this.props.postAcceptReceivedOffers(offerIds, this.props.receivedPermissionOffers);
   }
 
-  deletePermissionRows(offerIds) {
-    this.props.deleteActivePermissions(offerIds, this.props.receivedPermissionOffers);
+  deleteActivePermissionRows(offerIds) {
+    this.props.deleteActivePermissions(offerIds, this.props.activePermissions);
+  }
+
+  deleteGrantedPermissionRows(offerIds) {
+
   }
 
   render() {
@@ -105,12 +111,27 @@ export default class GrantPermissions extends Component {
             </div>
 
             <div className="box-body">
-              <ManagePermissionTable data={activePermissions} deletePermissionRows={this.deletePermissionRows} />
+              <ManageActivePermissionsTable data={activePermissions} deletePermissionRows={this.deleteActivePermissionRows} />
             </div>
 
             {isGettingActivePermissions && <div className="overlay">
               <FontAwesome name="refresh" spin/>
             </div>}
+          </div>
+
+          <div className="box box-primary">
+
+            <div className="box-header">
+              <h2>Granted permissions</h2>
+            </div>
+
+            <div className="box-body">
+              <ManageGrantedPermissionsTable data={activePermissions} deletePermissionRows={this.deleteGrantedPermissionRows} />
+            </div>
+
+            {/*<div className="overlay">
+              <FontAwesome name="refresh" spin/>
+            </div>*/}
           </div>
         </section>
 
