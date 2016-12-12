@@ -1,5 +1,6 @@
 import {
-  REQUEST_POST_PERMISSION_OFFER, COMPLETE_POST_PERMISSION_OFFER,
+  REQUEST_GET_GRANT_PERMISSION, COMPLETE_GET_GRANT_PERMISSION,
+  REQUEST_POST_GRANT_PERMISSION, COMPLETE_POST_GRANT_PERMISSION,
 
   REQUEST_GET_ACTIVE_PERMISSIONS, COMPLETE_GET_ACTIVE_PERMISSIONS,
   REQUEST_DELETE_ACTIVE_PERMISSIONS, COMPLETE_DELETE_ACTIVE_PERMISSIONS,
@@ -17,11 +18,17 @@ import axios from 'axios';
 import { notify } from './notificationActions';
 
 // REST for granting permissions
-export function requestPostPermissionOffer() {
-  return { type: REQUEST_POST_PERMISSION_OFFER };
+export function requestGetGrantPermissions() {
+  return { type: REQUEST_GET_GRANT_PERMISSION };
 }
-export function completePostPermissionOffer(payload) {
-  return { type: COMPLETE_POST_PERMISSION_OFFER, payload };
+export function completeGetGrantPermissions(payload) {
+  return { type: COMPLETE_GET_GRANT_PERMISSION, payload };
+}
+export function requestPostGrantPermission() {
+  return { type: REQUEST_POST_GRANT_PERMISSION };
+}
+export function completePostGrantPermission(payload) {
+  return { type: COMPLETE_POST_GRANT_PERMISSION, payload };
 }
 
 // REST active permissions
@@ -59,16 +66,39 @@ export function completeDeleteRejectReceivedPermissionOffers(payload) {
 }
 
 // GRANT
-export function postPermissionOffer(campaign) {
+export function getGrantPermissions() {
   return dispatch => {
-    dispatch(requestPostPermissionOffer());
+    dispatch(requestGetGrantPermissions());
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', API_GRANT_PERMISSIONS_ENDPOINT);
+    xhr.onload = () => {
+      if (xhr.responseText) {
+        // Convert response from JSON
+        const permissionsArray = JSON.parse(xhr.responseText).map(x => {
+          x.createdAt = new Date(x.createdAt);
+          x.updatedAt = new Date(x.updatedAt);
+          return x;
+        });
+
+        dispatch(completeGetGrantPermissions(permissionsArray));
+      } else {
+        dispatch(completeGetGrantPermissions([]));
+      }
+    };
+    xhr.send();
+  };
+}
+
+export function postGrantPermission(campaign) {
+  return dispatch => {
+    dispatch(requestPostGrantPermission());
 
     const xhr = new XMLHttpRequest();
     xhr.open('POST', API_GRANT_PERMISSIONS_ENDPOINT);
     xhr.onload = () => {
       const permissionResponse = JSON.parse(xhr.responseText);
       const status = xhr.status;
-      dispatch(completePostPermissionOffer({ ...permissionResponse, status  }));
+      dispatch(completePostGrantPermission({ ...permissionResponse, status  }));
     };
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(campaign);
@@ -101,7 +131,6 @@ export function getActivePermissions() {
 
 export function deleteActivePermissions(offerIds, activePermissions) {
   return dispatch => {
-    console.log(offerIds, activePermissions);
     dispatch(requestDeleteActivePermissions());
     axios.delete(API_ACTIVE_PERMISSIONS_ENDPOINT, {
       data: { offerIds }

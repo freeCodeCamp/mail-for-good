@@ -1,6 +1,7 @@
 import initialState from './initialState';
 import {
-  REQUEST_POST_PERMISSION_OFFER, COMPLETE_POST_PERMISSION_OFFER,
+  REQUEST_GET_GRANT_PERMISSION, COMPLETE_GET_GRANT_PERMISSION,
+  REQUEST_POST_GRANT_PERMISSION, COMPLETE_POST_GRANT_PERMISSION,
 
   REQUEST_GET_ACTIVE_PERMISSIONS, COMPLETE_GET_ACTIVE_PERMISSIONS,
   REQUEST_DELETE_ACTIVE_PERMISSIONS, COMPLETE_DELETE_ACTIVE_PERMISSIONS,
@@ -10,14 +11,25 @@ import {
   REQUEST_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS, COMPLETE_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS
 } from '../constants/actionTypes';
 
-export function offerPermission(state = initialState.offerPermission, action) {
+export function grantPermissions(state = initialState.grantPermissions, action) {
   switch(action.type) {
-    case REQUEST_POST_PERMISSION_OFFER: {
+    case REQUEST_GET_GRANT_PERMISSION: {
+      return {...state,
+        isGetting: true
+      };
+    }
+    case COMPLETE_GET_GRANT_PERMISSION: {
+      return {...state,
+        isGetting: false,
+        grantedPermissions: action.payload
+      };
+    }
+    case REQUEST_POST_GRANT_PERMISSION: {
       return {...state,
         isPosting: true
       };
     }
-    case COMPLETE_POST_PERMISSION_OFFER: {
+    case COMPLETE_POST_GRANT_PERMISSION: {
       return {...state,
         isPosting: false,
         response: action.payload
@@ -92,7 +104,7 @@ export function activePermissions(state = initialState.activePermissions, action
 }
 
 export default {
-  offerPermission,
+  grantPermissions,
   receivedPermissionOffers,
   activePermissions
 };

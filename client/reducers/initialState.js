@@ -45,7 +45,9 @@ const initialState = {
     user: {},
     ws_notification: []
   },
-  offerPermission: { // Refers to GrantPermissions container
+  grantPermissions: { // Refers to GrantPermissions container
+    isGetting: false,
+    grantedPermissions: [],
     isPosting: false,
     response: {}
   },

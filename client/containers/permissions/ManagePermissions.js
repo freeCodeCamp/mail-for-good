@@ -3,11 +3,14 @@ import { connect } from 'react-redux';
 
 import { notify } from '../../actions/notificationActions';
 import {
+  getGrantPermissions,
+
   getReceivedPermissionOffers,
+  postAcceptReceivedOffers,
   deleteRejectReceivedOffers,
+
   getActivePermissions,
-  deleteActivePermissions,
-  postAcceptReceivedOffers
+  deleteActivePermissions
 } from '../../actions/permissionActions';
 
 import FontAwesome from 'react-fontawesome';
@@ -19,6 +22,9 @@ import ManageGrantedPermissionsTable from '../../components/permissions/ManageGr
 function mapStateToProps(state) {
   // State reducer @ state.receivedPermissionOffers
   return {
+    isGettingGrantedPermissions: state.grantPermissions.isGetting,
+    grantedPermissions: state.grantPermissions.grantedPermissions,
+
     isGettingReceivedPermissionOffers: state.receivedPermissionOffers.isGetting,
     receivedPermissionOffers: state.receivedPermissionOffers.receivedPermissionOffers,
 
@@ -27,16 +33,21 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getReceivedPermissionOffers, deleteRejectReceivedOffers, getActivePermissions, deleteActivePermissions, postAcceptReceivedOffers })
+@connect(mapStateToProps, { getGrantPermissions, getReceivedPermissionOffers, deleteRejectReceivedOffers, getActivePermissions, deleteActivePermissions, postAcceptReceivedOffers })
 export default class GrantPermissions extends Component {
 
   static propTypes = {
     // redux
+    isGettingGrantedPermissions: PropTypes.bool.isRequired,
+    grantedPermissions: PropTypes.array.isRequired,
+
     isGettingReceivedPermissionOffers: PropTypes.bool.isRequired,
     receivedPermissionOffers: PropTypes.array.isRequired,
+
     isGettingActivePermissions: PropTypes.bool.isRequired,
     activePermissions: PropTypes.array.isRequired,
     // actions
+    getGrantPermissions: PropTypes.func.isRequired,
     getReceivedPermissionOffers: PropTypes.func.isRequired,
     deleteRejectReceivedOffers: PropTypes.func.isRequired,
     getActivePermissions: PropTypes.func.isRequired,
@@ -59,6 +70,9 @@ export default class GrantPermissions extends Component {
     }
     if (!this.props.activePermissions.length) {
       this.props.getActivePermissions();
+    }
+    if (!this.props.grantedPermissions.length) {
+      this.props.getGrantPermissions();
     }
   }
 

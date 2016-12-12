@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import GrantPermissionForm from '../../components/permissions/GrantPermissionForm';
 import { notify } from '../../actions/notificationActions';
-import { postPermissionOffer } from '../../actions/permissionActions';
+import { postGrantPermission } from '../../actions/permissionActions';
 
 import FontAwesome from 'react-fontawesome';
 
@@ -10,12 +10,12 @@ function mapStateToProps(state) {
   // State reducer @ state.form & state.offerPermission
   return {
     form: state.form.grantPermission,
-    isPosting: state.offerPermission.isPosting,
-    response: state.offerPermission.response
+    isPosting: state.grantPermissions.isPosting,
+    response: state.grantPermissions.response
   };
 }
 
-@connect(mapStateToProps, { notify, postPermissionOffer })
+@connect(mapStateToProps, { notify, postGrantPermission })
 export default class GrantPermissions extends Component {
 
   static propTypes = {
@@ -25,7 +25,7 @@ export default class GrantPermissions extends Component {
     response: PropTypes.object.isRequired,
     // actions
     notify: PropTypes.func.isRequired,
-    postPermissionOffer: PropTypes.func.isRequired
+    postGrantPermission: PropTypes.func.isRequired
   }
 
   constructor() {
@@ -41,7 +41,7 @@ export default class GrantPermissions extends Component {
   }
 
   handleSubmit() {
-    this.props.postPermissionOffer(JSON.stringify(this.props.form.values));
+    this.props.postGrantPermission(JSON.stringify(this.props.form.values));
   }
 
   render() {
