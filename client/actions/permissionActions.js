@@ -1,6 +1,9 @@
 import {
-  REQUEST_GET_ACTIVE_PERMISSIONS, COMPLETE_GET_ACTIVE_PERMISSIONS,
   REQUEST_POST_PERMISSION_OFFER, COMPLETE_POST_PERMISSION_OFFER,
+
+  REQUEST_GET_ACTIVE_PERMISSIONS, COMPLETE_GET_ACTIVE_PERMISSIONS,
+  REQUEST_DELETE_ACTIVE_PERMISSIONS, COMPLETE_DELETE_ACTIVE_PERMISSIONS,
+
   REQUEST_GET_RECEIVED_PERMISSION_OFFERS, COMPLETE_GET_RECEIVED_PERMISSION_OFFERS,
   REQUEST_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS, COMPLETE_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS,
   REQUEST_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS, COMPLETE_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS
@@ -27,6 +30,12 @@ export function requestGetActivePermissions() {
 }
 export function completeGetActivePermissions(payload) {
   return { type: COMPLETE_GET_ACTIVE_PERMISSIONS, payload };
+}
+export function requestDeleteActivePermissions() {
+  return { type: REQUEST_DELETE_ACTIVE_PERMISSIONS };
+}
+export function completeDeleteActivePermissions(payload) {
+  return { type: COMPLETE_DELETE_ACTIVE_PERMISSIONS, payload };
 }
 
 // REST for received permission offers
@@ -90,6 +99,23 @@ export function getActivePermissions() {
   };
 }
 
+export function deleteActivePermissions(offerIds, activePermissions) {
+  return dispatch => {
+    dispatch(requestDeleteActivePermissions());
+    axios.delete(API_ACTIVE_PERMISSIONS_ENDPOINT, {
+      data: { offerIds }
+    }).then(response => {
+      dispatch(notify({ message: response.data.message, colour: 'green' }));
+      // Remove deleted lists from state
+      const filterActivePermissions = activePermissions.filter(offer => !~offerIds.indexOf(offer.id));
+      dispatch(completeDeleteActivePermissions(filterActivePermissions));
+    }).catch(() => {
+      dispatch(notify({ message: 'There was an error completing this request.' }));
+      dispatch(completeDeleteActivePermissions(activePermissions));
+    });
+  };
+}
+
 // RECEIVE
 export function getReceivedPermissionOffers() {
   return dispatch => {
@@ -142,6 +168,7 @@ export function deleteRejectReceivedOffers(offerIds, receivedOffers) {
       dispatch(completeDeleteRejectReceivedPermissionOffers(filterReceivedOfferIds));
     }).catch(() => {
       dispatch(notify({ message: 'There was an error completing this request.' }));
+      dispatch(completeDeleteRejectReceivedPermissionOffers(receivedOffers));
     });
   };
 }
