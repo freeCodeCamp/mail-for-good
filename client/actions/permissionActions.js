@@ -82,7 +82,7 @@ export function getActivePermissions() {
 // RECEIVE
 export function getReceivedPermissionOffers() {
   return dispatch => {
-    dispatch(requestGetActivePermissions());
+    dispatch(requestGetReceivedPermissionOffers());
     const xhr = new XMLHttpRequest();
     xhr.open('GET', API_RECEIVED_PERMISSIONS_ENDPOINT);
     xhr.onload = () => {
