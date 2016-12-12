@@ -33,6 +33,7 @@ const unsubscribe = require('../controllers/subscriber/unsubscribe');
 const offerPermission = require('../controllers/permissions/offer-permission');
 
 const getActivePermissions = require('../controllers/permissions/get-active-permissions');
+const deleteActivePermissions = require('../controllers/permissions/delete-active-permissions');
 
 const getReceivedPermissionOffers = require('../controllers/permissions/get-received-permission-offers');
 const acceptPermissionOffer = require('../controllers/permissions/accept-permission-offer');
@@ -148,8 +149,13 @@ module.exports = (app, passport, io) => {
     offerPermission(req, res);
   });
 
+  // Get active permissions (belongs to the user granted permissions)
   app.get('/api/active-permissions', apiIsAuth, (req, res) => {
     getActivePermissions(req, res);
+  });
+  // Delete active permissions, removes item(s) from the ACL
+  app.delete('/api/active-permissions', apiIsAuth, parseJson, (req, res) => {
+    deleteActivePermissions(req, res);
   });
 
   // Get received permission offers
