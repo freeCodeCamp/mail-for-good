@@ -93,7 +93,7 @@ export default class GrantPermissions extends Component {
   }
 
   render() {
-    const { receivedPermissionOffers, isGettingReceivedPermissionOffers, isGettingActivePermissions, activePermissions } = this.props;
+    const { isGettingGrantedPermissions, grantedPermissions, receivedPermissionOffers, isGettingReceivedPermissionOffers, isGettingActivePermissions, activePermissions } = this.props;
     return (
       <div>
         <div className="content-header">
@@ -140,12 +140,12 @@ export default class GrantPermissions extends Component {
             </div>
 
             <div className="box-body">
-              <ManageGrantedPermissionsTable data={activePermissions} deletePermissionRows={this.deleteGrantedPermissionRows} />
+              <ManageGrantedPermissionsTable data={grantedPermissions} deletePermissionRows={this.deleteGrantedPermissionRows} />
             </div>
 
-            {/*<div className="overlay">
+            {isGettingGrantedPermissions && <div className="overlay">
               <FontAwesome name="refresh" spin/>
-            </div>*/}
+            </div>}
           </div>
         </section>
 

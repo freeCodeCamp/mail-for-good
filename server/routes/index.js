@@ -30,7 +30,8 @@ const deleteLists = require('../controllers/list/delete-lists');
 const unsubscribe = require('../controllers/subscriber/unsubscribe');
 
 // Permissions
-const offerPermission = require('../controllers/permissions/offer-permission');
+const getGrantedPermissions = require('../controllers/permissions/get-granted-permissions');
+const grantPermissions = require('../controllers/permissions/grant-permission');
 
 const getActivePermissions = require('../controllers/permissions/get-active-permissions');
 const deleteActivePermissions = require('../controllers/permissions/delete-active-permissions');
@@ -144,9 +145,13 @@ module.exports = (app, passport, io) => {
   });
 
   /* Permissions */
-  // Post to change new settings
+  // Get granted permissions (i.e. permissions you have granted another user)
+  app.get('/api/permissions', apiIsAuth, (req, res) => {
+    getGrantedPermissions(req, res);
+  });
+  // Post to offer another user a set of permissions
   app.post('/api/permissions', apiIsAuth, parseJson, (req, res) => {
-    offerPermission(req, res);
+    grantPermissions(req, res);
   });
 
   // Get active permissions (belongs to the user granted permissions)
