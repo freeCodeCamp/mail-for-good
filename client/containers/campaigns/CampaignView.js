@@ -134,6 +134,7 @@ export default class CampaignView extends Component {
   }
 
   render() {
+    let downloadUnsentSubscribersUrl = encodeURI(`${window.location.origin}/api/campaign/subscribers/csv?campaignId=${this.state.thisCampaign.id}&sent=false`);
     return (
       <div>
         <div className="content-header">
@@ -161,6 +162,8 @@ export default class CampaignView extends Component {
                 <button className="btn btn-success btn-lg" type="button" onClick={this.open}>Send</button>
                 <button style={{ "margin-left": "1rem" }} className="btn btn-info" type="button" onClick={this.sendTestEmail}>Send a test email</button>
                 <input id="testEmail" style={{ "margin-left": "1rem" }} className="form-control" placeholder="Send a test email to:" type="email" value={this.state.testEmail} onChange={this.handleChange} />
+                <br/>
+                <button className="btn btn-lg btn-primary" onClick={() => {window.location = downloadUnsentSubscribersUrl}}>Export unsent</button>
               </div>
 
               <Modal show={this.state.showModal} onHide={this.close}>
