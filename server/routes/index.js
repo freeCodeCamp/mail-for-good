@@ -32,6 +32,7 @@ const unsubscribe = require('../controllers/subscriber/unsubscribe');
 // Permissions
 const getGrantedPermissions = require('../controllers/permissions/get-granted-permissions');
 const grantPermissions = require('../controllers/permissions/grant-permission');
+const deleteGrantedPermissions = require('../controllers/permissions/delete-granted-permissions');
 
 const getActivePermissions = require('../controllers/permissions/get-active-permissions');
 const deleteActivePermissions = require('../controllers/permissions/delete-active-permissions');
@@ -152,6 +153,10 @@ module.exports = (app, passport, io) => {
   // Post to offer another user a set of permissions
   app.post('/api/permissions', apiIsAuth, parseJson, (req, res) => {
     grantPermissions(req, res);
+  });
+  // Delete granted permissions, removes item(s) from the ACL
+  app.delete('/api/permissions', apiIsAuth, parseJson, (req, res) => {
+    deleteGrantedPermissions(req, res);
   });
 
   // Get active permissions (belongs to the user granted permissions)
