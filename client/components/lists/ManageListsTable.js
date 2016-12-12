@@ -30,6 +30,12 @@ const ManageListsTable = ({ data, deleteRows }) => {
       </Link>
   );
 
+  const formatSignupFormButton = (cell, row) => (
+    <button type="button" className="btn btn-default btn-flat">
+      <i className="fa fa-address-card" />
+    </button>
+  )
+
   return (
     <BootstrapTable data={data}
       pagination={true}
@@ -43,9 +49,9 @@ const ManageListsTable = ({ data, deleteRows }) => {
 
       <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
       <TableHeaderColumn dataField="name" dataSort={true}>Name</TableHeaderColumn>
-      <TableHeaderColumn dataField="subscribeKey" dataSort={true}>Subscription Key</TableHeaderColumn>
       <TableHeaderColumn dataField="createdAt" dataSort={true} dataFormat={formatFieldDate}>Created</TableHeaderColumn>
       <TableHeaderColumn dataField="updatedAt" dataSort={true} dataFormat={formatFieldDate}>Updated</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" width="150" dataFormat={formatSignupFormButton}>Signup form</TableHeaderColumn>
       <TableHeaderColumn dataAlign="center" width="150" dataFormat={formatFieldManageSubscribers}>Subscribers</TableHeaderColumn>
     </BootstrapTable>
   );
