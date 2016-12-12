@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { notify } from '../../actions/notificationActions';
 import {
   getGrantPermissions,
+  deleteGrantedPermissions,
 
   getReceivedPermissionOffers,
   postAcceptReceivedOffers,
@@ -33,7 +34,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getGrantPermissions, getReceivedPermissionOffers, deleteRejectReceivedOffers, getActivePermissions, deleteActivePermissions, postAcceptReceivedOffers })
+@connect(mapStateToProps, { getGrantPermissions, deleteGrantedPermissions, getReceivedPermissionOffers, deleteRejectReceivedOffers, getActivePermissions, deleteActivePermissions, postAcceptReceivedOffers })
 export default class GrantPermissions extends Component {
 
   static propTypes = {
@@ -48,6 +49,7 @@ export default class GrantPermissions extends Component {
     activePermissions: PropTypes.array.isRequired,
     // actions
     getGrantPermissions: PropTypes.func.isRequired,
+    deleteGrantedPermissions: PropTypes.func.isRequired,
     getReceivedPermissionOffers: PropTypes.func.isRequired,
     deleteRejectReceivedOffers: PropTypes.func.isRequired,
     getActivePermissions: PropTypes.func.isRequired,
@@ -89,7 +91,7 @@ export default class GrantPermissions extends Component {
   }
 
   deleteGrantedPermissionRows(offerIds) {
-
+    this.props.deleteGrantedPermissions(offerIds, this.props.grantedPermissions);
   }
 
   render() {

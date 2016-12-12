@@ -1,6 +1,7 @@
 import {
   REQUEST_GET_GRANT_PERMISSION, COMPLETE_GET_GRANT_PERMISSION,
   REQUEST_POST_GRANT_PERMISSION, COMPLETE_POST_GRANT_PERMISSION,
+  REQUEST_DELETE_GRANT_PERMISSION, COMPLETE_DELETE_GRANT_PERMISSION,
 
   REQUEST_GET_ACTIVE_PERMISSIONS, COMPLETE_GET_ACTIVE_PERMISSIONS,
   REQUEST_DELETE_ACTIVE_PERMISSIONS, COMPLETE_DELETE_ACTIVE_PERMISSIONS,
@@ -29,6 +30,12 @@ export function requestPostGrantPermission() {
 }
 export function completePostGrantPermission(payload) {
   return { type: COMPLETE_POST_GRANT_PERMISSION, payload };
+}
+export function requestDeleteGrantPermission() {
+  return { type: REQUEST_DELETE_GRANT_PERMISSION };
+}
+export function completeDeleteGrantPermission(payload) {
+  return { type: COMPLETE_DELETE_GRANT_PERMISSION, payload };
 }
 
 // REST active permissions
@@ -102,6 +109,23 @@ export function postGrantPermission(campaign) {
     };
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(campaign);
+  };
+}
+
+export function deleteGrantedPermissions(offerIds, grantedPermissions) {
+  return dispatch => {
+    dispatch(requestDeleteGrantPermission());
+    axios.delete(API_GRANT_PERMISSIONS_ENDPOINT, {
+      data: { offerIds }
+    }).then(response => {
+      dispatch(notify({ message: response.data.message, colour: 'green' }));
+      // Remove deleted lists from state
+      const filterGrantedPermissions = grantedPermissions.filter(offer => !~offerIds.indexOf(offer.id));
+      dispatch(completeDeleteGrantPermission(filterGrantedPermissions));
+    }).catch(() => {
+      dispatch(notify({ message: 'There was an error completing this request.' }));
+      dispatch(completeDeleteGrantPermission(grantedPermissions));
+    });
   };
 }
 

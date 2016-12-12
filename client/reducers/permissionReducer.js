@@ -2,6 +2,7 @@ import initialState from './initialState';
 import {
   REQUEST_GET_GRANT_PERMISSION, COMPLETE_GET_GRANT_PERMISSION,
   REQUEST_POST_GRANT_PERMISSION, COMPLETE_POST_GRANT_PERMISSION,
+  REQUEST_DELETE_GRANT_PERMISSION, COMPLETE_DELETE_GRANT_PERMISSION,
 
   REQUEST_GET_ACTIVE_PERMISSIONS, COMPLETE_GET_ACTIVE_PERMISSIONS,
   REQUEST_DELETE_ACTIVE_PERMISSIONS, COMPLETE_DELETE_ACTIVE_PERMISSIONS,
@@ -33,6 +34,15 @@ export function grantPermissions(state = initialState.grantPermissions, action) 
       return {...state,
         isPosting: false,
         response: action.payload
+      };
+    }
+    case REQUEST_DELETE_GRANT_PERMISSION: {
+      return {...state,
+      };
+    }
+    case COMPLETE_DELETE_GRANT_PERMISSION: {
+      return {...state,
+        grantedPermissions: action.payload
       };
     }
     default:
