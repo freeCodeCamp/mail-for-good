@@ -38,10 +38,13 @@ export default class ListSignupFormCreator extends React.Component {
       <Modal show={this.state.showModal} onHide={this.closeModal.bind(this)}>
         <div className="modal-content">
           <div className="modal-header">
-            <h4 class="modal-title">Modal title</h4>
+            <h3 class="modal-title">Embeddable subscription form</h3>
           </div>
           <div className="modal-body">
-            {`
+            <h4>Allow users to sign up to your mailing list by embedding this HTML code into your website</h4>
+            <br/>
+            <textarea className="form-control" rows="5">
+              {`
               <form action="${actionUrl}" target="_blank">
               <label for="signup-email">Email</label>
               <input type="email" value="" name="email" label="signup-email">
@@ -49,8 +52,9 @@ export default class ListSignupFormCreator extends React.Component {
               <input type="submit" value="Subscribe" name="Subscribe">
               </form>
             `}
+            </textarea>
           </div>
-          <div className="modal-footer">Footer</div>
+          <div className="modal-footer"></div>
         </div>
       </Modal>
     );
