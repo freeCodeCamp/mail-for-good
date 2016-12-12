@@ -42,10 +42,11 @@ export default class ListSignupFormCreator extends React.Component {
           </div>
           <div className="modal-body">
             {`
-              <form action="${actionUrl}" target="_blank">\n
+              <form action="${actionUrl}" target="_blank">
               <label for="signup-email">Email</label>
               <input type="email" value="" name="email" label="signup-email">
               <input type="hidden" name="subscribeKey" value="${this.state.subscribeKey}" />
+              <input type="submit" value="Subscribe" name="Subscribe">
               </form>
             `}
           </div>
