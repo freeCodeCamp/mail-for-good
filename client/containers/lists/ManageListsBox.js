@@ -29,7 +29,7 @@ export default class ManageList extends Component {
     this.deleteRows = this.deleteRows.bind(this);
     this.state = {
       showListSignupFormCreator: false,
-      unsubscribeKey: ''
+      subscribeKey: ''
     }
   }
 
@@ -44,9 +44,9 @@ export default class ManageList extends Component {
     this.props.deleteLists(listIds, this.props.lists);
   }
 
-  showListSignupFormCreator(unsubscribeKey) {
+  showListSignupFormCreator(subscribeKey) {
     this.setState({
-      unsubscribeKey,
+      subscribeKey,
       showListSignupFormCreator: true
     });
   }
@@ -55,7 +55,7 @@ export default class ManageList extends Component {
   render() {
     return (
       <div className="box box-primary">
-        <ListSignupFormCreator unsubscribeKey={this.state.unsubscribeKey}
+        <ListSignupFormCreator subscribeKey={this.state.subscribeKey}
                                showModal={this.state.showListSignupFormCreator}
         />
         <div className="box-header">

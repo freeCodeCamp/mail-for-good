@@ -31,14 +31,15 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
   );
 
   const formatSignupFormButton = (cell, row) => {
-    console.log(showListSignupFormCreator)
     return (
-      <button onClick={showListSignupFormCreator} type="button" className="btn btn-default btn-flat">
+      <button onClick={() => { showListSignupFormCreator(row.subscribeKey) }}
+              type="button"
+              className="btn btn-default btn-flat">
+
         <i className="fa fa-address-card" />
       </button>
     )
   }
-  console.log(showListSignupFormCreator)
 
   return (
     <BootstrapTable data={data}
