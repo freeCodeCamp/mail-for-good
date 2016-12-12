@@ -29,21 +29,21 @@ module.exports = (req, res) => {
       // CSV file header row
       res.write('email,subscribed,mostrecentstatus\n');
 
+      // Construct filter query
+      let where = { listId };
+      if (filters.subscribed === 'true') {
+        where.subscribed = true;
+      } else if (filters.subscribed === 'false') {
+        where.subscribed = false;
+      }
+      const statusFilters = ['bounce:permanent', 'bounce:transient', 'bounce:undetermined', 'complaint', 'unconfirmed']
+      if (statusFilters.includes(filters.mostRecentStatus)) {
+        where.mostRecentStatus = filters.mostRecentStatus;
+      }
+
       sendSubscribers();
 
       function sendSubscribers(offset=0, limit=10000) {  // limit is how many rows to hold in memory
-        // Construct filter query
-        let where = { listId };
-        if (filters.subscribed === 'true') {
-          where.subscribed = true;
-        } else if (filters.subscribed === 'false') {
-          where.subscribed = false;
-        }
-        const statusFilters = ['bounce:permanent', 'bounce:transient', 'bounce:undetermined', 'complaint', 'unconfirmed']
-        if (statusFilters.includes(filters.mostRecentStatus)) {
-          where.mostRecentStatus = filters.mostRecentStatus;
-        }
-
         ListSubscriber.findAll({
           where,
           offset,

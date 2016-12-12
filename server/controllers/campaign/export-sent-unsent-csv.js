@@ -27,17 +27,17 @@ module.exports = (req, res) => {
       // CSV file header row
       res.write('email\n');
 
+      // Construct filter query
+      let where = { sent };
+      if (sent === 'true') {
+        where.sent = true;
+      } else if (sent === 'false') {
+        where.sent = false;
+      }
+
       sendSubscribers();
 
       function sendSubscribers(offset=0, limit=10000) {  // limit is how many rows to hold in memory
-        // Construct filter query
-        let where = { sent };
-        if (sent === 'true') {
-          where.sent = true;
-        } else if (sent === 'false') {
-          where.sent = false;
-        }
-
         CampaignSubscriber.findAll({
           where,
           offset,
