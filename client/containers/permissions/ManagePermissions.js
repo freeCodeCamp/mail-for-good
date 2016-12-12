@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { notify } from '../../actions/notificationActions';
-import { getReceivedPermissionOffers, getActivePermissions, postAcceptReceivedOffers } from '../../actions/permissionActions';
+import { getReceivedPermissionOffers, deleteRejectReceivedOffers, getActivePermissions, postAcceptReceivedOffers } from '../../actions/permissionActions';
 
 import FontAwesome from 'react-fontawesome';
 
@@ -20,7 +20,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getReceivedPermissionOffers, getActivePermissions, postAcceptReceivedOffers })
+@connect(mapStateToProps, { getReceivedPermissionOffers, deleteRejectReceivedOffers, getActivePermissions, postAcceptReceivedOffers })
 export default class GrantPermissions extends Component {
 
   static propTypes = {
@@ -31,6 +31,7 @@ export default class GrantPermissions extends Component {
     activePermissions: PropTypes.array.isRequired,
     // actions
     getReceivedPermissionOffers: PropTypes.func.isRequired,
+    deleteRejectReceivedOffers: PropTypes.func.isRequired,
     getActivePermissions: PropTypes.func.isRequired,
     postAcceptReceivedOffers: PropTypes.func.isRequired
   }
@@ -53,7 +54,7 @@ export default class GrantPermissions extends Component {
   }
 
   deleteReceivedPermissionOfferRows(offerIds) {
-    console.log(offerIds);
+    this.props.deleteRejectReceivedOffers(offerIds, this.props.receivedPermissionOffers);
   }
 
   acceptReceivedPermissionOfferRows(offerIds) {
@@ -61,7 +62,7 @@ export default class GrantPermissions extends Component {
   }
 
   deletePermissionRows(offerIds) {
-    console.log(offerIds);
+
   }
 
   render() {

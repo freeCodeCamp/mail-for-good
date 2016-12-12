@@ -2,9 +2,14 @@ import {
   REQUEST_GET_ACTIVE_PERMISSIONS, COMPLETE_GET_ACTIVE_PERMISSIONS,
   REQUEST_POST_PERMISSION_OFFER, COMPLETE_POST_PERMISSION_OFFER,
   REQUEST_GET_RECEIVED_PERMISSION_OFFERS, COMPLETE_GET_RECEIVED_PERMISSION_OFFERS,
-  REQUEST_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS, COMPLETE_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS
+  REQUEST_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS, COMPLETE_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS,
+  REQUEST_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS, COMPLETE_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS
 } from '../constants/actionTypes';
-import { API_GRANT_PERMISSIONS_ENDPOINT, API_RECEIVED_PERMISSIONS_ENDPOINT, API_ACTIVE_PERMISSIONS_ENDPOINT } from '../constants/endpoints';
+import {
+  API_GRANT_PERMISSIONS_ENDPOINT,
+  API_RECEIVED_PERMISSIONS_ENDPOINT,
+  API_ACTIVE_PERMISSIONS_ENDPOINT
+} from '../constants/endpoints';
 import axios from 'axios';
 import { notify } from './notificationActions';
 
@@ -36,6 +41,12 @@ export function requestPostAcceptReceivedPermissionOffers() {
 }
 export function completePostAcceptReceivedPermissionOffers(payload) {
   return { type: COMPLETE_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS, payload };
+}
+export function requestDeleteRejectReceivedPermissionOffers() {
+  return { type: REQUEST_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS };
+}
+export function completeDeleteRejectReceivedPermissionOffers(payload) {
+  return { type: COMPLETE_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS, payload };
 }
 
 // GRANT
@@ -114,6 +125,22 @@ export function postAcceptReceivedOffers(offerIds) {
     }).catch(() => {
       dispatch(notify({ message: 'There was an error completing this request.' }));
       dispatch(completePostAcceptReceivedPermissionOffers());
+    });
+  };
+}
+
+export function deleteRejectReceivedOffers(receivedOfferIds, receivedOffers) {
+  return dispatch => {
+    dispatch(requestDeleteRejectReceivedPermissionOffers());
+    axios.delete(API_RECEIVED_PERMISSIONS_ENDPOINT, {
+      data: { receivedOfferIds: receivedOfferIds }
+    }).then(response => {
+      dispatch(notify({ message: response.data, colour: 'green' }));
+      // Remove deleted lists from state
+      const filterReceivedOfferIds = receivedOffers.filter(offer => !~receivedOfferIds.indexOf(offer.id));
+      dispatch(completeDeleteRejectReceivedPermissionOffers(filterReceivedOfferIds));
+    }).catch(() => {
+      dispatch(notify({ message: 'There was an error completing this request.' }));
     });
   };
 }
