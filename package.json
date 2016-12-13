@@ -116,6 +116,7 @@
     "eslint-plugin-react": "6.2.0",
     "eslint-watch": "2.1.14",
     "extract-text-webpack-plugin": "1.0.1",
+    "fakeredis": "^1.0.3",
     "file-loader": "0.9.0",
     "html-webpack-plugin": "2.22.0",
     "http-proxy-middleware": "^0.17.2",

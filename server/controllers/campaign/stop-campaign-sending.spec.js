@@ -1,5 +1,6 @@
 const { expect } = require('chai');
 const httpMocks = require('node-mocks-http');
+const client = require("fakeredis").createClient(1337, 'google.com');
 
 const stopCampaignSending = require('./stop-campaign-sending');
 const {
@@ -16,7 +17,9 @@ describe('stopCampaignSending', () => {
           name: 'campaign1',
           userId: 1
         }).then(campaign => {
-          done();
+          client.flushdb(() => {
+            done();
+          })
         });
       });
     });
@@ -37,7 +40,21 @@ describe('stopCampaignSending', () => {
     });
   });
 
-  xit('sets the appropriate flags in redis', () => {
+  it('sets the appropriate flags in redis', (done) => {
+    const res = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter });
+    const req = {
+      user: { id: 1 },
+      body: { id: 1 }
+    };
+
+    stopCampaignSending(req, res, client);
+
+    res.on('finish', () => {
+      const campaignStopFlag = client.hget('stop-sending-campaign', 1, (err, flag) => {
+        expect(flag).to.be.equal(1);
+        done();
+      });
+    });
   });
 
   xit('sends a success message after redis flags have been set', () => {
