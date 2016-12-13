@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 const db = require('../../../../models');
 const AmazonEmail = require('./amazon');
 const { wrapLink, insertUnsubscribeLink, insertTrackingPixel } = require('./analytics');
-
+const mailMerge = require('./mail-merge');
 
 module.exports = (req, res) => {
   const { testEmail, campaignId } = req.body;
@@ -102,32 +102,41 @@ module.exports = (req, res) => {
         ? new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region, endpoint: 'http://localhost:9999' })
         : new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region });
 
+      // Modify email body for analytics
       if (campaign.trackLinksEnabled) {
         campaign.emailBody = wrapLink(campaign.emailBody, 'example-tracking-id', campaign.type, whiteLabelUrl);
       }
-
       if (campaign.trackingPixelEnabled) {
         campaign.emailBody = insertTrackingPixel(campaign.emailBody, 'example-tracking-id', campaign.type);
       }
-
       if (campaign.unsubscribeLinkEnabled) {
         campaign.emailBody = insertUnsubscribeLink(campaign.emailBody, 'example-unsubscribe-id', campaign.type, whiteLabelUrl);
       }
 
-      const emailFormat = AmazonEmail({ email: testEmail }, campaign);
+      // Get custom/additional data (extra columns) needed for mail merge feature
+      db.list.findById(campaign.listId, {
+        attributes: ['additionalFields'],
+        raw: true
+      }).then(list => {
+        // Add sample/example data to the custom fields
+        const additionalData = list.additionalFields.reduce((additionalData, field) => {
+          additionalData[field] = `EXAMPLE ${field}`
+          return additionalData;
+        }, {});
+        campaign.emailBody = mailMerge({ email: testEmail, additionalData }, campaign);
 
-      ses.sendEmail(emailFormat, err => {
-        if (err)
-          res.status(400).send(err);
-        else
-          res.send();
-      });
+        const emailFormat = AmazonEmail({ email: testEmail }, campaign);
 
+        ses.sendEmail(emailFormat, err => {
+          if (err)
+            res.status(400).send(err);
+          else
+            res.send();
+        });
+      })
     })
     .catch(err => {
       res.status(500).send(err);
       throw err;
     });
-
-
 };
