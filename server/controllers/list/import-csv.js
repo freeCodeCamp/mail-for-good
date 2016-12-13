@@ -170,7 +170,7 @@ module.exports = (req, res, io) => {
       .pipe(transformer)
       .on('data', () => {
       // Do nothing with the data. Let it be garbage collected.
-    }).on('end', () => {
+    }).on('finish', () => {
       // Delete CSV
       fs.unlink(`${path.resolve(req.file.path)}`, err => {
         if (err) throw err;
