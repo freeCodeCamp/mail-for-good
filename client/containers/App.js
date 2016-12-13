@@ -4,6 +4,7 @@ import { RouteTransition } from 'react-router-transition';
 
 import Header from '../components/admin-lte/Header.js';
 import Sidebar from '../components/admin-lte/Sidebar.js';
+import RightSidebar from '../components/admin-lte/RightSidebar.js';
 import Footer from '../components/admin-lte/Footer.js';
 import Notifications from './Notifications';
 import { emitProfileRequest, consumeNotification } from '../actions/appActions';
@@ -55,6 +56,8 @@ export default class App extends Component {
 
         <Notifications />
         <Footer />
+        <RightSidebar />
+        <div className="control-sidebar-bg" />
       </div>
     );
   }
