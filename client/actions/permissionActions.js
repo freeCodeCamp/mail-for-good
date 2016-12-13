@@ -18,6 +18,7 @@ import {
   API_ACTIVE_PERMISSIONS_ENDPOINT
 } from '../constants/endpoints';
 import axios from 'axios';
+import cookie from 'react-cookie';
 import { notify } from './notificationActions';
 
 // REST for granting permissions
@@ -75,8 +76,8 @@ export function completeDeleteRejectReceivedPermissionOffers(payload) {
 }
 
 // App state - set active account
-export function activeAccount(email, id) {
-  return { type: ACTIVE_ACCOUNT, payload: { email, id } };
+export function activeAccount(payload) {
+  return { type: ACTIVE_ACCOUNT, payload };
 }
 
 // GRANT
@@ -231,5 +232,15 @@ export function deleteRejectReceivedOffers(offerIds, receivedOffers) {
       dispatch(notify({ message: 'There was an error completing this request.' }));
       dispatch(completeDeleteRejectReceivedPermissionOffers(receivedOffers));
     });
+  };
+}
+
+// App state - change user account
+
+export function becomeAnotherUser(thisAccount) {
+  return dispatch => {
+    // Save a cookie storing the active user's ACL id, this will be sent along with all http requests to the server
+    cookie.save('user', thisAccount.id, { path: '/' });
+    dispatch(activeAccount(thisAccount));
   };
 }

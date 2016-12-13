@@ -3,10 +3,11 @@ import { Field, reduxForm } from 'redux-form';
 import { renderCombobox } from '../common/FormRenderWrappers';
 
 const RightSidebar = props => {
-  const { touch, valid, pristine, submitting, activePermissionsEmails } = props;
+  const { touch, valid, pristine, submitting, activePermissionsEmails, changeAccount } = props;
 
   const resetFormAndSubmit = e => {
     e.preventDefault();
+    changeAccount();
   };
 
   const data = activePermissionsEmails.map(x => x.email);
@@ -27,7 +28,7 @@ const RightSidebar = props => {
 
               <div className="form-group">
 
-                <Field name="campaignName" component={renderCombobox}  data={data} label="Change account" type="text" />
+                <Field name="email" component={renderCombobox}  data={data} label="Change account" type="text" />
                 <button className="btn btn-success btn-lg" type="submit" style={{ width: "100%", marginTop: "1rem" }} disabled={pristine || submitting}>Change</button>
 
               </div>
@@ -46,6 +47,7 @@ RightSidebar.propTypes = {
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
 
+  changeAccount: PropTypes.func.isRequired,
   isGettingActivePermissions: PropTypes.bool.isRequired,
   activePermissionsEmails: PropTypes.array.isRequired
 };

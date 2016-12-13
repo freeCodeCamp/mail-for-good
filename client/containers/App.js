@@ -9,7 +9,7 @@ import Footer from '../components/admin-lte/Footer.js';
 import Notifications from './Notifications';
 import { emitProfileRequest, consumeNotification } from '../actions/appActions';
 
-import { getActivePermissions } from '../actions/permissionActions'; // activeAccount
+import { getActivePermissions, becomeAnotherUser } from '../actions/permissionActions';
 
 function mapStateToProps(state) {
   // Select emails from activePermissions
@@ -21,11 +21,13 @@ function mapStateToProps(state) {
     ws_notification: state.profile.ws_notification,
 
     isGettingActivePermissions: state.activePermissions.isGetting,
-    activePermissionsEmails
+    activePermissionsEmails,
+
+    accountForm: state.form.activeAccount
   };
 }
 
-@connect(mapStateToProps, { emitProfileRequest, consumeNotification, getActivePermissions })
+@connect(mapStateToProps, { emitProfileRequest, consumeNotification, getActivePermissions, becomeAnotherUser })
 export default class App extends Component {
 
   static propTypes = {
@@ -35,10 +37,12 @@ export default class App extends Component {
     ws_notification: PropTypes.array.isRequired,
     isGettingActivePermissions: PropTypes.bool.isRequired,
     activePermissionsEmails: PropTypes.array.isRequired,
+    accountForm: PropTypes.object,
     // actions
     emitProfileRequest: PropTypes.func.isRequired,
     consumeNotification: PropTypes.func.isRequired,
     getActivePermissions: PropTypes.func.isRequired,
+    becomeAnotherUser: PropTypes.func.isRequired,
     // router
     route: React.PropTypes.object,
     location: React.PropTypes.object
@@ -46,6 +50,11 @@ export default class App extends Component {
 
   static contextTypes = {
     router: React.PropTypes.object
+  }
+
+  constructor() {
+    super();
+    this.changeAccount = this.changeAccount.bind(this);
   }
 
   componentWillMount() {
@@ -56,6 +65,12 @@ export default class App extends Component {
     if (!this.props.activePermissionsEmails.length) {
       this.props.getActivePermissions();
     }
+  }
+
+  changeAccount() {
+    const thisAccount = this.props.activePermissionsEmails.find(x => x.email === this.props.accountForm.values.email);
+    // @thisAccount { email, id }
+    this.props.becomeAnotherUser(thisAccount);
   }
 
   render() {
@@ -78,7 +93,7 @@ export default class App extends Component {
 
         <Notifications />
         <Footer />
-        <RightSidebar isGettingActivePermissions={isGettingActivePermissions} activePermissionsEmails={activePermissionsEmails} />
+        <RightSidebar changeAccount={this.changeAccount} isGettingActivePermissions={isGettingActivePermissions} activePermissionsEmails={activePermissionsEmails} />
         <div className="control-sidebar-bg" />
       </div>
     );

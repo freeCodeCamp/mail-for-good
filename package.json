@@ -66,6 +66,7 @@
     "react": "15.3.1",
     "react-bootstrap": "^0.30.3",
     "react-bootstrap-table": "^3.0.0-beta.2",
+    "react-cookie": "^1.0.4",
     "react-dom": "15.3.1",
     "react-notification": "^6.2.1",
     "react-redux": "4.4.5",
