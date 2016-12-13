@@ -113,6 +113,18 @@ export function activePermissions(state = initialState.activePermissions, action
   }
 }
 
+export function activeAccount(state = initialState.activeAccount, action) {
+  switch(action.type) {
+    case COMPLETE_DELETE_ACTIVE_PERMISSIONS: {
+      return {...state,
+        activePermissions: action.payload
+      };
+    }
+    default:
+      return state;
+  }
+}
+
 export default {
   grantPermissions,
   receivedPermissionOffers,

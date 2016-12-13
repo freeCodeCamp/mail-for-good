@@ -9,12 +9,12 @@ import Footer from '../components/admin-lte/Footer.js';
 import Notifications from './Notifications';
 import { emitProfileRequest, consumeNotification } from '../actions/appActions';
 
-import { getActivePermissions } from '../actions/permissionActions';
+import { getActivePermissions } from '../actions/permissionActions'; // activeAccount
 
 function mapStateToProps(state) {
   // Select emails from activePermissions
 
-  const activePermissionsEmails = state.activePermissions.activePermissions.map(x => x.toUserEmail);
+  const activePermissionsEmails = state.activePermissions.activePermissions.map(x => ({ email: x.toUserEmail, id: x.id }));
 
   return {
     user: state.profile.user,

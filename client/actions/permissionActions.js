@@ -8,7 +8,9 @@ import {
 
   REQUEST_GET_RECEIVED_PERMISSION_OFFERS, COMPLETE_GET_RECEIVED_PERMISSION_OFFERS,
   REQUEST_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS, COMPLETE_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS,
-  REQUEST_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS, COMPLETE_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS
+  REQUEST_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS, COMPLETE_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS,
+
+  ACTIVE_ACCOUNT
 } from '../constants/actionTypes';
 import {
   API_GRANT_PERMISSIONS_ENDPOINT,
@@ -70,6 +72,11 @@ export function requestDeleteRejectReceivedPermissionOffers() {
 }
 export function completeDeleteRejectReceivedPermissionOffers(payload) {
   return { type: COMPLETE_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS, payload };
+}
+
+// App state - set active account
+export function activeAccount(email, id) {
+  return { type: ACTIVE_ACCOUNT, payload: { email, id } };
 }
 
 // GRANT

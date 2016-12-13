@@ -58,6 +58,10 @@ const initialState = {
   activePermissions: {
     isGetting: false,
     activePermissions: []
+  },
+  activeAccount: {
+    id: null,
+    email: null
   }
 };
 

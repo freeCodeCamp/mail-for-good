@@ -9,6 +9,8 @@ const RightSidebar = props => {
     e.preventDefault();
   };
 
+  const data = activePermissionsEmails.map(x => x.email);
+
   return (
     <aside className="control-sidebar control-sidebar-dark">
 
@@ -25,9 +27,7 @@ const RightSidebar = props => {
 
               <div className="form-group">
 
-                {/* TODO: This needs to be validated via regex. Doesn't need to be a slug but must resolve to a unique slug so there's no possibility of conflict. */}
-                <Field name="campaignName" component={renderCombobox}  data={activePermissionsEmails} label="Change account" type="text" />
-
+                <Field name="campaignName" component={renderCombobox}  data={data} label="Change account" type="text" />
                 <button className="btn btn-success btn-lg" type="submit" style={{ width: "100%", marginTop: "1rem" }} disabled={pristine || submitting}>Change</button>
 
               </div>
