@@ -1,9 +1,10 @@
 const AWS = require('aws-sdk');
 const db = require('../../../../models');
 const AmazonEmail = require('./amazon');
+const { wrapLink, insertUnsubscribeLink, insertTrackingPixel } = require('./analytics');
+
 
 module.exports = (req, res) => {
-
   const { testEmail, campaignId } = req.body;
   const userId = req.user.id;
 
@@ -23,9 +24,32 @@ module.exports = (req, res) => {
       } else {
         const campaignObject = campaignInstance.get({ plain:true });
         const listId = campaignObject.listId;
-        const { fromName, fromEmail, emailSubject, emailBody, type, name } = campaignObject;
+        const {
+          fromName,
+          fromEmail,
+          emailSubject,
+          emailBody,
+          type,
+          name,
+          trackLinksEnabled,
+          trackingPixelEnabled,
+          unsubscribeLinkEnabled
+        } = campaignObject;
 
-        campaign = { listId, fromName, fromEmail, emailSubject, emailBody, campaignId, type, name };
+        campaign = {
+          listId,
+          fromName,
+          fromEmail,
+          emailSubject,
+          emailBody,
+          campaignId,
+          type,
+          name,
+          trackLinksEnabled,
+          trackingPixelEnabled,
+          unsubscribeLinkEnabled
+        };
+
         resolve();
       }
     }).catch(err => {
@@ -49,7 +73,8 @@ module.exports = (req, res) => {
         const {
           amazonSimpleEmailServiceAccessKey: accessKey,
           amazonSimpleEmailServiceSecretKey: secretKey,
-          region
+          region,
+          whiteLabelUrl
         } = settingObject;
         // If either key is blank, the user needs to set their settings
         if ((accessKey === '' || secretKey === '' || region === '') && process.env.NODE_ENV === 'production') {
@@ -57,7 +82,7 @@ module.exports = (req, res) => {
           reject();
         } else {
           // handling of default whitelabel url?
-          amazonSettings = { accessKey, secretKey, region };
+          amazonSettings = { accessKey, secretKey, region, whiteLabelUrl };
           resolve();
           return null;
         }
@@ -70,13 +95,24 @@ module.exports = (req, res) => {
 
   Promise.all([campaignBelongsToUser, getAmazonKeysAndRegion])
     .then(() => {
-      console.log(amazonSettings, campaign);
-      const { accessKey, secretKey, region } = amazonSettings;
+      const { accessKey, secretKey, region, whiteLabelUrl } = amazonSettings;
       const isDevMode = process.env.NODE_ENV === 'development' || false;
 
       const ses = isDevMode
         ? new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region, endpoint: 'http://localhost:9999' })
         : new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region });
+
+      if (campaign.trackLinksEnabled) {
+        campaign.emailBody = wrapLink(campaign.emailBody, 'example-tracking-id', campaign.type, whiteLabelUrl);
+      }
+
+      if (campaign.trackingPixelEnabled) {
+        campaign.emailBody = insertTrackingPixel(campaign.emailBody, 'example-tracking-id', campaign.type);
+      }
+
+      if (campaign.unsubscribeLinkEnabled) {
+        campaign.emailBody = insertUnsubscribeLink(campaign.emailBody, 'example-unsubscribe-id', campaign.type, whiteLabelUrl);
+      }
 
       const emailFormat = AmazonEmail({ email: testEmail }, campaign);
 
