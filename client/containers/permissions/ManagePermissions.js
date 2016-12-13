@@ -66,7 +66,6 @@ export default class GrantPermissions extends Component {
   }
 
   componentDidMount() {
-    // Update receivedPermissionOffers only if we need to
     if (!this.props.receivedPermissionOffers.length) {
       this.props.getReceivedPermissionOffers();
     }

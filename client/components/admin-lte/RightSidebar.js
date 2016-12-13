@@ -3,13 +3,11 @@ import { Field, reduxForm } from 'redux-form';
 import { renderCombobox } from '../common/FormRenderWrappers';
 
 const RightSidebar = props => {
-  const { touch, valid, pristine, submitting } = props;
+  const { touch, valid, pristine, submitting, activePermissionsEmails } = props;
 
   const resetFormAndSubmit = e => {
     e.preventDefault();
   };
-
-  const temp = [];
 
   return (
     <aside className="control-sidebar control-sidebar-dark">
@@ -28,7 +26,7 @@ const RightSidebar = props => {
               <div className="form-group">
 
                 {/* TODO: This needs to be validated via regex. Doesn't need to be a slug but must resolve to a unique slug so there's no possibility of conflict. */}
-                <Field name="campaignName" component={renderCombobox}  data={temp} label="Change account" type="text" />
+                <Field name="campaignName" component={renderCombobox}  data={activePermissionsEmails} label="Change account" type="text" />
 
                 <button className="btn btn-success btn-lg" type="submit" style={{ width: "100%", marginTop: "1rem" }} disabled={pristine || submitting}>Change</button>
 
@@ -46,7 +44,10 @@ RightSidebar.propTypes = {
   touch: PropTypes.func.isRequired,
   valid: PropTypes.bool.isRequired,
   pristine: PropTypes.bool.isRequired,
-  submitting: PropTypes.bool.isRequired
+  submitting: PropTypes.bool.isRequired,
+
+  isGettingActivePermissions: PropTypes.bool.isRequired,
+  activePermissionsEmails: PropTypes.array.isRequired
 };
 
 export default reduxForm({

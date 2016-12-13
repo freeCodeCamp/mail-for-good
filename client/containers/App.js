@@ -9,22 +9,37 @@ import Footer from '../components/admin-lte/Footer.js';
 import Notifications from './Notifications';
 import { emitProfileRequest, consumeNotification } from '../actions/appActions';
 
+import { getActivePermissions } from '../actions/permissionActions';
+
 function mapStateToProps(state) {
+  // Select emails from activePermissions
+
+  const activePermissionsEmails = state.activePermissions.activePermissions.map(x => x.toUserEmail);
+
   return {
     user: state.profile.user,
-    ws_notification: state.profile.ws_notification
+    ws_notification: state.profile.ws_notification,
+
+    isGettingActivePermissions: state.activePermissions.isGetting,
+    activePermissionsEmails
   };
 }
 
-@connect(mapStateToProps, { emitProfileRequest, consumeNotification })
+@connect(mapStateToProps, { emitProfileRequest, consumeNotification, getActivePermissions })
 export default class App extends Component {
 
   static propTypes = {
     children: PropTypes.element.isRequired,
-    emitProfileRequest: PropTypes.func.isRequired,
-    consumeNotification: PropTypes.func.isRequired,
+    // redux
     user: PropTypes.object,
     ws_notification: PropTypes.array.isRequired,
+    isGettingActivePermissions: PropTypes.bool.isRequired,
+    activePermissionsEmails: PropTypes.array.isRequired,
+    // actions
+    emitProfileRequest: PropTypes.func.isRequired,
+    consumeNotification: PropTypes.func.isRequired,
+    getActivePermissions: PropTypes.func.isRequired,
+    // router
     route: React.PropTypes.object,
     location: React.PropTypes.object
   }
@@ -37,7 +52,14 @@ export default class App extends Component {
     this.props.emitProfileRequest();
   }
 
+  componentDidMount() {
+    if (!this.props.activePermissionsEmails.length) {
+      this.props.getActivePermissions();
+    }
+  }
+
   render() {
+    const { isGettingActivePermissions, activePermissionsEmails } = this.props;
     return (
       <div className="wrapper">
         <Header user={this.props.user} ws_notification={this.props.ws_notification} consumeNotification={this.props.consumeNotification} />
@@ -56,7 +78,7 @@ export default class App extends Component {
 
         <Notifications />
         <Footer />
-        <RightSidebar />
+        <RightSidebar isGettingActivePermissions={isGettingActivePermissions} activePermissionsEmails={activePermissionsEmails} />
         <div className="control-sidebar-bg" />
       </div>
     );
