@@ -22,7 +22,19 @@ describe('stopCampaignSending', () => {
     });
   });
 
-  xit('validates that campaign id is present in request body', () => {
+  it('validates that campaign id is present in request body', () => {
+    const res = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter });
+    const req = {
+      user: { id: 1 },
+      body: { nope: 1 }
+    };
+
+    stopCampaignSending(req, res);
+
+    res.on('finish', () => {
+      expect(res.statusCode).to.be.equal(400);
+      done();
+    });
   });
 
   xit('sets the appropriate flags in redis', () => {
@@ -34,11 +46,12 @@ describe('stopCampaignSending', () => {
   it('validates that the campaign belongs to the user', (done) => {
     const res = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter });
     const req = {
-      user: {id: 1337},
-      body: {id: 1}
+      user: { id: 1337 },
+      body: { id: 1 }
     };
 
     stopCampaignSending(req, res);
+
     res.on('finish', () => {
       expect(res.statusCode).to.be.equal(400);
       done();
