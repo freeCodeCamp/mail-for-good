@@ -10,7 +10,7 @@ import {
   REQUEST_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS, COMPLETE_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS,
   REQUEST_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS, COMPLETE_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS,
 
-  ACTIVE_ACCOUNT
+  ACTIVATE_ACCOUNT, DEACTIVATE_ACCOUNT
 } from '../constants/actionTypes';
 import {
   API_GRANT_PERMISSIONS_ENDPOINT,
@@ -76,8 +76,11 @@ export function completeDeleteRejectReceivedPermissionOffers(payload) {
 }
 
 // App state - set active account
-export function activeAccount(payload) {
-  return { type: ACTIVE_ACCOUNT, payload };
+export function activateAccount(payload) {
+  return { type: ACTIVATE_ACCOUNT, payload };
+}
+export function deactivateAccount() {
+  return { type: DEACTIVATE_ACCOUNT };
 }
 
 // GRANT
@@ -241,7 +244,7 @@ export function becomeAnotherUser(thisAccount) {
   return dispatch => {
     // Save to cookie storing the active user's ACL id, this will be sent along with all http requests to the server
     cookie.save('user', thisAccount.id, { path: '/' });
-    dispatch(activeAccount(thisAccount));
+    dispatch(activateAccount(thisAccount));
   };
 }
 
@@ -249,7 +252,6 @@ export function becomeSelf() {
   return dispatch => {
     // Save to cookie storing the active user's ACL id, this will be sent along with all http requests to the server
     cookie.remove('user', { path: '/' });
-    const nullAccount = { email: null, id: null};
-    dispatch(activeAccount(nullAccount));
+    dispatch(deactivateAccount());
   };
 }

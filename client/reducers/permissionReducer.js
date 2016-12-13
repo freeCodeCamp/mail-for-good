@@ -11,7 +11,7 @@ import {
   REQUEST_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS, COMPLETE_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS,
   REQUEST_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS, COMPLETE_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS,
 
-  ACTIVE_ACCOUNT
+  ACTIVATE_ACCOUNT, DEACTIVATE_ACCOUNT
 } from '../constants/actionTypes';
 
 export function grantPermissions(state = initialState.grantPermissions, action) {
@@ -117,11 +117,13 @@ export function activePermissions(state = initialState.activePermissions, action
 
 export function activeAccount(state = initialState.activeAccount, action) {
   switch(action.type) {
-    case ACTIVE_ACCOUNT: {
+    case ACTIVATE_ACCOUNT: {
       return {...state,
-        id: action.payload.id,
-        email: action.payload.email
+        ...action.payload
       };
+    }
+    case DEACTIVATE_ACCOUNT: {
+      return initialState.activeAccount;
     }
     default:
       return state;

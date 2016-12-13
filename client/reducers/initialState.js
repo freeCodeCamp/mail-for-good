@@ -59,10 +59,7 @@ const initialState = {
     isGetting: false,
     activePermissions: []
   },
-  activeAccount: {
-    id: null,
-    email: null
-  }
+  activeAccount: {}
 };
 
 export default initialState;
