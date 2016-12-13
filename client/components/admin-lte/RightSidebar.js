@@ -3,7 +3,7 @@ import { Field, reduxForm } from 'redux-form';
 import { renderCombobox } from '../common/FormRenderWrappers';
 
 const RightSidebar = props => {
-  const { touch, valid, pristine, submitting, activePermissionsEmails, changeAccount } = props;
+  const { touch, valid, pristine, submitting, activePermissionsEmails, changeAccount, changeAccountToSelf, activeAccount } = props;
 
   const resetFormAndSubmit = e => {
     e.preventDefault();
@@ -23,7 +23,7 @@ const RightSidebar = props => {
 
         <div className="tab-pane active" id="control-sidebar-home-tab">
           <h3 className="control-sidebar-heading">Account</h3>
-
+            {activeAccount.email && <button className="btn btn-danger btn-lg" style={{ width: "100%", marginTop: "1rem" }} onClick={changeAccountToSelf}>Use My Account</button>}
             <form onSubmit={resetFormAndSubmit}>
 
               <div className="form-group">
@@ -48,8 +48,10 @@ RightSidebar.propTypes = {
   submitting: PropTypes.bool.isRequired,
 
   changeAccount: PropTypes.func.isRequired,
+  changeAccountToSelf: PropTypes.func.isRequired,
   isGettingActivePermissions: PropTypes.bool.isRequired,
-  activePermissionsEmails: PropTypes.array.isRequired
+  activePermissionsEmails: PropTypes.array.isRequired,
+  activeAccount: PropTypes.object.isRequired
 };
 
 export default reduxForm({

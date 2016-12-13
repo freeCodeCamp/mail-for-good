@@ -239,8 +239,17 @@ export function deleteRejectReceivedOffers(offerIds, receivedOffers) {
 
 export function becomeAnotherUser(thisAccount) {
   return dispatch => {
-    // Save a cookie storing the active user's ACL id, this will be sent along with all http requests to the server
+    // Save to cookie storing the active user's ACL id, this will be sent along with all http requests to the server
     cookie.save('user', thisAccount.id, { path: '/' });
     dispatch(activeAccount(thisAccount));
+  };
+}
+
+export function becomeSelf() {
+  return dispatch => {
+    // Save to cookie storing the active user's ACL id, this will be sent along with all http requests to the server
+    cookie.remove('user', { path: '/' });
+    const nullAccount = { email: null, id: null};
+    dispatch(activeAccount(nullAccount));
   };
 }
