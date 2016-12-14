@@ -1,11 +1,10 @@
 const {
   sequelize,
-  campaign: Campaign,
-  user: User,
+  campaign: Campaign
 } = require('../../models');
 
 
-module.exports = (req, res, client) => {
+module.exports = (req, res, redis) => {
 
   // If req.body.id was not supplied or is not a number, cancel
   if (!req.body.id || typeof req.body.id !== 'number') {
@@ -23,7 +22,7 @@ module.exports = (req, res, client) => {
     raw: true
   }).then(campaign => {
     if (campaign) {
-      client.hmset('stop-sending-campaign', {1: 1});  // Using 1 for true in redis
+      redis.publisher.publish('stop-campaign-sending', campaignId);
       res.send();
     } else {
       res.status(400).send();
