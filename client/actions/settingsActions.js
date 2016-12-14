@@ -31,6 +31,7 @@ export function changeSettings(newSettings) {
 
     axios.post(API_SETTINGS_ENDPOINT, newSettings).then(() => {
       dispatch(receiveChangeSettings('success'));
+      dispatch(getBooleanForAssignedSettings());
       // error /success handling
     }).catch(() => {
       dispatch(receiveChangeSettings('error updating settings'));
