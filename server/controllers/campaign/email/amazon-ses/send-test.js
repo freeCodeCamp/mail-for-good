@@ -2,10 +2,28 @@ const AWS = require('aws-sdk');
 const db = require('../../../../models');
 const AmazonEmail = require('./amazon');
 
+const campaignPermission = require('../../../permissions/acl-lib/acl-campaign-permissions');
+
 module.exports = (req, res) => {
 
+  let userId = '';
+
+  const access = campaignPermission(req.cookies.user, req.user.id)
+    .then(userIdAndCampaigns => {
+      // userIdAndCampaigns.userId must equal 'Write'
+      if (userIdAndCampaigns.campaigns === 'Write') {
+        throw 'Permission denied';
+      } else {
+        userId = userIdAndCampaigns.userId;
+        return null;
+      }
+    });
+
+  Promise.all([access])
+    .then(() => {
+    // BEGIN ACCESS CONTROL
+
   const { testEmail, campaignId } = req.body;
-  const userId = req.user.id;
 
   let campaign = {}; // eslint-disable-line
   let amazonSettings = {}; // eslint-disable-line
@@ -14,7 +32,7 @@ module.exports = (req, res) => {
     return db.campaign.findOne({
       where: {
         id: campaignId,
-        userId: userId
+        userId
       }
     }).then(campaignInstance => {
       if (!campaignInstance) {
@@ -70,7 +88,6 @@ module.exports = (req, res) => {
 
   Promise.all([campaignBelongsToUser, getAmazonKeysAndRegion])
     .then(() => {
-      console.log(amazonSettings, campaign);
       const { accessKey, secretKey, region } = amazonSettings;
       const isDevMode = process.env.NODE_ENV === 'development' || false;
 
@@ -93,5 +110,9 @@ module.exports = (req, res) => {
       throw err;
     });
 
-
+  // END ACCESS CONTROL
+  })
+  .catch(err => {
+    res.status(400).send(err);
+  });
 };
