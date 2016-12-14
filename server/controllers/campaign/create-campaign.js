@@ -85,7 +85,16 @@ module.exports = (req, res) => {
                     createCampaignSubscribers(offset + limit);
                   });
                 } else {
-                  return;
+                  db.campaign.update(
+                    { status: 'ready' },
+                    {
+                      where: { id: campaignId }
+                    }
+                  ).then(() => {
+                    return;
+                  }).catch(err => {
+                    throw err;
+                  });
                 }
               })
             }

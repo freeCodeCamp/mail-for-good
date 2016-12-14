@@ -98,6 +98,14 @@ describe('createCampaign', () => {
       }))
     });
 
+    it('modifies the campaign status appropriately', done => {
+      Campaign.findById(1, { raw: true }).then(campaign => {
+        expect(campaign.status).to.be.equal('ready');
+        done();
+      });
+    })
+
+
     it('creates CampaignSubscriber entries', done => {
       CampaignSubscriber.findAll({
         where: {
