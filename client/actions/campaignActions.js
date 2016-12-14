@@ -64,12 +64,7 @@ export function requestStopSending(campaignId) {
   return { type: REQUEST_STOP_SENDING, campaignId };
 }
 export function completeStopSending() {
-  return dispatch => {
-    dispatch(notify({
-      message: 'Campaign sending stopped',
-      colour: 'green'
-    }));
-  }
+  return { type: COMPLETE_STOP_SENDING };
 }
 
 export function stopSending(campaignId) {
@@ -80,6 +75,10 @@ export function stopSending(campaignId) {
       { id: campaignId }
     ).then(response => {
       dispatch(completeStopSending(response));
+      dispatch(notify({
+        message: 'Campaign sending stopped',
+        colour: 'green'
+      }));
     });
   }
 }
