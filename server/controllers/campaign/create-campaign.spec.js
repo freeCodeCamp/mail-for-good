@@ -54,8 +54,8 @@ describe('createCampaign', () => {
       })
     })
 
-    it('responds with a success message', () => {
-      expect(res.message).to.be.equal('New campaign successfully created');
+    it('responds with a message indicating that a campaign is being created', () => {
+      expect(res.message).to.be.equal('Campaign is being created - it will be ready to send soon.');
     });
 
     it('sets the user id correctly', done => {

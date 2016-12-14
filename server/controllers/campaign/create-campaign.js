@@ -67,6 +67,7 @@ module.exports = (req, res) => {
             // Each time we write (bulk insert) 10k ListSubscribers, fetch the next 10k by recursively calling
             // createCampaignSubscribers - ensures that we don't run out of ram by loading too many ListSubscribers
             // at once.
+            res.send({message: 'Campaign is being created - it will be ready to send soon.'});  // Should use notification/status rather than simple response
             function createCampaignSubscribers(offset=0, limit=10000) {
               db.listsubscriber.findAll({
                 where: { listId: valueFromValidation.listId },
@@ -84,7 +85,7 @@ module.exports = (req, res) => {
                     createCampaignSubscribers(offset + limit);
                   });
                 } else {
-                  res.send({message: 'New campaign successfully created'});  // Should use notification/status rather than simple response
+                  return;
                 }
               })
             }
