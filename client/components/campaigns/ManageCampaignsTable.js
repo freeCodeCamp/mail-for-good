@@ -43,6 +43,14 @@ const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
     return total - failed;
   };
 
+  const statusFormatter = (status, row) => {
+    if (status == 'creating') {
+      return `<span class="label label-warning">Creating</span>`;
+    } else if (status == 'ready') {
+      return `<span class="label label-success">Ready</span>`;
+    }
+  }
+
   const filterDate = {
     type: "DateFilter",
     //defaultValue: //Default value on filter. If type is NumberFilter or DateFilter, this value will like { number||date: xxx, comparator: '>' }
@@ -64,6 +72,7 @@ const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
       <TableHeaderColumn dataField="id" hidden={true} isKey={true}>Id</TableHeaderColumn>
       <TableHeaderColumn dataField="slug" hidden={true}>Slug</TableHeaderColumn>
       <TableHeaderColumn dataField="name" dataAlign="center" dataSort={true} width="450">Name</TableHeaderColumn>
+      <TableHeaderColumn dataField="status" dataAlign="center" dataSort={true} dataFormat={statusFormatter} width="150">Status</TableHeaderColumn>
       <TableHeaderColumn dataField="campaignanalytic.totalSentCount" dataAlign="center" dataSort={true} csvHeader="sent">Sent</TableHeaderColumn>
       <TableHeaderColumn dataField="delivered" dataAlign="center" dataSort={true} dataFormat={deliveredFormatter} csvFormat={deliveredFormatter}>Delivered</TableHeaderColumn>
       <TableHeaderColumn dataField="bounced" dataAlign="center" dataSort={true} dataFormat={bouncedFormatter} csvFormat={bouncedFormatter}>Bounced</TableHeaderColumn>
@@ -72,7 +81,6 @@ const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
       <TableHeaderColumn dataField="campaignanalytic.openCount" dataAlign="center" dataSort={true} csvHeader="opens">Opens</TableHeaderColumn>
       {/*<TableHeaderColumn export ={false} dataAlign="center" width="100">Tags (WIP)</TableHeaderColumn>*/}
       <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150" filter={filterDate}>Created</TableHeaderColumn>
-      <TableHeaderColumn dataField="updatedAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150" filter={filterDate}>Updated</TableHeaderColumn>
 
     </BootstrapTable>
   );
