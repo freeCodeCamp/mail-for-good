@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import WSNotification from './WS-Notification';
 
-const Header = (props) => { // eslint-disable-line no-unused-vars
+const Header = props => { // eslint-disable-line no-unused-vars
   const { user, ws_notification, consumeNotification } = props;
   return (
     <header className="main-header">
@@ -33,7 +33,13 @@ const Header = (props) => { // eslint-disable-line no-unused-vars
                   }}>
 
                   {ws_notification.map((notification, i) => {
-                    return <WSNotification key={`ws-notification${i}`} message={notification.message} consumeNotification={consumeNotification} index={i} icon={notification.icon} iconColour={notification.iconColour} />;
+                    return (
+                      <WSNotification key={`ws-notification${i}`}
+                        message={notification.message}
+                        consumeNotification={consumeNotification}
+                        index={i} icon={notification.icon}
+                        iconColour={notification.iconColour} />
+                    );
                   })}
 
                   </ul>
@@ -41,6 +47,7 @@ const Header = (props) => { // eslint-disable-line no-unused-vars
                 <li className="footer">
                   <a href="#">View all</a>
                 </li>
+
               </ul>
             </li>
 
@@ -62,6 +69,13 @@ const Header = (props) => { // eslint-disable-line no-unused-vars
                 </li>
               </ul>
             </li>
+
+            <li>
+              <a href="#" data-toggle="control-sidebar">
+                <i className="fa fa-gears" />
+              </a>
+            </li>
+
           </ul>
         </div>
       </nav>

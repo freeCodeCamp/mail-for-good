@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Combobox } from 'react-widgets';
-import 'react-widgets/dist/css/react-widgets.css';
 
 import { renderCombobox, renderField, renderTextEditor, renderRadio } from '../common/FormRenderWrappers';
 

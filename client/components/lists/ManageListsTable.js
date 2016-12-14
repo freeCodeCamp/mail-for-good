@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Link } from 'react-router';
 import moment from 'moment';
-import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 
 const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
 

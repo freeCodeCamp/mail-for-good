@@ -1,5 +1,6 @@
-import React from 'react';
-import { Route, IndexRoute } from 'react-router';
+import React, { PropTypes, Component } from 'react';
+import { Route, Router, IndexRoute } from 'react-router';
+import { connect } from 'react-redux';
 
 import App from './containers/App';
 // Dashboard
@@ -18,40 +19,91 @@ import ManageLists from './components/lists/ManageLists';
 import ManageListSubscribers from './containers/lists/ManageListSubscribers';
 // Analytics
 import CampaignReports from './containers/analytics/CampaignReports';
+// Permissions
+import GrantPermissions from './containers/permissions/GrantPermissions';
+import ManagePermissions from './containers/permissions/ManagePermissions';
 // Settings
 import Settings from './containers/Settings';
 
 // import AddEmail from './containers/AddEmail';
 import NotFound from './components/404';
 
-export default(
-  <Route path="/" component={App}>
-    <IndexRoute component={Dashboard}/>
+function mapStateToProps(state) {
+  return {
+    activeAccount: state.activeAccount
+  };
+}
 
-    <Route path="campaigns">
-      <Route path="create" component={CreateCampaign}/>
-      <Route path="manage" component={ManageCampaigns}/>
-      <Route path="manage/:slug" component={CampaignView}/>
-    </Route>
+@connect(mapStateToProps, null)
+export default class RouterConfig extends Component {
 
-    <Route path="templates">
-      <Route path="create" component={CreateTemplate}/>
-      <Route path="manage" component={ManageTemplates}/>
-      <Route path="manage/:slug" component={TemplateView}/>
-    </Route>
+  static propTypes = {
+    // redux
+    activeAccount: PropTypes.object.isRequired,
+    // props
+    history: PropTypes.object.isRequired
+  }
 
-    <Route path="lists">
-      <Route path="create" component={CreateList}/>
-      <Route path="manage" component={ManageLists}/>
-      <Route path="manage/:listId" component={ManageListSubscribers}/>
-    </Route>
+  constructor() {
+    super();
+    this.onEnter = this.onEnter.bind(this);
+  }
 
-    <Route path="analytics">
-      <Route path="reports" component={CampaignReports}/>
-    </Route>
+  onEnter(nextState, replace) {
+    const accountIsActive = !!this.props.activeAccount.email;
+    if (accountIsActive) {
+      const urlPathLength = nextState.routes.length;
+      if (urlPathLength === 1) { // Is dashboard
+        replace('/404');
+      } else {
+        if (!this.props.activeAccount[nextState.routes[1].path] || this.props.activeAccount[nextState.routes[1].path] === 'none') {
+          replace('/404');
+        }
+      }
+    }
+  }
 
-    <Route path="settings" component={Settings}/>
+  render() {
 
-    <Route path="*" component={NotFound}/>
-  </Route>
-);
+    const { history } = this.props;
+
+    return (
+      <Router history={history}>
+        <Route path="/" component={App}>
+          <IndexRoute component={Dashboard} onEnter={this.onEnter} />
+
+          <Route path="campaigns" onEnter={this.onEnter} >
+            <Route path="create" component={CreateCampaign}/>
+            <Route path="manage" component={ManageCampaigns}/>
+            <Route path="manage/:slug" component={CampaignView}/>
+          </Route>
+
+          <Route path="templates" onEnter={this.onEnter} >
+            <Route path="create" component={CreateTemplate}/>
+            <Route path="manage" component={ManageTemplates}/>
+            <Route path="manage/:slug" component={TemplateView}/>
+          </Route>
+
+          <Route path="lists" onEnter={this.onEnter} >
+            <Route path="create" component={CreateList}/>
+            <Route path="manage" component={ManageLists}/>
+            <Route path="manage/:listId" component={ManageListSubscribers}/>
+          </Route>
+
+          <Route path="analytics" onEnter={this.onEnter} >
+            <Route path="reports" component={CampaignReports}/>
+          </Route>
+
+          <Route path="permissions" onEnter={this.onEnter} >
+            <Route path="grant" component={GrantPermissions}/>
+            <Route path="manage" component={ManagePermissions}/>
+          </Route>
+
+          <Route path="settings" component={Settings} onEnter={this.onEnter} />
+
+          <Route path="*" component={NotFound}/>
+        </Route>
+      </Router>
+    );
+  }
+}

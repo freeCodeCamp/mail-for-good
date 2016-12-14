@@ -1,6 +1,5 @@
 import React, { PropTypes, Component } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
-import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
 import moment from 'moment';
 
 export default class ManageSubscribersTable extends Component {

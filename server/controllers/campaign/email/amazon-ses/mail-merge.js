@@ -7,5 +7,5 @@ module.exports = (task, campaignInfo) => {
   let data = task.additionalData;
   data.email = task.email;
 
-  return bodyTemplate(data)
+  return bodyTemplate(data);
 };

@@ -1,29 +1,53 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { RouteTransition } from 'react-router-transition';
+import cookie from 'react-cookie';
 
 import Header from '../components/admin-lte/Header.js';
 import Sidebar from '../components/admin-lte/Sidebar.js';
+import RightSidebar from '../components/admin-lte/RightSidebar.js';
 import Footer from '../components/admin-lte/Footer.js';
 import Notifications from './Notifications';
 import { emitProfileRequest, consumeNotification } from '../actions/appActions';
 
+import { getActivePermissions, becomeAnotherUser, becomeSelf } from '../actions/permissionActions';
+
 function mapStateToProps(state) {
+  // Select emails from activePermissions
+
+  const activePermissionsEmails = state.activePermissions.activePermissions.map(x => ({ ...x, email: x.toUserEmail }));
+
   return {
     user: state.profile.user,
-    ws_notification: state.profile.ws_notification
+    ws_notification: state.profile.ws_notification,
+
+    isGettingActivePermissions: state.activePermissions.isGetting,
+    activePermissionsEmails,
+
+    accountForm: state.form.activeAccount,
+    activeAccount: state.activeAccount
   };
 }
 
-@connect(mapStateToProps, { emitProfileRequest, consumeNotification })
+@connect(mapStateToProps, { emitProfileRequest, consumeNotification, getActivePermissions, becomeAnotherUser, becomeSelf })
 export default class App extends Component {
 
   static propTypes = {
     children: PropTypes.element.isRequired,
-    emitProfileRequest: PropTypes.func.isRequired,
-    consumeNotification: PropTypes.func.isRequired,
+    // redux
     user: PropTypes.object,
     ws_notification: PropTypes.array.isRequired,
+    isGettingActivePermissions: PropTypes.bool.isRequired,
+    activePermissionsEmails: PropTypes.array.isRequired,
+    accountForm: PropTypes.object,
+    activeAccount: PropTypes.object.isRequired,
+    // actions
+    emitProfileRequest: PropTypes.func.isRequired,
+    consumeNotification: PropTypes.func.isRequired,
+    getActivePermissions: PropTypes.func.isRequired,
+    becomeAnotherUser: PropTypes.func.isRequired,
+    becomeSelf: PropTypes.func.isRequired,
+    // router
     route: React.PropTypes.object,
     location: React.PropTypes.object
   }
@@ -32,19 +56,50 @@ export default class App extends Component {
     router: React.PropTypes.object
   }
 
+  constructor() {
+    super();
+    this.changeAccount = this.changeAccount.bind(this);
+    this.changeAccountToSelf = this.changeAccountToSelf.bind(this);
+  }
+
   componentWillMount() {
     this.props.emitProfileRequest();
   }
 
+  componentDidMount() {
+    if (!this.props.activePermissionsEmails.length) {
+      this.props.getActivePermissions();
+    }
+    // On component mount, if the 'user' cookie key exists but this.props.activeAccount.email === undefined then we need to delete this property
+    // As it's no longer in sync with the app's state and will incorrectly inform the server to use permissions to another user's account
+    if (!this.props.activeAccount.email) {
+      cookie.remove('user', { path: '/' });
+    }
+    if (!cookie.load('user')) {
+      cookie.save('user', this.props.activeAccount.id, { path: '/' });
+    }
+  }
+
+  changeAccount() {
+    const thisAccount = this.props.activePermissionsEmails.find(x => x.email === this.props.accountForm.values.email);
+    // @thisAccount { email, id }
+    this.props.becomeAnotherUser(thisAccount);
+  }
+
+  changeAccountToSelf() {
+    this.props.becomeSelf();
+  }
+
   render() {
+    const { location, isGettingActivePermissions, activePermissionsEmails, activeAccount, ws_notification, consumeNotification, user } = this.props;
     return (
       <div className="wrapper">
-        <Header user={this.props.user} ws_notification={this.props.ws_notification} consumeNotification={this.props.consumeNotification} />
-        <Sidebar user={this.props.user} />
+        <Header user={user} ws_notification={ws_notification} consumeNotification={consumeNotification} />
+        <Sidebar user={user} activeAccount={activeAccount} />
 
         <div className="content-wrapper">
           <RouteTransition
-            pathname={this.props.location.pathname}
+            pathname={location.pathname}
             atEnter={{ opacity: 0 }}
             atLeave={{ opacity: 2 }}
             atActive={{ opacity: 1 }}
@@ -55,6 +110,8 @@ export default class App extends Component {
 
         <Notifications />
         <Footer />
+        <RightSidebar activeAccount={activeAccount} changeAccountToSelf={this.changeAccountToSelf} changeAccount={this.changeAccount} isGettingActivePermissions={isGettingActivePermissions} activePermissionsEmails={activePermissionsEmails} />
+        <div className="control-sidebar-bg" />
       </div>
     );
   }

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer')({dest: 'server/controllers/list/uploads/'});
 const auth = require('./auth');
 const parseJson = bodyParser.json();
+const cookieParser = require('cookie-parser')();
 
 // Campaigns
 const getCampaigns = require('../controllers/campaign/get-campaigns');
@@ -30,6 +31,18 @@ const subscribeToList = require('../controllers/list/subscribe');
 const deleteSubscribers = require('../controllers/list/delete-subscribers');
 const deleteLists = require('../controllers/list/delete-lists');
 const unsubscribe = require('../controllers/subscriber/unsubscribe');
+
+// Permissions
+const getGrantedPermissions = require('../controllers/permissions/get-granted-permissions');
+const grantPermissions = require('../controllers/permissions/grant-permission');
+const deleteGrantedPermissions = require('../controllers/permissions/delete-granted-permissions');
+
+const getActivePermissions = require('../controllers/permissions/get-active-permissions');
+const deleteActivePermissions = require('../controllers/permissions/delete-active-permissions');
+
+const getReceivedPermissionOffers = require('../controllers/permissions/get-received-permission-offers');
+const acceptPermissionOffer = require('../controllers/permissions/accept-permission-offer');
+const rejectPermissionOffer = require('../controllers/permissions/reject-permission-offers');
 
 // Analytics
 const getClickthroughs = require('../controllers/analytics/get-clickthroughs');
@@ -63,15 +76,15 @@ module.exports = (app, passport, io, redis) => {
 
   /* Campaigns */
   // Get a list of all campaigns
-  app.get('/api/campaign', apiIsAuth, (req, res) => {
+  app.get('/api/campaign', apiIsAuth, cookieParser, (req, res) => {
     getCampaigns(req, res);
   });
   // Post new campaign
-  app.post('/api/campaign', apiIsAuth, parseJson, (req, res) => {
+  app.post('/api/campaign', apiIsAuth, parseJson, cookieParser, (req, res) => {
     createCampaign(req, res);
   });
   // Delete campaign(s)
-  app.delete('/api/campaign', apiIsAuth, parseJson, (req, res) => {
+  app.delete('/api/campaign', apiIsAuth, parseJson, cookieParser, (req, res) => {
     deleteCampaigns(req, res);
   });
   // Export subscribers that emails were not sent/sent to during a campaign
@@ -81,15 +94,15 @@ module.exports = (app, passport, io, redis) => {
 
   /* Send */
   // Post to send campaign
-  app.post('/api/send', apiIsAuth, parseJson, (req, res) => {
+  app.post('/api/send', apiIsAuth, parseJson, cookieParser, (req, res) => {
     sendCampaign(req, res, io, redis);
   });
   // Stop sending a campaign
   app.post('/api/stop', apiIsAuth, parseJson, (req, res) => {
-    stopCampaignSending(req, res, redis)
+    stopCampaignSending(req, res, redis);
   });
   // Post to send a test email
-  app.post('/api/test', apiIsAuth, parseJson, (req, res) => {
+  app.post('/api/test', apiIsAuth, parseJson, cookieParser, (req, res) => {
     sendTestEmail(req, res);
   });
 
@@ -141,6 +154,42 @@ module.exports = (app, passport, io, redis) => {
   // Delete lists
   app.delete('/api/list/manage', apiIsAuth, parseJson, (req, res) => {
     deleteLists(req, res);
+  });
+
+  /* Permissions */
+  // Get granted permissions (i.e. permissions you have granted another user)
+  app.get('/api/permissions', apiIsAuth, (req, res) => {
+    getGrantedPermissions(req, res);
+  });
+  // Post to offer another user a set of permissions
+  app.post('/api/permissions', apiIsAuth, parseJson, (req, res) => {
+    grantPermissions(req, res);
+  });
+  // Delete granted permissions, removes item(s) from the ACL
+  app.delete('/api/permissions', apiIsAuth, parseJson, (req, res) => {
+    deleteGrantedPermissions(req, res);
+  });
+
+  // Get active permissions (belongs to the user granted permissions)
+  app.get('/api/active-permissions', apiIsAuth, (req, res) => {
+    getActivePermissions(req, res);
+  });
+  // Delete active permissions, removes item(s) from the ACL
+  app.delete('/api/active-permissions', apiIsAuth, parseJson, (req, res) => {
+    deleteActivePermissions(req, res);
+  });
+
+  // Get received permission offers
+  app.get('/api/received-permissions', apiIsAuth, (req, res) => {
+    getReceivedPermissionOffers(req, res);
+  });
+  // Post to accept permission offers
+  app.post('/api/received-permissions', apiIsAuth, parseJson, (req, res) => {
+    acceptPermissionOffer(req, res);
+  });
+  // Delete to reject permission offers
+  app.delete('/api/received-permissions', apiIsAuth, parseJson, (req, res) => {
+    rejectPermissionOffer(req, res);
   });
 
   /* Settings */
@@ -197,6 +246,7 @@ module.exports = (app, passport, io, redis) => {
       });
     });
   });
+
 };
 
 /* Helper functions for verifying authentication */

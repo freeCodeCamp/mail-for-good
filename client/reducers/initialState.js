@@ -44,7 +44,22 @@ const initialState = {
   profile: {
     user: {},
     ws_notification: []
-  }
+  },
+  grantPermissions: { // Refers to GrantPermissions container
+    isGetting: false,
+    grantedPermissions: [],
+    isPosting: false,
+    response: {}
+  },
+  receivedPermissionOffers: { // Permission offers received from another user
+    isGetting: false,
+    receivedPermissionOffers: []
+  },
+  activePermissions: {
+    isGetting: false,
+    activePermissions: []
+  },
+  activeAccount: {}
 };
 
 export default initialState;
