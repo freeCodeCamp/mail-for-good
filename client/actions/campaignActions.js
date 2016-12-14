@@ -9,6 +9,7 @@ import {
   REQUEST_STOP_SENDING, COMPLETE_STOP_SENDING
 } from '../constants/actionTypes';
 import { API_CAMPAIGN_ENDPOINT, API_SEND_CAMPAIGN_ENDPOINT, API_TEMPLATE_ENDPOINT, API_TEST_SEND_CAMPAIGN_ENDPOINT, API_STOP_SENDING } from '../constants/endpoints';
+import { notify } from './notificationActions';
 
 // Create new campaign
 export function requestPostCreateCampaign() {
@@ -62,8 +63,13 @@ export function completeDeleteTemplates(templates) {
 export function requestStopSending(campaignId) {
   return { type: REQUEST_STOP_SENDING, campaignId };
 }
-export function completeStopSending(campaignId) {
-  return { type: REQUEST_STOP_SENDING, campaignId };
+export function completeStopSending() {
+  return dispatch => {
+    dispatch(notify({
+      message: 'Campaign sending stopped',
+      colour: 'green'
+    }));
+  }
 }
 
 export function stopSending(campaignId) {
