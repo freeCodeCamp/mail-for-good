@@ -1,12 +1,14 @@
+import axios from 'axios';
 import {
   REQUEST_POST_CREATECAMPAIGN, COMPLETE_POST_CREATECAMPAIGN,
   REQUEST_GET_CAMPAIGNS, COMPLETE_GET_CAMPAIGNS,
   REQUEST_POST_SENDCAMPAIGN, COMPLETE_POST_SENDCAMPAIGN,
   REQUEST_POST_CREATETEMPLATE, COMPLETE_POST_CREATETEMPLATE,
   REQUEST_GET_TEMPLATES, COMPLETE_GET_TEMPLATES,
-  COMPLETE_DELETE_CAMPAIGNS, COMPLETE_DELETE_TEMPLATES
+  COMPLETE_DELETE_CAMPAIGNS, COMPLETE_DELETE_TEMPLATES,
+  REQUEST_STOP_SENDING, COMPLETE_STOP_SENDING
 } from '../constants/actionTypes';
-import { API_CAMPAIGN_ENDPOINT, API_SEND_CAMPAIGN_ENDPOINT, API_TEMPLATE_ENDPOINT, API_TEST_SEND_CAMPAIGN_ENDPOINT } from '../constants/endpoints';
+import { API_CAMPAIGN_ENDPOINT, API_SEND_CAMPAIGN_ENDPOINT, API_TEMPLATE_ENDPOINT, API_TEST_SEND_CAMPAIGN_ENDPOINT, API_STOP_SENDING } from '../constants/endpoints';
 
 // Create new campaign
 export function requestPostCreateCampaign() {
@@ -55,6 +57,27 @@ export function completeDeleteCampaigns(campaigns) {
 export function completeDeleteTemplates(templates) {
   return { type: COMPLETE_DELETE_TEMPLATES, templates };
 }
+
+// Stop campaign sending
+export function requestStopSending(campaignId) {
+  return { type: REQUEST_STOP_SENDING, campaignId };
+}
+export function completeStopSending(campaignId) {
+  return { type: REQUEST_STOP_SENDING, campaignId };
+}
+
+export function stopSending(campaignId) {
+  return dispatch => {
+    dispatch(requestStopSending(campaignId));
+
+    axios.post(API_STOP_SENDING,
+      { id: campaignId }
+    ).then(response => {
+      dispatch(completeStopSending(response));
+    });
+  }
+}
+
 
 export function getCampaigns() {
   return dispatch => {
