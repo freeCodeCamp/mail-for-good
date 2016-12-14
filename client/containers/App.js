@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { RouteTransition } from 'react-router-transition';
+import cookie from 'react-cookie';
 
 import Header from '../components/admin-lte/Header.js';
 import Sidebar from '../components/admin-lte/Sidebar.js';
@@ -68,6 +69,11 @@ export default class App extends Component {
   componentDidMount() {
     if (!this.props.activePermissionsEmails.length) {
       this.props.getActivePermissions();
+    }
+    // On component mount, if the 'user' cookie key exists but this.props.activeAccount.email === undefined then we need to delete this property
+    // As it's no longer in sync with the app's state and will incorrectly inform the server to use permissions to another user's account
+    if (this.props.activeAccount.email) {
+      cookie.remove('user', { path: '/' });
     }
   }
 

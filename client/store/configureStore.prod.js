@@ -11,7 +11,7 @@ export default function configureStore(initialState) {
   return createStore(rootReducer, initialState, compose(
     applyMiddleware(...middewares),
     // Save subset of state to local storage
-    persistState(['form'])
+    persistState(['form', 'activeAccount'])
     )
   );
 }
