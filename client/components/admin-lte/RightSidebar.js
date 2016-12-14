@@ -23,7 +23,25 @@ const RightSidebar = props => {
 
         <div className="tab-pane active" id="control-sidebar-home-tab">
           <h3 className="control-sidebar-heading">Account</h3>
-            {activeAccount.email && <button className="btn btn-danger btn-lg" style={{ width: "100%", marginTop: "1rem" }} onClick={changeAccountToSelf}>Use My Account</button>}
+
+          {activeAccount.email &&
+          <ul className="control-sidebar-menu">
+            <li>
+              <a href="javascript:void(0)">
+                <i className="menu-icon fa fa-user bg-green" />
+
+                <div className="menu-info">
+                  <h4 className="control-sidebar-subheading">{activeAccount.email}</h4>
+
+                  <p>You are currently using this account</p>
+                </div>
+              </a>
+            </li>
+          </ul>}
+
+            {activeAccount.email &&
+            <button className="btn btn-danger btn-lg" style={{ width: "100%", marginTop: "1rem" }} onClick={changeAccountToSelf}>Use My Account</button>}
+
             <form onSubmit={resetFormAndSubmit}>
 
               <div className="form-group">
