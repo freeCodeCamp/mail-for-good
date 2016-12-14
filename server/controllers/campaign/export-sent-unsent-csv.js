@@ -28,7 +28,7 @@ module.exports = (req, res) => {
       res.write('email\n');
 
       // Construct filter query
-      let where = { sent };
+      let where = { sent, campaignId };
       if (sent === 'true') {
         where.sent = true;
       } else if (sent === 'false') {
