@@ -1,9 +1,11 @@
 const Campaign = require('../../models').campaign;
 const CampaignAnalytics = require('../../models').campaignanalytics;
 
+const campaignPermission = require('../permissions/acl-lib/acl-campaign-permissions');
+
 module.exports = (req, res) => {
   // Find all campaigns belonging to a user & send it to them
-
+  
   Campaign.findAll({
     where: {
       userId: req.user.id
