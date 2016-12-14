@@ -48,6 +48,8 @@ const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
       return `<span class="label label-warning">Creating</span>`;
     } else if (status == 'ready') {
       return `<span class="label label-success">Ready</span>`;
+    } else if (status == 'interrupted') {
+      return `<span class="label label-danger">Interrupted</span>`;
     }
   }
 

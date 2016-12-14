@@ -42,7 +42,7 @@ describe('stopCampaignSending', () => {
     });
   });
 
-  it('publishes a cancel message to redis', (done) => {
+  it('publishes a cancel message to redis', done => {
     const res = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter });
     const req = {
       user: { id: 1 },
@@ -63,14 +63,32 @@ describe('stopCampaignSending', () => {
   xit('sends a success message after redis flags have been set', () => {
   });
 
-  it('validates that the campaign belongs to the user', (done) => {
+  it('modifies the campaign status appropriately', done => {
+    const res = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter });
+    const req = {
+      user: { id: 1 },
+      body: { id: 1 }
+    };
+
+    stopCampaignSending(req, res, redis);
+
+    res.on('finish', () => {
+      Campaign.findById(1, { raw: true }).then(campaign => {
+        expect(campaign.status).to.be.equal('interrupted');
+      });
+
+      done();
+    });
+  });
+
+  it('validates that the campaign belongs to the user', done => {
     const res = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter });
     const req = {
       user: { id: 1337 },
       body: { id: 1 }
     };
 
-    stopCampaignSending(req, res);
+    stopCampaignSending(req, res, redis);
 
     res.on('finish', () => {
       expect(res.statusCode).to.be.equal(400);

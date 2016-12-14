@@ -23,7 +23,12 @@ module.exports = (req, res, redis) => {
   }).then(campaign => {
     if (campaign) {
       redis.publisher.publish('stop-campaign-sending', campaignId);
-      res.send();
+
+      Campaign.update({ status: 'interrupted' }, {
+        where: { userId, id: campaignId }
+      }).then(() => {
+        res.send();
+      });
     } else {
       res.status(400).send();
     }
