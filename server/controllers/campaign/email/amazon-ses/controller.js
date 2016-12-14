@@ -50,7 +50,7 @@ Throttling error:
 
 */
 
-module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, whiteLabelUrl) => {
+module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, whiteLabelUrl, redis) => {
 
 
   const isDevMode = process.env.NODE_ENV === 'development' || false;
@@ -61,6 +61,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   let processedEmails = 0;
   let isBackingOff = false;
   let isRunning = false; // eslint-disable-line
+  let stop = false;
 
   let ListSubscriberIndexPointer = 0;
 
@@ -217,8 +218,19 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
   function pushByRateLimit() {
     isRunning = true;
+
+    // Stop sending subscribers to queue on cancel event from redis
+    redis.subscriber.on('message', (channel, campaignId) => {
+      if (campaignId == campaignInfo.campaignId) {
+        stop = true;
+        redis.subscriber.unsubscribe('stop-campaign-sending');
+      }
+    });
+
+    redis.subscriber.subscribe('stop-campaign-sending');
+
     pushByRateLimitInterval = setInterval(() => {
-      if (totalListSubscribers > listCalls) {
+      if (totalListSubscribers > listCalls && !stop) {
         if (q.length() <= rateLimit && !(listCalls > (processedEmails + rateLimit))) { // Prevent race condition where requests to returnList vastly exceed & overwhelm other db requests
           returnList(ListSubscriberIndexPointer);
           ListSubscriberIndexPointer++;

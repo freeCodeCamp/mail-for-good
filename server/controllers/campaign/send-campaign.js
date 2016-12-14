@@ -3,7 +3,7 @@ const email = require('./email');
 const AWS = require('aws-sdk');
 const moment = require('moment');
 
-module.exports = (req, res, io) => {
+module.exports = (req, res, io, redis) => {
 
   // If req.body.id was not supplied or is not a number, cancel
   if (!req.body.id || typeof req.body.id !== 'number') {
@@ -36,7 +36,7 @@ module.exports = (req, res, io) => {
     res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday, quotas.MaxSendRate));
 
     // 7. Send the campaign. TODO: Clean up & condense these arguments
-    yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, whiteLabelUrl);
+    yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, whiteLabelUrl, redis);
 
     // 8. TODO: If there was an error, handle it here
 
