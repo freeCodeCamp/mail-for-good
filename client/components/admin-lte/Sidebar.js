@@ -17,7 +17,7 @@ const Sidebar = (props) => { // eslint-disable-line no-unused-vars
   - Do not render permissions (users can only manipulate this themselves)
   - Do not render settings (users can only modify their own settings)
   */
-  console.log(anotherAccountIsActive, activeAccount);
+
   return (
     <aside className="main-sidebar">
       <section className="sidebar">

@@ -43,6 +43,7 @@
     "body-parser": "^1.15.2",
     "bootstrap": "^3.3.7",
     "connect-redis": "^3.1.0",
+    "cookie-parser": "^1.4.3",
     "csv": "^1.1.0",
     "dompurify": "^0.8.3",
     "dotenv": "^2.0.0",

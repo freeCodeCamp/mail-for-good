@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer')({dest: 'server/controllers/list/uploads/'});
 const auth = require('./auth');
 const parseJson = bodyParser.json();
+const cookieParser = require('cookie-parser')();
 
 // Campaigns
 const getCampaigns = require('../controllers/campaign/get-campaigns');
@@ -73,25 +74,25 @@ module.exports = (app, passport, io) => {
 
   /* Campaigns */
   // Get a list of all campaigns
-  app.get('/api/campaign', apiIsAuth, (req, res) => {
+  app.get('/api/campaign', apiIsAuth, cookieParser, (req, res) => {
     getCampaigns(req, res);
   });
   // Post new campaign
-  app.post('/api/campaign', apiIsAuth, parseJson, (req, res) => {
+  app.post('/api/campaign', apiIsAuth, parseJson, cookieParser, (req, res) => {
     createCampaign(req, res);
   });
   // Delete campaign(s)
-  app.delete('/api/campaign', apiIsAuth, parseJson, (req, res) => {
+  app.delete('/api/campaign', apiIsAuth, parseJson, cookieParser, (req, res) => {
     deleteCampaigns(req, res);
   });
 
   /* Send */
   // Post to send campaign
-  app.post('/api/send', apiIsAuth, parseJson, (req, res) => {
+  app.post('/api/send', apiIsAuth, parseJson, cookieParser, (req, res) => {
     sendCampaign(req, res, io);
   });
   // Post to send a test email
-  app.post('/api/test', apiIsAuth, parseJson, (req, res) => {
+  app.post('/api/test', apiIsAuth, parseJson, cookieParser, (req, res) => {
     sendTestEmail(req, res);
   });
 
