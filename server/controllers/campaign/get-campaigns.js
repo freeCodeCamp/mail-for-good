@@ -9,7 +9,7 @@ module.exports = (req, res) => {
 
   const access = campaignPermission(req.cookies.user, req.user.id)
     .then(userIdAndCampaigns => {
-      // userIdAndCampaigns.userId must equal 'Read' or 'Write'
+      // userIdAndCampaigns.userId must not equal 'None'
       if (userIdAndCampaigns.campaigns === 'None') {
         throw 'Permission denied';
       } else {
