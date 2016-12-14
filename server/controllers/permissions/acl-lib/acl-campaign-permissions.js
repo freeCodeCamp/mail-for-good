@@ -1,15 +1,24 @@
 const ACL = require('../../../models').acl;
 
-module.exports = function(id) {
+module.exports = function(id, userId) {
 
   /*
     Returns a promise containing the type of permission granted
+    @params id = primaryKey id to a row in the ACL table. Extracted from req.cookies.user (if provided)
+    @params userId = the logged in user's id
   */
+
+  // If id is undefined, no cookie has been set. Therefore the user is not accessing another's account and has full access be default.
+  if (!id) {
+    return Promise.resolve({
+      userId,
+      campaigns: 'Write'
+    });
+  }
 
   return ACL.findById(id)
     .then(userInstance => {
       if (userInstance) {
-        console.log(userInstance);
         const campaignAccess = {
           campaigns: userInstance.getDataValue('campaigns'),
           userId: userInstance.getDataValue('userId')

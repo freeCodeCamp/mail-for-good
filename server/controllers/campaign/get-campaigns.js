@@ -4,50 +4,71 @@ const CampaignAnalytics = require('../../models').campaignanalytics;
 const campaignPermission = require('../permissions/acl-lib/acl-campaign-permissions');
 
 module.exports = (req, res) => {
-  // Find all campaigns belonging to a user & send it to them
-  
-  Campaign.findAll({
-    where: {
-      userId: req.user.id
-    },
-    include: [
-      {
-        model: CampaignAnalytics,  // Campaign summary analytics
-        required: true,
-        attributes: [
-          'complaintCount',
-          'permanentBounceCount',
-          'transientBounceCount',
-          'undeterminedBounceCount',
-          'totalSentCount',
-          'openCount',
-          'clickthroughCount'
-        ]
+
+  let userId = '';
+
+  const access = campaignPermission(req.cookies.user, req.user.id)
+    .then(userIdAndCampaigns => {
+      // userIdAndCampaigns.userId must equal 'Read' or 'Write'
+      if (userIdAndCampaigns.campaigns === 'None') {
+        throw 'Permission denied';
+      } else {
+        userId = userIdAndCampaigns.userId;
+        return null;
       }
-    ],
-    attributes: [
-      'name',
-      'fromName',
-      'fromEmail',
-      'emailSubject',
-      'emailBody',
-      'createdAt',
-      'updatedAt',
-      'id',
-      'slug',
-      'trackingPixelEnabled',
-      'trackLinksEnabled',
-      'unsubscribeLinkEnabled',
-      'type'
-    ],
-    raw: true
-  }).then(instancesArray => {
-    if(instancesArray) {
-      res.send(instancesArray);
-    } else {
-      res.send();
-    }
-  }).catch(() => {
-    res.send();
-  });
+    });
+
+  Promise.all([access])
+    .then(() => {
+
+      // Find all campaigns belonging to a user & send it to them
+      Campaign.findAll({
+        where: {
+          userId
+        },
+        include: [
+          {
+            model: CampaignAnalytics,  // Campaign summary analytics
+            required: true,
+            attributes: [
+              'complaintCount',
+              'permanentBounceCount',
+              'transientBounceCount',
+              'undeterminedBounceCount',
+              'totalSentCount',
+              'openCount',
+              'clickthroughCount'
+            ]
+          }
+        ],
+        attributes: [
+          'name',
+          'fromName',
+          'fromEmail',
+          'emailSubject',
+          'emailBody',
+          'createdAt',
+          'updatedAt',
+          'id',
+          'slug',
+          'trackingPixelEnabled',
+          'trackLinksEnabled',
+          'unsubscribeLinkEnabled',
+          'type'
+        ],
+        raw: true
+      }).then(instancesArray => {
+        if(instancesArray) {
+          res.send(instancesArray);
+        } else {
+          res.send();
+        }
+      }).catch(() => {
+        res.send();
+      });
+
+    })
+    .catch(err => {
+      res.status(400).send(err);
+    });
 };
