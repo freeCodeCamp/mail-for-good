@@ -47,9 +47,13 @@ const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
     if (status == 'creating') {
       return `<span class="label label-warning">Creating</span>`;
     } else if (status == 'ready') {
-      return `<span class="label label-success">Ready</span>`;
+      return `<span class="label label-default">Ready</span>`;
     } else if (status == 'interrupted') {
       return `<span class="label label-danger">Interrupted</span>`;
+    } else if (status == 'sending') {
+      return `<span class="label label-success">Sending</span>`;
+    } else if (status == 'done') {
+      return `<span class="label label-success">Done</span>`;
     }
   }
 

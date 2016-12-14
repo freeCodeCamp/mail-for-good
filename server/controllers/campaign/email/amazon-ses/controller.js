@@ -239,6 +239,15 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
         console.timeEnd('sending'); // eslint-disable-line
         generator.next(null);
         clearInterval(pushByRateLimitInterval);
+
+        const status = stop ? 'interrupted' : 'done'
+        db.campaign.update({ status },
+          { where: { id: campaignInfo.campaignId } }
+        ).then(() => {
+          // alskjdlajdslkj
+        }).catch(err => {
+          throw err;
+        });
       }
     }, (1000 / rateLimit));
   }
@@ -258,9 +267,16 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   };
 
   function *startSending() {
-    console.time('sending'); // eslint-disable-line
     ListSubscriberIndexPointer = yield getInitialListSubscriberId();
+    console.time('sending'); // eslint-disable-line
     pushByRateLimit();
+
+    db.campaign.update({ status: 'sending' },
+      { where: { id: campaignInfo.campaignId } }
+    ).then(() => {
+    }).catch(err => {
+      throw err;
+    });
   }
 
   const startGenerator = startSending();
