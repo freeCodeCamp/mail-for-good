@@ -61,8 +61,6 @@ export default class RouterConfig extends Component {
         }
       }
     }
-    // Disallow access to Dashboard on
-    console.log(this.props.activeAccount, nextState);
   }
 
   render() {
