@@ -9,6 +9,7 @@ const getCampaigns = require('../controllers/campaign/get-campaigns');
 const createCampaign = require('../controllers/campaign/create-campaign');
 const deleteCampaigns = require('../controllers/campaign/delete-campaigns');
 const exportSentUnsentCSV = require('../controllers/campaign/export-sent-unsent-csv');
+const stopCampaignSending = require('../controllers/campaign/stop-campaign-sending');
 
 // Send campaign
 const sendCampaign = require('../controllers/campaign/send-campaign');
@@ -82,6 +83,10 @@ module.exports = (app, passport, io, redis) => {
   // Post to send campaign
   app.post('/api/send', apiIsAuth, parseJson, (req, res) => {
     sendCampaign(req, res, io, redis);
+  });
+  // Stop sending a campaign
+  app.post('/api/stop', apiIsAuth, parseJson, (req, res) => {
+    stopCampaignSending(req, res, redis)
   });
   // Post to send a test email
   app.post('/api/test', apiIsAuth, parseJson, (req, res) => {
