@@ -1,5 +1,5 @@
-import React from 'react';
-import { Route, IndexRoute } from 'react-router';
+import React, { PropTypes, Component } from 'react';
+import { Route, Router, IndexRoute } from 'react-router';
 
 import App from './containers/App';
 // Dashboard
@@ -27,39 +27,53 @@ import Settings from './containers/Settings';
 // import AddEmail from './containers/AddEmail';
 import NotFound from './components/404';
 
-export default(
-  <Route path="/" component={App}>
-    <IndexRoute component={Dashboard}/>
+export default class RouterConfig extends Component {
 
-    <Route path="campaigns">
-      <Route path="create" component={CreateCampaign}/>
-      <Route path="manage" component={ManageCampaigns}/>
-      <Route path="manage/:slug" component={CampaignView}/>
-    </Route>
+  static propTypes = {
+    history: PropTypes.object.isRequired
+  }
 
-    <Route path="templates">
-      <Route path="create" component={CreateTemplate}/>
-      <Route path="manage" component={ManageTemplates}/>
-      <Route path="manage/:slug" component={TemplateView}/>
-    </Route>
+  render() {
 
-    <Route path="lists">
-      <Route path="create" component={CreateList}/>
-      <Route path="manage" component={ManageLists}/>
-      <Route path="manage/:listId" component={ManageListSubscribers}/>
-    </Route>
+    const { history } = this.props;
 
-    <Route path="analytics">
-      <Route path="reports" component={CampaignReports}/>
-    </Route>
+    return (
+      <Router history={history}>
+        <Route path="/" component={App}>
+          <IndexRoute component={Dashboard}/>
 
-    <Route path="permissions">
-      <Route path="grant" component={GrantPermissions}/>
-      <Route path="manage" component={ManagePermissions}/>
-    </Route>
+          <Route path="campaigns">
+            <Route path="create" component={CreateCampaign}/>
+            <Route path="manage" component={ManageCampaigns}/>
+            <Route path="manage/:slug" component={CampaignView}/>
+          </Route>
 
-    <Route path="settings" component={Settings}/>
+          <Route path="templates">
+            <Route path="create" component={CreateTemplate}/>
+            <Route path="manage" component={ManageTemplates}/>
+            <Route path="manage/:slug" component={TemplateView}/>
+          </Route>
 
-    <Route path="*" component={NotFound}/>
-  </Route>
-);
+          <Route path="lists">
+            <Route path="create" component={CreateList}/>
+            <Route path="manage" component={ManageLists}/>
+            <Route path="manage/:listId" component={ManageListSubscribers}/>
+          </Route>
+
+          <Route path="analytics">
+            <Route path="reports" component={CampaignReports}/>
+          </Route>
+
+          <Route path="permissions">
+            <Route path="grant" component={GrantPermissions}/>
+            <Route path="manage" component={ManagePermissions}/>
+          </Route>
+
+          <Route path="settings" component={Settings}/>
+
+          <Route path="*" component={NotFound}/>
+        </Route>
+      </Router>
+    );
+  }
+}
