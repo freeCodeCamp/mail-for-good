@@ -3,176 +3,199 @@ const email = require('./email');
 const AWS = require('aws-sdk');
 const moment = require('moment');
 
+const campaignPermission = require('../permissions/acl-lib/acl-campaign-permissions');
+
 module.exports = (req, res, io) => {
 
-  // If req.body.id was not supplied or is not a number, cancel
-  if (!req.body.id || typeof req.body.id !== 'number') {
-    res.status(400).send();
-    return;
-  }
+  let userId = '';
 
-  function *sendCampaign() {
-    const userId = req.user.id;
-    const campaignId = req.body.id;
+  const access = campaignPermission(req.cookies.user, req.user.id)
+    .then(userIdAndCampaigns => {
+      // userIdAndCampaigns.userId must equal 'Write'
+      if (userIdAndCampaigns.campaigns === 'Write') {
+        throw 'Permission denied';
+      } else {
+        userId = userIdAndCampaigns.userId;
+        return null;
+      }
+    });
 
-    // NOTE: Current assumption is that the user is using Amazon SES. Can modularise and change this if necessary.
+  Promise.all([access])
+    .then(() => {
+    // BEGIN ACCESS CONTROL
 
-    // 1. Confirm user has set their keys & retrieve them
-    const { accessKey, secretKey, region, whiteLabelUrl } = yield getAmazonKeysAndRegion(userId);
-
-    // 2. Confirm the campaign id belongs to the user and retrieve the associated listId
-    const campaignInfo = yield campaignBelongsToUser(userId, campaignId);
-
-    // 3. Get the user's Max24HourSend - SentLast24Hours to determine available email quota, then get MaxSendRate
-    const quotas = yield getEmailQuotas(accessKey, secretKey, region);
-
-    // 4. Count the number of list subscribers to message. If this is above the daily quota, send an error.
-    const totalListSubscribers = yield countListSubscribers(campaignInfo.listId, quotas.AvailableToday);
-
-    // 5. Update analytics data
-    campaignInfo.campaignAnalyticsId = yield updateAnalytics(campaignInfo.campaignId, userId, totalListSubscribers);
-
-    // 6. At this stage, we've ready to send the campaign. Respond that the request was successful.
-    res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday, quotas.MaxSendRate));
-
-    // 7. Send the campaign. TODO: Clean up & condense these arguments
-    yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, whiteLabelUrl);
-
-    // 8. TODO: If there was an error, handle it here
-
-    // 9. Push a notification regarding the success of the operation to the user if they're connected
-    if (io.sockets.connected[req.session.passport.socket]) {
-      const emailSuccess = {
-        message: `Campaign "${campaignInfo.name}" has been sent`,
-        icon: 'fa-envelope',
-        iconColour: 'text-green'
-      };
-
-      io.sockets.connected[req.session.passport.socket].emit('notification', emailSuccess);
+    // If req.body.id was not supplied or is not a number, cancel
+    if (!req.body.id || typeof req.body.id !== 'number') {
+      res.status(400).send();
+      return;
     }
-  }
 
-  const generator = sendCampaign();
-  generator.next();
+    function *sendCampaign() {
+      const campaignId = req.body.id;
 
-  // Validate the campaign belongs to the user
-  function campaignBelongsToUser(userId, campaignId) {
-    db.campaign.findOne({
-      where: {
-        id: campaignId,
-        userId: userId
+      // NOTE: Current assumption is that the user is using Amazon SES. Can modularise and change this if necessary.
+
+      // 1. Confirm user has set their keys & retrieve them
+      const { accessKey, secretKey, region, whiteLabelUrl } = yield getAmazonKeysAndRegion(userId);
+
+      // 2. Confirm the campaign id belongs to the user and retrieve the associated listId
+      const campaignInfo = yield campaignBelongsToUser(userId, campaignId);
+
+      // 3. Get the user's Max24HourSend - SentLast24Hours to determine available email quota, then get MaxSendRate
+      const quotas = yield getEmailQuotas(accessKey, secretKey, region);
+
+      // 4. Count the number of list subscribers to message. If this is above the daily quota, send an error.
+      const totalListSubscribers = yield countListSubscribers(campaignInfo.listId, quotas.AvailableToday);
+
+      // 5. Update analytics data
+      campaignInfo.campaignAnalyticsId = yield updateAnalytics(campaignInfo.campaignId, userId, totalListSubscribers);
+
+      // 6. At this stage, we've ready to send the campaign. Respond that the request was successful.
+      res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday, quotas.MaxSendRate));
+
+      // 7. Send the campaign. TODO: Clean up & condense these arguments
+      yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, whiteLabelUrl);
+
+      // 8. TODO: If there was an error, handle it here
+
+      // 9. Push a notification regarding the success of the operation to the user if they're connected
+      if (io.sockets.connected[req.session.passport.socket]) {
+        const emailSuccess = {
+          message: `Campaign "${campaignInfo.name}" has been sent`,
+          icon: 'fa-envelope',
+          iconColour: 'text-green'
+        };
+
+        io.sockets.connected[req.session.passport.socket].emit('notification', emailSuccess);
       }
-    }).then(campaignInstance => {
-      if (!campaignInstance) {
-        res.status(401).send();
-      } else {
-        const campaignObject = campaignInstance.get({ plain:true });
-        const listId = campaignObject.listId;
-        const { fromName, fromEmail, emailSubject, emailBody, type, name, trackingPixelEnabled, trackLinksEnabled, unsubscribeLinkEnabled } = campaignObject;
+    }
 
-        generator.next({ listId, fromName, fromEmail, emailSubject, emailBody, campaignId, type, name, trackingPixelEnabled, trackLinksEnabled, unsubscribeLinkEnabled  });
-      }
-    }).catch(err => {
-      throw err;
-    });
-  }
+    const generator = sendCampaign();
+    generator.next();
 
-  function getAmazonKeysAndRegion(userId) {
-    db.setting.findOne({
-      where: {
-        userId: userId
-      }
-    }).then(settingInstance => {
-      if (!settingInstance) {
-        // This should never happen as settings are created on account creation
-        res.status(500).send();
-      } else {
-        const settingObject = settingInstance.get({ plain:true });
-        const {
-          amazonSimpleEmailServiceAccessKey: accessKey,
-          amazonSimpleEmailServiceSecretKey: secretKey,
-          region,
-          whiteLabelUrl
-        } = settingObject;
-        // If either key is blank, the user needs to set their settings
-        if ((accessKey === '' || secretKey === '' || region === '') && process.env.NODE_ENV === 'production') {
-          res.status(400).send({ message:'Please provide your details for your Amazon account under "Settings".' });
-        } else {
-          // handling of default whitelabel url?
-          generator.next({ accessKey, secretKey, region, whiteLabelUrl: whiteLabelUrl || 'http://localhost:8080' });
-          return null;
+    // Validate the campaign belongs to the user
+    function campaignBelongsToUser(userId, campaignId) {
+      db.campaign.findOne({
+        where: {
+          id: campaignId,
+          userId: userId
         }
-      }
-    }).catch(err => {
-      res.status(500).send(err);
-    });
-  }
+      }).then(campaignInstance => {
+        if (!campaignInstance) {
+          res.status(401).send();
+        } else {
+          const campaignObject = campaignInstance.get({ plain:true });
+          const listId = campaignObject.listId;
+          const { fromName, fromEmail, emailSubject, emailBody, type, name, trackingPixelEnabled, trackLinksEnabled, unsubscribeLinkEnabled } = campaignObject;
 
-  function getEmailQuotas(accessKey, secretKey, region) {
-    const ses = new AWS.SES({
-      accessKeyId: accessKey,
-      secretAccessKey: secretKey,
-      region: region
-    });
+          generator.next({ listId, fromName, fromEmail, emailSubject, emailBody, campaignId, type, name, trackingPixelEnabled, trackLinksEnabled, unsubscribeLinkEnabled  });
+        }
+      }).catch(err => {
+        throw err;
+      });
+    }
 
-    ses.getSendQuota((err, data) => {
-      if (err) { // Either access keys are wrong here or the request is being placed too quickly
-        res.status(400).send({ message: 'Please confirm your Amazon SES settings and try again later.' });
-      } else {
-        const { Max24HourSend, SentLast24Hours, MaxSendRate } = data;
-        const AvailableToday = Max24HourSend - SentLast24Hours;
-        generator.next({ Max24HourSend, SentLast24Hours, MaxSendRate, AvailableToday });
-      }
-    });
-  }
+    function getAmazonKeysAndRegion(userId) {
+      db.setting.findOne({
+        where: {
+          userId: userId
+        }
+      }).then(settingInstance => {
+        if (!settingInstance) {
+          // This should never happen as settings are created on account creation
+          res.status(500).send();
+        } else {
+          const settingObject = settingInstance.get({ plain:true });
+          const {
+            amazonSimpleEmailServiceAccessKey: accessKey,
+            amazonSimpleEmailServiceSecretKey: secretKey,
+            region,
+            whiteLabelUrl
+          } = settingObject;
+          // If either key is blank, the user needs to set their settings
+          if ((accessKey === '' || secretKey === '' || region === '') && process.env.NODE_ENV === 'production') {
+            res.status(400).send({ message:'Please provide your details for your Amazon account under "Settings".' });
+          } else {
+            // handling of default whitelabel url?
+            generator.next({ accessKey, secretKey, region, whiteLabelUrl: whiteLabelUrl || 'http://localhost:8080' });
+            return null;
+          }
+        }
+      }).catch(err => {
+        res.status(500).send(err);
+      });
+    }
 
-  function countListSubscribers(listId, AvailableToday) {
-    db.listsubscriber.count({
-      where: {
-        listId: listId,
-        subscribed: true
-      }
-    }).then(total => {
-      if (total > AvailableToday && process.env.NODE_ENV === 'production') {
-        res.status(400).send({ message: `This list exceeds your 24 hour allowance of ${AvailableToday} emails. Please upgrade your SES limit.` });
-      } else {
-        generator.next(total);
-      }
-      return null;
-    }).catch(err => {
-      res.status(500).send(err);
-    });
-  }
+    function getEmailQuotas(accessKey, secretKey, region) {
+      const ses = new AWS.SES({
+        accessKeyId: accessKey,
+        secretAccessKey: secretKey,
+        region: region
+      });
 
-  function updateAnalytics(campaignId, userId, totalEmails) {
-    db.user.findById(
-      userId
-    ).then(foundUser => {
-      return foundUser.increment('sentEmailsCount', { by: totalEmails });
-    }).then(() => {
-      return db.campaignanalytics.findOne(
-        { where: { campaignId } }
-      );
-    }).then(result => {
-      generator.next(result.dataValues.id);
-      return null;
-    }).catch(err => {
-      res.status(500).send(err);
-    });
-  }
+      ses.getSendQuota((err, data) => {
+        if (err) { // Either access keys are wrong here or the request is being placed too quickly
+          res.status(400).send({ message: 'Please confirm your Amazon SES settings and try again later.' });
+        } else {
+          const { Max24HourSend, SentLast24Hours, MaxSendRate } = data;
+          const AvailableToday = Max24HourSend - SentLast24Hours;
+          generator.next({ Max24HourSend, SentLast24Hours, MaxSendRate, AvailableToday });
+        }
+      });
+    }
 
+    function countListSubscribers(listId, AvailableToday) {
+      db.listsubscriber.count({
+        where: {
+          listId: listId,
+          subscribed: true
+        }
+      }).then(total => {
+        if (total > AvailableToday && process.env.NODE_ENV === 'production') {
+          res.status(400).send({ message: `This list exceeds your 24 hour allowance of ${AvailableToday} emails. Please upgrade your SES limit.` });
+        } else {
+          generator.next(total);
+        }
+        return null;
+      }).catch(err => {
+        res.status(500).send(err);
+      });
+    }
+
+    function updateAnalytics(campaignId, userId, totalEmails) {
+      db.user.findById(
+        userId
+      ).then(foundUser => {
+        return foundUser.increment('sentEmailsCount', { by: totalEmails });
+      }).then(() => {
+        return db.campaignanalytics.findOne(
+          { where: { campaignId } }
+        );
+      }).then(result => {
+        generator.next(result.dataValues.id);
+        return null;
+      }).catch(err => {
+        res.status(500).send(err);
+      });
+    }
+
+    function howLongEmailingWillTake(totalListSubscribers, AvailableToday, MaxSendRate) {
+      const timeTaken = (totalListSubscribers / MaxSendRate / 60);
+      const emailsLeftAfterSend = AvailableToday - totalListSubscribers;
+      let formattedMessage = `Your campaign is being sent to ${totalListSubscribers.toLocaleString('en-GB')} subscribers, it should be done `;
+
+      const newTime = moment(new Date(new Date().getTime() + timeTaken * 60000));
+      const timeTo = moment(new Date).to(newTime);
+
+      formattedMessage += `${timeTo}. `;
+      formattedMessage += ` Your Amazon limit for today is now ${emailsLeftAfterSend.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} emails.`;
+
+      return { message: formattedMessage };
+    }
+
+  // END ACCESS CONTROL
+  })
+  .catch(err => {
+    res.status(400).send(err);
+  });
 };
-
-function howLongEmailingWillTake(totalListSubscribers, AvailableToday, MaxSendRate) {
-    const timeTaken = (totalListSubscribers / MaxSendRate / 60);
-    const emailsLeftAfterSend = AvailableToday - totalListSubscribers;
-    let formattedMessage = `Your campaign is being sent to ${totalListSubscribers.toLocaleString('en-GB')} subscribers, it should be done `;
-
-    const newTime = moment(new Date(new Date().getTime() + timeTaken * 60000));
-    const timeTo = moment(new Date).to(newTime);
-
-    formattedMessage += `${timeTo}. `;
-    formattedMessage += ` Your Amazon limit for today is now ${emailsLeftAfterSend.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} emails.`;
-
-    return { message: formattedMessage };
-  }
