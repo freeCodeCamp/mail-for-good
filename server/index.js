@@ -19,6 +19,8 @@ const routes = require('./routes');
 require('./config/passport')(passport);
 
 const client = redis.createClient();
+const subscriber = redis.createClient();  // Need to create separate connections
+const publisher = redis.createClient();   // for pub-sub
 
 client.on("error", err => console.log(`Error: ${err} - Are you running redis?`)); // eslint-disable-line
 
@@ -37,7 +39,7 @@ app.use('/public', express.static(path.join(__dirname, '../public')));
 app.use('/dist', express.static(path.join(__dirname, '../dist')));
 
 // Routes
-routes(app, passport, io);
+routes(app, passport, io, { client, subscriber, publisher });
 
 // Server
 const port = process.env.PORT || 8080;

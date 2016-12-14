@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 import { Modal, Button } from 'react-bootstrap';
-import { getCampaigns, postSendCampaign, postTestEmail } from '../../actions/campaignActions';
+import { getCampaigns, postSendCampaign, postTestEmail, stopSending } from '../../actions/campaignActions';
 import { notify } from '../../actions/notificationActions';
 import PreviewCampaignForm from '../../components/campaigns/PreviewCampaignForm';
 
@@ -18,7 +18,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getCampaigns, postSendCampaign, postTestEmail, notify })
+@connect(mapStateToProps, { getCampaigns, postSendCampaign, postTestEmail, stopSending, notify })
 export default class CampaignView extends Component {
 
   static propTypes = {
@@ -26,6 +26,7 @@ export default class CampaignView extends Component {
     postSendCampaign: PropTypes.func.isRequired,
     postTestEmail: PropTypes.func.isRequired,
     getCampaigns: PropTypes.func.isRequired,
+    stopSending: PropTypes.func.isRequired,
     notify: PropTypes.func.isRequired,
     // redux
     campaigns: PropTypes.array.isRequired,
@@ -127,6 +128,10 @@ export default class CampaignView extends Component {
     this.setState({ testEmail: '' });
   }
 
+  stopSending() {
+    this.props.stopSending(this.state.thisCampaign.id);
+  }
+
   handleChange(e) {
     this.setState({
       [e.target.id]: e.target.value
@@ -164,6 +169,7 @@ export default class CampaignView extends Component {
                 <input id="testEmail" style={{ "margin-left": "1rem" }} className="form-control" placeholder="Send a test email to:" type="email" value={this.state.testEmail} onChange={this.handleChange} />
                 <br/>
                 <button className="btn btn-lg btn-primary" onClick={() => {window.location = downloadUnsentSubscribersUrl}}>Export unsent</button>
+                <button className="btn btn-danger btn-lg" type="button" onClick={this.stopSending.bind(this)}>Stop sending</button>
               </div>
 
               <Modal show={this.state.showModal} onHide={this.close}>
