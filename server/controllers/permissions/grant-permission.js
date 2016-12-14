@@ -14,7 +14,12 @@ module.exports = function(req, res) {
   .then(userInstance => {
     if(!userInstance) {
       res.status(400).send({ message: 'This user does not exist' });
-    } else {
+    }
+    else if (userInstance.getDataValue('id') === req.user.id) {
+      // Disallow sending offers to self
+      res.status(400).send({ message: 'You cannot offer yourself permissions' });
+    }
+    else {
 
       ACL.findOne({
         where: {
