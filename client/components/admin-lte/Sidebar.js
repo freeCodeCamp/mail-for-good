@@ -5,6 +5,18 @@ import SidebarTreeview from '../common/SidebarTreeview';
 
 const Sidebar = (props) => { // eslint-disable-line no-unused-vars
   const { user, activeAccount } = props;
+  const anotherAccountIsActive = !activeAccount.hasOwnProperty('email'); // If this prop exists, the account is currently active
+  /*
+  Rules for rendering sidebar if another user account is active (permission active)
+
+  - Do not render Dashboard
+  - Render campaigns if activeAccount.campaigns !== undefined
+  - Render templates if activeAccount.templates !== undefined
+  - Render lists if activeAccount.lists !== undefined
+  - Do not render analytics (unsure if this treeview will remain in mvp)
+  - Do not render permissions (users can only manipulate this themselves)
+  - Do not render settings (users can only modify their own settings)
+  */
 
   return (
     <aside className="main-sidebar">
@@ -20,34 +32,40 @@ const Sidebar = (props) => { // eslint-disable-line no-unused-vars
         <ul className="sidebar-menu">
           <li className="header">OPTIONS</li>
 
-          <SidebarLink to="/" icon="fa-tachometer">Dashboard</SidebarLink>
+          {anotherAccountIsActive && <SidebarLink to="/" icon="fa-tachometer">Dashboard</SidebarLink>}
 
+          {activeAccount.campaigns && activeAccount.campaigns !== 'none' &&
           <SidebarTreeview name="Campaigns" icon="fa-envelope">
             <SidebarLink to="/campaigns/create">Create Campaign</SidebarLink> {/* typeofcampaign (html, plain etc), use template, steps= 1. to who - 2. campaign info (name, from, subject, from email, options for tracking) 3. Template 4. Write the actual email 5. send & confirm*/}
             <SidebarLink to="/campaigns/manage">Manage Campaigns</SidebarLink> {/* delete, resend, edit, view report (analytics) */}
-          </SidebarTreeview>
+          </SidebarTreeview>}
 
+          {activeAccount.templates && activeAccount.templates !== 'none' && 
           <SidebarTreeview name="Templates" icon="fa-file-text">
             <SidebarLink to="/templates/create">Create Template</SidebarLink> {/* typeofcampaign (html, plain etc), use template, steps= 1. to who - 2. campaign info (name, from, subject, from email, options for tracking) 3. Template 4. Write the actual email 5. send & confirm*/}
             <SidebarLink to="/templates/manage">Manage Templates</SidebarLink> {/* delete, resend, edit, view report (analytics) */}
-          </SidebarTreeview>
+          </SidebarTreeview>}
 
+          {activeAccount.lists && activeAccount.lists !== 'none' &&
           <SidebarTreeview name="Lists" icon="fa-list">
             <SidebarLink to="/lists/create">Create List</SidebarLink> {/* Import from CSV etc. Keep this isolated to importing */}
             <SidebarLink to="/lists/manage">Manage Lists</SidebarLink> {/* RUD, Export list, statistics, add subscriber, duplicate list, combine list */}
-          </SidebarTreeview>
+          </SidebarTreeview>}
 
+          {anotherAccountIsActive &&
           <SidebarTreeview name="Analytics" icon="fa-bar-chart">
             <SidebarLink to="/analytics/overview">Overview TBA</SidebarLink> {/* General overview of all campaigns */}
             <SidebarLink to="/analytics/reports">Campaign Reports</SidebarLink> {/* Bounce rate, click rate, open rate, unsub no., etc */}
-          </SidebarTreeview>
+          </SidebarTreeview>}
 
+          {anotherAccountIsActive &&
           <SidebarTreeview name="Permissions" icon="fa-users">
               <SidebarLink to="/permissions/grant">Grant permissions</SidebarLink> {/* Ability to grant others permissions */}
               <SidebarLink to="/permissions/manage">Manage permissions</SidebarLink> {/* Ability to manage own perimissions */}
-          </SidebarTreeview>
+          </SidebarTreeview>}
 
-          <SidebarLink to="/settings" icon="fa-cog">Settings</SidebarLink>
+          {anotherAccountIsActive &&
+            <SidebarLink to="/settings" icon="fa-cog">Settings</SidebarLink>}
         </ul>
       </section>
     </aside>
