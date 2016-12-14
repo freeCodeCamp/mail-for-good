@@ -8,7 +8,7 @@ module.exports = function(req, res) {
     },
     attributes: [
       'id',
-      'toUserEmail',
+      'fromUserEmail',
       'campaigns',
       'createdAt',
       'updatedAt'

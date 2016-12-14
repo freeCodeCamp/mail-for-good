@@ -46,6 +46,7 @@ module.exports = function(req, res) {
             } else {
               OfferPermission.create({
                 userId: req.user.id,
+                fromUserEmail: userInstance.getDataValue('email'),
                 toUserId: String(userInstance.getDataValue('id')),
                 toUserEmail: email,
                 campaigns
