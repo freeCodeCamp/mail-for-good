@@ -4,7 +4,7 @@ import SidebarLink from '../common/SidebarLink';
 import SidebarTreeview from '../common/SidebarTreeview';
 
 const Sidebar = (props) => { // eslint-disable-line no-unused-vars
-  const { user } = props;
+  const { user, activeAccount } = props;
 
   return (
     <aside className="main-sidebar">
@@ -55,7 +55,8 @@ const Sidebar = (props) => { // eslint-disable-line no-unused-vars
 };
 
 Sidebar.propTypes = {
-  user: PropTypes.object
+  user: PropTypes.object,
+  activeAccount: PropTypes.object.isRequired
 };
 
 export default Sidebar;

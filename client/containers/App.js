@@ -82,15 +82,15 @@ export default class App extends Component {
   }
 
   render() {
-    const { isGettingActivePermissions, activePermissionsEmails, activeAccount } = this.props;
+    const { location, isGettingActivePermissions, activePermissionsEmails, activeAccount, ws_notification, consumeNotification, user } = this.props;
     return (
       <div className="wrapper">
-        <Header user={this.props.user} ws_notification={this.props.ws_notification} consumeNotification={this.props.consumeNotification} />
-        <Sidebar user={this.props.user} />
+        <Header user={user} ws_notification={ws_notification} consumeNotification={consumeNotification} />
+        <Sidebar user={user} activeAccount={activeAccount} />
 
         <div className="content-wrapper">
           <RouteTransition
-            pathname={this.props.location.pathname}
+            pathname={location.pathname}
             atEnter={{ opacity: 0 }}
             atLeave={{ opacity: 2 }}
             atActive={{ opacity: 1 }}
