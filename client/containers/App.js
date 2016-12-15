@@ -75,7 +75,7 @@ export default class App extends Component {
     if (!this.props.activeAccount.email) {
       cookie.remove('user', { path: '/' });
     }
-    if (!cookie.load('user')) {
+    if (!cookie.load('user') && this.props.activeAccount.email) {
       cookie.save('user', this.props.activeAccount.id, { path: '/' });
     }
   }
