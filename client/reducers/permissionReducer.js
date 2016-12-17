@@ -128,7 +128,7 @@ export function grantOfferedPermissions(state = initialState.grantOfferedPermiss
     case COMPLETE_GET_GRANT_OFFERED_PERMISSIONS: {
       return {...state,
         isGetting: false,
-        activePermissions: action.payload
+        grantOfferedPermissions: action.payload
       };
     }
     case REQUEST_DELETE_GRANT_OFFERED_PERMISSIONS: {
@@ -137,7 +137,7 @@ export function grantOfferedPermissions(state = initialState.grantOfferedPermiss
     }
     case COMPLETE_DELETE_GRANT_OFFERED_PERMISSIONS: {
       return {...state,
-        activePermissions: action.payload
+        grantOfferedPermissions: action.payload
       };
     }
     default:

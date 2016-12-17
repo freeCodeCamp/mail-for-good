@@ -1,19 +1,19 @@
-const ACL = require('../../models').acl;
+const OfferPermission = require('../../models').offerPermission;
 
 module.exports = (req, res) => {
 
-  let { offerIds } = req.body; // List of ids in acl to delete
+  let { offerIds } = req.body; // List of ids in offerPermission to reject
   offerIds = typeof offerIds === 'object' ? offerIds : [offerIds];
   offerIds = offerIds.map(x => Number(x));
 
-  ACL.destroy({
+  OfferPermission.destroy({
     where: {
       id: { in: offerIds },
-      userId: String(req.user.id)
+      userId: req.user.id
     }
   })
   .then(() => {
-    res.send({ message: 'You are no longer offering these permissions' });
+    res.send({ message: 'You have deleted these permission offers' });
   })
   .catch(err => {
     throw err;

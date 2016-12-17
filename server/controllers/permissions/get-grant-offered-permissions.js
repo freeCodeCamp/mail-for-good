@@ -1,10 +1,10 @@
-const ACL = require('../../models').acl;
+const OfferPermission = require('../../models').offerPermission;
 
 module.exports = function(req, res) {
 
-  ACL.findAll({
+  OfferPermission.findAll({
     where: {
-      toUserId: String(req.user.id)
+      userId: req.user.id
     },
     attributes: [
       'id',
@@ -15,11 +15,11 @@ module.exports = function(req, res) {
     ],
     raw: true
   })
-  .then(permissionArray => {
-    if (!permissionArray.length) {
+  .then(grantOfferedPermissionsArray => {
+    if (!grantOfferedPermissionsArray.length) {
       res.send();
     } else {
-      res.send(permissionArray);
+      res.send(grantOfferedPermissionsArray);
     }
   })
   .catch(err => {

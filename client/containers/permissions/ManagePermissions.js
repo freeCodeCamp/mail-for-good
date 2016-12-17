@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { notify } from '../../actions/notificationActions';
+// import { notify } from '../../actions/notificationActions';
 import {
   getGrantPermissions,
   deleteGrantedPermissions,
@@ -21,6 +21,7 @@ import FontAwesome from 'react-fontawesome';
 
 import ManageReceivedPermissionOffersTable from '../../components/permissions/ManageReceivedPermissionOffersTable';
 import ManageActivePermissionsTable from '../../components/permissions/ManageActivePermissionsTable';
+import ManageGrantOfferedPermissionsTable from '../../components/permissions/ManageGrantOfferedPermissionsTable';
 import ManageGrantedPermissionsTable from '../../components/permissions/ManageGrantedPermissionsTable';
 
 function mapStateToProps(state) {
@@ -78,6 +79,7 @@ export default class GrantPermissions extends Component {
     this.acceptReceivedPermissionOfferRows = this.acceptReceivedPermissionOfferRows.bind(this);
     this.deleteActivePermissionRows = this.deleteActivePermissionRows.bind(this);
     this.deleteGrantedPermissionRows = this.deleteGrantedPermissionRows.bind(this);
+    this.deleteGrantOfferedPermissionRows = this.deleteGrantOfferedPermissionRows.bind(this);
   }
 
   componentDidMount() {
@@ -111,8 +113,15 @@ export default class GrantPermissions extends Component {
     this.props.deleteGrantedPermissions(offerIds, this.props.grantedPermissions);
   }
 
+  deleteGrantOfferedPermissionRows(offerIds) {
+    this.props.deleteGrantOfferedPermissions(offerIds, this.props.grantOfferedPermissions);
+  }
+
   render() {
-    const { isGettingGrantedPermissions, grantedPermissions, receivedPermissionOffers, isGettingReceivedPermissionOffers, isGettingActivePermissions, activePermissions } = this.props;
+    const { isGettingGrantedPermissions, grantedPermissions,
+            isGettingReceivedPermissionOffers, receivedPermissionOffers,
+            isGettingActivePermissions, activePermissions,
+            isGettingGrantOfferedPermissions, grantOfferedPermissions } = this.props;
     return (
       <div>
         <div className="content-header">
@@ -144,7 +153,7 @@ export default class GrantPermissions extends Component {
             </div>
 
             <div className="box-body">
-              <ManageActivePermissionsTable data={activePermissions} deletePermissionRows={this.deleteActivePermissionRows} />
+              <ManageActivePermissionsTable data={activePermissions} deletePermissionRows={this.deleteGrantOfferedPermissionRows} />
             </div>
 
             {isGettingActivePermissions && <div className="overlay">
@@ -166,6 +175,22 @@ export default class GrantPermissions extends Component {
               <FontAwesome name="refresh" spin/>
             </div>}
           </div>
+
+          <div className="box box-primary">
+
+            <div className="box-header">
+              <h2>Offered permissions</h2>
+            </div>
+
+            <div className="box-body">
+              <ManageGrantOfferedPermissionsTable data={grantOfferedPermissions} deletePermissionRows={this.deleteGrantOfferedPermissionRows} />
+            </div>
+
+            {isGettingGrantOfferedPermissions && <div className="overlay">
+              <FontAwesome name="refresh" spin/>
+            </div>}
+          </div>
+
         </section>
 
       </div>
