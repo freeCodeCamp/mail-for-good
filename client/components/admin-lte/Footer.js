@@ -5,6 +5,7 @@ const Footer = (props) => { // eslint-disable-line no-unused-vars
     <footer className="main-footer">
       <span>
         <strong>A <a href="https://www.freecodecamp.com/">FreeCodeCamp</a> initiative.</strong>
+        <i className="fa fa-free-code-camp pull-right" style={{ margin: "5px auto" }} aria-hidden="true" />
       </span>
     </footer>
   );
