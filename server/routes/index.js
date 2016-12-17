@@ -45,6 +45,7 @@ const acceptPermissionOffer = require('../controllers/permissions/accept-permiss
 const rejectPermissionOffer = require('../controllers/permissions/reject-permission-offers');
 
 const getGrantOfferedPermissions = require('../controllers/permissions/get-grant-offered-permissions');
+const deleteGrantOfferedPermissions = require('../controllers/permissions/delete-grant-offered-permissions');
 
 // Analytics
 const getClickthroughs = require('../controllers/analytics/get-clickthroughs');
@@ -197,6 +198,10 @@ module.exports = (app, passport, io, redis) => {
   // Get offered permissions (granter -> grantee)
   app.get('/api/grant-offered-permissions', apiIsAuth, (req, res) => {
     getGrantOfferedPermissions(req, res);
+  });
+  // Delete offered permissions, removes item(s) from the ACL
+  app.delete('/api/grant-offered-permissions', apiIsAuth, parseJson, (req, res) => {
+    deleteGrantOfferedPermissions(req, res);
   });
 
   /* Settings */
