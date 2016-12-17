@@ -217,6 +217,7 @@ export function postAcceptReceivedOffers(offerIds, receivedOffers) {
     }).catch(() => {
       dispatch(notify({ message: 'There was an error completing this request.' }));
       dispatch(completePostAcceptReceivedPermissionOffers());
+      dispatch(getActivePermissions());
     });
   };
 }
