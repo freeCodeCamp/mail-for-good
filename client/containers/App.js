@@ -15,7 +15,7 @@ import { getActivePermissions, becomeAnotherUser, becomeSelf } from '../actions/
 function mapStateToProps(state) {
   // Select emails from activePermissions
 
-  const activePermissionsEmails = state.activePermissions.activePermissions.map(x => ({ ...x, email: x.toUserEmail }));
+  const activePermissionsEmails = state.activePermissions.activePermissions.map(x => ({ ...x, email: x.fromUserEmail }));
 
   return {
     user: state.profile.user,
