@@ -55,9 +55,13 @@ const initialState = {
     isGetting: false,
     receivedPermissionOffers: []
   },
-  activePermissions: {
+  activePermissions: { // Permission offers active for a user (permissions they've been granted)
     isGetting: false,
     activePermissions: []
+  },
+  grantOfferedPermissions: { // Permission offers that have been offered to another user
+    isGetting: false,
+    grantOfferedPermissions: []
   },
   activeAccount: {}
 };

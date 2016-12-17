@@ -10,12 +10,16 @@ import {
   REQUEST_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS, COMPLETE_POST_ACCEPT_RECEIVED_PERMISSION_OFFERS,
   REQUEST_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS, COMPLETE_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS,
 
+  REQUEST_GET_GRANT_OFFERED_PERMISSIONS, COMPLETE_GET_GRANT_OFFERED_PERMISSIONS,
+  REQUEST_DELETE_GRANT_OFFERED_PERMISSIONS, COMPLETE_DELETE_GRANT_OFFERED_PERMISSIONS,
+
   ACTIVATE_ACCOUNT, DEACTIVATE_ACCOUNT
 } from '../constants/actionTypes';
 import {
   API_GRANT_PERMISSIONS_ENDPOINT,
   API_RECEIVED_PERMISSIONS_ENDPOINT,
-  API_ACTIVE_PERMISSIONS_ENDPOINT
+  API_ACTIVE_PERMISSIONS_ENDPOINT,
+  API_GRANT_OFFERED_PERMISSIONS_ENDPOINT
 } from '../constants/endpoints';
 import axios from 'axios';
 import cookie from 'react-cookie';
@@ -73,6 +77,20 @@ export function requestDeleteRejectReceivedPermissionOffers() {
 }
 export function completeDeleteRejectReceivedPermissionOffers(payload) {
   return { type: COMPLETE_DELETE_REJECT_RECEIVED_PERMISSION_OFFERS, payload };
+}
+
+// REST for offered permissions - shows permission offers from granter -> grantee
+export function requestGetGrantOfferedPermissions() {
+  return { type: REQUEST_GET_GRANT_OFFERED_PERMISSIONS };
+}
+export function completeGetGrantOfferedPermissions(payload) {
+  return { type: COMPLETE_GET_GRANT_OFFERED_PERMISSIONS, payload };
+}
+export function requestDeleteGrantOfferedPermissions() {
+  return { type: REQUEST_DELETE_GRANT_OFFERED_PERMISSIONS };
+}
+export function completeDeleteGrantOfferedPermissions(payload) {
+  return { type: COMPLETE_DELETE_GRANT_OFFERED_PERMISSIONS, payload };
 }
 
 // App state - set active account
@@ -214,10 +232,10 @@ export function postAcceptReceivedOffers(offerIds, receivedOffers) {
       dispatch(notify({ message: response.data.message, colour: 'green' }));
       const filterReceivedOfferIds = receivedOffers.filter(offer => !~offerIds.indexOf(offer.id));
       dispatch(completePostAcceptReceivedPermissionOffers(filterReceivedOfferIds));
+      dispatch(getActivePermissions());
     }).catch(() => {
       dispatch(notify({ message: 'There was an error completing this request.' }));
       dispatch(completePostAcceptReceivedPermissionOffers());
-      dispatch(getActivePermissions());
     });
   };
 }
@@ -235,6 +253,47 @@ export function deleteRejectReceivedOffers(offerIds, receivedOffers) {
     }).catch(() => {
       dispatch(notify({ message: 'There was an error completing this request.' }));
       dispatch(completeDeleteRejectReceivedPermissionOffers(receivedOffers));
+    });
+  };
+}
+
+// GRANT OFFERED
+export function getGrantOfferedPermissions() {
+  return dispatch => {
+    dispatch(requestGetGrantOfferedPermissions());
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', API_GRANT_OFFERED_PERMISSIONS_ENDPOINT);
+    xhr.onload = () => {
+      if (xhr.responseText) {
+        // Convert response from JSON
+        const permissionsArray = JSON.parse(xhr.responseText).map(x => {
+          x.createdAt = new Date(x.createdAt);
+          x.updatedAt = new Date(x.updatedAt);
+          return x;
+        });
+
+        dispatch(completeGetGrantOfferedPermissions(permissionsArray));
+      } else {
+        dispatch(completeGetGrantOfferedPermissions([]));
+      }
+    };
+    xhr.send();
+  };
+}
+
+export function deleteGrantOfferedPermissions(offerIds, grantOfferedPermisions) {
+  return dispatch => {
+    dispatch(requestDeleteGrantOfferedPermissions());
+    axios.delete(API_GRANT_OFFERED_PERMISSIONS_ENDPOINT, {
+      data: { offerIds }
+    }).then(response => {
+      dispatch(notify({ message: response.data.message, colour: 'green' }));
+      // Remove deleted lists from state
+      const filterGrantOfferedPermissions = grantOfferedPermisions.filter(offer => !~offerIds.indexOf(offer.id));
+      dispatch(completeDeleteGrantOfferedPermissions(filterGrantOfferedPermissions));
+    }).catch(() => {
+      dispatch(notify({ message: 'There was an error completing this request.' }));
+      dispatch(completeDeleteGrantOfferedPermissions(grantOfferedPermisions));
     });
   };
 }
