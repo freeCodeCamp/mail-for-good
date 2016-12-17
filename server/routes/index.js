@@ -44,6 +44,8 @@ const getReceivedPermissionOffers = require('../controllers/permissions/get-rece
 const acceptPermissionOffer = require('../controllers/permissions/accept-permission-offer');
 const rejectPermissionOffer = require('../controllers/permissions/reject-permission-offers');
 
+const getGrantOfferedPermissions = require('../controllers/permissions/get-grant-offered-permissions');
+
 // Analytics
 const getClickthroughs = require('../controllers/analytics/get-clickthroughs');
 const refresh = require('../controllers/analytics/refresh');
@@ -170,7 +172,7 @@ module.exports = (app, passport, io, redis) => {
     deleteGrantedPermissions(req, res);
   });
 
-  // Get active permissions (belongs to the user granted permissions)
+  // Get active permissions (grantee -> granter)
   app.get('/api/active-permissions', apiIsAuth, (req, res) => {
     getActivePermissions(req, res);
   });
@@ -190,6 +192,11 @@ module.exports = (app, passport, io, redis) => {
   // Delete to reject permission offers
   app.delete('/api/received-permissions', apiIsAuth, parseJson, (req, res) => {
     rejectPermissionOffer(req, res);
+  });
+
+  // Get offered permissions (granter -> grantee)
+  app.get('/api/grant-offered-permissions', apiIsAuth, (req, res) => {
+    getGrantOfferedPermissions(req, res);
   });
 
   /* Settings */
