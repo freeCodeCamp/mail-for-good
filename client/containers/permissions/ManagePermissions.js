@@ -11,7 +11,10 @@ import {
   deleteRejectReceivedOffers,
 
   getActivePermissions,
-  deleteActivePermissions
+  deleteActivePermissions,
+
+  getGrantOfferedPermissions,
+  deleteGrantOfferedPermissions
 } from '../../actions/permissionActions';
 
 import FontAwesome from 'react-fontawesome';
@@ -30,11 +33,18 @@ function mapStateToProps(state) {
     receivedPermissionOffers: state.receivedPermissionOffers.receivedPermissionOffers,
 
     isGettingActivePermissions: state.activePermissions.isGetting,
-    activePermissions: state.activePermissions.activePermissions
+    activePermissions: state.activePermissions.activePermissions,
+
+    isGettingGrantOfferedPermissions: state.grantOfferedPermissions.isGetting,
+    grantOfferedPermissions: state.grantOfferedPermissions.grantOfferedPermissions
   };
 }
 
-@connect(mapStateToProps, { getGrantPermissions, deleteGrantedPermissions, getReceivedPermissionOffers, deleteRejectReceivedOffers, getActivePermissions, deleteActivePermissions, postAcceptReceivedOffers })
+@connect(mapStateToProps, {
+  getGrantPermissions, deleteGrantedPermissions,
+  getReceivedPermissionOffers, deleteRejectReceivedOffers, postAcceptReceivedOffers,
+  getActivePermissions, deleteActivePermissions,
+  getGrantOfferedPermissions, deleteGrantOfferedPermissions })
 export default class GrantPermissions extends Component {
 
   static propTypes = {
@@ -47,6 +57,9 @@ export default class GrantPermissions extends Component {
 
     isGettingActivePermissions: PropTypes.bool.isRequired,
     activePermissions: PropTypes.array.isRequired,
+
+    isGettingGrantOfferedPermissions: PropTypes.bool.isRequired,
+    grantOfferedPermissions: PropTypes.array.isRequired,
     // actions
     getGrantPermissions: PropTypes.func.isRequired,
     deleteGrantedPermissions: PropTypes.func.isRequired,
@@ -54,7 +67,9 @@ export default class GrantPermissions extends Component {
     deleteRejectReceivedOffers: PropTypes.func.isRequired,
     getActivePermissions: PropTypes.func.isRequired,
     deleteActivePermissions: PropTypes.func.isRequired,
-    postAcceptReceivedOffers: PropTypes.func.isRequired
+    postAcceptReceivedOffers: PropTypes.func.isRequired,
+    getGrantOfferedPermissions: PropTypes.func.isRequired,
+    deleteGrantOfferedPermissions: PropTypes.func.isRequired
   }
 
   constructor() {
@@ -74,6 +89,9 @@ export default class GrantPermissions extends Component {
     }
     if (!this.props.grantedPermissions.length) {
       this.props.getGrantPermissions();
+    }
+    if (!this.props.grantOfferedPermissions.length) {
+      this.props.getGrantOfferedPermissions();
     }
   }
 
