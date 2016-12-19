@@ -233,6 +233,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
     redis.subscriber.on('message', (channel, campaignId) => {
       if (campaignId == campaignInfo.campaignId) {
         stop = true;
+        q.kill();
         redis.subscriber.unsubscribe('stop-campaign-sending');
       }
     });
