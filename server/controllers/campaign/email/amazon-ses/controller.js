@@ -80,6 +80,13 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
 
   const q = queue((task, done) => {
 
+    // Return early if this email has already been sent
+    if (task.campaignsubscribers[0].sent) {
+      done();
+      processedEmails++;
+      return;
+    }
+
     // Clone the campaign info object so that we can add per-campaign
     // analytics stuff (unsubscribe, link tracking, open tracking)
     let updatedCampaignInfo = Object.assign({}, campaignInfo);
@@ -205,7 +212,10 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
         id,
         listId: campaignInfo.listId,
         subscribed: true
-      }
+      },
+      include: [
+        { model: db.campaignsubscriber, where: { campaignId: campaignInfo.campaignId } }
+      ]
     }).then(list => {
       if (list) {
 
