@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 
+import DisabledLink from '../common/DisabledLink';
 import SidebarLink from '../common/SidebarLink';
 import SidebarTreeview from '../common/SidebarTreeview';
 
@@ -32,41 +33,48 @@ const Sidebar = (props) => { // eslint-disable-line no-unused-vars
         <ul className="sidebar-menu">
           <li className="header">OPTIONS</li>
 
-          {!anotherAccountIsActive &&
-          <SidebarLink to="/" icon="fa-tachometer">Dashboard</SidebarLink>}
+          {!anotherAccountIsActive
+          ? <SidebarLink to="/" icon="fa-tachometer">Dashboard</SidebarLink>
+          : <DisabledLink icon="fa-tachometer">Dashboard</DisabledLink>}
 
-          {(!anotherAccountIsActive || (activeAccount.campaigns && activeAccount.campaigns !== 'none')) &&
-          <SidebarTreeview name="Campaigns" icon="fa-envelope">
-            <SidebarLink to="/campaigns/create">Create Campaign</SidebarLink> {/* typeofcampaign (html, plain etc), use template, steps= 1. to who - 2. campaign info (name, from, subject, from email, options for tracking) 3. Template 4. Write the actual email 5. send & confirm*/}
-            <SidebarLink to="/campaigns/manage">Manage Campaigns</SidebarLink> {/* delete, resend, edit, view report (analytics) */}
-          </SidebarTreeview>}
+          {(!anotherAccountIsActive || (activeAccount.campaigns && activeAccount.campaigns !== 'none'))
+          ? <SidebarTreeview name="Campaigns" icon="fa-envelope">
+              <SidebarLink to="/campaigns/create">Create Campaign</SidebarLink> {/* typeofcampaign (html, plain etc), use template, steps= 1. to who - 2. campaign info (name, from, subject, from email, options for tracking) 3. Template 4. Write the actual email 5. send & confirm*/}
+              <SidebarLink to="/campaigns/manage">Manage Campaigns</SidebarLink> {/* delete, resend, edit, view report (analytics) */}
+            </SidebarTreeview>
+          : <DisabledLink icon="fa-envelope">Campaigns</DisabledLink>}
 
-          {(!anotherAccountIsActive || (activeAccount.templates && activeAccount.templates !== 'none')) &&
-          <SidebarTreeview name="Templates" icon="fa-file-text">
-            <SidebarLink to="/templates/create">Create Template</SidebarLink> {/* typeofcampaign (html, plain etc), use template, steps= 1. to who - 2. campaign info (name, from, subject, from email, options for tracking) 3. Template 4. Write the actual email 5. send & confirm*/}
-            <SidebarLink to="/templates/manage">Manage Templates</SidebarLink> {/* delete, resend, edit, view report (analytics) */}
-          </SidebarTreeview>}
+          {(!anotherAccountIsActive || (activeAccount.templates && activeAccount.templates !== 'none'))
+          ? <SidebarTreeview name="Templates" icon="fa-file-text">
+              <SidebarLink to="/templates/create">Create Template</SidebarLink> {/* typeofcampaign (html, plain etc), use template, steps= 1. to who - 2. campaign info (name, from, subject, from email, options for tracking) 3. Template 4. Write the actual email 5. send & confirm*/}
+              <SidebarLink to="/templates/manage">Manage Templates</SidebarLink> {/* delete, resend, edit, view report (analytics) */}
+            </SidebarTreeview>
+          : <DisabledLink icon="fa-file-text">Templates</DisabledLink>}
 
-          {(!anotherAccountIsActive || (activeAccount.lists && activeAccount.lists !== 'none')) &&
-          <SidebarTreeview name="Lists" icon="fa-list">
-            <SidebarLink to="/lists/create">Create List</SidebarLink> {/* Import from CSV etc. Keep this isolated to importing */}
-            <SidebarLink to="/lists/manage">Manage Lists</SidebarLink> {/* RUD, Export list, statistics, add subscriber, duplicate list, combine list */}
-          </SidebarTreeview>}
+          {(!anotherAccountIsActive || (activeAccount.lists && activeAccount.lists !== 'none'))
+          ? <SidebarTreeview name="Lists" icon="fa-list">
+              <SidebarLink to="/lists/create">Create List</SidebarLink> {/* Import from CSV etc. Keep this isolated to importing */}
+              <SidebarLink to="/lists/manage">Manage Lists</SidebarLink> {/* RUD, Export list, statistics, add subscriber, duplicate list, combine list */}
+            </SidebarTreeview>
+          : <DisabledLink icon="fa-list">Lists</DisabledLink>}
 
-          {!anotherAccountIsActive &&
-          <SidebarTreeview name="Analytics" icon="fa-bar-chart">
-            <SidebarLink to="/analytics/overview">Overview TBA</SidebarLink> {/* General overview of all campaigns */}
-            <SidebarLink to="/analytics/reports">Campaign Reports</SidebarLink> {/* Bounce rate, click rate, open rate, unsub no., etc */}
-          </SidebarTreeview>}
+          {!anotherAccountIsActive
+          ? <SidebarTreeview name="Analytics" icon="fa-bar-chart">
+              <SidebarLink to="/analytics/overview">Overview TBA</SidebarLink> {/* General overview of all campaigns */}
+              <SidebarLink to="/analytics/reports">Campaign Reports</SidebarLink> {/* Bounce rate, click rate, open rate, unsub no., etc */}
+            </SidebarTreeview>
+          : <DisabledLink icon="fa-bar-chart">Analytics</DisabledLink>}
 
-          {!anotherAccountIsActive &&
-          <SidebarTreeview name="Permissions" icon="fa-users">
+          {!anotherAccountIsActive
+          ? <SidebarTreeview name="Permissions" icon="fa-users">
               <SidebarLink to="/permissions/grant">Grant permissions</SidebarLink> {/* Ability to grant others permissions */}
               <SidebarLink to="/permissions/manage">Manage permissions</SidebarLink> {/* Ability to manage own perimissions */}
-          </SidebarTreeview>}
+          </SidebarTreeview>
+          : <DisabledLink icon="fa-users">Permissions</DisabledLink>}
 
-          {!anotherAccountIsActive &&
-          <SidebarLink to="/settings" icon="fa-cog">Settings</SidebarLink>} {/* User's settings e.g. AWS keys */}
+          {!anotherAccountIsActive
+          ? <SidebarLink to="/settings" icon="fa-cog">Settings</SidebarLink>
+          : <DisabledLink icon="fa-cog">Settings</DisabledLink>} {/* User's settings e.g. AWS keys */}
 
         </ul>
       </section>
