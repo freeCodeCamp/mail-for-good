@@ -67,6 +67,21 @@ module.exports = (req, res, io, redis) => {
         res.status(401).send();
       } else {
         const campaignObject = campaignInstance.get({ plain:true });
+
+        // Only send the campaign if it has been freshly created or
+        // has been interrupted (resume)
+        if (!['ready', 'interrupted'].includes(campaignObject.status)) {
+          // Campaign is not ready to send - show appropriate error message
+          const errorMessages = {
+            sending: 'Your campaign is already being sent',
+            done: 'Your campaign has been delivered already',
+            creating: 'Your campaign is still being created and will be ready to send soon'
+          }
+          console.log(errorMessages[campaignObject.status])
+          res.status(400).send({ message: errorMessages[campaignObject.status] });
+          return;
+        }
+
         const listId = campaignObject.listId;
         const { fromName, fromEmail, emailSubject, emailBody, type, name, trackingPixelEnabled, trackLinksEnabled, unsubscribeLinkEnabled } = campaignObject;
 
