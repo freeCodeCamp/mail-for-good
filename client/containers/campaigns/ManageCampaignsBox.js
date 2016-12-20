@@ -65,7 +65,7 @@ export default class ManageCampaignsBox extends Component {
             <FontAwesome name="refresh" spin/>
           </div>}
 
-          <ManageCampaignsGraph />
+          <ManageCampaignsGraph data={this.props.campaigns} />
         </div>
       </div>
     );
