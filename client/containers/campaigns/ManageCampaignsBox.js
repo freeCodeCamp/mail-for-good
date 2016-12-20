@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 
 import ManageCampaignsTable from '../../components/campaigns/ManageCampaignsTable';
+import ManageCampaignsGraph from '../../components/campaigns/ManageCampaignsGraph';
 
 import { getCampaigns, deleteCampaigns } from '../../actions/campaignActions';
 
@@ -63,6 +64,8 @@ export default class ManageCampaignsBox extends Component {
           {this.props.isGetting && <div className="overlay">
             <FontAwesome name="refresh" spin/>
           </div>}
+
+          <ManageCampaignsGraph />
         </div>
       </div>
     );
