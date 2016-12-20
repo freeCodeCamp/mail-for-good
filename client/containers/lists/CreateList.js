@@ -85,7 +85,7 @@ export default class CreateList extends Component {
       <div>
         <div className="content-header">
           <h1>Create List
-            <small>Add or segment a new list</small>
+            <small></small>
           </h1>
         </div>
 
@@ -93,52 +93,23 @@ export default class CreateList extends Component {
 
           <Row>
             <Col xs={12} md={12}>
-              <div className="nav-tabs-custom">
-                <ul className="nav nav-tabs pull-right">
-                  <li className="">
-                    <a href="#tab_1-1" data-toggle="tab">Add single email</a>
-                  </li>
-                  <li className="active">
-                    <a href="#tab_3-2" data-toggle="tab">Import CSV</a>
-                  </li>
-                  <li className="pull-left header"><i className="fa fa-th"/>
-                    Import a list</li>
-                </ul>
+              <div className="box box-primary">
+                <Row>
+                  <Col md={12}>
+                    <div className="box-header">
+                      <h3 className="box-title">List name</h3>
+                    </div>
 
-                <div className="box box-primary">
-                  <Row>
-                    <Col md={12}>
-                      <div className="box-header with-border">
-                        <h3 className="box-title">List name</h3>
-                      </div>
-
+                    <div className="box-body">
                       <form role="form">
-                        <div className="box-body">
-
-                          <div className="form-group">
-                            <input className="form-control" id="title" placeholder="The name of this list" type="text" value={this.state.title} onChange={this.handleChange} />
-                          </div>
-
+                        <div className="form-group">
+                          <input className="form-control" id="title" placeholder="The name of this list" type="text" value={this.state.title} onChange={this.handleChange} />
                         </div>
-
                       </form>
-                    </Col>
-                  </Row>
-                </div>
-
-                <div className="tab-content">
-                  <div className="tab-pane" id="tab_1-1">
-                    Example text
-                  </div>
-
-                  <div className="tab-pane" id="tab_2-2">
-                    Example text
-                  </div>
-
-                  <div className="tab-pane active" id="tab_3-2">
-                    <ImportCSV handleCSVSubmit={this.handleCSVSubmit} notification={this.notification}/>
-                  </div>
-                </div>
+                      <ImportCSV handleCSVSubmit={this.handleCSVSubmit} notification={this.notification}/>
+                    </div>
+                  </Col>
+                </Row>
               </div>
             </Col>
           </Row>

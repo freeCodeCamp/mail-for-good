@@ -106,55 +106,48 @@ export default class ImportCSV extends Component {
           ? <Row>
               <Col md={12}>
 
-                <div className="box box-primary">
-                  <div className="box-header with-border">
-                    <h3 className="box-title">Initiating upload...</h3>
+                <div className="box-header">
+                  <h3 className="box-title">Initiating upload...</h3>
 
-                    <div className="progress">
-                      <div style={{ width: `${this.props.upload}%` }} className="progress-bar progress-bar-aqua" role="progressbar" aria-valuenow={this.props.upload} aria-valuemin="0" aria-valuemax="100">
-                        <span className="sr-only">{this.props.upload}% Complete</span>
-                      </div>
+                  <div className="progress">
+                    <div style={{ width: `${this.props.upload}%` }} className="progress-bar progress-bar-aqua" role="progressbar" aria-valuenow={this.props.upload} aria-valuemin="0" aria-valuemax="100">
+                      <span className="sr-only">{this.props.upload}% Complete</span>
                     </div>
-
                   </div>
-
-                  <div className="box-body">
-                    <p>Loading...</p>
-                  </div>
-
-                </div>
-
-              </Col>
-            </Row>
-
-          : <Row>
-            <Col md={12}>
-
-              <div className="box">
-                <div className="box-header with-border">
-                  <h2>Import CSV</h2>
-                  <h3 className="box-title">Please ensure the first row of the CSV file contains column names. This row must contain an email header.</h3>
                 </div>
 
                 <div className="box-body">
-                  {(!this.state.subscribers && !this.state.errors) && <UploadFileModal handleNewFile={this.handleNewFile.bind(this)}/>}
-
-                  <ErrorsList errors={this.state.errors}/>
-
-                  <SubscribersTable fields={this.state.fields} subscribers={this.state.subscribers} deleteSubscriber={this.deleteSubscriber.bind(this)}/>
+                  <p>Loading...</p>
                 </div>
 
-                <div className="box-footer">
-                  <div className="btn-group">
-                    {this.state.subscribers && <button className="btn pull-left btn-lg btn-success" type="submit" onClick={this.handleSubmit.bind(this)}>Submit</button>}
+              </Col>
+        </Row>
 
-                    {(this.state.subscribers || this.state.errors) && <button className="btn pull-right btn-lg btn-danger" onClick={this.cancelImport.bind(this)}>Cancel</button>}
-                  </div>
-                </div>
+          : <Row>
+          <Col md={12}>
+
+            <div className="box-header">
+              <h2>Import CSV</h2>
+              <h3 className="box-title">Please ensure the first row of the CSV file contains column names. This row must contain an email header.</h3>
+            </div>
+
+            <div className="box-body">
+              {(!this.state.subscribers && !this.state.errors) && <UploadFileModal handleNewFile={this.handleNewFile.bind(this)}/>}
+
+              <ErrorsList errors={this.state.errors}/>
+
+              <SubscribersTable fields={this.state.fields} subscribers={this.state.subscribers} deleteSubscriber={this.deleteSubscriber.bind(this)}/>
+            </div>
+
+            <div className="box-footer">
+              <div className="btn-group">
+                {this.state.subscribers && <button className="btn pull-left btn-lg btn-success" type="submit" onClick={this.handleSubmit.bind(this)}>Submit</button>}
+
+                {(this.state.subscribers || this.state.errors) && <button className="btn pull-right btn-lg btn-danger" onClick={this.cancelImport.bind(this)}>Cancel</button>}
               </div>
-
-            </Col>
-          </Row>
+            </div>
+          </Col>
+        </Row>
         }
 
       </div>
