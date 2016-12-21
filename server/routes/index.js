@@ -142,7 +142,7 @@ module.exports = (app, passport, io, redis) => {
   });
 
   // Post new subscribers
-  app.post('/api/list/add/subscribers', apiIsAuth, cookieParser, (req, res) => {
+  app.post('/api/list/add/subscribers', apiIsAuth, (req, res) => {
     addSubscribers(req, res);
   });
   // Post new list via csv import

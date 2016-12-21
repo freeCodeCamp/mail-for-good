@@ -13,7 +13,7 @@ module.exports = function(req, res) {
             if (email) {
                 res.status(400)
                     .send({
-                  status: 'error', // Redundant
+                  status: 'error',
                   message:'This email already exists'
                 });
             } else {
@@ -22,11 +22,11 @@ module.exports = function(req, res) {
                 }).then(() => {
                     res.status(201)
                         .send({
-                      status: 'success', // Redundant
+                      status: 'success',
                       message: `${subscriber.email} added succesfully`
                     });
                 });
             }
-        })
+        });
     });
-}
+};
