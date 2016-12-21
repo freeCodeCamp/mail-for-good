@@ -4,7 +4,7 @@ const User = require('../../models').user;
 
 module.exports = function(req, res) {
 
-  const { email, campaigns } = req.body;
+  const { email, campaigns, templates, lists } = req.body;
 
   function *grantPermission() {
     const offeredUserInstance = yield userToOfferPermissions();
@@ -17,7 +17,9 @@ module.exports = function(req, res) {
       fromUserEmail: authUserInstance.getDataValue('email'),
       toUserId: String(offeredUserInstance.getDataValue('id')),
       toUserEmail: email,
-      campaigns
+      campaigns,
+      templates,
+      lists
     })
     .then(() => res.send({ message: 'Your offer to grant this user these permissions has been sent' }))
     .catch(err => {

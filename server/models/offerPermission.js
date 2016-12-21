@@ -4,7 +4,9 @@ module.exports = function(sequelize, DataTypes) {
     toUserId: DataTypes.STRING,
     fromUserEmail: DataTypes.STRING,
     toUserEmail: DataTypes.STRING,
-    campaigns: DataTypes.STRING
+    campaigns: DataTypes.STRING,
+    templates: DataTypes.STRING,
+    lists: DataTypes.STRING
   }, {
     classMethods: {
       associate: function(models) {
