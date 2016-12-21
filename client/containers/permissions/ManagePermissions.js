@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-// import { notify } from '../../actions/notificationActions';
+import { notify } from '../../actions/notificationActions';
 import {
   getGrantPermissions,
   deleteGrantedPermissions,
@@ -45,7 +45,8 @@ function mapStateToProps(state) {
   getGrantPermissions, deleteGrantedPermissions,
   getReceivedPermissionOffers, deleteRejectReceivedOffers, postAcceptReceivedOffers,
   getActivePermissions, deleteActivePermissions,
-  getGrantOfferedPermissions, deleteGrantOfferedPermissions })
+  getGrantOfferedPermissions, deleteGrantOfferedPermissions,
+  notify })
 export default class GrantPermissions extends Component {
 
   static propTypes = {
@@ -70,7 +71,8 @@ export default class GrantPermissions extends Component {
     deleteActivePermissions: PropTypes.func.isRequired,
     postAcceptReceivedOffers: PropTypes.func.isRequired,
     getGrantOfferedPermissions: PropTypes.func.isRequired,
-    deleteGrantOfferedPermissions: PropTypes.func.isRequired
+    deleteGrantOfferedPermissions: PropTypes.func.isRequired,
+    notify: PropTypes.func.isRequired
   }
 
   constructor() {
@@ -98,22 +100,42 @@ export default class GrantPermissions extends Component {
   }
 
   deleteReceivedPermissionOfferRows(offerIds) {
+    if (!offerIds.length) {
+      this.props.notify({ message: 'You have not selected any offers' });
+      return;
+    }
     this.props.deleteRejectReceivedOffers(offerIds, this.props.receivedPermissionOffers);
   }
 
   acceptReceivedPermissionOfferRows(offerIds) {
+    if (!offerIds.length) {
+      this.props.notify({ message: 'You have not selected any offers to accept' });
+      return;
+    }
     this.props.postAcceptReceivedOffers(offerIds, this.props.receivedPermissionOffers);
   }
 
   deleteActivePermissionRows(offerIds) {
+    if (!offerIds.length) {
+      this.props.notify({ message: 'You have not selected any offers' });
+      return;
+    }
     this.props.deleteActivePermissions(offerIds, this.props.activePermissions);
   }
 
   deleteGrantedPermissionRows(offerIds) {
+    if (!offerIds.length) {
+      this.props.notify({ message: 'You have not selected any offers' });
+      return;
+    }
     this.props.deleteGrantedPermissions(offerIds, this.props.grantedPermissions);
   }
 
   deleteGrantOfferedPermissionRows(offerIds) {
+    if (!offerIds.length) {
+      this.props.notify({ message: 'You have not selected any offers' });
+      return;
+    }
     this.props.deleteGrantOfferedPermissions(offerIds, this.props.grantOfferedPermissions);
   }
 

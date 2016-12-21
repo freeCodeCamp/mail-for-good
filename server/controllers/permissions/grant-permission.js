@@ -8,9 +8,9 @@ module.exports = function(req, res) {
 
   // Validate that campaigns, templates & lists equal 'None', 'Read' or 'Write'
   const validPermissions = ['None', 'Read', 'Write'];
-  const validateCampaigns = campaigns.every(x => ~validPermissions.indexOf(x));
-  const validateTemplates = templates.every(x => ~validPermissions.indexOf(x));
-  const validateLists = lists.every(x => ~validPermissions.indexOf(x));
+  const validateCampaigns = ~validPermissions.indexOf(campaigns);
+  const validateTemplates = ~validPermissions.indexOf(templates);
+  const validateLists = ~validPermissions.indexOf(lists);
 
   // Critical that these fields are not malformed. If they are, throw an early error here.
   if (!validateCampaigns || !validateTemplates || !validateLists) {
