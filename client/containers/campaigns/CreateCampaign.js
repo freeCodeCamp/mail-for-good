@@ -54,7 +54,7 @@ export default class CreateCampaign extends Component {
   state = {
     page: 1,
     initialFormValues: {
-      campaignName: `Campaign - ${moment().format('l')}`,
+      campaignName: `Campaign - ${moment().format('l, h:mm:ss')}`,
       type: 'Plaintext'
     },
     editor: null,

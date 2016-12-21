@@ -44,7 +44,7 @@ export default class Templates extends Component {
   state = {
     page: 1,
     initialFormValues: {
-      templateName: `Template - ${moment().format('l')}`,
+      templateName: `Template - ${moment().format('l, h:mm:ss')}`,
       type: 'Plaintext'
     },
     editor: '',
