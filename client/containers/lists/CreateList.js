@@ -28,6 +28,10 @@ export default class CreateList extends Component {
     isGetting: PropTypes.bool.isRequired
   }
 
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  }
+
   constructor() {
     super();
     this.handleCSVSubmit = this.handleCSVSubmit.bind(this);
@@ -67,6 +71,7 @@ export default class CreateList extends Component {
         message: 'Uploaded initiated - check notifications for progress',
         colour: 'green'
       });
+      this.context.router.push(`/lists/manage`);
     }
   }
 
