@@ -8,7 +8,7 @@ import { renderField, renderTextEditor, renderRadio } from '../common/FormRender
 
 const CreateTemplateForm = props => {
 
-  const { touch, valid, pristine, submitting, nextPage, reset, validationFailed, onEditor, textEditorType, passResetToState } = props;
+  const { touch, valid, pristine, submitting, nextPage, reset, validationFailed, onEditor, textEditorType, passResetToState, clearTextEditor } = props;
 
   const nameArray = [
     'templateName',
@@ -31,6 +31,11 @@ const CreateTemplateForm = props => {
       touch(...nameArray);
       validationFailed('Form is invalid, please review fields with errors');
     }
+  };
+
+  const resetForm = () => {
+    reset();
+    clearTextEditor('');
   };
 
   return (
@@ -59,7 +64,7 @@ const CreateTemplateForm = props => {
       <div className="box-footer">
         <div className="btn-group">
           <button className="btn btn-success btn-lg pull-left" type="submit" disabled={pristine || submitting}>Next Step</button>
-          <button className="btn btn-danger btn-lg pull-right" type="button" disabled={pristine || submitting} onClick={reset}>Reset</button>
+          <button className="btn btn-danger btn-lg pull-right" type="button" disabled={pristine || submitting} onClick={resetForm}>Reset</button>
         </div>
       </div>
     </form>
@@ -76,7 +81,8 @@ CreateTemplateForm.propTypes = {
   validationFailed: PropTypes.func.isRequired,
   onEditor: PropTypes.func.isRequired,
   textEditorType: PropTypes.string.isRequired,
-  passResetToState: PropTypes.func.isRequired
+  passResetToState: PropTypes.func.isRequired,
+  clearTextEditor: PropTypes.func.isRequired
 };
 
 const validate = values => {

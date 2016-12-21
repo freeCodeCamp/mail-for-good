@@ -48,6 +48,7 @@ export default class CreateCampaign extends Component {
     this.applyTemplate = this.applyTemplate.bind(this);
     this.onEditor = this.onEditor.bind(this);
     this.passResetToState = this.passResetToState.bind(this);
+    this.clearTextEditor = this.clearTextEditor.bind(this);
   }
 
   state = {
@@ -94,6 +95,10 @@ export default class CreateCampaign extends Component {
     }
   }
 
+  clearTextEditor() {
+    this.state.editor.loadHTML('');
+  }
+
   nextPage() {
     this.setState({ page: this.state.page + 1 });
   }
@@ -131,7 +136,7 @@ export default class CreateCampaign extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateCampaignForm passResetToState={this.passResetToState} textEditorType={type} onEditor={this.onEditor} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
+              {page === 1 && <CreateCampaignForm clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} onEditor={this.onEditor} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
               {page === 2 && <PreviewCampaignForm form={form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
 

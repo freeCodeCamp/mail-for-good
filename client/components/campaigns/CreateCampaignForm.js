@@ -10,7 +10,7 @@ import { renderCombobox, renderField, renderTextEditor, renderRadio } from '../c
 
 const CreateCampaignForm = props => {
 
-  const { touch, valid, pristine, submitting, nextPage, reset, applyTemplate, onEditor, textEditorType, passResetToState } = props;
+  const { touch, valid, pristine, submitting, nextPage, reset, applyTemplate, onEditor, textEditorType, passResetToState, clearTextEditor } = props;
 
   const lists = props.lists.map(x => x.name);
   const templates = props.templates.map(x => x.name);
@@ -29,6 +29,11 @@ const CreateCampaignForm = props => {
   const applyForm = (applyTemplateValue) => {
     const foundTemplate = props.templates.find(x => x.name === applyTemplateValue);
     applyTemplate(foundTemplate);
+  };
+
+  const resetForm = () => {
+    reset();
+    clearTextEditor('');
   };
 
   return (
@@ -68,7 +73,7 @@ const CreateCampaignForm = props => {
         <div className="box-footer">
           <div className="btn-group">
             <button className="btn btn-success btn-lg" type="submit" disabled={pristine || submitting}>Next Step</button>
-            <button className="btn btn-danger btn-lg" type="button" disabled={pristine || submitting} onClick={reset}>Reset</button>
+            <button className="btn btn-danger btn-lg" type="button" disabled={pristine || submitting} onClick={resetForm}>Reset</button>
           </div>
         </div>
       </form>
@@ -88,7 +93,8 @@ CreateCampaignForm.propTypes = {
   applyTemplate: PropTypes.func.isRequired,
   onEditor: PropTypes.func.isRequired,
   textEditorType: PropTypes.string.isRequired,
-  passResetToState: PropTypes.func.isRequired
+  passResetToState: PropTypes.func.isRequired,
+  clearTextEditor: PropTypes.func.isRequired
 };
 
 const validate = values => {
