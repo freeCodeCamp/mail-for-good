@@ -6,6 +6,19 @@ module.exports = function(req, res) {
 
   const { email, campaigns, templates, lists } = req.body;
 
+  // Validate that campaigns, templates & lists equal 'None', 'Read' or 'Write'
+  const validPermissions = ['None', 'Read', 'Write'];
+  const validateCampaigns = campaigns.every(x => ~validPermissions.indexOf(x));
+  const validateTemplates = templates.every(x => ~validPermissions.indexOf(x));
+  const validateLists = lists.every(x => ~validPermissions.indexOf(x));
+
+  // Critical that these fields are not malformed. If they are, throw an early error here.
+  if (!validateCampaigns || !validateTemplates || !validateLists) {
+    // Is checked client side, so no message response is necessary
+    res.status(400).send();
+    return;
+  }
+
   function *grantPermission() {
     const offeredUserInstance = yield userToOfferPermissions();
     const authUserInstance = yield authUser();
