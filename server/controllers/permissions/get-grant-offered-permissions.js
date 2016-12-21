@@ -10,6 +10,8 @@ module.exports = function(req, res) {
       'id',
       'toUserEmail',
       'campaigns',
+      'templates',
+      'lists',
       'createdAt',
       'updatedAt'
     ],

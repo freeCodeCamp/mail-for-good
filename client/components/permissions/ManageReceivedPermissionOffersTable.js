@@ -115,7 +115,11 @@ export default class ManageReceivedPermissionOffersTable extends Component {
 
         <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
         <TableHeaderColumn dataField="fromUserEmail" dataSort={true}>Email</TableHeaderColumn>
+
         <TableHeaderColumn dataField="campaigns" dataSort={true}>Campaign Access</TableHeaderColumn>
+        <TableHeaderColumn dataField="templates" dataSort={true}>Templates Access</TableHeaderColumn>
+        <TableHeaderColumn dataField="lists" dataSort={true}>Lists Access</TableHeaderColumn>
+
         <TableHeaderColumn dataField="createdAt" dataSort={true} width="150" dataFormat={formatFieldDate}>Created</TableHeaderColumn>
         <TableHeaderColumn dataField="updatedAt" dataSort={true} width="150" dataFormat={formatFieldDate}>Updated</TableHeaderColumn>
       </BootstrapTable>
