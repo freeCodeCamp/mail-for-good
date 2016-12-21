@@ -90,7 +90,6 @@ export default class CreateList extends Component {
       <div>
         <div className="content-header">
           <h1>Create List
-            <small></small>
           </h1>
         </div>
 
@@ -98,6 +97,7 @@ export default class CreateList extends Component {
 
           <Row>
             <Col xs={12} md={12}>
+
               <div className="box box-primary">
                 <Row>
                   <Col md={12}>
@@ -106,23 +106,39 @@ export default class CreateList extends Component {
                     </div>
 
                     <div className="box-body">
-                      <form role="form">
-                        <div className="form-group">
-                          <input className="form-control" id="title" placeholder="The name of this list" type="text" value={this.state.title} onChange={this.handleChange} />
-                        </div>
-                      </form>
-                      <ImportCSV handleCSVSubmit={this.handleCSVSubmit} notification={this.notification}/>
+
+                      <div className="nav-tabs-custom">
+                        <ul className="nav nav-tabs pull-right">
+                          {/*<li className="">
+                            <a href="#tab_1-1" data-toggle="tab">Add single email</a>
+                          </li>*/}
+                          <li className="active">
+                            <a href="#tab_3-2" data-toggle="tab">Import CSV</a>
+                          </li>
+                          <li className="pull-left header"><i className="fa fa-th"/>
+                            Import a list</li>
+                        </ul>
+
+
+                        <form role="form">
+                          <div className="form-group">
+                            <input className="form-control" id="title" placeholder="The name of this list" type="text" value={this.state.title} onChange={this.handleChange} />
+                          </div>
+                        </form>
+                        <ImportCSV handleCSVSubmit={this.handleCSVSubmit} notification={this.notification}/>
+                      </div>
+
                     </div>
-                  </Col>
-                </Row>
-              </div>
-            </Col>
+                </Col>
+              </Row>
+
+            {this.props.isGetting && <div className="overlay">
+              <FontAwesome name="refresh" spin/>
+            </div>}
+          </div>
+
+          </Col>
           </Row>
-
-          {this.props.isGetting && <div className="overlay">
-            <FontAwesome name="refresh" spin/>
-          </div>}
-
         </section>
       </div>
     );

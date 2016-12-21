@@ -1,3 +1,10 @@
 @import './tables.scss',
         './text-editor.scss',
         './text-editor-plaintext.scss';
+
+// Override Bootstrap table's orange 'delete' button colour
+.react-bs-table-del-btn {
+  color: #fff;
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
