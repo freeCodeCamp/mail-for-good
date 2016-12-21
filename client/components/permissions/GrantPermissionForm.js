@@ -10,7 +10,7 @@ import { renderField, renderDropdownList } from '../common/FormRenderWrappers';
 const GrantPermissionForm = props => {
 
   const { touch, valid, pristine, submitting, reset, handleSubmit } = props;
-  const nameArray = ['email', 'campaigns'];
+  const nameArray = ['email', 'campaigns', 'templates', 'lists'];
 
   const resetFormAndSubmit = e => {
     e.preventDefault();
@@ -32,6 +32,8 @@ const GrantPermissionForm = props => {
 
         <Field name="email" component={renderField} type="email" label="User's email" />
         <Field name="campaigns" component={renderDropdownList} data={permissions} label="Campaign access" />
+        <Field name="templates" component={renderDropdownList} data={permissions} label="Templates access" />
+        <Field name="lists" component={renderDropdownList} data={permissions} label="Lists access" />
 
         <br/>
         <div className="box-footer">
@@ -63,6 +65,12 @@ const validate = values => {
   }
   if (!values.campaigns) {
     errors.campaigns = 'Required';
+  }
+  if (!values.templates) {
+    errors.templates = 'Required';
+  }
+  if (!values.lists) {
+    errors.lists = 'Required';
   }
 
   return errors;

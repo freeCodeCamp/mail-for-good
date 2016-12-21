@@ -47,7 +47,11 @@ export default class GrantPermissions extends Component {
   render() {
     const { isPosting } = this.props;
 
-    const initialValues = { campaigns: 'None' };
+    const initialValues = {
+      campaigns: 'None',
+      templates: 'None',
+      lists: 'None'
+    };
 
     return (
       <div>
