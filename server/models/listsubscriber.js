@@ -13,6 +13,7 @@ module.exports = function(sequelize, DataTypes) {
         listsubscriber.belongsTo(models.list);
         listsubscriber.hasMany(models.campaignanalyticslink);
         listsubscriber.hasMany(models.campaignanalyticsopen);
+        listsubscriber.hasMany(models.campaignsubscriber);
       }
     }
   });
