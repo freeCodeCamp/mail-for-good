@@ -111,25 +111,25 @@ module.exports = (app, passport, io, redis) => {
 
   /* Templates */
   // Get a list of all templates
-  app.get('/api/template', apiIsAuth, (req, res) => {
+  app.get('/api/template', apiIsAuth, cookieParser, (req, res) => {
     getTemplates(req, res);
   });
   // Post a new template
-  app.post('/api/template', apiIsAuth, parseJson, (req, res) => {
+  app.post('/api/template', apiIsAuth, parseJson, cookieParser, (req, res) => {
     createTemplate(req, res);
   });
   // Delete template(s)
-  app.delete('/api/template', apiIsAuth, parseJson, (req, res) => {
+  app.delete('/api/template', apiIsAuth, parseJson, cookieParser, (req, res) => {
     deleteTemplates(req, res);
   });
 
   /* Lists */
   // Get all lists
-  app.get('/api/list/manage', apiIsAuth, (req, res) => {
+  app.get('/api/list/manage', apiIsAuth, cookieParser, (req, res) => {
     getLists(req, res);
   });
   // Get all subscribers of a list
-  app.get('/api/list/subscribers', apiIsAuth, parseJson, (req, res) => {
+  app.get('/api/list/subscribers', apiIsAuth, parseJson, cookieParser, (req, res) => {
     getListSubscribers(req, res);
   });
   // Get a single email using the list subscription key
@@ -142,20 +142,20 @@ module.exports = (app, passport, io, redis) => {
   });
 
   // Post new subscribers
-  app.post('/api/list/add/subscribers', apiIsAuth, (req, res) => {
+  app.post('/api/list/add/subscribers', apiIsAuth, cookieParser, (req, res) => {
     addSubscribers(req, res);
   });
   // Post new list via csv import
-  app.post('/api/list/add/csv', apiIsAuth, multer.single('csv'), (req, res) => {
+  app.post('/api/list/add/csv', apiIsAuth, multer.single('csv'), cookieParser, (req, res) => {
     importCSV(req, res, io);
   });
 
   // Delete subscribers
-  app.delete('/api/list/subscribers', apiIsAuth, parseJson, (req, res) => {
+  app.delete('/api/list/subscribers', apiIsAuth, parseJson, cookieParser, (req, res) => {
     deleteSubscribers(req, res);
   });
   // Delete lists
-  app.delete('/api/list/manage', apiIsAuth, parseJson, (req, res) => {
+  app.delete('/api/list/manage', apiIsAuth, parseJson, cookieParser, (req, res) => {
     deleteLists(req, res);
   });
 
