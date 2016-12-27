@@ -16,7 +16,7 @@ module.exports = (req, res) => {
   const access = campaignPermission(req.cookies.user, req.user.id)
     .then(userIdAndCampaigns => {
       // userIdAndCampaigns.userId must equal 'Write'
-      if (userIdAndCampaigns.campaigns === 'Write') {
+      if (userIdAndCampaigns.campaigns !== 'Write') {
         throw 'Permission denied';
       } else {
         userId = userIdAndCampaigns.userId;
@@ -92,6 +92,7 @@ module.exports = (req, res) => {
                       limit,
                       offset,
                       attributes: [ ['id', 'listsubscriberId'], 'email'],  // Nested array used to rename id to listsubscriberId
+                      order: [ ['id', 'ASC'] ],
                       raw: true
                     }).then(listSubscribers => {
                       if (listSubscribers.length) {  // If length is 0 then there are no more ListSubscribers, so we can cleanup

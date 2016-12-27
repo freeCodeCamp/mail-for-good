@@ -12,7 +12,7 @@ module.exports = (req, res, io, redis) => {
   const access = campaignPermission(req.cookies.user, req.user.id)
     .then(userIdAndCampaigns => {
       // userIdAndCampaigns.userId must equal 'Write'
-      if (userIdAndCampaigns.campaigns === 'Write') {
+      if (userIdAndCampaigns.campaigns !== 'Write') {
         throw 'Permission denied';
       } else {
         userId = userIdAndCampaigns.userId;
@@ -45,13 +45,14 @@ module.exports = (req, res, io, redis) => {
       const quotas = yield getEmailQuotas(accessKey, secretKey, region);
 
       // 4. Count the number of list subscribers to message. If this is above the daily quota, send an error.
-      const totalListSubscribers = yield countListSubscribers(campaignInfo.listId, quotas.AvailableToday);
+      const { totalListSubscribers, totalEmailsToSend } = yield countListSubscribers(campaignInfo.listId, quotas.AvailableToday, campaignId);
+      console.log(`total list subscribers: ${totalListSubscribers}, emails to send: ${totalEmailsToSend}`)
 
       // 5. Update analytics data
-      campaignInfo.campaignAnalyticsId = yield updateAnalytics(campaignInfo.campaignId, userId, totalListSubscribers);
+      campaignInfo.campaignAnalyticsId = yield updateAnalytics(campaignInfo.campaignId, userId, totalEmailsToSend);
 
       // 6. At this stage, we've ready to send the campaign. Respond that the request was successful.
-      res.send(howLongEmailingWillTake(totalListSubscribers, quotas.AvailableToday, quotas.MaxSendRate));
+      res.send(howLongEmailingWillTake(totalEmailsToSend, quotas.AvailableToday, quotas.MaxSendRate, campaignInfo.status));
 
       // 7. Send the campaign. TODO: Clean up & condense these arguments
       yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, whiteLabelUrl, redis);
@@ -85,10 +86,25 @@ module.exports = (req, res, io, redis) => {
           res.status(401).send();
         } else {
           const campaignObject = campaignInstance.get({ plain:true });
-          const listId = campaignObject.listId;
-          const { fromName, fromEmail, emailSubject, emailBody, type, name, trackingPixelEnabled, trackLinksEnabled, unsubscribeLinkEnabled } = campaignObject;
 
-          generator.next({ listId, fromName, fromEmail, emailSubject, emailBody, campaignId, type, name, trackingPixelEnabled, trackLinksEnabled, unsubscribeLinkEnabled  });
+          // Only send the campaign if it has been freshly created or
+          // has been interrupted (resume)
+          if (!['ready', 'interrupted'].includes(campaignObject.status)) {
+            // Campaign is not ready to send - show appropriate error message
+            const errorMessages = {
+              sending: 'Your campaign is already being sent',
+              done: 'Your campaign has been delivered already',
+              creating: 'Your campaign is still being created and will be ready to send soon'
+            }
+            console.log(errorMessages[campaignObject.status])
+            res.status(400).send({ message: errorMessages[campaignObject.status] });
+            return;
+          }
+
+          const listId = campaignObject.listId;
+          const { fromName, fromEmail, emailSubject, emailBody, type, name, trackingPixelEnabled, trackLinksEnabled, unsubscribeLinkEnabled, status } = campaignObject;
+
+          generator.next({ listId, fromName, fromEmail, emailSubject, emailBody, campaignId, type, name, trackingPixelEnabled, trackLinksEnabled, unsubscribeLinkEnabled, status });
         }
       }).catch(err => {
         throw err;
@@ -144,20 +160,39 @@ module.exports = (req, res, io, redis) => {
       });
     }
 
-    function countListSubscribers(listId, AvailableToday) {
+    function countListSubscribers(listId, AvailableToday, campaignId) {
+      let totalListSubscribers, totalEmailsToSend;
+
       db.listsubscriber.count({
         where: {
-          listId: listId,
+          listId,
           subscribed: true
         }
       }).then(total => {
-        if (total > AvailableToday && process.env.NODE_ENV === 'production') {
+        totalListSubscribers = total;
+        console.log(total);
+
+        return db.listsubscriber.count({
+          where: {
+            listId,
+            subscribed: true
+          },
+          include: [
+            { model: db.campaignsubscriber, where: { campaignId, sent: false } }
+          ]
+        })
+      }).then(total => {
+        totalEmailsToSend = total;
+        console.log(total);
+
+        if (totalEmailsToSend > AvailableToday && process.env.NODE_ENV === 'production') {
           res.status(400).send({ message: `This list exceeds your 24 hour allowance of ${AvailableToday} emails. Please upgrade your SES limit.` });
         } else {
-          generator.next(total);
+          generator.next({ totalListSubscribers, totalEmailsToSend });
         }
         return null;
       }).catch(err => {
+        throw err;
         res.status(500).send(err);
       });
     }
@@ -179,10 +214,17 @@ module.exports = (req, res, io, redis) => {
       });
     }
 
-    function howLongEmailingWillTake(totalListSubscribers, AvailableToday, MaxSendRate) {
-      const timeTaken = (totalListSubscribers / MaxSendRate / 60);
-      const emailsLeftAfterSend = AvailableToday - totalListSubscribers;
-      let formattedMessage = `Your campaign is being sent to ${totalListSubscribers.toLocaleString('en-GB')} subscribers, it should be done `;
+    function howLongEmailingWillTake(totalEmailsToSend, AvailableToday, MaxSendRate, status) {
+      const timeTaken = (totalEmailsToSend / MaxSendRate / 60);
+      const emailsLeftAfterSend = AvailableToday - totalEmailsToSend;
+      console.log(totalEmailsToSend);
+
+      let formattedMessage
+      if (status == 'ready') {
+         formattedMessage = `Your campaign is being sent to ${totalEmailsToSend.toLocaleString('en-GB')} subscribers, it should be done `;
+      } else if (status == 'interrupted') {
+        formattedMessage = `Campaign sending resumed - sending to remaining ${totalEmailsToSend.toLocaleString('en-GB')} subscribers, it should be done `;
+      }
 
       const newTime = moment(new Date(new Date().getTime() + timeTaken * 60000));
       const timeTo = moment(new Date).to(newTime);
@@ -191,7 +233,7 @@ module.exports = (req, res, io, redis) => {
       formattedMessage += ` Your Amazon limit for today is now ${emailsLeftAfterSend.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} emails.`;
 
       return { message: formattedMessage };
-    }
+  }
 
   // END ACCESS CONTROL
   })
