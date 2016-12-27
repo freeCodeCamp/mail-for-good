@@ -34,7 +34,7 @@ export default class ManageCampaignsGraph extends React.Component {
       complaintData[monthUTC] += campaign['campaignanalytic.complaintCount'];
       bounceData[monthUTC] += campaign['campaignanalytic.permanentBounceCount'];
 
-      deliveredData[monthUTC] += campaign['campaignanalytic.total'] -
+      deliveredData[monthUTC] += campaign['campaignanalytic.totalSentCount'] -
         campaign['campaignanalytic.permanentBounceCount'] -
         campaign['campaignanalytic.transientBounceCount'];;
     })
