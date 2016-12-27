@@ -37,12 +37,12 @@ const Sidebar = (props) => { // eslint-disable-line no-unused-vars
           ? <SidebarLink to="/" icon="fa-tachometer">Dashboard</SidebarLink>
           : <DisabledLink icon="fa-tachometer">Dashboard</DisabledLink>}
 
-          {(!anotherAccountIsActive || (activeAccount.campaigns && activeAccount.campaigns !== 'none'))
-          ? <SidebarTreeview name="Campaigns" icon="fa-envelope">
-              <SidebarLink to="/campaigns/create">Create Campaign</SidebarLink> {/* typeofcampaign (html, plain etc), use template, steps= 1. to who - 2. campaign info (name, from, subject, from email, options for tracking) 3. Template 4. Write the actual email 5. send & confirm*/}
-              <SidebarLink to="/campaigns/manage">Manage Campaigns</SidebarLink> {/* delete, resend, edit, view report (analytics) */}
+          {(!anotherAccountIsActive || (activeAccount.lists && activeAccount.lists !== 'none'))
+          ? <SidebarTreeview name="Lists" icon="fa-list">
+              <SidebarLink to="/lists/create">Create List</SidebarLink> {/* Import from CSV etc. Keep this isolated to importing */}
+              <SidebarLink to="/lists/manage">Manage Lists</SidebarLink> {/* RUD, Export list, statistics, add subscriber, duplicate list, combine list */}
             </SidebarTreeview>
-          : <DisabledLink icon="fa-envelope">Campaigns</DisabledLink>}
+          : <DisabledLink icon="fa-list">Lists</DisabledLink>}
 
           {(!anotherAccountIsActive || (activeAccount.templates && activeAccount.templates !== 'none'))
           ? <SidebarTreeview name="Templates" icon="fa-file-text">
@@ -51,12 +51,12 @@ const Sidebar = (props) => { // eslint-disable-line no-unused-vars
             </SidebarTreeview>
           : <DisabledLink icon="fa-file-text">Templates</DisabledLink>}
 
-          {(!anotherAccountIsActive || (activeAccount.lists && activeAccount.lists !== 'none'))
-          ? <SidebarTreeview name="Lists" icon="fa-list">
-              <SidebarLink to="/lists/create">Create List</SidebarLink> {/* Import from CSV etc. Keep this isolated to importing */}
-              <SidebarLink to="/lists/manage">Manage Lists</SidebarLink> {/* RUD, Export list, statistics, add subscriber, duplicate list, combine list */}
+          {(!anotherAccountIsActive || (activeAccount.campaigns && activeAccount.campaigns !== 'none'))
+          ? <SidebarTreeview name="Campaigns" icon="fa-envelope">
+              <SidebarLink to="/campaigns/create">Create Campaign</SidebarLink> {/* typeofcampaign (html, plain etc), use template, steps= 1. to who - 2. campaign info (name, from, subject, from email, options for tracking) 3. Template 4. Write the actual email 5. send & confirm*/}
+              <SidebarLink to="/campaigns/manage">Manage Campaigns</SidebarLink> {/* delete, resend, edit, view report (analytics) */}
             </SidebarTreeview>
-          : <DisabledLink icon="fa-list">Lists</DisabledLink>}
+          : <DisabledLink icon="fa-envelope">Campaigns</DisabledLink>}
 
           {!anotherAccountIsActive
           ? <SidebarTreeview name="Analytics" icon="fa-bar-chart">
