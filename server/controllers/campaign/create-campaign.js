@@ -92,6 +92,7 @@ module.exports = (req, res) => {
                       limit,
                       offset,
                       attributes: [ ['id', 'listsubscriberId'], 'email'],  // Nested array used to rename id to listsubscriberId
+                      order: [ ['id', 'ASC'] ],
                       raw: true
                     }).then(listSubscribers => {
                       if (listSubscribers.length) {  // If length is 0 then there are no more ListSubscribers, so we can cleanup
