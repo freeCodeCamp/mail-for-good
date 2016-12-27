@@ -54,10 +54,10 @@ export default class ManageCampaignsGraph extends React.Component {
         min: 0
       },
       series: [
-        { name: 'Sent', data: sentData, zIndex: 3, legendIndex: 0 },
-        { name: 'Delivered', data: deliveredData, zIndex: 2, legendIndex: 1 },
-        { name: 'Complaint', data: complaintData, zIndex: 1, legendIndex: 2 },
-        { name: 'Bounced', data: bounceData, zIndex: 0, legendIndex: 3 }
+        { name: 'Sent', data: sentData, zIndex: 3, legendIndex: 0, color: '#7cb5ec' },
+        { name: 'Delivered', data: deliveredData, zIndex: 2, legendIndex: 1, color: '#2b908f' },
+        { name: 'Complaint', data: complaintData, zIndex: 1, legendIndex: 2, color: '#f7a35c' },
+        { name: 'Bounced', data: bounceData, zIndex: 0, legendIndex: 3, color: '#f15c80' }
         ]
     };
 
