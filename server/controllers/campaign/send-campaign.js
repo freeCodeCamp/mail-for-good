@@ -215,6 +215,7 @@ module.exports = (req, res, io, redis) => {
     }
 
     function howLongEmailingWillTake(totalEmailsToSend, AvailableToday, MaxSendRate, status) {
+      MaxSendRate = (MaxSendRate > 35) ? 35 : MaxSendRate;  // Cap the max send rate so the estimate is not too optimistic
       const timeTaken = (totalEmailsToSend / MaxSendRate / 60);
       const emailsLeftAfterSend = AvailableToday - totalEmailsToSend;
       console.log(totalEmailsToSend);
