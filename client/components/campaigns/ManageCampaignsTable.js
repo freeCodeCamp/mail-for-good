@@ -8,10 +8,6 @@ const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
   const options = {
     clearSearch: true,
     noDataText: 'You do not have any campaigns linked with your account',
-    onRowClick: row => { // This fires on clicking a row. TODO: Needs to go to another route with the format /:[campaign-name-slug] where users can manage (edit, send, schedule, delete) the campaign
-      // NOTE: Row is an object where keys are data fields
-      getCampaignView(row);
-    },
     afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
       deleteRows(rows);
     },
@@ -36,6 +32,12 @@ const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
 
     return total - failed;
   };
+
+  const actionButtonsFormatter = (cell, row) => {
+    return (
+      <a href="#" onClick={getCampaignView.bind(this, row)}>Manage</a>
+    )
+  }
 
   const statusFormatter = (status, row) => {
     if (status == 'creating') {
@@ -71,6 +73,7 @@ const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
       <TableHeaderColumn dataField="id" hidden={true} isKey={true}>Id</TableHeaderColumn>
       <TableHeaderColumn dataField="slug" hidden={true}>Slug</TableHeaderColumn>
       <TableHeaderColumn dataField="name" dataAlign="center" dataSort={true} width="450">Name</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" width="150" dataFormat={actionButtonsFormatter.bind(this)}>Actions</TableHeaderColumn>
       <TableHeaderColumn dataField="status" dataAlign="center" dataSort={true} dataFormat={statusFormatter} width="150">Status</TableHeaderColumn>
       <TableHeaderColumn dataField="campaignanalytic.totalSentCount" dataAlign="center" dataSort={true} csvHeader="sent">Sent</TableHeaderColumn>
       <TableHeaderColumn dataField="delivered" dataAlign="center" dataSort={true} dataFormat={deliveredFormatter} csvFormat={deliveredFormatter}>Delivered</TableHeaderColumn>
