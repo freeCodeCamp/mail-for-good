@@ -21,7 +21,7 @@ const renderMultiselect = ({ input, ...rest }) =>
 */
 
 export const renderSettingsDropdownList = ({ input, label, type, meta: { touched, error, warning }, exists, ...data }) => (
-  <div>
+  <div style={{ marginBottom: "1em" }}>
     <label>{label} - {exists ? <i className="fa fa-check-circle text-green" aria-hidden="true" /> : <i className="fa fa-times-circle text-red" aria-hidden="true" />}</label>
     <div>
       <DropdownList {...input} {...data} />
@@ -52,7 +52,7 @@ export const renderCombobox = ({ input, label, type, meta: { touched, error, war
 
 export const renderSettingsField = ({ input, label, type, meta: { touched, error, warning }, exists }) => {
   return (
-  <div>
+  <div style={{ marginBottom: "1em" }}>
     <label>{label} - {exists ? <i className="fa fa-check-circle text-green" aria-hidden="true" /> : <i className="fa fa-times-circle text-red" aria-hidden="true" />}</label>
     <div>
       <input className="form-control" {...input} placeholder={label} type={type}/>
