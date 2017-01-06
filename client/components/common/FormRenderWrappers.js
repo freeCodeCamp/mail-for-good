@@ -51,13 +51,13 @@ export const renderCombobox = ({ input, label, type, meta: { touched, error, war
   </div>
 );
 
-export const renderSettingsField = ({ input, label, type, meta: { touched, error, warning }, exists, helpText }) => {
+export const renderSettingsField = ({ input, label, type, meta: { touched, error, warning }, exists, helpText, placeholder }) => {
   return (
   <div style={{ marginBottom: "1em" }}>
     <label>{label} - {exists ? <i className="fa fa-check-circle text-green" aria-hidden="true" /> : <i className="fa fa-times-circle text-red" aria-hidden="true" />}</label>
     <p className="form-text text-muted">{helpText}</p>
     <div>
-      <input className="form-control" {...input} placeholder={label} type={type}/>
+      <input className="form-control" {...input} placeholder={placeholder} type={type}/>
       {touched && ((error && <span className="text-red"><i className="fa fa-exclamation" /> {error}</span>) || (warning && <span>{warning}</span>))}
     </div>
   </div>

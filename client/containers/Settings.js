@@ -135,11 +135,45 @@ export default class Settings extends Component {
                 <form onSubmit={this.resetFormAndSubmit}>
                   <div className="box-body">
 
-                    <Field name="accessKey" component={renderSettingsField} exists={amazonSimpleEmailServiceAccessKey} label="Access Key" type="text" placeholder="Your service access key" />
-                    <Field exists={amazonSimpleEmailServiceSecretKey} name="secretAccessKey" component={renderSettingsField} label="Secret Access Key" type="text" placeholder="Your service secret key" />
-                    <Field exists={amazonSimpleQueueServiceUrl} name="queueUrl" component={renderSettingsField} label="SQS URL" type="text" placeholder="Your Amazon SQS queue URL for email feedback" />
-                    <Field exists={region} name="region" component={renderSettingsDropdownList} data={regions} label="Amazon region associated with this email" />
-                    <Field exists={whiteLabelUrl} name="whiteLabelUrl" component={renderSettingsField} label="White Label URL" type="text" placeholder="Your domain" />
+                    <Field
+                      exists={amazonSimpleEmailServiceAccessKey}
+                      name="accessKey"
+                      component={renderSettingsField}
+                      label="Access Key"
+                      type="text"
+                      placeholder="Example: AKIAIOSFODNN7EXAMPLE"
+                    />
+                    <Field
+                      exists={amazonSimpleEmailServiceSecretKey}
+                      name="secretAccessKey"
+                      component={renderSettingsField}
+                      label="Secret Access Key"
+                      type="text"
+                      placeholder="Example: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+                    />
+                    <Field
+                      exists={amazonSimpleQueueServiceUrl}
+                      name="queueUrl"
+                      component={renderSettingsField}
+                      label="SQS URL"
+                      type="text"
+                      placeholder="Example: https://sqs.eu-west-1.amazonaws.com/123456789/email_feedback"
+                    />
+                    <Field
+                      exists={region}
+                      name="region"
+                      component={renderSettingsDropdownList}
+                      data={regions}
+                      label="Amazon region associated with this email"
+                    />
+                    <Field
+                      exists={whiteLabelUrl}
+                      name="whiteLabelUrl"
+                      component={renderSettingsField}
+                      label="White Label URL"
+                      type="text"
+                      placeholder="Example: https://addressofthisapplication.com"
+                    />
 
                     <br/>
                     <div className="box-footer">
