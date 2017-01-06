@@ -22,13 +22,13 @@ function insertUnsubscribeLink(body, unsubscribeId, type, whiteLabelUrl) {
   return body + "<br/><br/><br/><br/><br/>" + `<a href="${unsubscribeUrl}">unsubscribe</a>`
 }
 
-function insertTrackingPixel(body, trackingId, type) {
+function insertTrackingPixel(body, trackingId, type, whiteLabelUrl) {
   if (type === 'Plaintext') {
     return body;
   }
 
   return body +
-    `\n<img src="${clickthroughHost}/trackopen?trackingId=${trackingId}" style="display:none">`
+    `\n<img src="${whiteLabelUrl}/trackopen?trackingId=${trackingId}" style="display:none">`
 }
 
 module.exports = {

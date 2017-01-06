@@ -106,7 +106,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
       });
     }).then(newCampaignAnalyticsOpen => {
       if (campaignInfo.trackingPixelEnabled) {
-        updatedCampaignInfo.emailBody = insertTrackingPixel(updatedCampaignInfo.emailBody, newCampaignAnalyticsOpen.dataValues.trackingId, campaignInfo.type);
+        updatedCampaignInfo.emailBody = insertTrackingPixel(updatedCampaignInfo.emailBody, newCampaignAnalyticsOpen.dataValues.trackingId, campaignInfo.type, whiteLabelUrl);
       }
 
       if (campaignInfo.unsubscribeLinkEnabled) {
