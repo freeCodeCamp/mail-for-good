@@ -142,6 +142,7 @@ export default class Settings extends Component {
                       label="Access Key"
                       type="text"
                       placeholder="Example: AKIAIOSFODNN7EXAMPLE"
+                      helpText={<div><a target="_blank" href="https://aws.amazon.com/developers/access-keys/">Find out more about access keys</a></div>}
                     />
                     <Field
                       exists={amazonSimpleEmailServiceSecretKey}
@@ -150,6 +151,7 @@ export default class Settings extends Component {
                       label="Secret Access Key"
                       type="text"
                       placeholder="Example: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+                      helpText={<div><a target="_blank" href="https://aws.amazon.com/developers/access-keys/">Find out more about secret access keys</a></div>}
                     />
                     <Field
                       exists={amazonSimpleQueueServiceUrl}
@@ -157,6 +159,7 @@ export default class Settings extends Component {
                       component={renderSettingsField}
                       label="SQS URL"
                       type="text"
+                      helpText="This must be configured to receive email feedback (bounces, complaints, etc). Visit LINK for a guide to set this up."
                       placeholder="Example: https://sqs.eu-west-1.amazonaws.com/123456789/email_feedback"
                     />
                     <Field
@@ -165,6 +168,7 @@ export default class Settings extends Component {
                       component={renderSettingsDropdownList}
                       data={regions}
                       label="Amazon region associated with this email"
+                      helpText={<div>View your limits for <a target="_blank" href="https://us-west-2.console.aws.amazon.com/ses/home?region=us-west-2#dashboard:">us-west-2</a>, <a target="_blank" href="https://us-east-1.console.aws.amazon.com/ses/home?region=us-east-1#dashboard:">us-east-1</a>, or <a target="_blank" href="https://eu-west-1.console.aws.amazon.com/ses/home?region=eu-west-1#dashboard:">eu-west-1</a></div>}
                     />
                     <Field
                       exists={whiteLabelUrl}
@@ -173,6 +177,7 @@ export default class Settings extends Component {
                       label="White Label URL"
                       type="text"
                       placeholder="Example: https://addressofthisapplication.com"
+                      helpText={<div>description</div>}
                     />
 
                     <br/>
