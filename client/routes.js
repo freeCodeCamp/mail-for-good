@@ -21,7 +21,8 @@ import ManageListSubscribers from './containers/lists/ManageListSubscribers';
 import CampaignReports from './containers/analytics/CampaignReports';
 // Permissions
 import GrantPermissions from './containers/permissions/GrantPermissions';
-import ManagePermissions from './containers/permissions/ManagePermissions';
+import OfferedPermissions from './containers/permissions/OfferedPermissions';
+import ReceivedPermissions from './containers/permissions/ReceivedPermissions';
 // Settings
 import Settings from './containers/Settings';
 
@@ -96,7 +97,8 @@ export default class RouterConfig extends Component {
 
           <Route path="permissions" onEnter={this.onEnter} >
             <Route path="grant" component={GrantPermissions}/>
-            <Route path="manage" component={ManagePermissions}/>
+            <Route path="offered" component={OfferedPermissions}/>
+            <Route path="received" component={ReceivedPermissions}/>
           </Route>
 
           <Route path="settings" component={Settings} onEnter={this.onEnter} />

@@ -68,7 +68,8 @@ const Sidebar = (props) => { // eslint-disable-line no-unused-vars
           {!anotherAccountIsActive
           ? <SidebarTreeview name="Permissions" icon="fa-users">
               <SidebarLink to="/permissions/grant">Grant permissions</SidebarLink> {/* Ability to grant others permissions */}
-              <SidebarLink to="/permissions/manage">Manage permissions</SidebarLink> {/* Ability to manage own perimissions */}
+              <SidebarLink to="/permissions/offered">My permissions</SidebarLink> {/* Ability to manage offered perimissions */}
+              <SidebarLink to="/permissions/received">Others' permissions</SidebarLink> {/* Ability to manage received perimissions */}
           </SidebarTreeview>
           : <DisabledLink icon="fa-users">Permissions</DisabledLink>}
 
