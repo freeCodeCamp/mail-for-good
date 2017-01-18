@@ -23,7 +23,8 @@
     "dev": "NODE_ENV=development node server/index.js",
     "debug": "NODE_ENV=development node --inspect --debug-brk server/index.js",
     "build": "babel-node tools/build.js",
-    "test:server": "node server/controllers/campaign/email/amazon-ses/test-server.js"
+    "test:server": "node tools/simulator/ses-simulator.js",
+    "simulator:start": "node tools/simulator/ses-simulator.js"
   },
   "repository": {
     "type": "git",
@@ -147,6 +148,7 @@
     "sinon": "1.17.5",
     "sinon-chai": "2.8.0",
     "smtp-server": "^1.14.2",
+    "sqlite3": "^3.1.8",
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
     "webpack": "1.13.2",

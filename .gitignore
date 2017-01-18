@@ -69,3 +69,7 @@ uploads
 migrations
 seed
 seeders
+
+# Development db
+tools/simulator/simulator.db
+
