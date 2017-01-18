@@ -112,9 +112,6 @@ export default class CreateList extends Component {
                           {/*<li className="">
                             <a href="#tab_1-1" data-toggle="tab">Add single email</a>
                           </li>*/}
-                          <li className="active">
-                            <a href="#tab_3-2" data-toggle="tab">Import CSV</a>
-                          </li>
                           <li className="pull-left header"><i className="fa fa-th"/>
                             Import a list</li>
                         </ul>
