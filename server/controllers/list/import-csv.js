@@ -110,37 +110,76 @@ module.exports = (req, res, io) => {
         }
       }
 
+      function returnUniqueItems(model, records) {
+        // @params model = a sequelize db model
+        // @params records = an array of rows to upsert
+        // Returns unique items in the records array
+
+        // First remove duplicate emails from the records
+        records = _.uniqBy(records, 'email');
+
+        // Now verify that the remaining records do not exist in the db
+        const promiseArrayOfUniqueRecords = records.map(row => {
+          // Will return null if email exists, and the row if it doesn't
+          return new Promise(resolve => {
+            model.findOne({
+              where: {
+                listId,
+                email: row.email
+              }
+            })
+            .then(instance => {
+              if (instance) // Email already exists
+                resolve(null);
+              else
+                resolve(row);
+            });
+          });
+        });
+
+        // When the process above is complete, eliminate duplicates that are now 'null'
+        const uniqueEmails = new Promise(resolve => {
+          Promise.all(promiseArrayOfUniqueRecords)
+            .then(values => resolve(values.filter(x => x !== null)));
+        });
+
+        // Return the wrapped promise
+        return uniqueEmails;
+      }
+
       const c = cargo((tasks, callback) => {
         const tasksLength = tasks.length;
-        db.listsubscriber.bulkCreate(tasks)
-          .then(() => {
+        returnUniqueItems(db.listsubscriber, tasks)
+          .then(uniqueTasks => {
+            db.listsubscriber.bulkCreate(uniqueTasks)
+              .then(() => {
 
-            // Track how many emails we've processed so far.
-            numberProcessed += tasksLength;
+                // Track how many emails we've processed so far.
+                numberProcessed += tasksLength;
 
-            // Send a notification if this isn't the final batch (since if it is, the user will receive a 'success')
-            if (tasksLength === bufferLength) {
-              const rowsParsed = {
-                message: `Processed ${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows...`,
-                isUpdate: true, // Mark this notification as an update for an existing notification to the client
-                id: crudeRandomId, // Unique identified for use on client side (in the reducer)
-                icon: 'fa-upload',
-                iconColour: 'text-blue'
-              };
-              if (io.sockets.connected[req.session.passport.socket]) {
-                io.sockets.connected[req.session.passport.socket].emit('notification', rowsParsed);
-              }
-            } else {
-              sendFinalNotification();
-            }
+                // Send a notification if this isn't the final batch (since if it is, the user will receive a 'success')
+                if (tasksLength === bufferLength) {
+                  const rowsParsed = {
+                    message: `Processed ${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows...`,
+                    isUpdate: true, // Mark this notification as an update for an existing notification to the client
+                    id: crudeRandomId, // Unique identified for use on client side (in the reducer)
+                    icon: 'fa-upload',
+                    iconColour: 'text-blue'
+                  };
+                  if (io.sockets.connected[req.session.passport.socket]) {
+                    io.sockets.connected[req.session.passport.socket].emit('notification', rowsParsed);
+                  }
+                } else {
+                  sendFinalNotification();
+                }
 
-            callback();
-            return null;
-          })
-          .catch(() => {
-            console.log('Oh dear');
+                callback();
+                return null;
+              })
+              .catch(err => {
+                console.log(`Error on bulkCreate of CSV import - ${err}`); // eslint-disable-line
+              });
           });
-
       }, bufferLength);
 
       /* Config csv parser */
