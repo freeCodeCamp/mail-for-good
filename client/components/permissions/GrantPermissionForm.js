@@ -38,8 +38,8 @@ const GrantPermissionForm = props => {
         <br/>
         <div className="box-footer">
           <div className="btn-group">
-            <button className="btn btn-success btn-lg" type="submit" disabled={pristine || submitting}>Grant Permission</button>
-            <button className="btn btn-danger btn-lg" type="button" disabled={pristine || submitting} onClick={reset}>Reset</button>
+            <button className="btn btn-success btn-lg btn-hug" type="submit" disabled={pristine || submitting}>Grant</button>
+            <button className="btn btn-danger btn-lg btn-hug" type="button" disabled={pristine || submitting} onClick={reset}>Reset</button>
           </div>
         </div>
 

@@ -63,8 +63,8 @@ const CreateTemplateForm = props => {
       <br/>
       <div className="box-footer">
         <div className="btn-group">
-          <button style={{ margin: "1em", width: "125px" }} className="btn btn-success btn-lg" type="submit" disabled={pristine || submitting}>Next Step</button>
-          <button style={{ margin: "1em", width: "125px" }} className="btn btn-danger btn-lg" type="button" disabled={pristine || submitting} onClick={resetForm}>Reset</button>
+          <button className="btn btn-success btn-lg btn-hug" type="submit" disabled={pristine || submitting}>Next Step</button>
+          <button className="btn btn-danger btn-lg btn-hug" type="button" disabled={pristine || submitting} onClick={resetForm}>Reset</button>
         </div>
       </div>
     </form>

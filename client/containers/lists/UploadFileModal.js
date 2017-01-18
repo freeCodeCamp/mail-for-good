@@ -63,7 +63,7 @@ export default class UploadFileModal extends React.Component {
 
           <Modal.Footer>
             <button className="btn pull-left btn-lg btn-success" type="submit" onClick={this.handleSubmit.bind(this)}>Upload</button>
-            <button className="btn pull-right btn-lg btn-danger" type="submit" onClick={this.close.bind(this)}>Cancel</button>
+            <button className="btn pull-left btn-lg btn-danger" type="submit" onClick={this.close.bind(this)}>Cancel</button>
           </Modal.Footer>
         </Modal>
       </div>
