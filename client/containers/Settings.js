@@ -176,8 +176,8 @@ export default class Settings extends Component {
                       component={renderSettingsField}
                       label="White Label URL"
                       type="text"
-                      placeholder="Example: https://addressofthisapplication.com"
-                      helpText={<div>description</div>}
+                      placeholder="Example: https://email.myorganisation.com"
+                      helpText={<div>Display a custom URL for unsubscription and clickthrough tracking links by providing a white label URL (without the trailing backslash). This must be configured beforehand with your DNS hosting service.</div>}
                     />
 
                     <br/>
