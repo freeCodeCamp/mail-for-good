@@ -12,7 +12,7 @@ module.exports = function(id, userId) {
   if (!id) {
     return Promise.resolve({
       userId,
-      campaigns: 'Write'
+      access: 'Write'
     });
   }
 
@@ -20,7 +20,7 @@ module.exports = function(id, userId) {
     .then(userInstance => {
       if (userInstance) {
         const campaignAccess = {
-          campaigns: userInstance.getDataValue('campaigns'),
+          access: userInstance.getDataValue('campaigns'),
           userId: userInstance.getDataValue('userId')
         };
         return campaignAccess;

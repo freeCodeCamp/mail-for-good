@@ -12,7 +12,7 @@ module.exports = function(id, userId) {
   if (!id) {
     return Promise.resolve({
       userId,
-      templates: 'Write'
+      access: 'Write'
     });
   }
 
@@ -20,7 +20,7 @@ module.exports = function(id, userId) {
     .then(userInstance => {
       if (userInstance) {
         const templatesAccess = {
-          templates: userInstance.getDataValue('templates'),
+          access: userInstance.getDataValue('templates'),
           userId: userInstance.getDataValue('userId')
         };
         return templatesAccess;

@@ -1,6 +1,5 @@
 const path = require('path');
 const bodyParser = require('body-parser');
-const multer = require('multer')({dest: 'server/controllers/list/uploads/'});
 const auth = require('./auth');
 const parseJson = bodyParser.json();
 const cookieParser = require('cookie-parser')();
@@ -21,15 +20,7 @@ const getTemplates = require('../controllers/template/get-templates');
 const createTemplate = require('../controllers/template/create-template');
 const deleteTemplates = require('../controllers/template/delete-templates');
 
-// Lists
-const getLists = require('../controllers/list/get-lists');
-const getListSubscribers = require('../controllers/list/get-list-subscribers');
-const exportListSubscribersCSV = require('../controllers/list/export-list-subscribers-csv');
-const addSubscribers = require('../controllers/list/add-subscribers');
-const importCSV = require('../controllers/list/import-csv');
-const subscribeToList = require('../controllers/list/subscribe');
-const deleteSubscribers = require('../controllers/list/delete-subscribers');
-const deleteLists = require('../controllers/list/delete-lists');
+
 const unsubscribe = require('../controllers/subscriber/unsubscribe');
 
 // Permissions
@@ -59,6 +50,11 @@ const changeSettings = require('../controllers/settings/changesettings');
 
 // Websocket notifications
 const getProfile = require('../controllers/websockets/get-profile');
+
+// Middleware
+const { apiIsAuth, isAuth } = require('./middleware/auth');
+
+const lists = require('./lists');
 
 module.exports = (app, passport, io, redis) => {
 
@@ -124,40 +120,7 @@ module.exports = (app, passport, io, redis) => {
   });
 
   /* Lists */
-  // Get all lists
-  app.get('/api/list/manage', apiIsAuth, cookieParser, (req, res) => {
-    getLists(req, res);
-  });
-  // Get all subscribers of a list
-  app.get('/api/list/subscribers', apiIsAuth, parseJson, cookieParser, (req, res) => {
-    getListSubscribers(req, res);
-  });
-  // Get a single email using the list subscription key
-  app.get('/api/list/subscribe', (req, res) => {
-    subscribeToList(req, res);
-  });
-  // temp route for testing csv export of list subscribers
-  app.get('/api/list/subscribers/csv', apiIsAuth, (req, res) => {
-    exportListSubscribersCSV(req, res);
-  });
-
-  // Post new subscribers
-  app.post('/api/list/add/subscribers', apiIsAuth, (req, res) => {
-    addSubscribers(req, res);
-  });
-  // Post new list via csv import
-  app.post('/api/list/add/csv', apiIsAuth, multer.single('csv'), cookieParser, (req, res) => {
-    importCSV(req, res, io);
-  });
-
-  // Delete subscribers
-  app.delete('/api/list/subscribers', apiIsAuth, parseJson, cookieParser, (req, res) => {
-    deleteSubscribers(req, res);
-  });
-  // Delete lists
-  app.delete('/api/list/manage', apiIsAuth, parseJson, cookieParser, (req, res) => {
-    deleteLists(req, res);
-  });
+  lists(app, io);
 
   /* Permissions */
   // Get granted permissions (i.e. permissions you have granted another user)
@@ -260,21 +223,3 @@ module.exports = (app, passport, io, redis) => {
   });
 
 };
-
-/* Helper functions for verifying authentication */
-// Check user is allowed to load SPA
-function isAuth(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    res.redirect('/login');
-  }
-}
-// Check user accessing API route is authenticated
-function apiIsAuth(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    res.status(403).send();
-  }
-}
