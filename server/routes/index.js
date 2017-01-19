@@ -15,12 +15,6 @@ const stopCampaignSending = require('../controllers/campaign/stop-campaign-sendi
 const sendCampaign = require('../controllers/campaign/send-campaign');
 const sendTestEmail = require('../controllers/campaign/email/amazon-ses/send-test');
 
-// Templates
-const getTemplates = require('../controllers/template/get-templates');
-const createTemplate = require('../controllers/template/create-template');
-const deleteTemplates = require('../controllers/template/delete-templates');
-
-
 const unsubscribe = require('../controllers/subscriber/unsubscribe');
 
 // Permissions
@@ -54,7 +48,9 @@ const getProfile = require('../controllers/websockets/get-profile');
 // Middleware
 const { apiIsAuth, isAuth } = require('./middleware/auth');
 
+// Routes
 const lists = require('./lists');
+const templates = require('./templates');
 
 module.exports = (app, passport, io, redis) => {
 
@@ -106,18 +102,7 @@ module.exports = (app, passport, io, redis) => {
   });
 
   /* Templates */
-  // Get a list of all templates
-  app.get('/api/template', apiIsAuth, cookieParser, (req, res) => {
-    getTemplates(req, res);
-  });
-  // Post a new template
-  app.post('/api/template', apiIsAuth, parseJson, cookieParser, (req, res) => {
-    createTemplate(req, res);
-  });
-  // Delete template(s)
-  app.delete('/api/template', apiIsAuth, parseJson, cookieParser, (req, res) => {
-    deleteTemplates(req, res);
-  });
+  templates(app);
 
   /* Lists */
   lists(app, io);
