@@ -20,9 +20,12 @@ const renderMultiselect = ({ input, ...rest }) =>
     {...rest}/>;
 */
 
+const savedLabel = <div className="label label-success">Saved</div>;
+const notSavedLabel = <div className="label label-danger">Not saved</div>;
+
 export const renderSettingsDropdownList = ({ input, label, type, meta: { touched, error, warning }, exists, helpText, ...data }) => (
   <div style={{ marginBottom: "1em" }}>
-    <label>{label} - {exists ? <i className="fa fa-check-circle text-green" aria-hidden="true" /> : <i className="fa fa-times-circle text-red" aria-hidden="true" />}</label>
+    <label>{label} - { exists ? savedLabel : notSavedLabel }</label>
     <p className="form-text text-muted">{helpText}</p>
     <div>
       <DropdownList {...input} {...data} />
@@ -54,7 +57,7 @@ export const renderCombobox = ({ input, label, type, meta: { touched, error, war
 export const renderSettingsField = ({ input, label, type, meta: { touched, error, warning }, exists, helpText, placeholder }) => {
   return (
   <div style={{ marginBottom: "1em" }}>
-    <label>{label} - {exists ? <i className="fa fa-check-circle text-green" aria-hidden="true" /> : <i className="fa fa-times-circle text-red" aria-hidden="true" />}</label>
+    <label>{label} - { exists ? savedLabel : notSavedLabel }</label>
     <p className="form-text text-muted">{helpText}</p>
     <div>
       <input className="form-control" {...input} placeholder={placeholder} type={type}/>
