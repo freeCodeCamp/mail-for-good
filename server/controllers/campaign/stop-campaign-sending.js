@@ -1,5 +1,5 @@
 const {
-  sequelize,
+  // sequelize,
   campaign: Campaign
 } = require('../../models');
 
@@ -33,4 +33,4 @@ module.exports = (req, res, redis) => {
       res.status(400).send();
     }
   });
-}
+};

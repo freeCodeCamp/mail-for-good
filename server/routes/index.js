@@ -2,18 +2,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const auth = require('./auth');
 const parseJson = bodyParser.json();
-const cookieParser = require('cookie-parser')();
-
-// Campaigns
-const getCampaigns = require('../controllers/campaign/get-campaigns');
-const createCampaign = require('../controllers/campaign/create-campaign');
-const deleteCampaigns = require('../controllers/campaign/delete-campaigns');
-const exportSentUnsentCSV = require('../controllers/campaign/export-sent-unsent-csv');
-const stopCampaignSending = require('../controllers/campaign/stop-campaign-sending');
-
-// Send campaign
-const sendCampaign = require('../controllers/campaign/send-campaign');
-const sendTestEmail = require('../controllers/campaign/email/amazon-ses/send-test');
 
 const unsubscribe = require('../controllers/subscriber/unsubscribe');
 
@@ -51,6 +39,7 @@ const { apiIsAuth, isAuth } = require('./middleware/auth');
 // Routes
 const lists = require('./lists');
 const templates = require('./templates');
+const campaigns = require('./campaigns');
 
 module.exports = (app, passport, io, redis) => {
 
@@ -70,36 +59,7 @@ module.exports = (app, passport, io, redis) => {
   ////////////////////
 
   /* Campaigns */
-  // Get a list of all campaigns
-  app.get('/api/campaign', apiIsAuth, cookieParser, (req, res) => {
-    getCampaigns(req, res);
-  });
-  // Post new campaign
-  app.post('/api/campaign', apiIsAuth, parseJson, cookieParser, (req, res) => {
-    createCampaign(req, res);
-  });
-  // Delete campaign(s)
-  app.delete('/api/campaign', apiIsAuth, parseJson, cookieParser, (req, res) => {
-    deleteCampaigns(req, res);
-  });
-  // Export subscribers that emails were not sent/sent to during a campaign
-  app.get('/api/campaign/subscribers/csv', apiIsAuth, (req, res) => {
-    exportSentUnsentCSV(req, res);
-  });
-
-  /* Send */
-  // Post to send campaign
-  app.post('/api/send', apiIsAuth, parseJson, cookieParser, (req, res) => {
-    sendCampaign(req, res, io, redis);
-  });
-  // Stop sending a campaign
-  app.post('/api/stop', apiIsAuth, parseJson, (req, res) => {
-    stopCampaignSending(req, res, redis);
-  });
-  // Post to send a test email
-  app.post('/api/test', apiIsAuth, parseJson, cookieParser, (req, res) => {
-    sendTestEmail(req, res);
-  });
+  campaigns(app, io, redis);
 
   /* Templates */
   templates(app);
