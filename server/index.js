@@ -10,6 +10,7 @@ const io = require('socket.io')(server);
 const helmet = require('helmet');
 
 require('dotenv').config();
+const restoreDbState = require('./restore-db-state');
 
 const secret = require('./config/secrets');
 const routes = require('./routes');
@@ -40,8 +41,10 @@ app.use('/dist', express.static(path.join(__dirname, '../dist')));
 // Routes
 routes(app, passport, io, { client, subscriber, publisher });
 
-// Server
-const port = process.env.PORT || 8080;
-server.listen(port, function() {
-  console.log(`Email service live on port ${port}`); // eslint-disable-line
+// Start the server after correcting the database state
+restoreDbState().then(() => {
+  const port = process.env.PORT || 8080;
+  server.listen(port, function() {
+    console.log(`Email service live on port ${port}`); // eslint-disable-line
+  });
 });
