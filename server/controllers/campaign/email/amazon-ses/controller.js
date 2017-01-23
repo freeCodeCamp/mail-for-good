@@ -128,7 +128,10 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
           CampaignSubscriber.update(
             { messageId: data.MessageId, sent: true },
             {
-              where: { listsubscriberId: task.id },
+              where: {
+                listsubscriberId: task.id,
+                campaignId: campaignInfo.campaignId
+              },
               limit: 1
             }
           ).then(() => {
