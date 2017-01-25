@@ -15,7 +15,13 @@ module.exports = function(sequelize, DataTypes) {
         listsubscriber.hasMany(models.campaignanalyticsopen);
         listsubscriber.hasMany(models.campaignsubscriber);
       }
-    }
+    },
+    indexes: [
+      {
+        unique: true,
+        fields:['email']
+      }
+    ]
   });
   return listsubscriber;
 };

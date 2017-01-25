@@ -13,7 +13,12 @@ module.exports = function(sequelize, DataTypes) {
       associate: function() {
         // associations can be defined here
       }
-    }
+    },
+    indexes: [
+      {
+        fields:['userId', 'toUserId']
+      }
+    ]
   });
   return acl;
 };
