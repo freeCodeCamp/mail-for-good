@@ -37,9 +37,7 @@ export default class ManageCampaignsBox extends Component {
 
   componentDidMount() {
     // Update campaigns only if we need to
-    if (!this.props.campaigns.length) {
-      this.props.getCampaigns();
-    }
+    this.props.getCampaigns();
   }
 
   deleteRows(campaignIds) { // campaignIds [...Numbers]

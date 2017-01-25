@@ -75,9 +75,7 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.activePermissionsEmails.length) {
-      this.props.getActivePermissions();
-    }
+    this.props.getActivePermissions();
   }
 
   changeAccount() {

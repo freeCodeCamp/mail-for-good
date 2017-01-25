@@ -35,12 +35,8 @@ export default class CampaignView extends Component {
   }
 
   componentWillMount() {
-    // Update campaigns only if we need to
-    if (!this.props.templates.length) {
-      this.props.getTemplates();
-    } else {
-      this.getSingleTemplate(this.props);
-    }
+    this.props.getTemplates();
+    this.getSingleTemplate(this.props);
   }
 
   componentWillReceiveProps(props) {

@@ -62,13 +62,8 @@ export default class CreateCampaign extends Component {
   }
 
   componentDidMount() {
-    // Update lists only if we need to
-    if (!this.props.lists.length) {
-      this.props.getLists();
-    }
-    if (!this.props.templates.length) {
-      this.props.getTemplates();
-    }
+    this.props.getLists();
+    this.props.getTemplates();
   }
 
   componentWillReceiveProps(props) {

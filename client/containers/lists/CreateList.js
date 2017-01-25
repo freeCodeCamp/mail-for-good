@@ -44,10 +44,7 @@ export default class CreateList extends Component {
   }
 
   componentDidMount() {
-    // Update lists only if we need to
-    if (!this.props.lists.length) {
-      this.props.getLists();
-    }
+    this.props.getLists();
   }
 
   notification(notification) {

@@ -52,12 +52,8 @@ export default class GrantPermissions extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.grantedPermissions.length) {
-      this.props.getGrantPermissions();
-    }
-    if (!this.props.grantOfferedPermissions.length) {
-      this.props.getGrantOfferedPermissions();
-    }
+    this.props.getGrantPermissions();
+    this.props.getGrantOfferedPermissions();
   }
 
   deleteGrantedPermissionRows(offerIds) {
