@@ -38,7 +38,7 @@ module.exports = function(app, io) {
     subscribeToList(req, res);
   });
   // temp route for testing csv export of list subscribers
-  app.get('/api/list/subscribers/csv', apiIsAuth, writeListAccess, (req, res) => {
+  app.get('/api/list/subscribers/csv', apiIsAuth, readListAccess, (req, res) => {
     exportListSubscribersCSV(req, res);
   });
 

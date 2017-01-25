@@ -78,14 +78,24 @@ export default class App extends Component {
     this.props.getActivePermissions();
   }
 
+  pushToDashboardOrRefresh() {
+    // Push to dashboard or refresh page
+    if (this.props.location.pathname === '/')
+      this.context.router.replace('/');
+    else
+      this.context.router.push('/');
+  }
+
   changeAccount() {
     const thisAccount = this.props.activePermissionsEmails.find(x => x.email === this.props.accountForm.values.email);
     // @thisAccount { email, id }
     this.props.becomeAnotherUser(thisAccount);
+    this.pushToDashboardOrRefresh();
   }
 
   changeAccountToSelf() {
     this.props.becomeSelf();
+    this.pushToDashboardOrRefresh();
   }
 
   render() {

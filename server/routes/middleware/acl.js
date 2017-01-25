@@ -4,7 +4,8 @@ module.exports = {
       .then(object => { // { access: 'Write', 'Read', 'None', userId: '1 ...' }
       // Access prop must equal 'Write'
       if (object.access !== 'Write') {
-        throw 'Permission denied';
+        res.status(400).send();
+        throw `Permission denied - readAccess not granted - ${object.access} from ${req.user.id} to ${object.userId}`;
       } else {
         req.user.id = object.userId;
         next();
@@ -17,7 +18,8 @@ module.exports = {
       .then(object => { // { access: 'Write', 'Read', 'None', userId: '1 ...' }
       // Access prop must not equal 'None'
       if (object.access === 'None') {
-        throw 'Permission denied';
+        res.status(400).send();
+        throw `Permission denied - writeAccess not granted - ${object.access} from ${req.user.id} to ${object.userId}`;
       } else {
         req.user.id = object.userId;
         next();

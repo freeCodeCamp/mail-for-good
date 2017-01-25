@@ -73,3 +73,6 @@ seeders
 # Development db
 tools/simulator/simulator.db
 
+# DS files
+dump.rdb
+.DS_Store
