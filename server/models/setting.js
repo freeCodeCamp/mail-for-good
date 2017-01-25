@@ -3,6 +3,10 @@ const crypto = require('crypto')
 const algorithm = 'aes-256-ctr';
 const password = process.env.ENCRYPTION_PASSWORD;
 
+if (!password) {
+  throw new Error('AWS encryption password was empty. Set a password by providing the ENCRYPTION_PASSWORD environment variable in .env');
+}
+
 module.exports = function(sequelize, DataTypes) {
   var setting = sequelize.define('setting', {
     amazonSimpleEmailServiceAccessKey: { type: DataTypes.STRING, defaultValue: '' },
