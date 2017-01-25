@@ -71,7 +71,7 @@ module.exports = (generator, ListSubscriber, campaignInfo, accessKey, secretKey,
   });
 
   const ses = isDevMode
-    ? new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region, endpoint: 'http://localhost:9999' })
+    ? new AWS.SES({ maxRetries: 0, accessKeyId: accessKey, secretAccessKey: secretKey, region, endpoint: 'http://localhost:9999' })
     : new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region });
 
   ///////////
