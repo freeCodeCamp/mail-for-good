@@ -7,9 +7,11 @@ const Header = props => { // eslint-disable-line no-unused-vars
     <header className="main-header">
       <a className="logo">
         <span className="logo-mini">
-          <strong>E</strong>S</span>
+          <strong>M</strong>f<strong>G</strong>
+        </span>
         <span className="logo-lg">
-          <strong>Email</strong>Service</span>
+          <strong>Mail</strong> for <strong>Good</strong>
+        </span>
       </a>
       <nav className="navbar navbar-static-top">
         <a className="sidebar-toggle" href="#" data-toggle="offcanvas">

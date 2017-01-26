@@ -14,7 +14,7 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 
 import './utils/adminLte/app.js'; // JS needs to be modified for compatabiltiy with react router
 import 'admin-lte/dist/css/AdminLTE.min.css';
-import 'admin-lte/dist/css/skins/skin-blue.min.css';
+import './utils/adminLte/mail-for-good-theme.css'; // Theme for Mail for Good
 
 import 'react-widgets/dist/css/react-widgets.css';
 import 'react-bootstrap-table/dist/react-bootstrap-table.min.css';
