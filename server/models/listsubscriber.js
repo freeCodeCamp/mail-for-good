@@ -18,7 +18,6 @@ module.exports = function(sequelize, DataTypes) {
     },
     indexes: [
       {
-        unique: true,
         fields:['email']
       }
     ]
