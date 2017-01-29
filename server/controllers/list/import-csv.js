@@ -1,5 +1,4 @@
 const path = require('path');
-const debug = require('debug')('server:controllers:list:import-csv');
 const csv = require('csv');
 const fs = require('fs');
 const cargo = require('async/cargo');
@@ -100,9 +99,8 @@ module.exports = (req, res, io) => {
       db.list.update(
         { status: 'ready' }, { where: { id: listId }}
       ).then(() => {
-        debug('Updated list %d status to ready because processing has finished', listId);
+        console.log('Updated list status to ready');
       }).catch(err => {
-        debug('Error updating list status: %o', err);
         throw err;
       });
     }
