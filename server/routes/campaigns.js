@@ -28,7 +28,7 @@ module.exports = function(app, io, redis) {
     getCampaigns(req, res);
   });
   // Export subscribers that emails were not sent/sent to during a campaign
-  app.get('/api/campaign/subscribers/csv', apiIsAuth, readCampaignAccess, (req, res) => {
+  app.get('/api/campaign/subscribers/csv', apiIsAuth, cookieParser, readCampaignAccess, (req, res) => {
     exportSentUnsentCSV(req, res);
   });
 
@@ -47,7 +47,7 @@ module.exports = function(app, io, redis) {
     sendCampaign(req, res, io, redis);
   });
   // Stop sending a campaign
-  app.post('/api/stop', apiIsAuth, parseJson, writeCampaignAccess, (req, res) => {
+  app.post('/api/stop', apiIsAuth, parseJson, cookieParser, writeCampaignAccess, (req, res) => {
     stopCampaignSending(req, res, redis);
   });
   // Post to send a test email
