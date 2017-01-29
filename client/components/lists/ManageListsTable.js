@@ -29,6 +29,14 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
       </Link>
   );
 
+  const formatStatus = status => {
+    if (status == 'processing') {
+      return `<span class="label label-warning">Processing</span>`;
+    } else if (status == 'ready') {
+      return `<span class="label label-default">Ready</span>`;
+    };
+  }
+
   const formatSignupFormButton = (cell, row) => {
     return (
       <button onClick={() => { showListSignupFormCreator(row.subscribeKey) }}
@@ -53,6 +61,7 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
 
       <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
       <TableHeaderColumn dataField="name" dataSort={true}>Name</TableHeaderColumn>
+      <TableHeaderColumn dataField="status" dataAlign="center" dataSort={true} dataFormat={formatStatus} width="150">Status</TableHeaderColumn>
       <TableHeaderColumn dataField="createdAt" dataSort={true} dataFormat={formatFieldDate}>Created</TableHeaderColumn>
       <TableHeaderColumn dataField="updatedAt" dataSort={true} dataFormat={formatFieldDate}>Updated</TableHeaderColumn>
       <TableHeaderColumn dataAlign="center" width="150" dataFormat={formatSignupFormButton}>Signup form</TableHeaderColumn>
