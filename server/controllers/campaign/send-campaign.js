@@ -141,7 +141,7 @@ module.exports = (req, res, io, redis) => {
             accessKey,
             secretKey,
             region,
-            whiteLabelUrl: whiteLabelUrl || 'http://localhost:8080'
+            whiteLabelUrl: whiteLabelUrl
           });
           return null;
         }
