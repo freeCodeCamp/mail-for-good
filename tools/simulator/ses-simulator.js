@@ -28,17 +28,23 @@ const Email = sequelize.define('email', {
 });
 
 // Associate emails with a session id that is incremented each time we run this script
-const Session = sequelize.define('session', { })
+const Session = sequelize.define('session', { });
 Session.hasMany(Email);
 Email.belongsTo(Session);
-let sessionId;
 
-const json = JSON.stringify({
-  ResponseMetadata: {
-    RequestId: 'e8a3d6b4-94fd-11z6-afac-757cax279ap5'
-  },
-  MessageId: '01020157a1261241-90a5e1cd-3a5z-4sb7-1r41-957a4cae8e58-000000'
-});
+const xml = `
+<?xml version="1.0" ?>
+<SendEmailResponse xmlns="https://email.amazonaws.com/doc/2010-03-31/">
+  <SendEmailResult>
+    <MessageId>000001271b15238a-fd3ae762-2563-11df-8cd4-6d4e828a9ae8-000000</MessageId>
+  </SendEmailResult>
+  <ResponseMetadata>
+    <RequestId>fd3ae762-2563-11df-8cd4-6d4e828a9ae8</RequestId>
+  </ResponseMetadata>
+</SendEmailResponse>
+`;
+
+let sessionId;
 
 let numReceived = 0;
 app.use((req, res) => {
@@ -48,22 +54,22 @@ app.use((req, res) => {
     destination: req.body['Destination.ToAddresses.member.1'],
     source: req.body['Source'],
     sessionId
-  })
+  });
 
   numReceived++;
 
   // Mock latency
   setTimeout(() => {
     res.statusCode = 200;
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    res.end(json);
+    res.writeHead(200, {'Content-Type': 'text/xml'});
+    res.end(xml);
   }, 150);
 });
 
 (function printNumReceivedPerSecond() {
   setTimeout(() => {
     if (numReceived !== 0) {
-      console.log(`${Math.ceil(numReceived / 4)} requests received in 1s`);
+      console.log(`${Math.ceil(numReceived)} requests received in 1s`); // eslint-disable-line
       numReceived = 0;
     }
 
@@ -77,14 +83,14 @@ const server = http.createServer(app);
 
 sequelize
   .sync({ force: false })
-  .then(err => {
+  .then(() => {
     Session
       .create({ }, { raw: true })
       .then(session => {
         sessionId = session.id;
-        console.log(`SES simulator connected to database. Session id: ${session.id}`);
-        server.listen(port, host, () => { console.log(`Amazon test server running at http://${host}:${port}`); });
+        console.log(`SES simulator connected to database. Session id: ${session.id}`); // eslint-disable-line
+        server.listen(port, host, () => { console.log(`Amazon test server running at http://${host}:${port}`); }); // eslint-disable-line
       });
   }, err => {
-    console.log('An error occurred while creating the table:', err);
-  });
+    console.log('An error occurred while creating the table:', err); // eslint-disable-line
+});
