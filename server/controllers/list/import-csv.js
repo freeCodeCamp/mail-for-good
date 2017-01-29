@@ -1,4 +1,5 @@
 const path = require('path');
+const debug = require('debug')('server:controllers:list:import-csv');
 const csv = require('csv');
 const fs = require('fs');
 const cargo = require('async/cargo');
@@ -95,6 +96,17 @@ module.exports = (req, res, io) => {
       }
     }
 
+    function updateListStatusReady() {
+      db.list.update(
+        { status: 'ready' }, { where: { id: listId }}
+      ).then(() => {
+        debug('Updated list %d status to ready because processing has finished', listId);
+      }).catch(err => {
+        debug('Error updating list status: %o', err);
+        throw err;
+      });
+    }
+
     function returnUniqueItems(model, records) {
       // @params model = a sequelize db model
       // @params records = an array of rows to upsert
@@ -152,6 +164,7 @@ module.exports = (req, res, io) => {
               io.sockets.connected[req.session.passport.socket].emit('notification', rowsParsed);
             }
           } else {
+            updateListStatusReady();
             sendFinalNotification();
           }
 
