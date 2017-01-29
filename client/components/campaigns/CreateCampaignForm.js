@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { Combobox } from 'react-widgets';
+import _ from 'lodash';
 
 import { renderCombobox, renderField, renderTextEditor, renderRadio } from '../common/FormRenderWrappers';
 
@@ -97,11 +98,13 @@ CreateCampaignForm.propTypes = {
   clearTextEditor: PropTypes.func.isRequired
 };
 
-const validate = values => {
+const validate = (values, props) => {
   const errors = {};
 
   if (!values.listName) {
     errors.listName = 'Required';
+  } else if (_.find(props.lists, list => list.name == values.listName).status != 'ready') {
+    errors.listName = 'This list is still being imported.';
   }
   if (!values.campaignName) {
     errors.campaignName = 'Required';
