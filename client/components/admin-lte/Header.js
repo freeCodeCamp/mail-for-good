@@ -46,10 +46,6 @@ const Header = props => { // eslint-disable-line no-unused-vars
 
                   </ul>
                 </li>
-                <li className="footer">
-                  <a href="#">View all</a>
-                </li>
-
               </ul>
             </li>
 
