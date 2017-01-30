@@ -174,7 +174,7 @@ export default class CampaignView extends Component {
 
               <Modal show={this.state.showModal} onHide={this.close}>
                 <Modal.Header closeButton>
-                  <Modal.Title>Are you sure you would like to send this campaign?</Modal.Title>
+                  <Modal.Title>Are you ready to send this campaign to {this.state.thisCampaign.totalCampaignSubscribers} subscribers?</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Footer>
