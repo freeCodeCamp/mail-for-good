@@ -4,7 +4,8 @@
   "description": "A cost effective, open source solution to sending mass emails",
   "main": "index.js",
   "engines": {
-    "npm": ">=3"
+    "npm": ">=3",
+    "node": ">=7.0.0"
   },
   "scripts": {
     "client:start": "npm-run-all --parallel client:test:watch client:open:src client:lint:watch",
