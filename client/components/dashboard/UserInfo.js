@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 const UserInfo = props => {
-  const { user } = props;
+  const { user, totalSentCount } = props;
   return (
     <div className="box box-primary">
       <div className="box-header">
@@ -10,14 +10,15 @@ const UserInfo = props => {
 
       <div className="box-body">
         <p>{user.email}</p>
-        <p>Total emails sent: {user.sentEmailsCount}</p>
+        <p>Total emails sent: {totalSentCount}</p>
       </div>
     </div>
   );
 };
 
 UserInfo.propTypes = {
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  totalSentCount: PropTypes.number
 };
 
 export default UserInfo;

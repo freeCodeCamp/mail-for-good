@@ -6,13 +6,16 @@ import UserInfo from '../components/dashboard/UserInfo';
 
 function mapStateToProps(state) {
   return {
-    user: state.profile.user
+    user: state.profile.user,
+    campaigns: state.manageCampaign.campaigns
   };
 }
 
 @connect(mapStateToProps, null)
 export default class Dashboard extends Component {
   render() {
+    const totalSentCount = this.props.campaigns.reduce((total, campaign) => total + campaign['campaignanalytic.totalSentCount'], 0);
+
     return (
       <div>
         <section className="content-header">
@@ -20,7 +23,7 @@ export default class Dashboard extends Component {
         </section>
         <section className="content">
 
-          <UserInfo user={this.props.user} />
+          <UserInfo user={this.props.user} totalSentCount={totalSentCount} />
           <ManageCampaignsBox />
           <ManageListsBox />
 
