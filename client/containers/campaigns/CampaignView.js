@@ -158,7 +158,7 @@ export default class CampaignView extends Component {
 
               {(this.props.sendCampaignResponse && this.state.haveShownMessage) &&
                 <p className={this.props.sendCampaignStatus === 200 ? 'text-green' : 'text-red'}>
-                  <i className={this.props.sendCampaignStatus === 200 ? 'fa fa-check' : 'fa fa-exclamation'}/> {this.props.sendCampaignResponse}
+                  <i className={this.props.sendCampaignStatus === 200 ? 'fa fa-check' : 'fa fa-exclamation'}/> {this.props.sendCampaignResponse.split('.')[0]}.<br/> <br/> {this.props.sendCampaignResponse.split('.')[1]}.
                 </p>}
 
               <PreviewCampaignForm campaignView={this.state.thisCampaign} />
