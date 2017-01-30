@@ -11,7 +11,8 @@ module.exports = function(sequelize, DataTypes) {
     trackingPixelEnabled: { type: DataTypes.BOOLEAN, defaultValue: false },
     trackLinksEnabled: { type: DataTypes.BOOLEAN, defaultValue: false },
     unsubscribeLinkEnabled: { type: DataTypes.BOOLEAN, defaultValue: false },
-    status: { type: DataTypes.STRING, defaultValue: 'creating' }
+    status: { type: DataTypes.STRING, defaultValue: 'creating' },
+    totalCampaignSubscribers: { type: DataTypes.INTEGER, defaultValue: 0 }
   }, {
     classMethods: {
       associate: function(models) {

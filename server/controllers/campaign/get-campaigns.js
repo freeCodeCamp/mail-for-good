@@ -39,7 +39,8 @@ module.exports = (req, res) => {
       'trackLinksEnabled',
       'unsubscribeLinkEnabled',
       'type',
-      'status'
+      'status',
+      'totalCampaignSubscribers'
     ],
     raw: true
   }).then(instancesArray => {

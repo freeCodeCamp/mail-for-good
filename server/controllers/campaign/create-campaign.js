@@ -66,6 +66,7 @@ module.exports = (req, res) => {
       }).then((instance) => {
         if (instance[0].$options.isNewRecord) {
           const campaignId = instance[0].dataValues.id;
+          let totalCampaignSubscribersProcessed = 0;
           db.campaignanalytics.create({campaignId}).then(() => {
             // Iterate through blocks of 10k ListSubscribers and bulk create CampaignSubscribers.
             // Each time we write (bulk insert) 10k ListSubscribers, fetch the next 10k by recursively calling
@@ -91,6 +92,7 @@ module.exports = (req, res) => {
                 raw: true
               }).then(listSubscribers => {
                 if (listSubscribers.length) { // If length is 0 then there are no more ListSubscribers, so we can cleanup
+                  totalCampaignSubscribersProcessed += listSubscribers.length;
                   listSubscribers = listSubscribers.map(listSubscriber => {
                     listSubscriber.campaignId = campaignId;
                     return listSubscriber;
@@ -100,7 +102,8 @@ module.exports = (req, res) => {
                   });
                 } else {
                   db.campaign.update({
-                    status: 'ready'
+                    status: 'ready',
+                    totalCampaignSubscribers: totalCampaignSubscribersProcessed
                   }, {
                     where: {
                       id: campaignId
