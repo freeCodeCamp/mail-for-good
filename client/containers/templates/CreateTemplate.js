@@ -119,7 +119,7 @@ export default class Templates extends Component {
           <div className="box box-primary">
             <div className="box-body">
               {page === 1 && <CreateTemplateForm clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} onEditor={this.onEditor} validationFailed={this.validationFailed} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
-              {page === 2 && <PreviewTemplateForm form={this.props.form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
+              {page === 2 && <PreviewTemplateForm form={this.props.form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} submitting={this.props.isPosting} />}
             </div>
             {this.props.isPosting || this.props.isGetting && <div className="overlay">
               <FontAwesome name="refresh" spin/>

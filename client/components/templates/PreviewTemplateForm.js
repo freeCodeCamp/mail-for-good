@@ -3,7 +3,7 @@ import showdown from 'showdown'; // Lib to convert from markdown to html
 import DOMPurify from 'dompurify';
 
 const PreviewTemplateForm = props => {
-  const { handleSubmit, lastPage } = props;
+  const { handleSubmit, lastPage, submitting } = props;
 
   if (props.form) {
     var { form:{ values: form } } = props; // eslint-disable-line
@@ -34,7 +34,7 @@ const PreviewTemplateForm = props => {
 
       {(lastPage && handleSubmit) &&
         <div className="box-footer">
-          <button style={{ margin: "1em", width: "160px" }} className="btn btn-lg btn-success" type="button" onClick={handleSubmit}>Save Template</button>
+          <button style={{ margin: "1em", width: "160px" }} className="btn btn-lg btn-success" type="button" onClick={handleSubmit} disabled={submitting}>{submitting ? 'Saving Template' : 'Save Template'}</button>
           <button style={{ margin: "1em", width: "160px" }} className="btn btn-lg btn-primary" type="button" onClick={lastPage}>Go back</button>
         </div>}
 
@@ -46,7 +46,8 @@ PreviewTemplateForm.propTypes = {
   handleSubmit: PropTypes.func,
   lastPage: PropTypes.func,
   form: PropTypes.object,
-  templateView: PropTypes.object
+  templateView: PropTypes.object,
+  submitting: PropTypes.bool
 };
 
 export default PreviewTemplateForm;
