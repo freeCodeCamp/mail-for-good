@@ -5,14 +5,14 @@ const Header = props => { // eslint-disable-line no-unused-vars
   const { user, ws_notification, consumeNotification } = props;
   return (
     <header className="main-header">
-      <a className="logo">
+      <div className="logo">
         <span className="logo-mini">
-          <strong>M</strong>f<strong>G</strong>
+          <strong>MfG</strong>
         </span>
         <span className="logo-lg">
-          <strong>Mail</strong> for <strong>Good</strong>
+          <strong>Mail for Good</strong>
         </span>
-      </a>
+      </div>
       <nav className="navbar navbar-static-top">
         <a className="sidebar-toggle" href="#" data-toggle="offcanvas">
           <span className="sr-only">Toggle navigation</span>
