@@ -13,13 +13,13 @@ module.exports = (req, res, io, redis) => {
     return;
   }
 
-  function * sendCampaign() {
+  function *sendCampaign() {
     const campaignId = req.body.id;
 
     // NOTE: Current assumption is that the user is using Amazon SES. Can modularise and change this if necessary.
 
     // 1. Confirm user has set their keys & retrieve them
-    const {accessKey, secretKey, region, whiteLabelUrl} = yield getAmazonKeysAndRegion(userId);
+    const { accessKey, secretKey, region, whiteLabelUrl } = yield getAmazonKeysAndRegion(userId);
 
     // 2. Confirm the campaign id belongs to the user and retrieve the associated listId
     const campaignInfo = yield campaignBelongsToUser(userId, campaignId);
@@ -28,8 +28,8 @@ module.exports = (req, res, io, redis) => {
     const quotas = yield getEmailQuotas(accessKey, secretKey, region);
 
     // 4. Count the number of list subscribers to message. If this is above the daily quota, send an error.
-    const {totalListSubscribers, totalEmailsToSend} = yield countListSubscribers(campaignInfo.listId, quotas.AvailableToday, campaignId);
-    console.log(`total list subscribers: ${totalListSubscribers}, emails to send: ${totalEmailsToSend}`);
+    const { totalListSubscribers, totalEmailsToSend } = yield countListSubscribers(campaignInfo.listId, quotas.AvailableToday, campaignId);
+    console.log(`Total list subscribers: ${totalListSubscribers}\nEmails to send: ${totalEmailsToSend}`); // eslint-disable-line
 
     // 5. Update analytics data
     campaignInfo.campaignAnalyticsId = yield updateAnalytics(campaignInfo.campaignId, userId, totalEmailsToSend);
@@ -38,7 +38,20 @@ module.exports = (req, res, io, redis) => {
     res.send(howLongEmailingWillTake(totalEmailsToSend, quotas.AvailableToday, quotas.MaxSendRate, campaignInfo.status));
 
     // 7. Send the campaign. TODO: Clean up & condense these arguments
-    yield email.amazon.controller(generator, db.listsubscriber, campaignInfo, accessKey, secretKey, quotas, totalListSubscribers, region, whiteLabelUrl, redis);
+    const campaignAndListInfo = {
+      campaignInfo,
+      totalListSubscribers
+    };
+
+    const amazonAccountInfo = {
+      accessKey,
+      secretKey,
+      region,
+      whiteLabelUrl,
+      quotas
+    };
+
+    yield email.amazon.controller(generator, db.listsubscriber, redis, campaignAndListInfo, amazonAccountInfo);
 
     // 8. TODO: If there was an error, handle it here
 
@@ -79,7 +92,7 @@ module.exports = (req, res, io, redis) => {
             done: 'Your campaign has been delivered already',
             creating: 'Your campaign is still being created and will be ready to send soon'
           };
-          console.log(errorMessages[campaignObject.status]);
+          console.log(errorMessages[campaignObject.status]); // eslint-disable-line
           res.status(400).send({
             message: errorMessages[campaignObject.status]
           });
@@ -116,7 +129,7 @@ module.exports = (req, res, io, redis) => {
         });
       }
     }).catch(err => {
-      throw err;
+      console.log(err); //eslint-disable-line
     });
   }
 
@@ -160,7 +173,7 @@ module.exports = (req, res, io, redis) => {
       } else {
         const {Max24HourSend, SentLast24Hours, MaxSendRate} = data;
         const AvailableToday = Max24HourSend - SentLast24Hours;
-        generator.next({Max24HourSend, SentLast24Hours, MaxSendRate, AvailableToday});
+        generator.next({ Max24HourSend, SentLast24Hours, MaxSendRate, AvailableToday });
       }
     });
   }
@@ -176,7 +189,6 @@ module.exports = (req, res, io, redis) => {
       }
     }).then(total => {
       totalListSubscribers = total;
-      console.log(total);
 
       return db.listsubscriber.count({
         where: {
@@ -195,33 +207,47 @@ module.exports = (req, res, io, redis) => {
       });
     }).then(total => {
       totalEmailsToSend = total;
-      console.log(total);
 
       if (totalEmailsToSend > AvailableToday && process.env.NODE_ENV === 'production') {
         res.status(400).send({message: `This list exceeds your 24 hour allowance of ${AvailableToday} emails. Please upgrade your SES limit.`});
       } else {
-        generator.next({totalListSubscribers, totalEmailsToSend});
+        generator.next({ totalListSubscribers, totalEmailsToSend });
       }
       return null;
     }).catch(err => {
       res.status(500).send(err);
-      throw err;
+      console.log(err); //eslint-disable-line
     });
   }
 
   function updateAnalytics(campaignId, userId, totalEmails) {
-    db.user.findById(userId).then(foundUser => {
-      return foundUser.increment('sentEmailsCount', {by: totalEmails});
-    }).then(() => {
-      return db.campaignanalytics.findOne({where: {
-          campaignId
-        }});
-    }).then(result => {
-      generator.next(result.dataValues.id);
-      return null;
-    }).catch(err => {
-      res.status(500).send(err);
-    });
+    const findUserById = db.user.findById(userId)
+      .then(foundUser => {
+        return foundUser.increment('sentEmailsCount', { by: totalEmails });
+      })
+      .catch(err => {
+        res.status(500).send(err);
+        console.log(err); //eslint-disable-line
+      });
+
+    const findCampaignAnalytics = findUserById
+      .then(() => {
+        return db.campaignanalytics.findOne({
+          where: {
+            campaignId
+          }
+        });
+      })
+      .catch(err => {
+        res.status(500).send(err);
+        console.log(err); //eslint-disable-line
+      });
+
+    findCampaignAnalytics
+      .then(result => {
+        generator.next(result.dataValues.id);
+        return null;
+      });
   }
 
   function howLongEmailingWillTake(totalEmailsToSend, AvailableToday, MaxSendRate, status) {
@@ -230,7 +256,6 @@ module.exports = (req, res, io, redis) => {
       : MaxSendRate; // Cap the max send rate so the estimate is not too optimistic
     const timeTaken = (totalEmailsToSend / MaxSendRate / 60);
     const emailsLeftAfterSend = AvailableToday - totalEmailsToSend;
-    console.log(totalEmailsToSend);
 
     let formattedMessage;
     if (status == 'ready') {
@@ -245,6 +270,6 @@ module.exports = (req, res, io, redis) => {
     formattedMessage += `${timeTo}. `;
     formattedMessage += ` Your Amazon limit for today is now ${emailsLeftAfterSend.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} emails.`;
 
-    return {message: formattedMessage};
+    return { message: formattedMessage };
   }
 };

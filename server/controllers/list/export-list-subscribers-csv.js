@@ -43,7 +43,8 @@ module.exports = (req, res) => {
 
       sendSubscribers();
 
-      function sendSubscribers(offset = 0, limit = 10000) { // limit is how many rows to hold in memory
+      // limit is how many rows to hold in memory
+      function sendSubscribers(offset = 0, limit = 10000) { // eslint-disable-line
         ListSubscriber.findAll({
           where,
           offset,

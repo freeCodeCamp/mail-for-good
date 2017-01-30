@@ -9,7 +9,8 @@ module.exports = function(sequelize, DataTypes) {
     openCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     totalSentCount: { type: DataTypes.INTEGER, defaultValue: 0 },
     trackLinksEnabled: { type: DataTypes.BOOLEAN, defaultValue: true }
-  }, {
+    },
+    {
     freezeTableName: true,  // because CampaignAnalyticss is a silly name
     classMethods: {
       associate: function(models) {
