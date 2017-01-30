@@ -36,10 +36,18 @@ const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
   const actionButtonsFormatter = (cell, row) => {
     return (
       <a href="#" onClick={getCampaignView.bind(this, row)}>Manage</a>
-    )
-  }
+    );
+  };
 
-  const statusFormatter = (status, row) => {
+  const clickthroughsFormatter = (cell, row) => {
+    return row['trackLinksEnabled'] ? cell : 'n/a';
+  };
+
+  const opensFormatter = (cell, row) => {
+    return row['trackingPixelEnabled'] ? cell : 'n/a';
+  };
+
+  const statusFormatter = status => {
     if (status == 'creating') {
       return `<span class="label label-warning">Creating</span>`;
     } else if (status == 'ready') {
@@ -51,7 +59,7 @@ const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
     } else if (status == 'done') {
       return `<span class="label label-success">Done</span>`;
     }
-  }
+  };
 
   const filterDate = {
     type: "DateFilter",
@@ -79,8 +87,8 @@ const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
       <TableHeaderColumn dataField="delivered" dataAlign="center" dataSort={true} dataFormat={deliveredFormatter} csvFormat={deliveredFormatter}>Delivered</TableHeaderColumn>
       <TableHeaderColumn dataField="bounced" dataAlign="center" dataSort={true} dataFormat={bouncedFormatter} csvFormat={bouncedFormatter}>Bounced</TableHeaderColumn>
       <TableHeaderColumn dataField="campaignanalytic.complaintCount" dataAlign="center" dataSort={true} csvHeader="complaints">Complaints</TableHeaderColumn>
-      <TableHeaderColumn dataField="campaignanalytic.clickthroughCount" dataAlign="center" dataSort={true} csvHeader="clickthroughs">Clickthroughs</TableHeaderColumn>
-      <TableHeaderColumn dataField="campaignanalytic.openCount" dataAlign="center" dataSort={true} csvHeader="opens">Opens</TableHeaderColumn>
+      <TableHeaderColumn dataField="campaignanalytic.clickthroughCount" dataAlign="center" dataSort={true} dataFormat={clickthroughsFormatter} csvHeader="clickthroughs">Clickthroughs</TableHeaderColumn>
+      <TableHeaderColumn dataField="campaignanalytic.openCount" dataAlign="center" dataSort={true} dataFormat={opensFormatter} csvHeader="opens">Opens</TableHeaderColumn>
       {/*<TableHeaderColumn export ={false} dataAlign="center" width="100">Tags (WIP)</TableHeaderColumn>*/}
       <TableHeaderColumn dataField="createdAt" dataAlign="center" dataSort={true} dataFormat={dateFormatter} width="150" filter={filterDate}>Created</TableHeaderColumn>
 
