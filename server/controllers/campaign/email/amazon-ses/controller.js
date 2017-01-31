@@ -91,6 +91,7 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
 
   // Vars
   let databaseIsWorking = false; // This is a flag that will ensure that the db does not get assigned too much work
+  let shouldSend = true; // Another flag that indicates whether or not a campaign should send
 
   const Producer = require('../message-queue/amazon/producer')();
   const Receiver = require('../message-queue/amazon/receiver')(ses, rateLimit, campaignInfo);
@@ -105,7 +106,14 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
     const initialBuffer = await fillInitialBuffer(arrayOfIds); // Initialise the buffer
     emailBuffer.push(...initialBuffer);
     if (isDevMode) console.log(`Filled emailBuffer with ${emailBuffer.length} emails`); // eslint-disable-line
-    // 2. Fill the buffer with an initial set of emails
+    // 2. Listen for cancellation event
+    redis.subscriber.on('message', (channel, campaignId) => {
+      if (campaignId == campaignInfo.campaignId) {
+        cancel();
+      }
+    });
+    redis.subscriber.subscribe('stop-campaign-sending');
+    // 3. Fill the buffer with an initial set of emails
     emailProducer(arrayOfIds, rateLimit);
   })();
 
@@ -305,7 +313,8 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
             if (receiverQueueLength >= rateLimitTimesFive) {
               shouldProduceMoreEmails();
             } else {
-              emailProducer(arrayOfIds, rateLimit);
+              if (shouldSend)
+                emailProducer(arrayOfIds, rateLimit);
             }
           });
       }, ONE_SECOND);
@@ -335,14 +344,34 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
     });
 
     // Emails have now been placed in the queue for processing. Now we can maintain the buffer:
-    maintainEmailBuffer(arrayOfIds);
+    if (shouldSend)
+      maintainEmailBuffer(arrayOfIds);
+  }
+
+  function finish(error) {
+    const status = shouldSend ? 'interrupted' : 'done';
+    db.campaign.update({
+      status
+    }, {
+      where: {
+        id: campaignInfo.campaignId
+      }
+    });
+    generator.next(error);
   }
 
   function success() {
     console.log('\nFinished sending campaign\n'); // eslint-disable-line
     Producer.close();
     Receiver.close();
+    finish(null);
+  }
 
-    generator.next();
+  function cancel() {
+    shouldSend = false;
+    Producer.close();
+    Receiver.close();
+    redis.subscriber.unsubscribe('stop-campaign-sending');
+    finish('cancelled');
   }
 };

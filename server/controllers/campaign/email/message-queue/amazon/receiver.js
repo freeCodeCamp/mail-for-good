@@ -109,14 +109,18 @@ module.exports = function(ses, rateLimit, campaignInfo) {
     });
   }
 
+  function _quit() {
+    const THREE_SECONDS = 3000;
+    setTimeout(() => {
+      client.quit(); // Close Redis connection
+    }, THREE_SECONDS);
+  }
+
   return {
     close: function close() {
       // Close connection after 3 seconds
       Receiver.close(); // Close bull connection
-      const THREE_SECONDS = 3000;
-      setTimeout(() => {
-        client.quit(); // Close Redis connection
-      }, THREE_SECONDS);
+      _quit();
     },
     count: function count() {
       return Receiver.count();
