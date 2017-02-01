@@ -34,7 +34,7 @@ module.exports = function(app, io, redis) {
 
   // Post new campaign
   app.post('/api/campaign', apiIsAuth, parseJson, cookieParser, writeCampaignAccess, (req, res) => {
-    createCampaign(req, res);
+    createCampaign(req, res, io);
   });
   // Delete campaign(s)
   app.delete('/api/campaign', apiIsAuth, parseJson, cookieParser, writeCampaignAccess, (req, res) => {
