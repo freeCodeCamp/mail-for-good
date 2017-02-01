@@ -74,7 +74,7 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
   const ses = isDevMode
     ? new AWS.SES({  // Dev mode
         apiVersion: '2010-12-01',
-        convertResponseTypes: false,
+        // convertResponseTypes: false,
         maxRetries: 0,
         accessKeyId: accessKey,
         secretAccessKey:

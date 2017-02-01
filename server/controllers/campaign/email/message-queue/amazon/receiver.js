@@ -20,33 +20,33 @@ module.exports = function(ses, rateLimit, campaignInfo) {
 
   Receiver.process(CONCURRENCY, (job) => {
     // Call the _sendEmail function in the parent closure
-    const emailFormat = job.data;
-    return ses.sendEmail(emailFormat, (err, data) => {
+    const { email, task } = job.data; // See Amazon.js - where { email } is a formatted SES email & { info } contains the id
+    return ses.sendEmail(email, (err, data) => {
       if (err) {
         console.log(err); // eslint-disable-line
-      }
-
-      const p1 = CampaignSubscriber.update(
-        {
-          messageId: data.MessageId,
-          sent: true
-        },
-        {
-          where: {
-            listsubscriberId: emailFormat.id,
-            campaignId: campaignInfo.campaignId
+      } else {
+        const p1 = CampaignSubscriber.update(
+          {
+            messageId: data.MessageId,
+            sent: true
           },
-          limit: 1
-        }
-      );
+          {
+            where: {
+              listsubscriberId: task.id,
+              campaignId: campaignInfo.campaignId
+            },
+            limit: 1
+          }
+        );
 
-      const p2 = CampaignAnalytics.findById(campaignInfo.campaignAnalyticsId)
-        .then(foundCampaignAnalytics => {
-          return foundCampaignAnalytics.increment('totalSentCount');
-        });
+        const p2 = CampaignAnalytics.findById(campaignInfo.campaignAnalyticsId)
+          .then(foundCampaignAnalytics => {
+            return foundCampaignAnalytics.increment('totalSentCount');
+          });
 
-      return Promise.all([p1, p2]);
-      // _updateAnalytics(data, emailFormat.id);
+        return Promise.all([p1, p2]);
+        // _updateAnalytics(data, emailFormat.id);
+      }
     });
   });
 
