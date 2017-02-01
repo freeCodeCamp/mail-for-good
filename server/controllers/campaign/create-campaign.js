@@ -2,7 +2,7 @@ const db = require('../../models');
 const slug = require('slug');
 const htmlToText = require('html-to-text');
 
-module.exports = (req, res) => {
+module.exports = (req, res, io) => {
   /*
         Outstanding issues:
         -- Validate other things? Validations can be added as promises to validationComplete and run concurrently
@@ -109,6 +109,7 @@ module.exports = (req, res) => {
                       id: campaignId
                     }
                   }).then(() => {
+                    sendSuccessNotification();
                     return;
                   }).catch(err => {
                     throw err;
@@ -129,4 +130,14 @@ module.exports = (req, res) => {
     res.status(400).send(err);
   });
 
+  function sendSuccessNotification() {
+    if (io.sockets.connected[req.session.passport.socket]) {
+      const createCampaignSuccess = {
+        message: `${req.body.campaignName} is ready to send`,
+        icon: 'fa-list-alt',
+        iconColour: 'text-green'
+      };
+      io.sockets.connected[req.session.passport.socket].emit('notification', createCampaignSuccess);
+    }
+  }
 };

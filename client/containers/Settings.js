@@ -17,7 +17,8 @@ function getState(state) {
   return {
     loading: state.settings.loading,
     fieldsExist: state.settings.fieldsExist,
-    form: state.form.settings
+    form: state.form.settings,
+    status: state.settings.status
   };
 }
 
@@ -93,10 +94,6 @@ export default class Settings extends Component {
       };
       changeSettings(formattedFormValues);
       reset();
-      notify({
-        message: 'Your settings have been saved!',
-        colour: 'green'
-      });
     } else {
       const nameArray = ['accessKey', 'secretAccessKey', 'region', 'whiteLabelUrl', 'queueUrl'];
       touch(...nameArray);
@@ -130,6 +127,12 @@ export default class Settings extends Component {
               <div className="box box-primary">
                 <div className="box-header with-border">
                   <h3 className="box-title">Amazon SES credentials</h3>
+                  <br /><br />
+                  {this.props.status &&
+                  <div>
+                    Error updating credentials: <br /> {this.props.status}
+                  </div>
+                  }
                 </div>
 
                 <form onSubmit={this.resetFormAndSubmit}>
@@ -154,15 +157,6 @@ export default class Settings extends Component {
                       helpText={<div><a target="_blank" href="https://aws.amazon.com/developers/access-keys/">Find out more about secret access keys</a></div>}
                     />
                     <Field
-                      exists={amazonSimpleQueueServiceUrl}
-                      name="queueUrl"
-                      component={renderSettingsField}
-                      label="SQS URL"
-                      type="text"
-                      helpText="This must be configured to receive email feedback (bounces, complaints, etc). Visit LINK for a guide to set this up."
-                      placeholder="Example: https://sqs.eu-west-1.amazonaws.com/123456789/email_feedback"
-                    />
-                    <Field
                       exists={region}
                       name="region"
                       component={renderSettingsDropdownList}
@@ -174,7 +168,7 @@ export default class Settings extends Component {
                       exists={whiteLabelUrl}
                       name="whiteLabelUrl"
                       component={renderSettingsField}
-                      label="White Label URL"
+                      label="White Label URL [optional]"
                       type="text"
                       placeholder="Example: https://email.myorganisation.com"
                       helpText={<div>Display a custom URL for unsubscription and clickthrough tracking links by providing a white label URL (without the trailing backslash). This must be configured beforehand with your DNS hosting service.</div>}

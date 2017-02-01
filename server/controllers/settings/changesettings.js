@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const Setting = require('../../models').setting;
+const configureAws = require('./configure-aws/configure-aws');
 
 module.exports = function(req, res) {
   const settingsToChange = _.pickBy(req.body);
@@ -12,8 +13,6 @@ module.exports = function(req, res) {
 
   /*
     NOTE: There's no need to include any response message as the settings are validated client side
-    TODO: Need to encrypt these keys
-    TODO: Validate SQS url
  */
 
   // Quick function to create a new object selectProvidedFields that contains keys from settingsToChange whose property was not an empty string (or otherwise falsey value)
@@ -24,21 +23,20 @@ module.exports = function(req, res) {
     }
   });
 
-  // All checks below are pretty self explanatory
   if (selectProvidedFields.accessKey) {
     if (selectProvidedFields.accessKey.length < 16 || selectProvidedFields.accessKey.length > 32) {
-      res.status(400).send();
+      res.status(400).send({message: "Provided access key is invalid"});
       return;
     }
   }
 
   if (selectProvidedFields.secretAccessKey) {
     if (selectProvidedFields.secretAccessKey.length < 40) {
-      res.status(400).send();
+      res.status(400).send({message: "Provided secret access key is invalid"});
       return;
     }
     else if (/[0-9a-f]{40}/.test(selectProvidedFields.secretAccessKey)) {
-      res.status(400).send();
+      res.status(400).send({message: "Provided secret access key is invalid"});
       return;
     }
   }
@@ -51,13 +49,75 @@ module.exports = function(req, res) {
     }
   }
 
-  Setting.update(selectProvidedFields, {
-    where: {
-      userId: req.user.id
-    }
-  }).then(() => {
-    res.send();
-  }).catch(() => {
-    res.status(500).send();
-  });
+  // If any AWS settings have been changed then we need to reconfigure the feedback queues
+  // This also serves as advanced validation for AWS credentials
+  if (selectProvidedFields.amazonSimpleEmailServiceAccessKey || selectProvidedFields.amazonSimpleEmailServiceSecretKey || selectProvidedFields.region) {
+    console.log("AWS settings provided, reconfiguring AWS");
+    Setting.findOne({
+      where: { userId: req.user.id },
+      attributes: ['amazonSimpleEmailServiceAccessKey', 'amazonSimpleEmailServiceSecretKey', 'region']
+    }).then(settingInstance => {
+      const settings = _.extend(
+        {
+          amazonSimpleEmailServiceAccessKey: settingInstance.amazonSimpleEmailServiceAccessKey,
+          amazonSimpleEmailServiceSecretKey: settingInstance.amazonSimpleEmailServiceSecretKey,
+          region: settingInstance.region
+        }, selectProvidedFields);
+
+      configureAws({
+        accessKey: settings.amazonSimpleEmailServiceAccessKey,
+        secretKey: settings.amazonSimpleEmailServiceSecretKey,
+        region: settings.region
+      }, (err, queueUrl) => {
+        if (err) {
+          console.log("Error creating sqs feedback queue");
+          console.log(err);
+          res.status(400).send({message: err.message});
+        } else {
+          console.log(`Created sqs feedback queue: ${queueUrl}`);
+          selectProvidedFields.amazonSimpleQueueServiceUrl = queueUrl;
+          updateSettings();
+        }
+      });
+    });
+  } else {
+    // No AWS settings have been provided, there is no need to reconfigure AWS,
+    // so we can go ahead and update the database.
+    updateSettings();
+  }
+
+  function updateSettings () {
+    Setting.update(selectProvidedFields, {
+      where: {
+        userId: req.user.id
+      }
+    }).then(() => {
+      res.send();
+    }).catch(() => {
+      res.status(500).send();
+    });
+  }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
