@@ -1,6 +1,18 @@
 const AWS = require('aws-sdk');
 const async = require('async');
 
+/**
+ * Configure an AWS account for receiving SES feedback notifications (bounces and complaints) through an SNS queue.
+ * https://docs.aws.amazon.com/ses/latest/DeveloperGuide/notifications-via-sns.html
+ *
+ * End configuration:
+ * Send emails (SES) -> listen for bounces/complaints (SNS) -> publish to queue (SQS)
+ * This makes it possible to poll the SQS queue and receive the stored feedback notifications, then save
+ * the bounces/complaints in the db + associate them with CampaignSubcribers using the messageId
+ *
+ * @param credentials
+ * @param callback - Called on success or error, i.e. callback(error, queueUrl)
+ */
 module.exports = (credentials, callback) => {
   AWS.config.update({accessKeyId: credentials.accessKey, secretAccessKey: credentials.secretKey, region: credentials.region});
 
@@ -11,7 +23,6 @@ module.exports = (credentials, callback) => {
     subscribeSesToSns
   ], (err, queueUrl) => {
     if (err) {
-      console.log(err);
       callback(err);
     } else {
       console.log(`SQS queue created successfully: ${queueUrl}`);
@@ -55,9 +66,6 @@ function createSnsTopics (config = { sns: { bounce: { arn: '' }, complaint: { ar
   });
 }
 
-/*
-https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SQS.html#createQueue-property
- */
 function createSqsQueue (config = { sqs: { url: '', arn: '' } }, callback) {
   console.log("Creating SQS queue");
   const SQS_NAME = 'mail-for-good-ses-feedback';
@@ -131,9 +139,7 @@ function subscribeSnsToSqs (config, callback) {
   async.parallel({
     bounce: async.apply(subscribe, config.sns.bounce.arn),
     complaint: async.apply(subscribe, config.sns.complaint.arn)
-  }, (err, result) => {
-    console.log(err);
-    console.log(result);
+  }, () => {
     callback(null, config);
   });
 }
@@ -152,7 +158,8 @@ function subscribeSesToSns (config, callback) {
       if (!identities.length) {
         callback(new Error('No SES identity has been configured'));
       } else if (identities.length > 1) {
-        callback(new Error('More than one identity present')); // Need to decide what to do for ambiguous identity case
+        // Need to decide what to do for ambiguous identity case
+        callback(new Error('More than one identity present'));
       } else {
 
         async.parallel({

@@ -17,7 +17,8 @@ function getState(state) {
   return {
     loading: state.settings.loading,
     fieldsExist: state.settings.fieldsExist,
-    form: state.form.settings
+    form: state.form.settings,
+    status: state.settings.status
   };
 }
 
@@ -93,10 +94,6 @@ export default class Settings extends Component {
       };
       changeSettings(formattedFormValues);
       reset();
-      notify({
-        message: 'Your settings have been saved!',
-        colour: 'green'
-      });
     } else {
       const nameArray = ['accessKey', 'secretAccessKey', 'region', 'whiteLabelUrl', 'queueUrl'];
       touch(...nameArray);
@@ -130,6 +127,12 @@ export default class Settings extends Component {
               <div className="box box-primary">
                 <div className="box-header with-border">
                   <h3 className="box-title">Amazon SES credentials</h3>
+                  <br /><br />
+                  {this.props.status &&
+                  <div>
+                    Error updating credentials: <br /> {this.props.status}
+                  </div>
+                  }
                 </div>
 
                 <form onSubmit={this.resetFormAndSubmit}>
