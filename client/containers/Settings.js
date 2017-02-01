@@ -157,15 +157,6 @@ export default class Settings extends Component {
                       helpText={<div><a target="_blank" href="https://aws.amazon.com/developers/access-keys/">Find out more about secret access keys</a></div>}
                     />
                     <Field
-                      exists={amazonSimpleQueueServiceUrl}
-                      name="queueUrl"
-                      component={renderSettingsField}
-                      label="SQS URL"
-                      type="text"
-                      helpText="This must be configured to receive email feedback (bounces, complaints, etc). Visit LINK for a guide to set this up."
-                      placeholder="Example: https://sqs.eu-west-1.amazonaws.com/123456789/email_feedback"
-                    />
-                    <Field
                       exists={region}
                       name="region"
                       component={renderSettingsDropdownList}
