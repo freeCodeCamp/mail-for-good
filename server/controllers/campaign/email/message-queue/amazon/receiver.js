@@ -1,7 +1,6 @@
 const Queue = require('bull');
 const Receiver = Queue('amazon');
-const Limiter = require('rolling-rate-limiter');
-const Promise = require('bluebird');
+// const Limiter = require('rolling-rate-limiter');
 const redis = require("redis");
 
 const CampaignSubscriber = require('../../../../../models').campaignsubscriber;
@@ -13,15 +12,15 @@ const CampaignAnalytics = require('../../../../../models').campaignanalytics;
 */
 
 module.exports = function(ses, rateLimit, campaignInfo) {
-  const EMAILS_PER_SECOND = rateLimit * 1000;
-  const ONE_SECOND = 1000;
-  const LIMITER_NAMESPACE = 'email'; // Variable used by Limiter to determine if an item should be limited
+  // const EMAILS_PER_SECOND = rateLimit * 1000;
+  // const ONE_SECOND = 1000;
+  // const LIMITER_NAMESPACE = 'email'; // Variable used by Limiter to determine if an item should be limited
   const CONCURRENCY = rateLimit; // No. of jobs to process in parallel on a single worker
 
-  Receiver.process(CONCURRENCY, (job) => {
+  Receiver.process(CONCURRENCY, (job, done) => {
     // Call the _sendEmail function in the parent closure
     const { email, task } = job.data; // See Amazon.js - where { email } is a formatted SES email & { info } contains the id
-    return ses.sendEmail(email, (err, data) => {
+    ses.sendEmail(email, (err, data) => {
       if (err) {
         console.log(err); // eslint-disable-line
       } else {
@@ -44,30 +43,24 @@ module.exports = function(ses, rateLimit, campaignInfo) {
             return foundCampaignAnalytics.increment('totalSentCount');
           });
 
-        return Promise.all([p1, p2]);
+        Promise.all([p1, p2]).then(() => {
+          done();
+        });
         // _updateAnalytics(data, emailFormat.id);
       }
     });
   });
 
-  Receiver.on('completed', function(){
-    // Clean all completed jobs (remove from redis)
-    Receiver.clean(1000, 'completed');
-    Receiver.clean(1000, 'failed');
-  });
 
-  Receiver.on('error', function(error) {
-    console.log(error); // eslint-disable-line
-  });
 
   const client = redis.createClient();
 
-  const limiter = Promise.promisify(Limiter({
+  /*const limiter = Promise.promisify(Limiter({
     interval: ONE_SECOND,
     maxInInterval: EMAILS_PER_SECOND,
     redis: client,
     namespace: `amazon-${Math.random().toString(36)}`
-  }));
+  }));*/
 
   function _updateAnalytics(data, listsubscriberId) {
     CampaignSubscriber.update(
@@ -90,7 +83,7 @@ module.exports = function(ses, rateLimit, campaignInfo) {
       });
   }
 
-  function _sendEmail(emailFormat) {
+  /*function _sendEmail(emailFormat) {
     limiter(LIMITER_NAMESPACE, function(thereIsTimeLeft) {
       if (thereIsTimeLeft) {
         // limit was exceeded, action should not be allowed
@@ -107,7 +100,7 @@ module.exports = function(ses, rateLimit, campaignInfo) {
         });
       }
     });
-  }
+  }*/
 
   function _quit() {
     const THREE_SECONDS = 3000;

@@ -40,6 +40,9 @@ const AmazonEmail = require('./amazon');
 const CampaignAnalyticsLink = require('../../../../models').campaignanalyticslink;
 const CampaignAnalyticsOpen = require('../../../../models').campaignanalyticsopen;
 
+const CampaignSubscriber = require('../../../../models').campaignsubscriber;
+const CampaignAnalytics = require('../../../../models').campaignanalytics;
+
 module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, amazonAccountInfo) => {
   /*
     # Send emails via Amazon SES' API #
@@ -93,8 +96,8 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
   let databaseIsWorking = false; // This is a flag that will ensure that the db does not get assigned too much work
   let shouldSend = true; // Another flag that indicates whether or not a campaign should send
 
-  const Producer = require('../message-queue/amazon/producer')();
-  const Receiver = require('../message-queue/amazon/receiver')(ses, rateLimit, campaignInfo);
+  //const Producer = require('../message-queue/amazon/producer')();
+  //const Receiver = require('../message-queue/amazon/receiver')(ses, rateLimit, campaignInfo);
 
   (async function sendEmailsViaAmazon() {
     // 1. First we'll get an array containing the ids of all users we're going to email.
@@ -114,6 +117,11 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
     });
     redis.subscriber.subscribe('stop-campaign-sending');
     // 3. Fill the buffer with an initial set of emails
+
+    /*(function a () {getEmailsAndCampaignInfo(arrayOfIds, rateLimit).then(() => {
+      console.log('Got emails!');
+      a();
+    })})();*/
     emailProducer(arrayOfIds, rateLimit);
   })();
 
@@ -306,7 +314,8 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
     const ONE_SECOND = 1000;
     (function shouldProduceMoreEmails() {
       setTimeout(() => {
-        Receiver.count()
+        emailProducer(arrayOfIds, rateLimit);
+        /*Receiver.count()
           .then(receiverQueueLength => { // The number of items currently being processed by the receiver
             // If the receiver is processing >= rateLimitTimesFive emails, postpone calling them
             if (isDevMode) console.log(`receiverQueueLength: ${receiverQueueLength} - ${receiverQueueLength >= rateLimitTimesFive ? 'postponing' : 'continuing'}`); // eslint-disable-line
@@ -316,7 +325,7 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
               if (shouldSend)
                 emailProducer(arrayOfIds, rateLimit);
             }
-          });
+          });*/
       }, ONE_SECOND);
     })();
   }
@@ -340,12 +349,50 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
 
     // At this point, emailBuffer contains rateLimit fewer emails.
     splicedEmails.forEach(emailFormat => {
-      Producer.add(emailFormat);
+      sendAnEmail(emailFormat);
     });
 
     // Emails have now been placed in the queue for processing. Now we can maintain the buffer:
     if (shouldSend)
       maintainEmailBuffer(arrayOfIds);
+  }
+
+  function sendAnEmail(emailFormat) {
+    const { email, task } = emailFormat; // See Amazon.js - where { email } is a formatted SES email & { info } contains the id
+    ses.sendEmail(email, (err, data) => {
+      if (err) {
+        console.log(err); // eslint-disable-line
+      } else {
+        CampaignSubscriber.update(
+          {
+            messageId: data.MessageId,
+            sent: true
+          },
+          {
+            where: {
+              listsubscriberId: task.id,
+              campaignId: campaignInfo.campaignId
+            }
+          }
+        ).catch(err => {
+          console.log(err);
+        });
+
+        CampaignAnalytics.findById(campaignInfo.campaignAnalyticsId)
+          .then(foundCampaignAnalytics => {
+            foundCampaignAnalytics.increment('totalSentCount')
+              .then(() => {
+                return null;
+              })
+              .catch(err => {
+                console.log(err);
+              });
+            return null;
+          }).catch(err => {
+            console.log(err);
+          });
+      }
+    });
   }
 
   function finish(error) {

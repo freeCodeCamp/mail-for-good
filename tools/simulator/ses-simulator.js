@@ -1,38 +1,59 @@
 const http = require('http');
 const express = require('express');
-const Sequelize = require('sequelize');
-
-// Limitations:
-// - Assumes that batch email sending has not been used - only 'Destination.ToAddresses.member.1' is recorded
+const argv = require('yargs')
+  .usage('\nUsage: node index.js <command> [options]')
+  .example('Use default setting:', 'node ses-simulator.js')
+  .example('Show no. req per minute:', 'node ses-simulator.js -i 60000')
+  .example('Change port:', 'node ses-simulator.js -p 3000')
+  .example('Generate ~1 throttling res per 1k req', 'node ses-simulator.js -e 0.1')
+  // Host
+  .alias('h', 'host')
+  .string('h')
+  .nargs('h', 1)
+  .describe('h', 'Set the hostname')
+  .default('h', 'localhost')
+  // Port
+  .alias('p', 'port')
+  .number('p')
+  .nargs('p', 1)
+  .describe('p', 'Set the port')
+  .default('p', 9999)
+  // Interval
+  .alias('i', 'interval')
+  .number('i')
+  .nargs('i', 1)
+  .describe('i', 'Interval between req reports (ms)')
+  .default('i', 1000)
+  // Validate
+  .alias('v', 'validate')
+  .boolean('v')
+  .nargs('v', 1)
+  .describe('v', 'Should validate emails')
+  .default('v', false)
+  // Error
+  .alias('e', 'error')
+  .number('e')
+  .nargs('e', 1)
+  .describe('e', '% chance of throttling error')
+  .default('e', 0)
+  // Other
+  .help('help')
+  .epilog('For more info visit: https://github.com/AndrewGHC/node-amazon-ses-simulator')
+  .argv;
 
 const app = express();
 app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(require('body-parser').json());
 
-// Track received emails in an sqlite database
-// This provides a bit more flexibility than dumping to csv, as we can later
-// implement an SQS feedback simulator that uses the stored messageIds.
-const sequelize = new Sequelize('database', 'username', 'password', {
-  dialect: 'sqlite',
-  storage: './tools/simulator/simulator.db',
-  logging: false
-});
+const {
+  host,
+  port,
+  interval,
+  validate,
+  error
+} = argv;
 
-const Email = sequelize.define('email', {
-  messageId: Sequelize.STRING,
-  body: Sequelize.STRING,
-  subject: Sequelize.STRING,
-  destination: Sequelize.STRING,
-  destinationEmail: Sequelize.STRING,
-  source: Sequelize.STRING
-});
-
-// Associate emails with a session id that is incremented each time we run this script
-const Session = sequelize.define('session', { });
-Session.hasMany(Email);
-Email.belongsTo(Session);
-
-const xml = `
+const xmlSuccess = `
 <?xml version="1.0" ?>
 <SendEmailResponse xmlns="https://email.amazonaws.com/doc/2010-03-31/">
   <SendEmailResult>
@@ -44,53 +65,89 @@ const xml = `
 </SendEmailResponse>
 `;
 
-let sessionId;
+const xmlError = `
+<?xml version="1.0" ?>
+<ErrorResponse xmlns="http://cloudformation.amazonaws.com/doc/2010-05-15/">
+  <Error>
+    <Type>Sender</Type>
+    <Code>Throttling</Code>
+    <Message>Rate exceeded</Message>
+  </Error>
+  <RequestId>fd3ae762-2563-11df-8cd4-6d4e828a9ae8</RequestId>
+</ErrorResponse>
+`;
+
+function emailIsValid(body) {
+  // @params body = req.body
+  // Emails must contain a valid source, destination, subject and body
+  const emailBody = body['Message.Body.Text.Data'];
+  const emailSubject = body['Message.Subject.Data'];
+  const destination = body['Destination.ToAddresses.member.1'];
+  const source = body['Source'];
+  const action = body['Action'];
+  // Source field exists
+  if (!emailBody === undefined) {
+    throw new Error('Message body text data is undefined');
+  }
+  if (!emailSubject === undefined) {
+    throw new Error('Message subject data is undefined');
+  }
+  if (!destination === undefined) {
+    throw new Error('No destination email defined');
+  }
+  if (!source) {
+    throw new Error('No source email defined');
+  }
+  if (!action && action !== 'SendEmail') {
+    throw new Error('Incorrect action specified');
+  }
+}
+
+function emailToSend() {
+  const shouldSendError = (Math.ceil(Math.random() * 100)) <= error ? true : false;
+  if (shouldSendError) {
+    return { email: xmlError, status: 400 };
+  }
+  else {
+    return { email: xmlSuccess, status: 200 };
+  }
+}
 
 let numReceived = 0;
+// Middleware that will blindly respond to requests
 app.use((req, res) => {
-  Email.create({
-    body: req.body['Message.Body.Text.Data'],
-    subject: req.body['Message.Subject.Data'],
-    destination: req.body['Destination.ToAddresses.member.1'],
-    source: req.body['Source'],
-    sessionId
-  });
 
   numReceived++;
 
+  // Validate email
+  if (validate) {
+    emailIsValid(req.body);
+  }
+
   // Mock latency
+  const numberBetweenOneAndOneHundredFifty = Math.floor((Math.random() * 100)) + 50;
   setTimeout(() => {
-    res.statusCode = 200;
-    res.writeHead(200, {'Content-Type': 'text/xml'});
-    res.end(xml);
-  }, 150);
+    // See https://docs.aws.amazon.com/ses/latest/DeveloperGuide/api-error-codes.html
+    const { email, status } = emailToSend();
+    res.statusCode = status;
+    res.writeHead(status, { 'Content-Type': 'text/xml' });
+    res.end(email);
+  }, numberBetweenOneAndOneHundredFifty);
 });
 
-(function printNumReceivedPerSecond() {
+(function printNumReceived() {
   setTimeout(() => {
-    if (numReceived !== 0) {
-      console.log(`${Math.ceil(numReceived)} requests received in 1s`); // eslint-disable-line
-      numReceived = 0;
-    }
-
-    printNumReceivedPerSecond();
-  }, 1000);
+    console.log(`${Math.ceil(numReceived)} requests received in last ${interval / 1000} second(s)`); // eslint-disable-line
+    numReceived = 0;
+    printNumReceived();
+  }, interval);
 })();
 
-const port = 9999;
-const host = 'localhost';
 const server = http.createServer(app);
 
-sequelize
-  .sync({ force: false })
-  .then(() => {
-    Session
-      .create({ }, { raw: true })
-      .then(session => {
-        sessionId = session.id;
-        console.log(`SES simulator connected to database. Session id: ${session.id}`); // eslint-disable-line
-        server.listen(port, host, () => { console.log(`Amazon test server running at http://${host}:${port}`); }); // eslint-disable-line
-      });
-  }, err => {
-    console.log('An error occurred while creating the table:', err); // eslint-disable-line
+server.listen(port, host, () => {
+  console.log(`\n##########################`);
+  console.log(`## Amazon SES Simulator ##`);
+  console.log(`##########################\n`);
+  console.log(`Running at http://${host}:${port}\n`);
 });

@@ -42,6 +42,7 @@
     "async": "^2.0.1",
     "aws-sdk": "^2.6.7",
     "backoff": "^2.5.0",
+    "bluebird": "^3.4.7",
     "body-parser": "^1.15.2",
     "bootstrap": "^3.3.7",
     "bull": "^1.1.3",
