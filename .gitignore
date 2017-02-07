@@ -73,6 +73,7 @@ seeders
 # Development db
 tools/simulator/simulator.db
 
-# DS files
+# Annoying mac files et al
 dump.rdb
-*.DS_Store
+*.rdb
+.DS_Store
