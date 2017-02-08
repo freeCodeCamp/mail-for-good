@@ -123,6 +123,10 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
         listId: campaignInfo.listId,
         subscribed: true
       },
+      include: [{
+        model: db.campaignsubscriber,
+        where: { sent: false }
+      }],
       attributes: [
         'id'
       ],
