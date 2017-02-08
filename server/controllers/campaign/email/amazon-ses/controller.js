@@ -364,7 +364,7 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
   }
 
   function finish(error) {
-    const status = shouldSend ? 'interrupted' : 'done';
+    const status = shouldSend ? 'done' : 'interrupted';
     db.campaign.update({
       status
     }, {
