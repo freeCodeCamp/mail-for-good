@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import WSNotification from './WS-Notification';
 
+import '../../styles/header.scss';
+
 const Header = props => { // eslint-disable-line no-unused-vars
   const { user, ws_notification, consumeNotification } = props;
   return (
