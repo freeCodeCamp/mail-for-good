@@ -18,7 +18,7 @@ module.exports = function(ses, rateLimit, campaignInfo) {
   const LIMITER_NAMESPACE = 'email'; // Variable used by Limiter to determine if an item should be limited
   const CONCURRENCY = rateLimit; // No. of jobs to process in parallel on a single worker
 
-  Receiver.process(CONCURRENCY, (job) => {
+  Receiver.process(CONCURRENCY, (job, done) => {
     // Call the _sendEmail function in the parent closure
     const { email, task } = job.data; // See Amazon.js - where { email } is a formatted SES email & { info } contains the id
     return ses.sendEmail(email, (err, data) => {
@@ -44,6 +44,8 @@ module.exports = function(ses, rateLimit, campaignInfo) {
           .then(foundCampaignAnalytics => {
             return foundCampaignAnalytics.increment('totalSentCount');
           });
+
+        done();
 
         return Promise.all([p1, p2]);
         // _updateAnalytics(data, emailFormat.id);
