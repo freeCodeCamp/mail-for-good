@@ -105,6 +105,7 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
     //// This way we have the certainty of knowing who to email without the memory footprint
     //// associated with including all other columns.
     console.log(`\nEmail campaign send initiated. Sending ${rateLimit} per second.\n`); // eslint-disable-line
+    updateCampaignStatus();
     console.log('Preparing to send email campaign. Getting list subscribers ids ...'); // eslint-disable-line
     const arrayOfIds = await getListSubscriberIds(); // Returns ids from listsubscribers [1,2,3, ... etc]
     const initialBuffer = await fillInitialBuffer(arrayOfIds); // Initialise the buffer
@@ -124,12 +125,26 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
     emailProducer(arrayOfIds, rateLimit);
   })();
 
+  function updateCampaignStatus() {
+    db.campaign.update({
+      status: 'sending'
+    }, {
+      where: {
+        id: campaignInfo.campaignId
+      }
+    }).catch(err => {throw err;});
+  }
+
   function getListSubscriberIds() {
     return listSubscriberModel.findAll({
       where: {
         listId: campaignInfo.listId,
         subscribed: true
       },
+      include: [{
+        model: db.campaignsubscriber,
+        where: { sent: false }
+      }],
       attributes: [
         'id'
       ],
@@ -388,7 +403,7 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
   }
 
   function finish(error) {
-    const status = shouldSend ? 'interrupted' : 'done';
+    const status = shouldSend ? 'done' : 'interrupted';
     db.campaign.update({
       status
     }, {
