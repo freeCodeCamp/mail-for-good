@@ -18,7 +18,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     indexes: [
       {
-        fields:['email', 'subscribed']
+        fields: ['email']
+      },
+      {
+        fields: ['subscribed']
       }
     ]
   });

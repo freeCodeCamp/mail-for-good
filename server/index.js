@@ -47,4 +47,8 @@ restoreDbState().then(() => {
   server.listen(port, function() {
     console.log(`Email service live on port ${port}`); // eslint-disable-line
   });
+
+  server.on('error', err => {
+    console.log(err);
+  });
 });

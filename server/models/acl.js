@@ -16,7 +16,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     indexes: [
       {
-        fields:['userId', 'toUserId']
+        fields:['userId']
+      },
+      {
+        fields:['toUserId']
       }
     ]
   });

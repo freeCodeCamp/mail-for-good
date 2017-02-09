@@ -21,6 +21,7 @@
     "client:open:cover": "npm run test:cover && open coverage/index.html",
     "server:test": "mocha tools/testSetup.js \"server/**/*.spec.js\" --reporter progress",
     "start": "NODE_ENV=production node --harmony-async-await server/index.js",
+    "production": "TEST_PRODUCTION=true NODE_ENV=production node --harmony-async-await server/index.js",
     "dev": "NODE_ENV=development node --harmony-async-await server/index.js",
     "debug": "NODE_ENV=development node --inspect --debug-brk --harmony-async-await server/index.js",
     "build": "babel-node tools/build.js",

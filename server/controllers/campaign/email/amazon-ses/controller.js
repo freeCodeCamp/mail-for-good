@@ -40,9 +40,6 @@ const AmazonEmail = require('./amazon');
 const CampaignAnalyticsLink = require('../../../../models').campaignanalyticslink;
 const CampaignAnalyticsOpen = require('../../../../models').campaignanalyticsopen;
 
-const CampaignSubscriber = require('../../../../models').campaignsubscriber;
-const CampaignAnalytics = require('../../../../models').campaignanalytics;
-
 module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, amazonAccountInfo) => {
   /*
     # Send emails via Amazon SES' API #
@@ -70,11 +67,12 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
 
   // Constants
   const isDevMode = process.env.NODE_ENV === 'development';
+  const isProductionTestMode = process.env.TEST_PRODUCTION === 'true';
   const rateLimit = process.env.DEV_SEND_RATE || quotas.MaxSendRate; // No. of email we can send p/s as established by Amazon
   const rateLimitTimesFive = rateLimit * 5; // Arbitrary quantity of emails to store in buffer
   const emailBuffer = []; // This stores the current buffer of emails to be sent
 
-  const ses = isDevMode
+  const ses = (isDevMode || isProductionTestMode)
     ? new AWS.SES({  // Dev mode
         apiVersion: '2010-12-01',
         // convertResponseTypes: false,
@@ -95,10 +93,9 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
   // Vars
   let databaseIsWorking = false; // This is a flag that will ensure that the db does not get assigned too much work
   let shouldSend = true; // Another flag that indicates whether or not a campaign should send
-  let campaignAnalyticsInstance;
 
-  //const Producer = require('../message-queue/amazon/producer')();
-  //const Receiver = require('../message-queue/amazon/receiver')(ses, rateLimit, campaignInfo);
+  const Producer = require('../message-queue/amazon/producer')();
+  const Receiver = require('../message-queue/amazon/receiver')(ses, rateLimit, campaignInfo);
 
   (async function sendEmailsViaAmazon() {
     // 1. First we'll get an array containing the ids of all users we're going to email.
@@ -109,8 +106,6 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
     console.log('Preparing to send email campaign. Getting list subscribers ids ...'); // eslint-disable-line
     const arrayOfIds = await getListSubscriberIds(); // Returns ids from listsubscribers [1,2,3, ... etc]
     const initialBuffer = await fillInitialBuffer(arrayOfIds); // Initialise the buffer
-    campaignAnalyticsInstance = await CampaignAnalytics.findById(campaignInfo.campaignAnalyticsId);
-
     emailBuffer.push(...initialBuffer);
     if (isDevMode) console.log(`Filled emailBuffer with ${emailBuffer.length} emails`); // eslint-disable-line
     // 2. Listen for cancellation event
@@ -120,8 +115,7 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
       }
     });
     redis.subscriber.subscribe('stop-campaign-sending');
-
-    // 3. Send email campaign
+    // 3. Fill the buffer with an initial set of emails
     emailProducer(arrayOfIds, rateLimit);
   })();
 
@@ -328,8 +322,7 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
     const ONE_SECOND = 1000;
     (function shouldProduceMoreEmails() {
       setTimeout(() => {
-        emailProducer(arrayOfIds, rateLimit);
-        /*Receiver.count()
+        Receiver.count()
           .then(receiverQueueLength => { // The number of items currently being processed by the receiver
             // If the receiver is processing >= rateLimitTimesFive emails, postpone calling them
             if (isDevMode) console.log(`receiverQueueLength: ${receiverQueueLength} - ${receiverQueueLength >= rateLimitTimesFive ? 'postponing' : 'continuing'}`); // eslint-disable-line
@@ -339,7 +332,7 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
               if (shouldSend)
                 emailProducer(arrayOfIds, rateLimit);
             }
-          });*/
+          });
       }, ONE_SECOND);
     })();
   }
@@ -363,43 +356,12 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
 
     // At this point, emailBuffer contains rateLimit fewer emails.
     splicedEmails.forEach(emailFormat => {
-      sendAnEmail(emailFormat);
+      Producer.add(emailFormat);
     });
 
     // Emails have now been placed in the queue for processing. Now we can maintain the buffer:
     if (shouldSend)
       maintainEmailBuffer(arrayOfIds);
-  }
-
-  function sendAnEmail(emailFormat) {
-    const { email, task } = emailFormat; // See Amazon.js - where { email } is a formatted SES email & { info } contains the id
-    ses.sendEmail(email, (err, data) => {
-      if (err) {
-        console.log(err); // eslint-disable-line
-      } else {
-        CampaignSubscriber.update(
-          {
-            messageId: data.MessageId,
-            sent: true
-          },
-          {
-            where: {
-              listsubscriberId: task.id
-            }
-          }
-        ).catch(err => {
-          console.log(err);
-        });
-
-        campaignAnalyticsInstance.increment('totalSentCount')
-          .then(() => {
-            return null;
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
-    });
   }
 
   function finish(error) {
