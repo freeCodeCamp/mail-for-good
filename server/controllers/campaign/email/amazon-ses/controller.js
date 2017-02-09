@@ -95,6 +95,7 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
   // Vars
   let databaseIsWorking = false; // This is a flag that will ensure that the db does not get assigned too much work
   let shouldSend = true; // Another flag that indicates whether or not a campaign should send
+  let campaignAnalyticsInstance;
 
   //const Producer = require('../message-queue/amazon/producer')();
   //const Receiver = require('../message-queue/amazon/receiver')(ses, rateLimit, campaignInfo);
@@ -107,6 +108,8 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
     console.log('Preparing to send email campaign. Getting list subscribers ids ...'); // eslint-disable-line
     const arrayOfIds = await getListSubscriberIds(); // Returns ids from listsubscribers [1,2,3, ... etc]
     const initialBuffer = await fillInitialBuffer(arrayOfIds); // Initialise the buffer
+    campaignAnalyticsInstance = await CampaignAnalytics.findById(campaignInfo.campaignAnalyticsId);
+
     emailBuffer.push(...initialBuffer);
     if (isDevMode) console.log(`Filled emailBuffer with ${emailBuffer.length} emails`); // eslint-disable-line
     // 2. Listen for cancellation event
@@ -116,12 +119,8 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
       }
     });
     redis.subscriber.subscribe('stop-campaign-sending');
-    // 3. Fill the buffer with an initial set of emails
 
-    /*(function a () {getEmailsAndCampaignInfo(arrayOfIds, rateLimit).then(() => {
-      console.log('Got emails!');
-      a();
-    })})();*/
+    // 3. Send email campaign
     emailProducer(arrayOfIds, rateLimit);
   })();
 
@@ -370,25 +369,18 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
           },
           {
             where: {
-              listsubscriberId: task.id,
-              campaignId: campaignInfo.campaignId
+              listsubscriberId: task.id
             }
           }
         ).catch(err => {
           console.log(err);
         });
 
-        CampaignAnalytics.findById(campaignInfo.campaignAnalyticsId)
-          .then(foundCampaignAnalytics => {
-            foundCampaignAnalytics.increment('totalSentCount')
-              .then(() => {
-                return null;
-              })
-              .catch(err => {
-                console.log(err);
-              });
+        campaignAnalyticsInstance.increment('totalSentCount')
+          .then(() => {
             return null;
-          }).catch(err => {
+          })
+          .catch(err => {
             console.log(err);
           });
       }
