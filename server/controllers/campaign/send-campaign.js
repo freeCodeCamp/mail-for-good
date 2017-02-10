@@ -249,27 +249,27 @@ module.exports = (req, res, io, redis) => {
         return null;
       });
   }
-
-  function howLongEmailingWillTake(totalEmailsToSend, AvailableToday, MaxSendRate, status) {
-    MaxSendRate = (MaxSendRate > 35)
-      ? 35
-      : MaxSendRate; // Cap the max send rate so the estimate is not too optimistic
-    const timeTaken = (totalEmailsToSend / MaxSendRate / 60);
-    const emailsLeftAfterSend = AvailableToday - totalEmailsToSend;
-
-    let formattedMessage;
-    if (status == 'ready') {
-      formattedMessage = `Your campaign is being sent to ${totalEmailsToSend.toLocaleString('en-GB')} subscribers, it should be done `;
-    } else if (status == 'interrupted') {
-      formattedMessage = `Campaign sending resumed - sending to remaining ${totalEmailsToSend.toLocaleString('en-GB')} subscribers, it should be done `;
-    }
-
-    const newTime = moment(new Date(new Date().getTime() + timeTaken * 60000));
-    const timeTo = moment(new Date).to(newTime);
-
-    formattedMessage += `${timeTo}. `;
-    formattedMessage += ` Your Amazon limit for today is now ${emailsLeftAfterSend.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} emails.`;
-
-    return { message: formattedMessage };
-  }
 };
+
+function howLongEmailingWillTake(totalEmailsToSend, AvailableToday, MaxSendRate, status) {
+  MaxSendRate = (MaxSendRate > 35)
+    ? 35
+    : MaxSendRate; // Cap the max send rate so the estimate is not too optimistic
+  const timeTaken = (totalEmailsToSend / MaxSendRate / 60);
+  const emailsLeftAfterSend = AvailableToday - totalEmailsToSend;
+
+  let formattedMessage;
+  if (status == 'ready') {
+    formattedMessage = `Your campaign is being sent to ${totalEmailsToSend.toLocaleString('en-GB')} subscribers, it should be done `;
+  } else if (status == 'interrupted') {
+    formattedMessage = `Campaign sending resumed - sending to remaining ${totalEmailsToSend.toLocaleString('en-GB')} subscribers, it should be done `;
+  }
+
+  const newTime = moment(new Date(new Date().getTime() + timeTaken * 60000));
+  const timeTo = moment(new Date).to(newTime);
+
+  formattedMessage += `${timeTo}. `;
+  formattedMessage += ` Your Amazon limit for today is now ${emailsLeftAfterSend.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} emails.`;
+
+  return { message: formattedMessage };
+}
