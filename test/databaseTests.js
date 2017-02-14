@@ -65,7 +65,6 @@ setTimeout(() => {
     t.equal(200, response.statusCode, 'Export sent/unsent CSV returns status code 200');
 
   });
-  // test('a', stopCampaignSend);
 
   test('Stop campaign send feature returns the correct status code', async function(t) {
     t.plan(1);
@@ -83,7 +82,6 @@ setTimeout(() => {
     // Original was 'validates that campaign id is present in request body', this doesn't look right
     t.equal(400, res.statusCode, 'Response status code from stop campaign should be 400');
   });
-
   test('Stop campaign publishes a cancel message to redis', async function(t) {
     t.plan(2);
     const res = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter });
@@ -101,7 +99,6 @@ setTimeout(() => {
 
     stopCampaignSending(req, res, redis);
   });
-
   test('Stop campaign modifies the campaign status appropriately', async function(t) {
     t.plan(1);
     const res = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter });
@@ -118,7 +115,6 @@ setTimeout(() => {
       });
     });
   });
-
   test('Stop campaign validates that the campaign belongs to the user', async function(t) {
     t.plan(1);
     const res = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter });
@@ -133,6 +129,8 @@ setTimeout(() => {
       t.equal(400, res.statusCode, 'Response status code equals 400');
     });
   });
+
+  
 
 }, 1000);
 
