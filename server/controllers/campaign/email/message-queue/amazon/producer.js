@@ -1,5 +1,5 @@
 const Queue = require('bull');
-const Producer = Queue('amazon');
+const Producer = Queue('amazon', null, process.env.REDIS_HOST || '127.0.0.1');
 
 /*
   The purpose of this file is to produce emails (see general messaging vernacular). To produce means to

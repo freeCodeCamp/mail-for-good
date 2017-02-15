@@ -18,9 +18,10 @@ const routes = require('./routes');
 // Config
 require('./config/passport')(passport);
 
-const client = redis.createClient();
-const subscriber = redis.createClient();  // Need to create separate connections
-const publisher = redis.createClient();   // for pub-sub
+const redisSettings = { host: process.env.REDIS_HOST || '127.0.0.1' };
+const client = redis.createClient(redisSettings);
+const subscriber = redis.createClient(redisSettings);  // Need to create separate connections
+const publisher = redis.createClient(redisSettings);   // for pub-sub
 
 client.on("error", err => console.log(`Error: ${err} - Are you running redis?`)); // eslint-disable-line
 

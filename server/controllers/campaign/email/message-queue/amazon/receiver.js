@@ -1,5 +1,5 @@
 const Queue = require('bull');
-const Receiver = Queue('amazon');
+const Receiver = Queue('amazon', null, process.env.REDIS_HOST || '127.0.0.1');
 const Limiter = require('rolling-rate-limiter');
 const Promise = require('bluebird');
 const redis = require("redis");
@@ -63,7 +63,9 @@ module.exports = function(ses, rateLimit, campaignInfo) {
     console.log(error); // eslint-disable-line
   });
 
-  const client = redis.createClient();
+
+  const redisSettings = { host: process.env.REDIS_HOST || '127.0.0.1' };
+  const client = redis.createClient(redisSettings);
 
   const limiter = Promise.promisify(Limiter({
     interval: ONE_SECOND,
