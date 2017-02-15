@@ -1,5 +1,5 @@
 app:
-    image: mail-for-good:latest
+    image: 4iar/mail-for-good:latest
     env_file: .env
     environment:
         - PSQL_USERNAME=postgres
