@@ -52,10 +52,7 @@ export default class Templates extends Component {
   }
 
   componentDidMount() {
-    // Update templates only if we need to
-    if (!this.props.templates.length) {
-      this.props.getTemplates();
-    }
+    this.props.getTemplates();
   }
 
   componentWillReceiveProps(props) {

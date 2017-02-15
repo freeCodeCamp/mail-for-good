@@ -11,7 +11,21 @@ import { renderCombobox, renderField, renderTextEditor, renderRadio } from '../c
 
 const CreateCampaignForm = props => {
 
-  const { touch, valid, pristine, submitting, nextPage, reset, applyTemplate, onEditor, textEditorType, passResetToState, clearTextEditor } = props;
+  const {
+    touch,
+    valid,
+    pristine,
+    submitting,
+    nextPage,
+    reset,
+    applyTemplate,
+    textEditorType,
+    passResetToState,
+    initialValues,
+    clearTextEditor
+  } = props;
+
+  const { editorValue } = initialValues;
 
   const lists = props.lists.map(x => x.name);
   const templates = props.templates.map(x => x.name);
@@ -68,7 +82,7 @@ const CreateCampaignForm = props => {
         <h3>Create email</h3>
         <Field name="type" component={renderRadio} label="Type" />
         <Field name="emailSubject" component={renderField} label="Subject" type="text" />
-        <Field name="emailBody" component={renderTextEditor} label="Write Email" onEditor={onEditor} textEditorType={textEditorType} />
+        <Field name="emailBody" component={renderTextEditor} label="Write Email" editorValue={editorValue} textEditorType={textEditorType} />
 
         <br/>
         <div className="box-footer">
@@ -92,9 +106,9 @@ CreateCampaignForm.propTypes = {
   lists: PropTypes.array.isRequired,
   templates: PropTypes.array.isRequired,
   applyTemplate: PropTypes.func.isRequired,
-  onEditor: PropTypes.func.isRequired,
   textEditorType: PropTypes.string.isRequired,
   passResetToState: PropTypes.func.isRequired,
+  initialValues: PropTypes.object.isRequired,
   clearTextEditor: PropTypes.func.isRequired
 };
 

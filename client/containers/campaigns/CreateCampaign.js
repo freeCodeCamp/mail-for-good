@@ -46,7 +46,6 @@ export default class CreateCampaign extends Component {
     this.nextPage = this.nextPage.bind(this);
     this.lastPage = this.lastPage.bind(this);
     this.applyTemplate = this.applyTemplate.bind(this);
-    this.onEditor = this.onEditor.bind(this);
     this.passResetToState = this.passResetToState.bind(this);
     this.clearTextEditor = this.clearTextEditor.bind(this);
   }
@@ -55,6 +54,7 @@ export default class CreateCampaign extends Component {
     page: 1,
     initialFormValues: {
       campaignName: `Campaign - ${moment().format('l, h:mm:ss')}`,
+      editorValue: '',
       type: 'Plaintext'
     },
     editor: null,
@@ -69,6 +69,12 @@ export default class CreateCampaign extends Component {
   componentWillReceiveProps(props) {
     if (this.props.isPosting === true && props.isPosting === false) { // Fires when campaign has been successfully created
       this.context.router.push(`/campaigns/manage`);
+    }
+
+    if (this.props.form && this.props.form.values.emailBody) {
+      this.setState({
+        editorValue: this.props.form.values.emailBody
+      });
     }
   }
 
@@ -102,15 +108,6 @@ export default class CreateCampaign extends Component {
     this.setState({ page: this.state.page - 1 });
   }
 
-  onEditor(editor) {
-    //@params editor = Trix editor object bound to the CreateCampaignForm text editor
-    this.setState({ editor });
-    // When the text editor loads, check if there's a value stored for it. If so, apply it.
-    if (this.props.form && this.props.form.values.emailBody) {
-      editor.loadHTML(this.props.form.values.emailBody);
-    }
-  }
-
   passResetToState(reset) {
     this.setState({ reset });
   }
@@ -131,7 +128,7 @@ export default class CreateCampaign extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateCampaignForm clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} onEditor={this.onEditor} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
+              {page === 1 && <CreateCampaignForm clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
               {page === 2 && <PreviewCampaignForm form={form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
 
