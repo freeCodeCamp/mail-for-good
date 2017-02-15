@@ -1,4 +1,5 @@
 const Campaign = require('./models').campaign;
+const User = require('./models').user;
 
 
 /**
@@ -9,9 +10,18 @@ const Campaign = require('./models').campaign;
  * allowing the user to resume sending a campaign manually.
  */
 module.exports = () => {
-  return Campaign.update({
-    status: 'interrupted'
-  }, {
-    where: { status: 'sending' }
-  });
+  // If there are no users then the database is
+  // probably fresh + there is no need to
+  // update anything
+  return User.findAll({ raw: true })
+    .then(users => {
+      console.log(users);
+      if (users.length) {
+        Campaign.update({
+          status: 'interrupted'
+        }, {
+          where: { status: 'sending' }
+        });
+      }
+    })
 };
