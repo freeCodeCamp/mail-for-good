@@ -1,14 +1,13 @@
 FROM node:7-onbuild
 
-COPY package.json .
-RUN npm install
-
-# Compile the frontend
-COPY client .
-RUN npm run build
+# Copying package.json and running
+# npm install are automatically handled
 
 # Add source files 
 COPY . .
+
+# And then compile the frontend
+RUN npm run build
 
 CMD ["npm", "start"]
 EXPOSE 8080
