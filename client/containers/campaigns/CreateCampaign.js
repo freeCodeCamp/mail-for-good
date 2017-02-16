@@ -66,16 +66,19 @@ export default class CreateCampaign extends Component {
     this.props.getTemplates();
   }
 
-  componentWillReceiveProps(props) {
-    if (this.props.isPosting === true && props.isPosting === false) { // Fires when campaign has been successfully created
+  componentWillReceiveProps(nextProps) {
+    if (this.props.isPosting === true && nextProps.isPosting === false) { // Fires when campaign has been successfully created
       this.context.router.push(`/campaigns/manage`);
     }
 
+<<<<<<< HEAD
     if (this.props.form && this.props.form.values.emailBody) {
       this.setState({
         editorValue: this.props.form.values.emailBody
       });
     }
+=======
+>>>>>>> 774e31b... Revert changes to the editor
   }
 
   handleSubmit() {

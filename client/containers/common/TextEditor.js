@@ -1,5 +1,6 @@
 // Import the "raw" serializer that ships with Slate.
 import React, { Component, PropTypes } from 'react';
+<<<<<<< HEAD
 import { Editor, Html } from 'slate';
 
 // Create our initial state...
@@ -306,39 +307,45 @@ export default class TextEditor extends Component {
 }
 
 /*import React, {Component, PropTypes} from 'react';
+=======
+import ReactQuill from 'react-quill';
+>>>>>>> 774e31b... Revert changes to the editor
 
-import TextEditorRich from '../../components/common/TextEditorRich';
-import TextEditorPlain from '../../components/common/TextEditorPlain';
 
 export default class TextEditor extends Component {
 
   static propTypes = {
     input: PropTypes.object,
     onEditor: PropTypes.func,
-    textEditorType: PropTypes.string
+    textEditorType: PropTypes.string,
+    // ReduxForm
+    onChange: PropTypes.func,
+    // Parents
+    editorValue: PropTypes.string.isRequired // Html string
   }
 
+  // Set the initial state when the app is first constructed.
   constructor() {
     super();
-    this.onChange = this.onChange.bind(this);
+    this.onDocumentChange = this.onDocumentChange.bind(this);
   }
 
-  onChange(value) {
-    // Update redux form
-    this.props.input.onChange(value);
+  state = {
+    text: ''
   }
 
   render() {
     const isPlaintext = this.props.textEditorType === 'Plaintext';
 
+    const onTextChange = function(value) {
+      this.setState({ text:value });
+    };
+
     return (
-      <div>
-      {isPlaintext
-        ? <TextEditorPlain onEditor={this.props.onEditor} onChange={this.onChange} placeholder="Write your plaintext email"/>
-        : <TextEditorRich onEditor={this.props.onEditor} onChange={this.onChange} placeholder="Write your HTML email"/>
-      }
-      </div>
+      <ReactQuill value={this.state.text}
+                  onChange={this.onTextChange} />
     );
   }
+
 }
 */
