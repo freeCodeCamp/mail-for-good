@@ -34,7 +34,7 @@ const TextEditorPlain = props => (
 
 TextEditorPlain.propTypes = {
   value: PropTypes.string,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func
 };
 
 export default TextEditorPlain;

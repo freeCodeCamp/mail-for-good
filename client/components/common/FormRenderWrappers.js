@@ -90,11 +90,11 @@ export const renderEditorTypeRadio = ({ input, label, type, meta: { touched, err
   </div>
 );
 
-export const renderTextEditor = ({ input, label, type, meta: { touched, error, warning }, editorValue, textEditorType }) => (
+export const renderTextEditor = ({ input, label, type, meta: { touched, error, warning }, textEditorValue, textEditorType }) => (
   <div>
     <label>{label}</label>
     <div>
-      <Field name="emailBody" {...input} component={TextEditor} editorValue={editorValue} textEditorType={textEditorType} />
+      <Field name="emailBody" value={() => input.value} onChange={() => input.onChange} component={TextEditor} textEditorValue={textEditorValue} textEditorType={textEditorType} />
       {touched && ((error && <span className="text-red"><i className="fa fa-exclamation" /> {error}</span>) || (warning && <span>{warning}</span>))}
     </div>
   </div>

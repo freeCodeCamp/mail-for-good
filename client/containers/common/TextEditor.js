@@ -8,44 +8,36 @@ export default class TextEditor extends Component {
 
   static propTypes = {
     input: PropTypes.object.isRequired,
-    textEditorValue: PropTypes.oneOfType(['string', 'object']), // Can be null or str
     textEditorType: PropTypes.string
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.onChange = this.onChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
+    // Clear text editor on switch as html does not directly translate into plaintext
     const oldType = this.props.textEditorType;
     const newType = nextProps.textEditorType;
-    // Clear text editor on switch as html does not directly translate into plaintext
     if (oldType !== newType) {
+      this.setState({ value: '' });
       this.props.input.onChange('');
     }
-  }
-
-  state = {
-    // NOTE: We're using state here rather than just directly hooking the component up with redux form
-      // as doing so causes critical, weird buggy issues with the text editor.
-    value: ''
   }
 
   onChange(value) {
     // Update redux form
     // See state comment for why we're updating two instances of component state
-    this.setState({ value });
     this.props.input.onChange(value);
   }
 
   render() {
-    const { value } = this.state;
-    /*const {
+    const {
       input: {
         value
       }
-    } = this.props;*/
+    } = this.props;
 
     const isPlaintext = this.props.textEditorType === 'Plaintext';
 
