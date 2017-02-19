@@ -41,16 +41,22 @@ export default class CampaignView extends Component {
 
   constructor() {
     super();
-    this.open = this.open.bind(this);
-    this.close = this.close.bind(this);
+    this.openSendModal = this.openSendModal.bind(this);
+    this.closeSendModal = this.closeSendModal.bind(this);
+    this.openTestSendModal = this.openTestSendModal.bind(this);
+    this.closeTestSendModal = this.closeTestSendModal.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.sendTestEmail = this.sendTestEmail.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
   state = {
+    // Object containing info for this campaign
     thisCampaign: {},
-    showModal: false,
+    // Modals open/closed
+    showSendModal: false,
+    showTestSendModal: false,
+    // Rest
     haveShownMessage: false,
     testEmail: ''
   }
@@ -103,15 +109,27 @@ export default class CampaignView extends Component {
     this.close();
   }
 
-  open() {
+  openSendModal() {
     this.setState({
-      showModal: true
+      showSendModal: true
     });
   }
 
-  close() {
+  closeSendModal() {
     this.setState({
-      showModal: false
+      showSendModal: false
+    });
+  }
+
+  openTestSendModal() {
+    this.setState({
+      showTestSendModal: true
+    });
+  }
+
+  closeTestSendModal() {
+    this.setState({
+      showTestSendModal: false
     });
   }
 
@@ -125,7 +143,10 @@ export default class CampaignView extends Component {
     const form = { testEmail, campaignId };
     this.props.postTestEmail(JSON.stringify(form));
     this.props.notify({ message: 'Your test email has been sent', colour: 'green' });
-    this.setState({ testEmail: '' });
+    this.setState({
+      testEmail: ''
+    });
+    this.closeTestSendModal();
   }
 
   stopSending() {
@@ -164,21 +185,36 @@ export default class CampaignView extends Component {
               <PreviewCampaignForm campaignView={this.state.thisCampaign} />
 
               <div className="form-inline">
-                <button className="btn btn-success btn-lg" type="button" onClick={this.open}>Send</button>
-                <button style={{ "margin-left": "1rem" }} className="btn btn-info" type="button" onClick={this.sendTestEmail}>Send a test email</button>
-                <input id="testEmail" style={{ "margin-left": "1rem" }} className="form-control" placeholder="Send a test email to:" type="email" value={this.state.testEmail} onChange={this.handleChange} />
-                <br/>
-                <button className="btn btn-lg btn-primary" onClick={() => {window.location = downloadUnsentSubscribersUrl}}>Export unsent</button>
-                <button className="btn btn-danger btn-lg" type="button" onClick={this.stopSending.bind(this)}>Stop sending</button>
+                <button className="btn btn-success btn-lg" type="button" onClick={this.openSendModal}>Send</button>
+                <button className="btn btn-info btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.openTestSendModal}>Send a test email</button>
+                <button className="btn btn-lg btn-primary" style={{ "margin-left": "1rem" }} onClick={() => {window.location = downloadUnsentSubscribersUrl}}>Export unsent</button>
+                <button className="btn btn-danger btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.stopSending.bind(this)}>Stop sending</button>
               </div>
 
-              <Modal show={this.state.showModal} onHide={this.close}>
+              {/* Modal for sending test emails */}
+              <Modal show={this.state.showTestSendModal} onHide={this.closeTestSendModal}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Send a test email</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                  <input className="form-control" style={{ "margin-left": "1rem" }} id="testEmail" placeholder="Send a test email to:" type="email" value={this.state.testEmail} onChange={this.handleChange} />
+                </Modal.Body>
+
+                <Modal.Footer>
+                  <Button onClick={this.closeTestSendModal}>Cancel</Button>
+                  <Button bsStyle="primary" onClick={this.sendTestEmail}>Send Test Email</Button>
+                </Modal.Footer>
+              </Modal>
+
+              {/* Modal for sending email campaign */}
+              <Modal show={this.state.showSendModal} onHide={this.closeSendModal}>
                 <Modal.Header closeButton>
                   <Modal.Title>Are you ready to send this campaign to {this.state.thisCampaign.totalCampaignSubscribers} subscribers?</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Footer>
-                  <Button onClick={this.close}>No</Button>
+                  <Button onClick={this.closeSendModal}>No</Button>
                   <Button bsStyle="primary" onClick={this.handleSubmit}>Yes</Button>
                 </Modal.Footer>
               </Modal>
