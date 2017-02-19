@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import { reducer as formReducer } from 'redux-form';
 
-import { createCampaign, createTemplate, manageCampaign, manageTemplates, sendCampaign } from './campaignReducer';
+import { createCampaign, createTemplate, manageCampaign, manageTemplates, sendCampaign, sendTest } from './campaignReducer';
 import { createList, manageList, manageListSubscribers } from './listReducer';
 import { profile } from './appReducer';
 import settings from './settingsReducer';
@@ -15,6 +15,7 @@ const rootReducer = combineReducers({
   manageCampaign,
   manageTemplates,
   sendCampaign,
+  sendTest,
   createList,
   manageList,
   manageListSubscribers,

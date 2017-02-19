@@ -18,6 +18,11 @@ const initialState = {
     sendCampaignResponse: '',
     sendCampaignStatus: 0
   },
+  sendTest: {
+    isPosting: false,
+    sendTestEmailResponse: '',
+    sendTestEmailStatus: 0
+  },
   createList: {
     list: [],
     isPosting: false,

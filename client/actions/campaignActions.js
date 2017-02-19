@@ -3,6 +3,7 @@ import {
   REQUEST_POST_CREATECAMPAIGN, COMPLETE_POST_CREATECAMPAIGN,
   REQUEST_GET_CAMPAIGNS, COMPLETE_GET_CAMPAIGNS,
   REQUEST_POST_SENDCAMPAIGN, COMPLETE_POST_SENDCAMPAIGN,
+  REQUEST_POST_SENDTESTEMAIL, COMPLETE_POST_SENDTESTEMAIL,
   REQUEST_POST_CREATETEMPLATE, COMPLETE_POST_CREATETEMPLATE,
   REQUEST_GET_TEMPLATES, COMPLETE_GET_TEMPLATES,
   COMPLETE_DELETE_CAMPAIGNS, COMPLETE_DELETE_TEMPLATES,
@@ -43,6 +44,14 @@ export function completePostSendCampaign(response, status) {
   return { type: COMPLETE_POST_SENDCAMPAIGN, sendCampaignResponse: response, sendCampaignStatus: status };
 }
 
+// Post send test email request
+export function requestPostSendTestEmail() {
+  return { type: REQUEST_POST_SENDTESTEMAIL };
+}
+export function completePostSendTestEmail(response, status) {
+  return { type: COMPLETE_POST_SENDTESTEMAIL, sendTestEmailResponse: response, sendTestEmailStatus: status };
+}
+
 // Get templates
 export function requestGetTemplates() {
   return { type: REQUEST_GET_TEMPLATES };
@@ -80,7 +89,7 @@ export function stopSending(campaignId) {
         colour: 'green'
       }));
     });
-  }
+  };
 }
 
 
@@ -169,10 +178,15 @@ export function postSendCampaign(campaign) {
 }
 
 export function postTestEmail(form) {
-  return () => {
-    // This function is very simple and should purely pass a single testEmail and campaignId to the test campaign endpoints
+  return dispatch => {
+    dispatch(requestPostSendTestEmail());
+
     const xhr = new XMLHttpRequest();
     xhr.open('POST', API_TEST_SEND_CAMPAIGN_ENDPOINT);
+    xhr.onload = () => {
+      const sendTestEmailResponse = JSON.parse(xhr.responseText);
+      dispatch(completePostSendTestEmail(sendTestEmailResponse.message, xhr.status));
+    };
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(form);
   };

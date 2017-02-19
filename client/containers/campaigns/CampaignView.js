@@ -11,10 +11,14 @@ function mapStateToProps(state) {
   return {
     campaigns: state.manageCampaign.campaigns,
     isGetting: state.manageCampaign.isGetting,
-
-    isPosting: state.sendCampaign.isPosting,
+    // SendCampaign state
+    isPostingSendCampaign: state.sendCampaign.isPosting,
     sendCampaignResponse: state.sendCampaign.sendCampaignResponse,
-    sendCampaignStatus: state.sendCampaign.sendCampaignStatus
+    sendCampaignStatus: state.sendCampaign.sendCampaignStatus,
+    // SendTest state
+    isPostingSendTest: state.sendTest.isPosting,
+    sendTestEmailResponse: state.sendTest.sendTestEmailResponse,
+    sendTestEmailStatus: state.sendTest.sendTestEmailStatus
   };
 }
 
@@ -32,9 +36,14 @@ export default class CampaignView extends Component {
     campaigns: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired,
     sendCampaign: PropTypes.func,
-    isPosting: PropTypes.bool.isRequired,
+
+    isPostingSendCampaign: PropTypes.bool.isRequired,
     sendCampaignResponse: PropTypes.string.isRequired,
     sendCampaignStatus: PropTypes.number.isRequired,
+
+    isPostingSendTest: PropTypes.bool.isRequired,
+    sendTestEmailResponse: PropTypes.string.isRequired,
+    sendTestEmailStatus: PropTypes.number.isRequired,
     // route path
     params: PropTypes.object.isRequired
   }
@@ -75,8 +84,8 @@ export default class CampaignView extends Component {
     if (props.campaigns && props.campaigns.length && !this.props.campaigns.length) { // Guarded and statement that confirms campaigns is in the new props, confirms the array isn't empty, and then confirms that current props do not exist
       this.getSingleCampaign(props);
     }
-    // Show success/failure toast
-    if (props.sendCampaignResponse && !props.isPosting) {
+    // Show success/failure toast for send campaign
+    if (props.sendCampaignResponse && !props.isPostingSendCampaign) {
       this.setState({ haveShownMessage: true });
       if (props.sendCampaignStatus === 200) {
         this.props.notify({
@@ -86,6 +95,21 @@ export default class CampaignView extends Component {
       } else {
         this.props.notify({
           message: 'There was an error sending your campaign'
+        });
+      }
+    }
+
+    // Show success/failure toast for send test
+    if (props.sendTestEmailResponse && !props.isPostingSendTest) {
+      this.setState({ haveShownMessage: true });
+      if (props.sendTestEmailStatus === 200) {
+        this.props.notify({
+          message: 'Your test email is being sent',
+          colour: 'green'
+        });
+      } else {
+        this.props.notify({
+          message: props.sendTestEmailResponse
         });
       }
     }
@@ -106,7 +130,7 @@ export default class CampaignView extends Component {
     };
 
     this.props.postSendCampaign(JSON.stringify(form));
-    this.close();
+    this.closeSendModal();
   }
 
   openSendModal() {
@@ -142,7 +166,6 @@ export default class CampaignView extends Component {
     }
     const form = { testEmail, campaignId };
     this.props.postTestEmail(JSON.stringify(form));
-    this.props.notify({ message: 'Your test email has been sent', colour: 'green' });
     this.setState({
       testEmail: ''
     });
@@ -161,6 +184,7 @@ export default class CampaignView extends Component {
 
   render() {
     let downloadUnsentSubscribersUrl = encodeURI(`${window.location.origin}/api/campaign/subscribers/csv?campaignId=${this.state.thisCampaign.id}&sent=false`);
+
     return (
       <div>
         <div className="content-header">
@@ -187,7 +211,7 @@ export default class CampaignView extends Component {
               <div className="form-inline">
                 <button className="btn btn-success btn-lg" type="button" onClick={this.openSendModal}>Send</button>
                 <button className="btn btn-info btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.openTestSendModal}>Send a test email</button>
-                <button className="btn btn-lg btn-primary" style={{ "margin-left": "1rem" }} onClick={() => {window.location = downloadUnsentSubscribersUrl}}>Export unsent</button>
+                <button className="btn btn-lg btn-primary" style={{ "margin-left": "1rem" }} onClick={() => {window.location = downloadUnsentSubscribersUrl;}}>Export unsent</button>
                 <button className="btn btn-danger btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.stopSending.bind(this)}>Stop sending</button>
               </div>
 
@@ -219,7 +243,7 @@ export default class CampaignView extends Component {
                 </Modal.Footer>
               </Modal>
 
-              {this.props.isGetting || this.props.isPosting && <div className="overlay">
+              {this.props.isGetting || this.props.isPostingSendCampaign || this.props.isPostingSendTest && <div className="overlay">
                 <FontAwesome name="refresh" spin/>
               </div>}
             </div>

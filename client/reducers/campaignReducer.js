@@ -3,6 +3,7 @@ import {
   REQUEST_POST_CREATECAMPAIGN, COMPLETE_POST_CREATECAMPAIGN,
   REQUEST_GET_CAMPAIGNS, COMPLETE_GET_CAMPAIGNS,
   REQUEST_POST_SENDCAMPAIGN, COMPLETE_POST_SENDCAMPAIGN,
+  REQUEST_POST_SENDTESTEMAIL, COMPLETE_POST_SENDTESTEMAIL,
   REQUEST_POST_CREATETEMPLATE, COMPLETE_POST_CREATETEMPLATE,
   REQUEST_GET_TEMPLATES, COMPLETE_GET_TEMPLATES,
   COMPLETE_DELETE_CAMPAIGNS, COMPLETE_DELETE_TEMPLATES
@@ -107,10 +108,30 @@ export function sendCampaign(state = initialState.sendCampaign, action) {
   }
 }
 
+export function sendTest(state = initialState.sendTest, action) {
+  switch (action.type) {
+    case REQUEST_POST_SENDTESTEMAIL: {
+        return {...state,
+          isPosting: true
+        };
+    }
+    case COMPLETE_POST_SENDTESTEMAIL: {
+        return {...state,
+          isPosting: false,
+          sendTestEmailResponse: action.sendTestEmailResponse,
+          sendTestEmailStatus: action.sendTestEmailStatus
+        };
+    }
+    default:
+      return state;
+  }
+}
+
 export default {
   createCampaign,
   createTemplate,
   manageCampaign,
   sendCampaign,
+  sendTest,
   manageTemplates
 };
