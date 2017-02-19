@@ -3,9 +3,10 @@ import ReactQuill from 'react-quill';
 
 // See Quill's module system ref = http://quilljs.com/docs/modules/
 // Sets what appears in the toolbar
+// NOTE: Getting links to automatically show up is a bit tricky, it has been addressed here https://github.com/quilljs/quill/issues/109
 const PLAINTEXT_MODULE = {
   toolbar: [
-    'link'
+    [{ 'list': 'ordered'}]
   ]
 };
 
@@ -13,7 +14,7 @@ const PLAINTEXT_MODULE = {
 // paste bold text or use shortcodes ctrl-b unless valid formats are explicitly specified.
 // The formats constant ensures that only the items listed below are valid in the text editor.
 const PLAINTEXT_FORMATS = [
-  'link'
+  'list'
 ];
 
 const TextEditorPlain = props => (
