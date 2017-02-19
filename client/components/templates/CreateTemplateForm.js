@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Field, reduxForm} from 'redux-form';
-import { renderField, renderTextEditor, renderRadio } from '../common/FormRenderWrappers';
+import { renderField, renderTextEditor, renderEditorTypeRadio } from '../common/FormRenderWrappers';
 
 // Ref redux-form http://redux-form.com/6.0.5/docs/GettingStarted.md/
 // Ref react-widgets https://jquense.github.io/react-widgets/ (for examples see https://github.com/erikras/redux-form/blob/master/examples/react-widgets/src/ReactWidgetsForm.js)
@@ -8,7 +8,19 @@ import { renderField, renderTextEditor, renderRadio } from '../common/FormRender
 
 const CreateTemplateForm = props => {
 
-  const { touch, valid, pristine, submitting, nextPage, reset, validationFailed, onEditor, textEditorType, passResetToState, clearTextEditor } = props;
+  const {
+    touch,
+    valid,
+    pristine,
+    submitting,
+    nextPage,
+    reset,
+    validationFailed,
+    textEditorValue,
+    textEditorType,
+    passResetToState,
+    clearTextEditor
+  } = props;
 
   const nameArray = [
     'templateName',
@@ -57,9 +69,9 @@ const CreateTemplateForm = props => {
       <hr/>
 
       <h3>Create email</h3>
-      <Field name="type" component={renderRadio} label="Type" />
+      <Field name="type" component={renderEditorTypeRadio} label="Type" />
       <Field name="emailSubject" component={renderField} label="Subject" type="text" />
-      <Field name="emailBody" component={renderTextEditor} label="Write Email*" onEditor={onEditor} textEditorType={textEditorType} />
+      <Field name="emailBody" component={renderTextEditor} label="Write Email*" textEditorValue={textEditorValue} textEditorType={textEditorType} />
       <br/>
       <div className="box-footer">
         <div className="btn-group">
@@ -79,7 +91,7 @@ CreateTemplateForm.propTypes = {
   nextPage: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
   validationFailed: PropTypes.func.isRequired,
-  onEditor: PropTypes.func.isRequired,
+  textEditorValue: PropTypes.string.isRequired,
   textEditorType: PropTypes.string.isRequired,
   passResetToState: PropTypes.func.isRequired,
   clearTextEditor: PropTypes.func.isRequired

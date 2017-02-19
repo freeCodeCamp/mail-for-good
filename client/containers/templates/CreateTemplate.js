@@ -36,7 +36,6 @@ export default class Templates extends Component {
     this.nextPage = this.nextPage.bind(this);
     this.lastPage = this.lastPage.bind(this);
     this.validationFailed = this.validationFailed.bind(this);
-    this.onEditor = this.onEditor.bind(this);
     this.passResetToState = this.passResetToState.bind(this);
     this.clearTextEditor = this.clearTextEditor.bind(this);
   }
@@ -47,12 +46,19 @@ export default class Templates extends Component {
       templateName: `Template - ${moment().format('l, h:mm:ss')}`,
       type: 'Plaintext'
     },
+    textEditorValue: null, // We should only change this if we want to change the text editor's value
     editor: '',
     reset: null
   }
 
   componentDidMount() {
     this.props.getTemplates();
+
+    if (this.props.form && this.props.form.values.emailBody) {
+      this.setState({ // eslint-disable-line
+        textEditorValue: this.props.form.values.emailBody
+      });
+    }
   }
 
   componentWillReceiveProps(props) {
@@ -83,15 +89,6 @@ export default class Templates extends Component {
     });
   }
 
-  onEditor(editor) {
-    //@params editor = Trix editor object bound to the CreateCampaignForm text editor
-    this.setState({ editor });
-    // When the text editor loads, check if there's a value stored for it. If so, apply it.
-    if (this.props.form && this.props.form.values.emailBody) {
-      editor.loadHTML(this.props.form.values.emailBody);
-    }
-  }
-
   passResetToState(reset) {
     this.setState({ reset });
   }
@@ -101,7 +98,7 @@ export default class Templates extends Component {
   }
 
   render() {
-    const { page } = this.state;
+    const { page, textEditorValue } = this.state;
     const type = (this.props.form && this.props.form.values.type) || this.state.initialFormValues.type;
 
     return (
@@ -115,7 +112,7 @@ export default class Templates extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateTemplateForm clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} onEditor={this.onEditor} validationFailed={this.validationFailed} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
+              {page === 1 && <CreateTemplateForm textEditorValue={textEditorValue} clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} validationFailed={this.validationFailed} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
               {page === 2 && <PreviewTemplateForm form={this.props.form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} submitting={this.props.isPosting} />}
             </div>
             {this.props.isPosting || this.props.isGetting && <div className="overlay">
