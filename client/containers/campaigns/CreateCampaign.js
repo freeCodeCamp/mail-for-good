@@ -76,15 +76,6 @@ export default class CreateCampaign extends Component {
     if (this.props.isPosting === true && nextProps.isPosting === false) { // Fires when campaign has been successfully created
       this.context.router.push(`/campaigns/manage`);
     }
-
-<<<<<<< HEAD
-    if (this.props.form && this.props.form.values.emailBody) {
-      this.setState({
-        editorValue: this.props.form.values.emailBody
-      });
-    }
-=======
->>>>>>> 774e31b... Revert changes to the editor
   }
 
   handleSubmit() {
@@ -140,11 +131,7 @@ export default class CreateCampaign extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-<<<<<<< HEAD
-              {page === 1 && <CreateCampaignForm clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
-=======
               {page === 1 && <CreateCampaignForm textEditorValue={textEditorValue} clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
->>>>>>> Apply Quill editor to Campaigns
               {page === 2 && <PreviewCampaignForm form={form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
 

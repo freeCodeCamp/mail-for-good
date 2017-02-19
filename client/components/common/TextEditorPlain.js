@@ -19,6 +19,11 @@ const PLAINTEXT_FORMATS = [
 const TextEditorPlain = props => (
   <ReactQuill
     theme="snow"
+    id="TextEditorPlain"
+    className="TextEditor"
+    bounds="#TextEditorPlain"
+    readOnly={false}
+    placeholder="Write your email ..."
     modules={PLAINTEXT_MODULE}
     formats={PLAINTEXT_FORMATS}
     value={props.value}

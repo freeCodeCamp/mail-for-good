@@ -26,17 +26,26 @@ export default class TextEditor extends Component {
     }
   }
 
+  state = {
+    // NOTE: We're using state here rather than just directly hooking the component up with redux form
+      // as doing so causes critical, weird buggy issues with the text editor.
+    value: ''
+  }
+
   onChange(value) {
     // Update redux form
+    // See state comment for why we're updating two instances of component state
+    this.setState({ value });
     this.props.input.onChange(value);
   }
 
   render() {
-    const {
+    const { value } = this.state;
+    /*const {
       input: {
         value
       }
-    } = this.props;
+    } = this.props;*/
 
     const isPlaintext = this.props.textEditorType === 'Plaintext';
 
