@@ -5,6 +5,8 @@ const cargo = require('async/cargo');
 const _ = require('lodash');
 
 const db = require('../../models');
+const sendSingleNotification = require('../websockets/send-single-notification');
+const sendUpdateNotification = require('../websockets/send-update-notification');
 
 // Expects req.body.headers (JSON array), req,body.list (string), req.file (csv file)
 /* Example req.file
@@ -80,26 +82,25 @@ module.exports = (req, res, io) => {
     let numberProcessed = 0; // Var for tracking how many CSVs have been processed. Sends a WS notification per 'bufferLength' processed emails.
 
     function sendFinalNotification() {
-      if (io.sockets.connected[req.session.passport.socket]) {
-        // Truncate filename
-        let filenameWithoutExtension = filename.substr(0, filename.lastIndexOf('.'));
-        filenameWithoutExtension = filenameWithoutExtension.length > 10
-          ? `${filenameWithoutExtension.substr(0, 10)}...`
-          : filenameWithoutExtension;
-        const importSuccess = {
-          message: `"${filenameWithoutExtension}" successfully uploaded (${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows)`,
-          icon: 'fa-list-alt',
-          iconColour: 'text-green'
-        };
-        io.sockets.connected[req.session.passport.socket].emit('notification', importSuccess);
-      }
+      // Truncate filename
+      let filenameWithoutExtension = filename.substr(0, filename.lastIndexOf('.'));
+      filenameWithoutExtension = filenameWithoutExtension.length > 10
+        ? `${filenameWithoutExtension.substr(0, 10)}...`
+        : filenameWithoutExtension;
+
+      const ioSocket = io.sockets.connected[req.session.passport.socket];
+      const message = `"${filenameWithoutExtension}" successfully uploaded (${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows)`;
+      const icon = 'fa-list-alt';
+      const iconColour = 'text-green';
+
+      sendSingleNotification(ioSocket, message, icon, iconColour);
     }
 
     function updateListStatusReady() {
       db.list.update(
         { status: 'ready' }, { where: { id: listId }}
       ).then(() => {
-        console.log('Updated list status to ready');
+        console.log('Updated list status to ready'); // eslint-disable-line
       }).catch(err => {
         throw err;
       });
@@ -151,16 +152,13 @@ module.exports = (req, res, io) => {
 
           // Send a notification if this isn't the final batch (since if it is, the user will receive a 'success')
           if (tasksLength === bufferLength) {
-            const rowsParsed = {
-              message: `Processed ${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows...`,
-              isUpdate: true, // Mark this notification as an update for an existing notification to the client
-              id: crudeRandomId, // Unique identified for use on client side (in the reducer)
-              icon: 'fa-upload',
-              iconColour: 'text-blue'
-            };
-            if (io.sockets.connected[req.session.passport.socket]) {
-              io.sockets.connected[req.session.passport.socket].emit('notification', rowsParsed);
-            }
+            const ioSocket = io.sockets.connected[req.session.passport.socket];
+            const message = `Processed ${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows...`;
+            const icon = 'fa-upload';
+            const iconColour = 'text-blue';
+            const id = crudeRandomId;
+
+            sendUpdateNotification(ioSocket, message, icon, iconColour, id);
           } else {
             updateListStatusReady();
             sendFinalNotification();
