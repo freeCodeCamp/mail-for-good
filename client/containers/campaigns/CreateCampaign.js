@@ -54,22 +54,14 @@ export default class CreateCampaign extends Component {
     page: 1,
     initialFormValues: {
       campaignName: `Campaign - ${moment().format('l, h:mm:ss')}`,
-      editorValue: '',
       type: 'Plaintext'
     },
-    textEditorValue: null, // We should only change this if we want to change the text editor's value
     reset: null
   }
 
   componentDidMount() {
     this.props.getLists();
     this.props.getTemplates();
-
-    if (this.props.form && this.props.form.values.emailBody) {
-      this.setState({ // eslint-disable-line
-        textEditorValue: this.props.form.values.emailBody
-      });
-    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -90,9 +82,6 @@ export default class CreateCampaign extends Component {
     if (template) {
       const applyTemplateOnTopOfCurrentValues = Object.assign({}, this.props.form.values, template);
       this.props.initialize('createCampaign', applyTemplateOnTopOfCurrentValues);
-      this.setState({
-        textEditorValue: template.emailBody
-      });
     } else {
       this.props.notify({ message: 'You have not selected a valid template' });
     }
@@ -115,7 +104,7 @@ export default class CreateCampaign extends Component {
   }
 
   render() {
-    const { page, initialFormValues, textEditorValue } = this.state;
+    const { page, initialFormValues } = this.state;
     const { lists, templates, form, isGetting, isPosting } = this.props;
 
     const type = (this.props.form && this.props.form.values.type) ? this.props.form.values.type : this.state.initialFormValues.type;
@@ -131,7 +120,7 @@ export default class CreateCampaign extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateCampaignForm textEditorValue={textEditorValue} clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
+              {page === 1 && <CreateCampaignForm clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
               {page === 2 && <PreviewCampaignForm form={form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
             </div>
 

@@ -46,19 +46,12 @@ export default class Templates extends Component {
       templateName: `Template - ${moment().format('l, h:mm:ss')}`,
       type: 'Plaintext'
     },
-    textEditorValue: null, // We should only change this if we want to change the text editor's value
     editor: '',
     reset: null
   }
 
   componentDidMount() {
     this.props.getTemplates();
-
-    if (this.props.form && this.props.form.values.emailBody) {
-      this.setState({ // eslint-disable-line
-        textEditorValue: this.props.form.values.emailBody
-      });
-    }
   }
 
   componentWillReceiveProps(props) {
@@ -98,7 +91,7 @@ export default class Templates extends Component {
   }
 
   render() {
-    const { page, textEditorValue } = this.state;
+    const { page } = this.state;
     const type = (this.props.form && this.props.form.values.type) || this.state.initialFormValues.type;
 
     return (
@@ -112,7 +105,7 @@ export default class Templates extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateTemplateForm textEditorValue={textEditorValue} clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} validationFailed={this.validationFailed} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
+              {page === 1 && <CreateTemplateForm clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} validationFailed={this.validationFailed} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
               {page === 2 && <PreviewTemplateForm form={this.props.form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} submitting={this.props.isPosting} />}
             </div>
             {this.props.isPosting || this.props.isGetting && <div className="overlay">

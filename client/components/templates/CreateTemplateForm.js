@@ -16,7 +16,6 @@ const CreateTemplateForm = props => {
     nextPage,
     reset,
     validationFailed,
-    textEditorValue,
     textEditorType,
     passResetToState,
     clearTextEditor
@@ -71,7 +70,7 @@ const CreateTemplateForm = props => {
       <h3>Create email</h3>
       <Field name="type" component={renderEditorTypeRadio} label="Type" />
       <Field name="emailSubject" component={renderField} label="Subject" type="text" />
-      <Field name="emailBody" component={renderTextEditor} label="Write Email*" textEditorValue={textEditorValue} textEditorType={textEditorType} />
+      <Field name="emailBody" component={renderTextEditor} label="Write Email*" textEditorType={textEditorType} />
       <br/>
       <div className="box-footer">
         <div className="btn-group">
@@ -91,7 +90,6 @@ CreateTemplateForm.propTypes = {
   nextPage: PropTypes.func.isRequired,
   reset: PropTypes.func.isRequired,
   validationFailed: PropTypes.func.isRequired,
-  textEditorValue: PropTypes.string.isRequired,
   textEditorType: PropTypes.string.isRequired,
   passResetToState: PropTypes.func.isRequired,
   clearTextEditor: PropTypes.func.isRequired

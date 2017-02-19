@@ -21,7 +21,6 @@ const CreateCampaignForm = props => {
     applyTemplate,
     textEditorType,
     passResetToState,
-    textEditorValue,
     clearTextEditor } = props;
 
   const lists = props.lists.map(x => x.name);
@@ -79,7 +78,7 @@ const CreateCampaignForm = props => {
         <h3>Create email</h3>
         <Field name="type" component={renderEditorTypeRadio} label="Type of email" />
         <Field name="emailSubject" component={renderField} label="Subject" type="text" />
-        <Field name="emailBody" component={renderTextEditor} label="Write Email" textEditorType={textEditorType} textEditorValue={textEditorValue} />
+        <Field name="emailBody" component={renderTextEditor} label="Write Email" textEditorType={textEditorType} />
         <br/>
         <div className="box-footer">
           <div className="btn-group">
@@ -102,7 +101,6 @@ CreateCampaignForm.propTypes = {
   lists: PropTypes.array.isRequired,
   templates: PropTypes.array.isRequired,
   applyTemplate: PropTypes.func.isRequired,
-  textEditorValue: PropTypes.string,
   textEditorType: PropTypes.string.isRequired,
   passResetToState: PropTypes.func.isRequired,
   initialValues: PropTypes.object.isRequired,
