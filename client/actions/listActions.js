@@ -11,6 +11,7 @@ import {
   COMPLETE_DELETE_LIST_SUBSCRIBERS, COMPLETE_DELETE_LISTS
 } from '../constants/actionTypes';
 import { notify } from '../actions/notificationActions';
+import { localNotification } from './appActions';
 
 export function requestAddSubscribers(upload) {
   return { type: REQUEST_ADD_SUBSCRIBERS, upload };
@@ -84,6 +85,8 @@ export function submitCSV(file, headers, list) {
   return dispatch => {
     dispatch(requestAddSubscribers(0));
 
+    const crudeRandomId = (Math.random() * 100000).toString();
+
     const formData = new FormData();
     formData.append('csv', file);
     formData.append('headers', JSON.stringify(headers));
@@ -95,6 +98,15 @@ export function submitCSV(file, headers, list) {
     xhr.upload.addEventListener("progress", e => {
       if (e.lengthComputable) {
         percentComplete = Math.round((e.loaded * 100) / e.total);
+        dispatch(
+          localNotification({
+            isUpdate: true,
+            message: `Uploading CSV... ${percentComplete}%`,
+            id: crudeRandomId,
+            icon: 'fa-upload',
+            iconColour: 'text-blue'
+          })
+        );
         dispatch(requestAddSubscribers(percentComplete));
       }
     }, false);

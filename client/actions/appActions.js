@@ -36,3 +36,11 @@ export function emitProfileRequest() {
     });
   };
 }
+
+export function localNotification(notification) {
+  // Dispatches a notifcation in the top right in the same manner as with WS
+
+  return dispatch => {
+    dispatch(receiveNotification(notification));
+  };
+}

@@ -1,5 +1,5 @@
 const bodyParser = require('body-parser');
-const multer = require('multer')({dest: 'server/controllers/list/uploads/'});
+const multer = require('multer')({ dest: 'server/controllers/list/uploads/' });
 const parseJson = bodyParser.json();
 const cookieParser = require('cookie-parser')();
 
