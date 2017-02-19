@@ -76,6 +76,6 @@ describe('parseSubscriberList', () => {
       expect(result.errors).to.deep.equal(sampleDataInvalidExpectedErrors);
     }
 
-    const result = parseSubscriberListCsv(sampleDataInvalidData, mockCallback);
+    parseSubscriberListCsv(sampleDataInvalidData, mockCallback);
   });
 });
