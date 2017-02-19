@@ -77,13 +77,13 @@ export const renderField = ({ input, label, type, meta: { touched, error, warnin
   </div>
 )};
 
-export const renderRadio = ({ input, label, type, meta: { touched, error, warning } }) => (
+export const renderEditorTypeRadio = ({ input, label, type, meta: { touched, error, warning } }) => (
   <div>
     <label>{label}</label>
     <div className="form-group">
-      <label><Field component="input" type="radio" {...input} value="Plaintext" /> Plaintext</label>
+      <label><Field component="input" type="radio" name={input.name} value="Plaintext" /> Plaintext</label>
       <br />
-      <label><Field component="input" type="radio" {...input} value="HTML" /> HTML</label>
+      <label><Field component="input" type="radio" name={input.name} value="HTML" /> HTML</label>
       <br />
       {touched && ((error && <span className="text-red"><i className="fa fa-exclamation" /> {error}</span>) || (warning && <span>{warning}</span>))}
     </div>

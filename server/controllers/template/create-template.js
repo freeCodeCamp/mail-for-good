@@ -1,6 +1,5 @@
 const db = require('../../models');
 const slug = require('slug');
-const htmlToText = require('html-to-text');
 
 module.exports = (req, res) => {
 
@@ -12,15 +11,7 @@ module.exports = (req, res) => {
     return;
   }
 
-  // Set emailBody to plaintext if type === Plaintext
-  const htmlToTextOpts = {
-    wordwrap: false,
-    ignoreImage: true
-  };
-
-  const emailBodyType = req.body.type === 'Plaintext'
-    ? htmlToText.fromString(req.body.emailBody, htmlToTextOpts)
-    : req.body.emailBody;
+  const emailBodyType = req.body.emailBody;
 
   db.template.findOrCreate({
     where: {

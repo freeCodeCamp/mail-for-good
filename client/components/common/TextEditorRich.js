@@ -1,9 +1,19 @@
 import React, { PropTypes } from 'react';
-import ReactTrixEditor from 'react-trix-editor';
-const TextEditorRich = props => <div id="rich"><ReactTrixEditor {...props} /></div>;
+import ReactQuill from 'react-quill';
 
-TextEditorRich.propTypes = {
+const TextEditorPlain = props => (
+  <ReactQuill
+    theme="snow"
+    modules={undefined}
+    formats={undefined}
+    value={props.value}
+    onChange={props.onChange}
+  />
+);
+
+TextEditorPlain.propTypes = {
+  value: PropTypes.string,
   onChange: PropTypes.func.isRequired
 };
 
-export default TextEditorRich;
+export default TextEditorPlain;
