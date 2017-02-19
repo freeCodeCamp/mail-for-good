@@ -3,7 +3,7 @@ import { Field, reduxForm } from 'redux-form';
 import { Combobox } from 'react-widgets';
 import _ from 'lodash';
 
-import { renderCombobox, renderField, renderTextEditor, renderRadio } from '../common/FormRenderWrappers';
+import { renderCombobox, renderField, renderTextEditor, renderEditorTypeRadio } from '../common/FormRenderWrappers';
 
 // Ref redux-form http://redux-form.com/6.0.5/docs/GettingStarted.md/
 // Ref react-widgets https://jquense.github.io/react-widgets/ (for examples see https://github.com/erikras/redux-form/blob/master/examples/react-widgets/src/ReactWidgetsForm.js)
@@ -21,11 +21,8 @@ const CreateCampaignForm = props => {
     applyTemplate,
     textEditorType,
     passResetToState,
-    initialValues,
-    clearTextEditor
-  } = props;
-
-  const { editorValue } = initialValues;
+    textEditorValue,
+    clearTextEditor } = props;
 
   const lists = props.lists.map(x => x.name);
   const templates = props.templates.map(x => x.name);
@@ -80,10 +77,9 @@ const CreateCampaignForm = props => {
         <hr/>
 
         <h3>Create email</h3>
-        <Field name="type" component={renderRadio} label="Type" />
+        <Field name="type" component={renderEditorTypeRadio} label="Type of email" />
         <Field name="emailSubject" component={renderField} label="Subject" type="text" />
-        <Field name="emailBody" component={renderTextEditor} label="Write Email" editorValue={editorValue} textEditorType={textEditorType} />
-
+        <Field name="emailBody" component={renderTextEditor} label="Write Email" textEditorType={textEditorType} textEditorValue={textEditorValue} />
         <br/>
         <div className="box-footer">
           <div className="btn-group">
@@ -106,6 +102,7 @@ CreateCampaignForm.propTypes = {
   lists: PropTypes.array.isRequired,
   templates: PropTypes.array.isRequired,
   applyTemplate: PropTypes.func.isRequired,
+  textEditorValue: PropTypes.string,
   textEditorType: PropTypes.string.isRequired,
   passResetToState: PropTypes.func.isRequired,
   initialValues: PropTypes.object.isRequired,
