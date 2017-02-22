@@ -92,9 +92,10 @@ module.exports = (req, res, io) => {
       const message = `"${filenameWithoutExtension}" successfully uploaded (${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows)`;
       const icon = 'fa-list-alt';
       const iconColour = 'text-green';
+      const newDataToFetch = 'lists';
       const url = `/lists/manage/${listId}`;
 
-      sendSingleNotification(ioSocket, message, icon, iconColour, null, url);
+      sendSingleNotification(ioSocket, message, icon, iconColour, newDataToFetch, url);
     }
 
     function updateListStatusReady() {

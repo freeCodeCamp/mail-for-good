@@ -6,6 +6,7 @@ import {
   CONSUME_WS_NOTIFICATION,
 } from '../constants/actionTypes';
 import { getCampaigns } from '../actions/campaignActions';
+import { getLists } from '../actions/listActions';
 
 export function requestProfile() {
   return { type: REQUEST_WS_PROFILE };
@@ -19,6 +20,8 @@ export function receiveNotification(notification) {
   return dispatch => {
     if (notification.newDataToFetch == 'campaigns') {
       dispatch(getCampaigns());
+    } else if (notification.newDataToFetch == 'lists') {
+      dispatch(getLists());
     }
 
     dispatch({ type: RECEIVE_WS_NOTIFICATION, notification });
