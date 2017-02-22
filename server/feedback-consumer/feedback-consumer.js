@@ -151,6 +151,14 @@ function receiveMessageCallback(message, done) {
             return ListSubscriber.findById(updatedCampaignSubscriber.dataValues.listsubscriberId)
           }).then(listSubscriber => {
             listSubscriber.mostRecentStatus = recentStatus;
+
+            // Should not re-send to email addresses that produces a permanent bounce, so we
+            // handle this automatically for the user by unsubscribing the offending email.
+            // https://docs.aws.amazon.com/ses/latest/DeveloperGuide/notification-contents.html
+            if (recentStatus == 'bounce:permanent') {
+              listSubscriber.subscribed = false;
+            }
+
             return listSubscriber.save();
           }).then(result => {
             // alkjdlkjf
