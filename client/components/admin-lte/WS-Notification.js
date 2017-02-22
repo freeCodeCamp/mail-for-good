@@ -1,13 +1,14 @@
 import React, { PropTypes } from 'react';
+import { Link } from 'react-router';
 
 const WSNotification = props => { // eslint-disable-line no-unused-vars
-  const { message, icon, iconColour, consumeNotification, index } = props;
+  const { message, icon, iconColour, consumeNotification, index, url } = props;
   return (
     <li onClick={() => consumeNotification(index)}>
-      <a href="#">
+      <Link to={url || '#'}>
         <i className={`fa ${icon || 'fa-users'} ${iconColour || 'text-green'}`} />
         {message}
-      </a>
+      </Link>
     </li>
   );
 };

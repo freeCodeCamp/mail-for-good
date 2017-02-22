@@ -39,6 +39,7 @@ const Header = props => { // eslint-disable-line no-unused-vars
                   {ws_notification.map((notification, i) => {
                     return (
                       <WSNotification key={`ws-notification${i}`}
+                        url={notification.url}
                         message={notification.message}
                         consumeNotification={consumeNotification}
                         index={i} icon={notification.icon}

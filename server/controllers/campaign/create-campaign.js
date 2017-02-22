@@ -135,11 +135,12 @@ module.exports = (req, res, io) => {
 
   function sendSuccessNotification() {
     const ioSocket = io.sockets.connected[req.session.passport.socket];
-    const message = `${req.body.campaignName} is ready to send`
-    const icon = 'fa-list-alt'
-    const iconColour = 'text-green'
+    const message = `${req.body.campaignName} is ready to send`;
+    const icon = 'fa-list-alt';
+    const iconColour = 'text-green';
     const newDataToFetch = 'campaigns';
+    const url = `/campaigns/manage/${slug(req.body.campaignName)}`;
 
-    sendSingleNotification(ioSocket, message, icon, iconColour, newDataToFetch)
+    sendSingleNotification(ioSocket, message, icon, iconColour, newDataToFetch, url);
   }
 };
