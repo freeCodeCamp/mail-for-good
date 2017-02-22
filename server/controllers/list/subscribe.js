@@ -15,14 +15,20 @@ module.exports = function(req, res) {
         where: {
           listId,
           email
-        }
+        },
+        plain: true
       }).then(listSubscriber => {
         if (listSubscriber) {
-          res.status(400)
-            .send({
-              status: 'error', // Redundant
-              message:'This email already exists'
-            });
+          ListSubscriber.update(
+            { subscribed: true },
+            { where: { id: listSubscriber.id } }
+          ).then(() => {
+            res.status(201)
+              .send({
+                status: 'success', // Redundant
+                message: `added successfully`
+              });
+          });
         } else {
           ListSubscriber.create({
             email, listId
