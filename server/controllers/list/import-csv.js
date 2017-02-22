@@ -99,7 +99,7 @@ module.exports = (req, res, io) => {
 
     function updateListStatusReady() {
       db.list.update(
-        { status: 'ready' }, { where: { id: listId }}
+        { status: 'ready', total: numberProcessed }, { where: { id: listId } }
       ).then(() => {
         console.log('Updated list status to ready'); // eslint-disable-line
       }).catch(err => {
