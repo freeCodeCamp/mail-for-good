@@ -2,7 +2,7 @@ const _ = require('lodash');
 const Setting = require('../../models').setting;
 const configureAws = require('./configure-aws/configure-aws');
 
-module.exports = function(req, res) {
+module.exports = function(req, res, redis) {
   const settingsToChange = _.pickBy(req.body);
 
   // Exit if there are no settings to change
@@ -77,6 +77,7 @@ module.exports = function(req, res) {
           console.log(`Created sqs feedback queue: ${queueUrl}`);
           selectProvidedFields.amazonSimpleQueueServiceUrl = queueUrl;
           updateSettings();
+          redis.publisher.publish('change-settings', 'changed');
         }
       });
     });

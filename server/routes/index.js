@@ -63,7 +63,7 @@ module.exports = (app, passport, io, redis) => {
   });
   // Post to change new settings
   app.post('/api/settings', apiIsAuth, parseJson, (req, res) => {
-    changeSettings(req, res);
+    changeSettings(req, res, redis);
   });
 
   /* Subscribers */
