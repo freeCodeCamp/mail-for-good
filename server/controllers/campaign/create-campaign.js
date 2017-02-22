@@ -2,6 +2,9 @@ const db = require('../../models');
 const slug = require('slug');
 const htmlToText = require('html-to-text');
 
+const sendSingleNotification = require('../websockets/send-single-notification');
+
+
 module.exports = (req, res, io) => {
   /*
         Outstanding issues:
@@ -131,13 +134,12 @@ module.exports = (req, res, io) => {
   });
 
   function sendSuccessNotification() {
-    if (io.sockets.connected[req.session.passport.socket]) {
-      const createCampaignSuccess = {
-        message: `${req.body.campaignName} is ready to send`,
-        icon: 'fa-list-alt',
-        iconColour: 'text-green'
-      };
-      io.sockets.connected[req.session.passport.socket].emit('notification', createCampaignSuccess);
-    }
+    const ioSocket = io.sockets.connected[req.session.passport.socket];
+    const message = `${req.body.campaignName} is ready to send`
+    const icon = 'fa-list-alt'
+    const iconColour = 'text-green'
+    const newDataToFetch = 'campaigns';
+
+    sendSingleNotification(ioSocket, message, icon, iconColour, newDataToFetch)
   }
 };

@@ -3,8 +3,9 @@ import {
   REQUEST_WS_PROFILE,
   COMPLETE_WS_PROFILE,
   RECEIVE_WS_NOTIFICATION,
-  CONSUME_WS_NOTIFICATION
+  CONSUME_WS_NOTIFICATION,
 } from '../constants/actionTypes';
+import { getCampaigns } from '../actions/campaignActions';
 
 export function requestProfile() {
   return { type: REQUEST_WS_PROFILE };
@@ -15,7 +16,13 @@ export function completeProfile(data) {
 }
 
 export function receiveNotification(notification) {
-  return { type: RECEIVE_WS_NOTIFICATION, notification };
+  return dispatch => {
+    if (notification.newDataToFetch == 'campaigns') {
+      dispatch(getCampaigns());
+    }
+
+    dispatch({ type: RECEIVE_WS_NOTIFICATION, notification });
+  }
 }
 
 export function consumeNotification(index) {
