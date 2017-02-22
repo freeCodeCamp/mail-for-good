@@ -48,6 +48,14 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
     )
   }
 
+  const formatSubscribersTotal = (cell, row) => {
+    if (row.status == 'processing') {
+      return 'n/a';
+    } else {
+      return cell;
+    }
+  }
+
   return (
     <BootstrapTable data={data}
       pagination={true}
@@ -62,6 +70,7 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
       <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
       <TableHeaderColumn dataField="name" dataSort={true}>Name</TableHeaderColumn>
       <TableHeaderColumn dataField="status" dataAlign="center" dataSort={true} dataFormat={formatStatus} width="150">Status</TableHeaderColumn>
+      <TableHeaderColumn dataField="total" dataAlign="center" dataSort={true} dataFormat={formatSubscribersTotal} width="150">Total</TableHeaderColumn>
       <TableHeaderColumn dataField="createdAt" dataSort={true} dataFormat={formatFieldDate}>Created</TableHeaderColumn>
       <TableHeaderColumn dataField="updatedAt" dataSort={true} dataFormat={formatFieldDate}>Updated</TableHeaderColumn>
       <TableHeaderColumn dataAlign="center" width="150" dataFormat={formatSignupFormButton}>Signup form</TableHeaderColumn>

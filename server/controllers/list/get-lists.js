@@ -15,7 +15,8 @@ module.exports = (req, res) => {
       'updatedAt',
       'id',
       'additionalFields',
-      'status'
+      'status',
+      'total'
     ],
     raw: true
   }).then(instancesArray => {
