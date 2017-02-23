@@ -99,12 +99,16 @@ module.exports = (req, res, io) => {
     }
 
     function updateListStatusReady() {
-      db.list.update(
-        { status: 'ready', total: numberProcessed }, { where: { id: listId } }
-      ).then(() => {
-        console.log('Updated list status to ready'); // eslint-disable-line
-      }).catch(err => {
-        throw err;
+      db.listsubscriber.count({
+        where: { listId: listId }
+      }).then(total => {
+        db.list.update(
+          { status: 'ready', total }, { where: { id: listId } }
+        ).then(() => {
+          console.log('Updated list status to ready'); // eslint-disable-line
+        }).catch(err => {
+          throw err;
+        });
       });
     }
 
