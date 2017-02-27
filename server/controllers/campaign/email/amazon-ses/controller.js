@@ -191,7 +191,9 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
             where: {
               listsubscriberId: {
                 in: arrayOfEmailIds
-              }
+              },
+              sent: false,
+              campaignId: campaignInfo.campaignId
             },
             raw: true
           }
