@@ -104,7 +104,7 @@ module.exports = (req, res) => {
 
       const ses = isDevMode
         ? new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region, endpoint: 'http://localhost:9999' })
-        : new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region });
+        : new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region, apiVersion: '2010-12-01'});
 
       // Modify email body for analytics
       if (campaign.trackLinksEnabled) {
@@ -129,9 +129,9 @@ module.exports = (req, res) => {
         }, {});
         campaign.emailBody = mailMerge({ email: testEmail, additionalData }, campaign);
 
-        const emailFormat = AmazonEmail({ email: testEmail }, campaign);
+        const emailFormat = AmazonEmail({ email: testEmail }, campaign).email;
 
-        ses.sendEmail(emailFormat, err => {
+        ses.sendEmail(emailFormat, (data, err) => {
           if (err)
             res.status(400).send(err);
           else
