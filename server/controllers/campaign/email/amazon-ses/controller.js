@@ -211,7 +211,6 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
     const campaignPromise = listPromise
       .then(listSubsAndCampSubs => {
         // 2.1 Create a campaignAnalyticsLink for each listSubsAndCampSub, and add info to campaignInfoArray
-        console.log(listSubsAndCampSubs.length, '\n', campaignInfoArray.length);
         listSubsAndCampSubs.forEach((sub, index) => {
           if (campaignInfo.unsubscribeLinkEnabled) {
             campaignInfoArray[index].emailBody = insertUnsubscribeLink(campaignInfoArray[index].emailBody, sub.unsubscribeKey, campaignInfo.type, whiteLabelUrl);
@@ -320,7 +319,7 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
 
     if (isDevMode) console.log(`\n# maintainEmailBuffer function reports emailBufferLength - ${emailBufferLength} & arrayOfIdsLength - ${arrayOfIdsLength} & rateLimitTimesFive - ${rateLimitTimesFive}`); // eslint-disable-line
 
-    // Finally - call emailProducer after 1s
+    // Finally - call emailProducer after 1 second
     const ONE_SECOND = 1000;
     (function shouldProduceMoreEmails() {
       setTimeout(() => {
