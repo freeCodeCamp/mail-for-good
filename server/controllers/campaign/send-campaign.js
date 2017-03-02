@@ -51,7 +51,7 @@ module.exports = (req, res, io, redis) => {
       quotas
     };
 
-    yield email.amazon.controller(generator, db.listsubscriber, redis, campaignAndListInfo, amazonAccountInfo);
+    yield email.amazon.controller(generator, redis, campaignAndListInfo, amazonAccountInfo);
 
     // 8. TODO: If there was an error, handle it here
 

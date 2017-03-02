@@ -28,7 +28,7 @@
     "debug": "NODE_ENV=development node --inspect --debug-brk --harmony-async-await server/index.js",
     "build": "babel-node tools/build.js",
     "test": "npm run client:test && npm run server:test",
-    "simulator:start": "node ./node_modules/node-amazon-ses-simulator/index.js",
+    "simulator:start": "node ./node_modules/node-amazon-ses-simulator/index.js -e 0",
     "feedback-consumer": "NODE_ENV=production node server/feedback-consumer/index.js"
   },
   "repository": {

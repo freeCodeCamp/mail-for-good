@@ -40,7 +40,7 @@ const AmazonEmail = require('./amazon');
 const CampaignAnalyticsLink = require('../../../../models').campaignanalyticslink;
 const CampaignAnalyticsOpen = require('../../../../models').campaignanalyticsopen;
 
-module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, amazonAccountInfo) => {
+module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
   /*
     # Send emails via Amazon SES' API #
     This function focuses on a tradeoff between speed and memory usage. It does the following:
@@ -105,6 +105,7 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
     updateCampaignStatus();
     console.log('Preparing to send email campaign. Getting list subscribers ids ...'); // eslint-disable-line
     const arrayOfIds = await getListSubscriberIds(); // Returns ids from listsubscribers [1,2,3, ... etc]
+    if (isDevMode) console.log(`Grabbed ${arrayOfIds.length} ids`);
     const initialBuffer = await fillInitialBuffer(arrayOfIds); // Initialise the buffer
     emailBuffer.push(...initialBuffer);
     if (isDevMode) console.log(`Filled emailBuffer with ${emailBuffer.length} emails`); // eslint-disable-line
@@ -130,14 +131,17 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
   }
 
   function getListSubscriberIds() {
-    return listSubscriberModel.findAll({
+    return db.listsubscriber.findAll({
       where: {
         listId: campaignInfo.listId,
         subscribed: true
       },
       include: [{
         model: db.campaignsubscriber,
-        where: { sent: false }
+        where: {
+          campaignId: campaignInfo.campaignId,
+          sent: false
+        }
       }],
       attributes: [
         'id'
@@ -145,6 +149,7 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
       raw: true
     })
     .then(instances => { // [{id: 1}, {id: 2}, etc]
+      console.log('Returned: ' + instances.length);
       const plainArrayOfIdNumbers = instances.map(x => x.id);
       return plainArrayOfIdNumbers;
     })
@@ -158,127 +163,122 @@ module.exports = (generator, listSubscriberModel, redis, campaignAndListInfo, am
     //// an email via Amazon SES. This also means creating tracking information in the database.
     //// Returns an array of arg rateLimit of [emails] and [campaignInfo]
     //// Each email index contains the full listsubscriber + campaignsubscriber info
-
+    if (isDevMode) console.log('Calling getEmailsAndCampaignInfo'); //eslint-disable-line
     // If rateLimit = 0, return
     if (rateLimit === 0) {
       return Promise.resolve();
     }
 
-    try {
-      const arrayOfEmailIds = [];
-      const campaignInfoArray = []; // An array of [{c}] of length rateLimit_or_arrayOfIdsLength
-      const arrayOfIdsLength = arrayOfIds.length;
-      const rateLimit_or_arrayOfIdsLength = arrayOfIdsLength < rateLimit ? arrayOfIdsLength : rateLimit;
+    const arrayOfEmailIds = [];
+    const campaignInfoArray = []; // An array of [{campaignInfo(s)}] of length rateLimit_or_arrayOfIdsLength
+    const arrayOfIdsLength = arrayOfIds.length;
+    const rateLimit_or_arrayOfIdsLength = arrayOfIdsLength < rateLimit ? arrayOfIdsLength : rateLimit;
 
-      // Note that the code below intentionally mutates the arrayOfIds argument
-      for (let i = 0; i < rateLimit_or_arrayOfIdsLength; i++) {
-        arrayOfEmailIds.push(arrayOfIds.shift()); // [1, 2, ...]
-        campaignInfoArray.push(Object.assign({}, campaignInfo)); // [{campaignInfo}, {campaignInfo}, ...]
-      }
-
-      // 1. Get listSubscribers & join campaignSubscribers
-      //// Returns array of [{ listsubscriber + campaignsubscriber}, ...] of length rateLimit_or_arrayOfIdsLength
-      const listPromise = listSubscriberModel.findAll({
-        where: {
-          id: {
-            in: arrayOfEmailIds
-          },
-          subscribed: true
-        },
-        include: [
-          {
-            model: db.campaignsubscriber,
-            where: {
-              listsubscriberId: {
-                in: arrayOfEmailIds
-              },
-              sent: false,
-              campaignId: campaignInfo.campaignId
-            },
-            raw: true
-          }
-        ],
-        raw: true
-      })
-      .then(instances => {
-        // Instances are raw objects
-        return instances;
-      })
-      .catch(err => {
-        console.log(err); //eslint-disable-line
-      });
-
-      // 2. Create CampaignAnalyticsLink, CampaignAnalyticsOpen
-
-      const campaignPromise = listPromise
-        .then(listSubsAndCampSubs => {
-          // 2.1 Create a campaignAnalyticsLink for each listSubsAndCampSub, and add info to campaignInfoArray
-          listSubsAndCampSubs.forEach((sub, index) => {
-            if (campaignInfo.unsubscribeLinkEnabled) {
-              campaignInfoArray[index].emailBody = insertUnsubscribeLink(campaignInfoArray[index].emailBody, sub.unsubscribeKey, campaignInfo.type, whiteLabelUrl);
-            }
-            campaignInfoArray[index].emailBody = mailMerge(sub, campaignInfoArray[index]);
-          });
-
-          const caLinks = listSubsAndCampSubs.map(sub => ({
-              trackingId: campaignInfo.trackingId,
-              campaignanalyticId: campaignInfo.campaignAnalyticsId,  // consider refactoring these?
-              listsubscriberId: sub.id
-          }));
-
-          // 2.2 Create the campaignAnalyticsOpens rows
-          const p1 = CampaignAnalyticsLink.bulkCreate(caLinks)
-            .then(newCALinstances => {
-              const rawCAL = newCALinstances.filter(x => x.get());
-              const caOpens = rawCAL.map((link, index) => {
-                // Create rateLimit_or_arrayOfIdsLength no. of trackLinksEnabled props
-                if (campaignInfo.trackLinksEnabled) {
-                  campaignInfoArray[index].emailBody = wrapLink(campaignInfo.emailBody, link.trackingId, campaignInfo.type, whiteLabelUrl);
-                }
-
-                return {
-                  campaignanalyticId: campaignInfo.campaignAnalyticsId,
-                  listsubscriberId: link.id
-                };
-              });
-
-              return CampaignAnalyticsOpen.bulkCreate(caOpens);
-            });
-
-          // 2.3 One the CampaignAnalyticsLink and CampaignAnalyticsOpen has been created, insert info into
-          //// updatedCampaignInfo if necessary.
-          const p2 = p1.then(newCAOinstances => {
-            const rawCAO = newCAOinstances.filter(x => x.get());
-            // Insert trackling label
-            rawCAO.forEach((open, index) => {
-              if (campaignInfo.trackingPixelEnabled) {
-                campaignInfoArray[index].emailBody = insertTrackingPixel(campaignInfoArray[index].emailBody, rawCAO.trackingId, campaignInfo.type, whiteLabelUrl);
-              }
-            });
-
-            return null;
-          });
-
-          return Promise.all([p1, p2])
-            .then(() => campaignInfoArray);
-      });
-
-      return Promise.all([listPromise, campaignPromise])
-        .then(values => {
-          const [l, c] = values; // List subscriber & campaign info arrays
-          // Format each email & return
-          const emailFormatArray = l.map((sub, index) => AmazonEmail(sub, c[index]));
-          databaseIsWorking = false;
-          return emailFormatArray;
-        });
-    } catch (err) {
-      console.log(err); //eslint-disable-line
+    // Note that the code below intentionally mutates the arrayOfIds argument
+    for (let i = 0; i < rateLimit_or_arrayOfIdsLength; i++) {
+      arrayOfEmailIds.push(arrayOfIds.shift()); // [1, 2, ...]
+      campaignInfoArray.push(Object.assign({}, campaignInfo)); // [{campaignInfo}, {campaignInfo}, ...]
     }
+
+    // 1. Get listSubscribers & join campaignSubscribers
+    //// Returns array of [{ listsubscriber + campaignsubscriber}, ...] of length rateLimit_or_arrayOfIdsLength
+    if (isDevMode) console.log('getEmailsAndCampaignInfo - get listPromise'); //eslint-disable-line
+    const listPromise = db.listsubscriber.findAll({
+      where: {
+        id: {
+          in: arrayOfEmailIds
+        },
+        subscribed: true
+      },
+      include: [
+        {
+          model: db.campaignsubscriber,
+          required: true
+        }
+      ],
+
+    })
+    .then(instances => {
+      // Instances are raw objects
+      return instances;
+    })
+    .catch(err => {
+      console.log(err); //eslint-disable-line
+    });
+
+    // 2. Create CampaignAnalyticsLink, CampaignAnalyticsOpen
+    if (isDevMode) console.log('getEmailsAndCampaignInfo - get campaignPromise'); //eslint-disable-line
+    const campaignPromise = listPromise
+      .then(listSubsAndCampSubs => {
+        // 2.1 Create a campaignAnalyticsLink for each listSubsAndCampSub, and add info to campaignInfoArray
+        console.log(listSubsAndCampSubs.length, '\n', campaignInfoArray.length);
+        listSubsAndCampSubs.forEach((sub, index) => {
+          if (campaignInfo.unsubscribeLinkEnabled) {
+            campaignInfoArray[index].emailBody = insertUnsubscribeLink(campaignInfoArray[index].emailBody, sub.unsubscribeKey, campaignInfo.type, whiteLabelUrl);
+          }
+          campaignInfoArray[index].emailBody = mailMerge(sub, campaignInfoArray[index]);
+        });
+
+        const caLinks = listSubsAndCampSubs.map(sub => ({
+            trackingId: campaignInfo.trackingId,
+            campaignanalyticId: campaignInfo.campaignAnalyticsId,  // consider refactoring these?
+            listsubscriberId: sub.id
+        }));
+
+        // 2.2 Create the campaignAnalyticsOpens rows
+        const p1 = CampaignAnalyticsLink.bulkCreate(caLinks)
+          .then(newCALinstances => {
+            const rawCAL = newCALinstances.filter(x => x.get());
+            const caOpens = rawCAL.map((link, index) => {
+              // Create rateLimit_or_arrayOfIdsLength no. of trackLinksEnabled props
+              if (campaignInfo.trackLinksEnabled) {
+                campaignInfoArray[index].emailBody = wrapLink(campaignInfo.emailBody, link.trackingId, campaignInfo.type, whiteLabelUrl);
+              }
+
+              return {
+                campaignanalyticId: campaignInfo.campaignAnalyticsId,
+                listsubscriberId: link.id
+              };
+            });
+
+            return CampaignAnalyticsOpen.bulkCreate(caOpens);
+          })
+          .catch(err => console.log(err));
+
+        // 2.3 One the CampaignAnalyticsLink and CampaignAnalyticsOpen has been created, insert info into
+        //// updatedCampaignInfo if necessary.
+        const p2 = p1.then(newCAOinstances => {
+          const rawCAO = newCAOinstances.filter(x => x.get());
+          // Insert trackling label
+          rawCAO.forEach((open, index) => {
+            if (campaignInfo.trackingPixelEnabled) {
+              campaignInfoArray[index].emailBody = insertTrackingPixel(campaignInfoArray[index].emailBody, rawCAO.trackingId, campaignInfo.type, whiteLabelUrl);
+            }
+          });
+
+          return null;
+        })
+        .catch(err => console.log(err));
+
+        return Promise.all([p1, p2])
+          .then(() => campaignInfoArray)
+          .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
+
+    return Promise.all([listPromise, campaignPromise])
+      .then(values => {
+        const [l, c] = values; // List subscriber & campaign info arrays
+        // Format each email & return
+        const emailFormatArray = l.map((sub, index) => AmazonEmail(sub, c[index]));
+        databaseIsWorking = false;
+        return emailFormatArray;
+      });
   }
 
   function fillInitialBuffer(arrayOfIds) {
     if (isDevMode) console.log(`Filling email buffer ...`); // eslint-disable-line
-    return getEmailsAndCampaignInfo(arrayOfIds, rateLimitTimesFive)
+    return getEmailsAndCampaignInfo(arrayOfIds, rateLimit)
       .then(emailFormatArray => {
         return emailFormatArray;
       });
