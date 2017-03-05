@@ -1,5 +1,9 @@
 import React, { PropTypes } from 'react';
 import ReactQuill from 'react-quill';
+import Quill from 'quill';
+
+const Block = Quill.import('blots/block');
+Block.tagName = 'DIV';
 
 const HTML_MODULE = {
   toolbar: [
@@ -20,7 +24,10 @@ const HTML_MODULE = {
     [{ 'align': [] }],
 
     ['clean']                                         // remove formatting button
-  ]
+  ],
+  blots: {
+    block: Block
+  }
 };
 
 const TextEditorRich = props => (

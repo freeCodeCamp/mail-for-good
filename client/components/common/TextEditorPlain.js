@@ -1,5 +1,12 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import ReactQuill from 'react-quill';
+import Quill from 'quill';
+
+// Change <p> tags to <div> tags as empty lines are rendered as <p><br></p> which is two spaces, <div><br></div> is one
+// Adapted from https://codepen.io/alexkrolick/pen/PWrKdx?editors=0010 and https://codepen.io/quill/pen/VjgorV
+const Block = Quill.import('blots/block');
+Block.tagName = 'DIV';
+Quill.register(Block, true);
 
 // See Quill's module system ref = http://quilljs.com/docs/modules/
 // Sets what appears in the toolbar
@@ -17,24 +24,27 @@ const PLAINTEXT_FORMATS = [
   'list'
 ];
 
-const TextEditorPlain = props => (
-  <ReactQuill
-    theme="snow"
-    id="TextEditorPlain"
-    className="TextEditor"
-    bounds="#TextEditorPlain"
-    readOnly={false}
-    placeholder="Write your email ..."
-    modules={PLAINTEXT_MODULE}
-    formats={PLAINTEXT_FORMATS}
-    value={props.value}
-    onChange={props.onChange}
-  />
-);
+export default class TextEditorPlain extends Component {
+  static propTypes = {
+    value: PropTypes.string,
+    onChange: PropTypes.func
+  }
 
-TextEditorPlain.propTypes = {
-  value: PropTypes.string,
-  onChange: PropTypes.func
-};
-
-export default TextEditorPlain;
+  render() {
+    const { value, onChange } = this.props;
+    return (
+      <ReactQuill
+        theme="snow"
+        id="TextEditorPlain"
+        className="TextEditor"
+        bounds="#TextEditorPlain"
+        readOnly={false}
+        placeholder="Write your email ..."
+        modules={PLAINTEXT_MODULE}
+        formats={PLAINTEXT_FORMATS}
+        value={value}
+        onChange={onChange}
+      />
+    );
+  }
+}
