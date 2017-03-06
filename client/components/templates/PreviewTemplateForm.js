@@ -1,22 +1,20 @@
 import React, { PropTypes } from 'react';
-import showdown from 'showdown'; // Lib to convert from markdown to html
 import DOMPurify from 'dompurify';
 
 const PreviewTemplateForm = props => {
   const { handleSubmit, lastPage, submitting } = props;
+  let text;
+  let form;
+  let type;
 
-  if (props.form) {
-    var { form:{ values: form } } = props; // eslint-disable-line
+  // form = { listName, campaignName, fromName, fromEmail, emailSubject, emailBody, type }
+  form = props.form.values;
+  type = form.type;
+  if (type === 'Plaintext') {
+    text = form.emailBody;
   } else {
-    // In this case, the preview is rendered within the TemplateView container
-    // We may receive markdown or html from the server. If it's markdown, we'll need to convert it using showdown.
-    form = props.templateView; // eslint-disable-line
-    if (props.templateView.type === 'Plaintext') {
-      form.emailBody = new showdown.Converter().makeHtml(props.templateView.emailBody); // eslint-disable-line
-    }
+    text = DOMPurify.sanitize(form.emailBody); // Purify to prevent xss attacks
   }
-  // { listName, templateName, fromName, fromEmail, emailSubject, emailBody, type }
-  const cleanHtml = DOMPurify.sanitize(form.emailBody); // Purify xss to prevent xss attacks
 
   return (
     <div>
@@ -26,9 +24,19 @@ const PreviewTemplateForm = props => {
 
       <h3><strong>From: {`${form.fromName || 'Not set'} <${form.fromEmail || 'Not set'}>`}</strong></h3>
       <h4><strong>Subject: {`${form.emailSubject || 'Not set'}`}</strong></h4>
+
+      {type === 'HTML'
+      ?
       <blockquote>
-        <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
+        <div dangerouslySetInnerHTML={{ __html: text }} />
       </blockquote>
+      :
+      <textarea
+        className="form-control"
+        disabled
+        style={{ width: "100%", minHeight: "60vh" }}
+        value={text} />
+      }
 
       <hr />
 
