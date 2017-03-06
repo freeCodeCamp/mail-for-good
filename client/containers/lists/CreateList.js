@@ -6,7 +6,7 @@ import moment from 'moment';
 
 import ImportCSV from './ImportCSV';
 
-import { submitCSV, getLists } from '../../actions/listActions';
+import { submitCSV } from '../../actions/listActions';
 import { notify } from '../../actions/notificationActions';
 
 function mapStateToProps(state) {
@@ -17,13 +17,12 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { submitCSV, notify, getLists })
+@connect(mapStateToProps, { submitCSV, notify })
 export default class CreateList extends Component {
 
   static propTypes = {
     submitCSV: PropTypes.func.isRequired,
     notify: PropTypes.func.isRequired,
-    getLists: PropTypes.func.isRequired,
     lists: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired
   }
@@ -41,10 +40,6 @@ export default class CreateList extends Component {
 
   state = {
     title: this.generateDefaultTitle()
-  }
-
-  componentDidMount() {
-    this.props.getLists();
   }
 
   notification(notification) {
