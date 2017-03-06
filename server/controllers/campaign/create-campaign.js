@@ -1,6 +1,5 @@
 const db = require('../../models');
 const slug = require('slug');
-const htmlToText = require('html-to-text');
 
 const sendSingleNotification = require('../websockets/send-single-notification');
 
@@ -38,14 +37,9 @@ module.exports = (req, res, io) => {
     if (values.some(x => x === false)) {
       res.status(400).send(); // If any validation promise resolves to false, fail silently. No need to respond as validation is handled client side & this is a security measure.
     } else {
-      // Set emailBody to plaintext if type === Plaintext
-      const htmlToTextOpts = {
-        wordwrap: false,
-        ignoreImage: true
-      };
-      const emailBodyType = req.body.type === 'Plaintext'
-        ? htmlToText.fromString(req.body.emailBody, htmlToTextOpts)
-        : req.body.emailBody;
+
+      const emailBodyType = req.body.emailBody;
+
       // Find or create the campaign
       db.campaign.findOrCreate({
         where: {

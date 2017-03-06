@@ -71,7 +71,9 @@ export default class CreateCampaign extends Component {
   }
 
   handleSubmit() {
-    this.props.postCreateCampaign(JSON.stringify(this.props.form.values), this.state.reset);
+    const formValues = this.props.form.values;
+
+    this.props.postCreateCampaign(JSON.stringify(formValues), this.state.reset);
     this.props.notify({
       message: 'Campaign is being created - it will be ready to send soon.',
       colour: 'green'
@@ -113,7 +115,7 @@ export default class CreateCampaign extends Component {
       <div>
         <div className="content-header">
           <h1>Create Campaign
-            <small>Create and optionally send to a new campaign</small>
+            <small>Create a new campaign</small>
           </h1>
         </div>
 
