@@ -1,28 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import ReactQuill from 'react-quill';
-import Quill from 'quill';
-
-// Change <p> tags to <div> tags as empty lines are rendered as <p><br></p> which is two spaces, <div><br></div> is one
-// Adapted from https://codepen.io/alexkrolick/pen/PWrKdx?editors=0010 and https://codepen.io/quill/pen/VjgorV
-const Block = Quill.import('blots/block');
-Block.tagName = 'DIV';
-Quill.register(Block, true);
-
-// See Quill's module system ref = http://quilljs.com/docs/modules/
-// Sets what appears in the toolbar
-// NOTE: Getting links to automatically show up is a bit tricky, it has been addressed here https://github.com/quilljs/quill/issues/109
-const PLAINTEXT_MODULE = {
-  toolbar: [
-    [{ 'list': 'ordered'}]
-  ]
-};
-
-// Althought an item may not appear in the toolbar, it will still be possible for users to
-// paste bold text or use shortcodes ctrl-b unless valid formats are explicitly specified.
-// The formats constant ensures that only the items listed below are valid in the text editor.
-const PLAINTEXT_FORMATS = [
-  'list'
-];
 
 export default class TextEditorPlain extends Component {
   static propTypes = {
@@ -33,18 +9,12 @@ export default class TextEditorPlain extends Component {
   render() {
     const { value, onChange } = this.props;
     return (
-      <ReactQuill
-        theme="snow"
-        id="TextEditorPlain"
-        className="TextEditor"
-        bounds="#TextEditorPlain"
-        readOnly={false}
-        placeholder="Write your email ..."
-        modules={PLAINTEXT_MODULE}
-        formats={PLAINTEXT_FORMATS}
+      <textarea
+        className="form-control"
+        style={{ width: "100%", minHeight: "60vh" }}
         value={value}
         onChange={onChange}
-      />
+        />
     );
   }
 }
