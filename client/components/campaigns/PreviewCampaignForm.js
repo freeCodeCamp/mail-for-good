@@ -1,22 +1,31 @@
 import React, { PropTypes } from 'react';
-import showdown from 'showdown'; // Lib to convert from markdown to html
 import DOMPurify from 'dompurify';
 
 const PreviewCampaignForm = props => {
   const { handleSubmit, lastPage } = props;
+  const isCreateCampaignPreview = !!props.form;
+  let text;
+  let form;
+  let type;
 
-  if (props.form) {
-    var { form:{ values: form } } = props; // eslint-disable-line
+  if (isCreateCampaignPreview) {
+    // form = { listName, campaignName, fromName, fromEmail, emailSubject, emailBody, type }
+    form = props.form.values;
+    type = form.type;
+    if (type === 'Plaintext') {
+      text = form.emailBody;
+    } else {
+      text = DOMPurify.sanitize(form.emailBody); // Purify to prevent xss attacks
+    }
   } else {
     // In this case, the preview is rendered within the CampaignView container
-    // We may receive markdown or html from the server. If it's markdown, we'll need to convert it using showdown.
-    form = props.campaignView; // eslint-disable-line
-    if (props.campaignView.type === 'Plaintext') {
-      form.emailBody = new showdown.Converter().makeHtml(props.campaignView.emailBody); // eslint-disable-line
-    }
+    // We may receive plaintext or html from the server.
+    form = props.campaignView;
+    type = form.type;
+    text = props.campaignView.emailBody;
   }
-  // { listName, campaignName, fromName, fromEmail, emailSubject, emailBody, type }
-  const cleanHtml = DOMPurify.sanitize(form.emailBody); // Purify xss to prevent xss attacks
+
+  console.log(props);
 
   return (
     <div>
@@ -27,17 +36,25 @@ const PreviewCampaignForm = props => {
 
       <h4><strong>From: {`${form.fromName} <${form.fromEmail}>`}</strong></h4>
       <h4><strong>Subject: {`${form.emailSubject}`}</strong></h4>
+      {type === 'HTML'
+      ?
       <blockquote>
-        <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />
+        <div dangerouslySetInnerHTML={{ __html: text }} />
       </blockquote>
+      :
+      <textarea
+        className="form-control"
+        disabled
+        style={{ width: "100%", minHeight: "60vh" }}
+        value={text} />
+      }
 
-      <hr />
-
+      {!isCreateCampaignPreview && <hr />}
       {(lastPage && handleSubmit) &&
       <div className="box-footer">
         <div className="btn-group">
-          <button style={{ margin: "1em", width: "160px" }} className="btn btn-lg btn-success" type="button" onClick={handleSubmit}>Create Campaign</button>
-          <button style={{ margin: "1em", width: "160px" }} className="btn btn-lg btn-primary" type="button" onClick={lastPage}>Go back</button>
+          <button style={{ margin: "1em", width: "200px" }} className="btn btn-lg btn-success" type="button" onClick={handleSubmit}>Create Campaign</button>
+          <button style={{ margin: "1em", width: "200px" }} className="btn btn-lg btn-primary" type="button" onClick={lastPage}>Go back</button>
         </div>
       </div>}
 
