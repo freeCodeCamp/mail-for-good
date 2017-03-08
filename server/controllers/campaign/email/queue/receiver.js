@@ -1,4 +1,7 @@
+const Queue = require('bull');
+const Receiver = Queue('amazon', process.env.REDIS_PORT || 6379, process.env.REDIS_HOST || '127.0.0.1');
 const Promise = require('bluebird');
+const redis = require("redis");
 
 const CampaignSubscriber = require('../../../../models').campaignsubscriber;
 const CampaignAnalytics = require('../../../../models').campaignanalytics;
@@ -8,11 +11,11 @@ const CampaignAnalytics = require('../../../../models').campaignanalytics;
   it will send to the rateLimit as determined by Amazon.
 */
 
-module.exports = function(Queue, ses, rateLimit, campaignInfo ) {
+module.exports = function(ses, rateLimit, campaignInfo ) {
   // const EMAILS_PER_SECOND = rateLimit;
   // const ONE_SECOND = 1000;
 
-  Queue.process(job => {
+  Receiver.process(job => {
     // Call the _sendEmail function in the parent closure
     const { email, task } = job.data; // See Amazon.js - where { email } is a formatted SES email & { info } contains the id
 
@@ -27,17 +30,19 @@ module.exports = function(Queue, ses, rateLimit, campaignInfo ) {
         return;
       });
   });
-/*
-  Queue.on('completed', function(){
+
+  Receiver.on('completed', function(){
     // Clean all completed jobs (remove from redis)
-    Queue.clean(1000, 'completed');
-    Queue.clean(1000, 'failed');
+    Receiver.clean(1000, 'completed');
+    Receiver.clean(1000, 'failed');
   });
 
-  Queue.on('error', function(error) {
+  Receiver.on('error', function(error) {
     console.log(error); // eslint-disable-line
   });
-*/
+
+  const redisSettings = { host: process.env.REDIS_HOST || '127.0.0.1' };
+  const client = redis.createClient(redisSettings);
 
   function _updateAnalytics(data, task, campaignInfo) {
     const p1 = CampaignSubscriber.update(
@@ -63,9 +68,21 @@ module.exports = function(Queue, ses, rateLimit, campaignInfo ) {
     return Promise.all([p1, p2]);
   }
 
+  function _quit() {
+    const THREE_SECONDS = 3000;
+    setTimeout(() => {
+      client.quit(); // Close Redis connection
+    }, THREE_SECONDS);
+  }
+
   return {
+    close: function close() {
+      // Close connection after 3 seconds
+      Receiver.close(); // Close bull connection
+      _quit();
+    },
     count: function count() {
-      return Queue.count();
+      return Receiver.count();
     }
   };
 };

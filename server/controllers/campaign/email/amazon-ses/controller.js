@@ -1,17 +1,14 @@
 /*
-
 https://docs.aws.amazon.com/ses/latest/DeveloperGuide/mailbox-simulator.html
 success@simulator.amazonses.com (Successful email)
 bounce@simulator.amazonses.com (Soft bounce)
 ooto@simulator.amazonses.com (Out of office response from ISP)
 complaint@simulator.amazonses.com (Complaint from ISP)
 suppressionlist@simulator.amazonses.com (Hard bounce as target email is on Amazon's suppression list)
-
 API endpoints
 US East (N. Virginia)	us-east-1
 US West (Oregon)	us-west-2
 EU (Ireland)	eu-west-1
-
 Successful response has form:
 { ResponseMetadata: { RequestId: 'e8a3d6b4-94fd-11z6-afac-757cax279ap5' },
   MessageId: '01020157a1261241-90a5e1cd-3a5z-4sb7-1r41-957a4cae8e58-000000' }
@@ -24,12 +21,10 @@ Throttling error:
   requestId: '7f2d1781-9507-11e6-8885-675506266ba7',
   statusCode: 400,
   retryable: true }
-
 */
 
 const AWS = require('aws-sdk');
 const Promise = require('bluebird'); // Bluebird is signficantly faster than native promises
-const childProcess = require('child_process');
 
 const wrapLink = require('./analytics').wrapLink;
 const insertUnsubscribeLink = require('./analytics').insertUnsubscribeLink;
@@ -95,17 +90,13 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
   let databaseIsWorking = false; // This is a flag that will ensure that the db does not get assigned too much work
   let shouldSend = true; // Another flag that indicates whether or not a campaign should send
 
-  let Producer;
-  let Receiver;
+  const bull = require('bull');
+  const Queue = bull(`amazon-${campaignInfo.campaignId}`, null, process.env.REDIS_HOST || '127.0.0.1');
+
+  const Producer = require('./producer')(Queue);
+  const Receiver = require('./receiver')(Queue, ses, rateLimit, campaignInfo);
 
   (async function sendEmailsViaAmazon() {
-    Producer = require('./producer')();
-    // Fork the Receiver process, then wait for it to start & return its api to us
-    const Receiver = childProcess.fork('./server/controllers/campaign/email/amazon-ses/receiver'); //require('../message-queue/amazon/receiver')(ses, rateLimit, campaignInfo);
-    Receiver.send({ ses, rateLimit, campaignInfo });
-    Receiver.on('message', message => console.log(message));
-
-
     // 1. First we'll get an array containing the ids of all users we're going to email.
     //// This way we have the certainty of knowing who to email without the memory footprint
     //// associated with including all other columns.
@@ -331,7 +322,7 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
     const ONE_SECOND = 1000;
     (function shouldProduceMoreEmails() {
       setTimeout(() => {
-        Producer.count()
+        Receiver.count()
           .then(receiverQueueLength => { // The number of items currently being processed by the receiver
             // If the receiver is processing >= rateLimitTimesFive emails, postpone calling them
             if (isDevMode) console.log(`receiverQueueLength: ${receiverQueueLength} - ${receiverQueueLength >= rateLimitTimesFive ? 'postponing' : 'continuing'}`); // eslint-disable-line
@@ -387,15 +378,13 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
 
   function success() {
     console.log('\nFinished sending campaign\n'); // eslint-disable-line
-    Producer.close();
-    Receiver.kill();
+    Queue.close();
     finish(null);
   }
 
   function cancel() {
     shouldSend = false;
-    Producer.close();
-    Receiver.kill();
+    Queue.close();
     redis.subscriber.unsubscribe('stop-campaign-sending');
     finish('cancelled');
   }
