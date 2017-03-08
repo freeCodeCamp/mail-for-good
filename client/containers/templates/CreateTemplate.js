@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 import CreateTemplateForm from '../../components/templates/CreateTemplateForm';
 import PreviewTemplateForm from '../../components/templates/PreviewTemplateForm';
-import { getTemplates, postCreateTemplate } from '../../actions/campaignActions';
+import { postCreateTemplate } from '../../actions/campaignActions';
 import { notify } from '../../actions/notificationActions';
 import moment from 'moment';
 
@@ -17,14 +17,13 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getTemplates, postCreateTemplate, notify })
+@connect(mapStateToProps, { postCreateTemplate, notify })
 export default class Templates extends Component {
 
   static propTypes = {
     form: PropTypes.object,
     isPosting: PropTypes.bool.isRequired,
     postCreateTemplate: PropTypes.func.isRequired,
-    getTemplates: PropTypes.func.isRequired,
     templates: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired,
     notify: PropTypes.func.isRequired
@@ -48,10 +47,6 @@ export default class Templates extends Component {
     },
     editor: '',
     reset: null
-  }
-
-  componentDidMount() {
-    this.props.getTemplates();
   }
 
   componentWillReceiveProps(props) {

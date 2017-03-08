@@ -78,7 +78,7 @@ module.exports = (req, res, io) => {
 
     const filename = req.file.originalname;
     let bufferArray = [];
-    const bufferLength = 5000;
+    const bufferLength = 2500;
     let numberProcessed = 0; // Var for tracking how many CSVs have been processed. Sends a WS notification per 'bufferLength' processed emails.
 
     function sendFinalNotification() {
