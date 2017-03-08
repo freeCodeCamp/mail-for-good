@@ -29,6 +29,7 @@ Throttling error:
 
 const AWS = require('aws-sdk');
 const Promise = require('bluebird'); // Bluebird is signficantly faster than native promises
+const childProcess = require('child_process');
 
 const wrapLink = require('./analytics').wrapLink;
 const insertUnsubscribeLink = require('./analytics').insertUnsubscribeLink;
@@ -94,10 +95,17 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
   let databaseIsWorking = false; // This is a flag that will ensure that the db does not get assigned too much work
   let shouldSend = true; // Another flag that indicates whether or not a campaign should send
 
-  const Producer = require('../message-queue/amazon/producer')();
-  const Receiver = require('../message-queue/amazon/receiver')(ses, rateLimit, campaignInfo);
+  let Producer;
+  let Receiver;
 
   (async function sendEmailsViaAmazon() {
+    Producer = require('./producer')();
+    // Fork the Receiver process, then wait for it to start & return its api to us
+    const Receiver = childProcess.fork('./server/controllers/campaign/email/amazon-ses/receiver'); //require('../message-queue/amazon/receiver')(ses, rateLimit, campaignInfo);
+    Receiver.send({ ses, rateLimit, campaignInfo });
+    Receiver.on('message', message => console.log(message));
+
+
     // 1. First we'll get an array containing the ids of all users we're going to email.
     //// This way we have the certainty of knowing who to email without the memory footprint
     //// associated with including all other columns.
@@ -323,7 +331,7 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
     const ONE_SECOND = 1000;
     (function shouldProduceMoreEmails() {
       setTimeout(() => {
-        Receiver.count()
+        Producer.count()
           .then(receiverQueueLength => { // The number of items currently being processed by the receiver
             // If the receiver is processing >= rateLimitTimesFive emails, postpone calling them
             if (isDevMode) console.log(`receiverQueueLength: ${receiverQueueLength} - ${receiverQueueLength >= rateLimitTimesFive ? 'postponing' : 'continuing'}`); // eslint-disable-line
@@ -380,14 +388,14 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
   function success() {
     console.log('\nFinished sending campaign\n'); // eslint-disable-line
     Producer.close();
-    Receiver.close();
+    Receiver.kill();
     finish(null);
   }
 
   function cancel() {
     shouldSend = false;
     Producer.close();
-    Receiver.close();
+    Receiver.kill();
     redis.subscriber.unsubscribe('stop-campaign-sending');
     finish('cancelled');
   }

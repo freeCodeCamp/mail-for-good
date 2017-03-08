@@ -3,31 +3,31 @@ const Receiver = Queue('amazon', process.env.REDIS_PORT || 6379, process.env.RED
 const Promise = require('bluebird');
 const redis = require("redis");
 
-const CampaignSubscriber = require('../../../../../models').campaignsubscriber;
-const CampaignAnalytics = require('../../../../../models').campaignanalytics;
+const CampaignSubscriber = require('../../../../models').campaignsubscriber;
+const CampaignAnalytics = require('../../../../models').campaignanalytics;
 
 /*
   This file receives emails from the Redis queue and sends them via Amazon SES. It limits the number
   it will send to the rateLimit as determined by Amazon.
 */
 
-module.exports = function(ses, rateLimit, campaignInfo) {
+process.on('message', args => {
+  const { ses, rateLimit, campaignInfo } = args;
   // const EMAILS_PER_SECOND = rateLimit;
   // const ONE_SECOND = 1000;
   const CONCURRENCY = rateLimit; // No. of jobs to process in parallel on a single worker
-
+  //process.send({ message: '\n\n\nhere...\n\n\n' });
   Receiver.process(CONCURRENCY, job => {
+    const promisifiedSes = Promise.promisify(ses.sendEmail, { context: ses });
     // Call the _sendEmail function in the parent closure
     const { email, task } = job.data; // See Amazon.js - where { email } is a formatted SES email & { info } contains the id
 
     // Promisify (turn into a promise) the send email callback func - http://bluebirdjs.com/docs/api/promise.promisify.html
-    const promisifiedSes = Promise.promisify(ses.sendEmail, { context: ses });
     return promisifiedSes(email)
       .then(data => {
         return _updateAnalytics(data, task, campaignInfo);
       })
-      .catch(err => {
-        console.log(err);
+      .catch(() => {
         return;
       });
   });
@@ -73,17 +73,16 @@ module.exports = function(ses, rateLimit, campaignInfo) {
     const THREE_SECONDS = 3000;
     setTimeout(() => {
       client.quit(); // Close Redis connection
+      process.exit(); // Kill process
     }, THREE_SECONDS);
   }
 
-  return {
-    close: function close() {
-      // Close connection after 3 seconds
-      Receiver.close(); // Close bull connection
-      _quit();
-    },
-    count: function count() {
-      return Receiver.count();
-    }
-  };
-};
+});
+
+process.on('error', () => {
+  process.send({ message: 'Error happened' });
+});
+
+process.on('uncaughtException', () => {
+  process.send({ message: `Uncaught exception` });
+});
