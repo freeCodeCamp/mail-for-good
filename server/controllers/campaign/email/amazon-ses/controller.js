@@ -25,6 +25,7 @@ Throttling error:
 
 const AWS = require('aws-sdk');
 const Promise = require('bluebird'); // Bluebird is signficantly faster than native promises
+const async = require('async');
 
 const wrapLink = require('./analytics').wrapLink;
 const insertUnsubscribeLink = require('./analytics').insertUnsubscribeLink;
@@ -36,7 +37,10 @@ const AmazonEmail = require('./amazon');
 const CampaignAnalyticsLink = require('../../../../models').campaignanalyticslink;
 const CampaignAnalyticsOpen = require('../../../../models').campaignanalyticsopen;
 
-module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
+const sendSingleNotification = require('../../../websockets/send-single-notification');
+const sendUpdateNotification = require('../../../websockets/send-update-notification');
+
+module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, ioSocket) => {
   /*
     # Send emails via Amazon SES' API #
     This function focuses on a tradeoff between speed and memory usage. It does the following:
@@ -102,6 +106,7 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
     //// associated with including all other columns.
     console.log(`\nEmail campaign send initiated. Sending ${rateLimit} per second.\n`); // eslint-disable-line
     updateCampaignStatus();
+    startSendingSocketNotifications();
     console.log('Preparing to send email campaign. Getting list subscribers ids ...'); // eslint-disable-line
     const arrayOfIds = await getListSubscriberIds(); // Returns ids from listsubscribers [1,2,3, ... etc]
     if (isDevMode) console.log(`Grabbed ${arrayOfIds.length} ids`);
@@ -366,6 +371,7 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
 
   function finish(error) {
     const status = shouldSend ? 'done' : 'interrupted';
+    shouldSend = false;
     db.campaign.update({
       status
     }, {
@@ -378,6 +384,7 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
 
   function success() {
     console.log('\nFinished sending campaign\n'); // eslint-disable-line
+    sendFinalSocketNotification('success');
     Queue.close();
     finish(null);
   }
@@ -386,6 +393,46 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo) => {
     shouldSend = false;
     Queue.close();
     redis.subscriber.unsubscribe('stop-campaign-sending');
+    sendFinalSocketNotification('cancelled')
     finish('cancelled');
+  }
+
+  function startSendingSocketNotifications() {
+    const id = (Math.random() * 100000).toString();
+    const update = (callback) => {
+      db.campaignanalytics.findOne({
+        where: { campaignId: campaignInfo.campaignId },
+        attributes: ['totalSentCount']
+      }).then(campaignAnalytics => {
+        const message = `Sent ${campaignAnalytics.totalSentCount} emails`;
+        const icon = 'fa-envelope';
+        const iconColour = 'text-green';
+        sendUpdateNotification(ioSocket, message, icon, iconColour, id);
+      });
+      setTimeout(callback, 5000);
+    }
+
+    async.doWhilst(
+      update,
+      () => {
+        if (!shouldSend) {
+          update(() => { });  // Send a final sent count notification
+        }
+        return shouldSend
+      }
+    );
+  }
+
+  function sendFinalSocketNotification(outcome) {
+    if (outcome == 'success') {
+      const message = `Campaign has been delivered (${campaignInfo.name})`;
+      const icon = 'fa-envelope';
+      const iconColour = 'text-green';
+      const newDataToFetch = 'campaigns';
+      const url = '/campaigns/manage';
+      console.log("sending success")
+      console.log(ioSocket)
+      sendSingleNotification(ioSocket, message, icon, iconColour, newDataToFetch, url);
+    }
   }
 };

@@ -51,7 +51,9 @@ module.exports = (req, res, io, redis) => {
       quotas
     };
 
-    yield email.amazon.controller(generator, redis, campaignAndListInfo, amazonAccountInfo);
+    const ioSocket = io.sockets.connected[req.session.passport.socket]
+
+    yield email.amazon.controller(generator, redis, campaignAndListInfo, amazonAccountInfo, ioSocket);
 
     // 8. TODO: If there was an error, handle it here
 
