@@ -234,7 +234,7 @@ export default class CampaignView extends Component {
               {/* Modal for sending email campaign */}
               <Modal show={this.state.showSendModal} onHide={this.closeSendModal}>
                 <Modal.Header closeButton>
-                  <Modal.Title>Are you ready to send this campaign to {this.state.thisCampaign.totalCampaignSubscribers} subscribers?</Modal.Title>
+                  <Modal.Title>Are you ready to send this campaign to {this.state.thisCampaign.totalCampaignSubscribers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} subscribers?</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Footer>
