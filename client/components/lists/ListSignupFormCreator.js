@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 
 import { notify } from '../../actions/notificationActions';
 
+const mapDispatchToProps = { notify };
 
-@connect(null, { notify })
-export default class ListSignupFormCreator extends React.Component {
+export class ListSignupFormCreator extends React.Component {
   constructor(props) {
     super(props);
 
@@ -73,3 +73,4 @@ export default class ListSignupFormCreator extends React.Component {
   }
 }
 
+export default connect(null, mapDispatchToProps)(ListSignupFormCreator);

@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 
 import { addSubscribers } from '../actions/listActions';
 
+const mapDispatchToProps = { addSubscribers };
 
-@connect(null, { addSubscribers })
-export default class AddEmail extends React.Component {
+export class AddEmail extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
@@ -42,3 +42,5 @@ export default class AddEmail extends React.Component {
 AddEmail.propTypes = {
   addSubscribers: React.PropTypes.func.isRequired
 };
+
+export default connect(null, mapDispatchToProps)(AddEmail);

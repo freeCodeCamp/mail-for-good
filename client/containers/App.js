@@ -29,8 +29,9 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { emitProfileRequest, consumeNotification, getActivePermissions, becomeAnotherUser, becomeSelf })
-export default class App extends Component {
+const mapDispatchToProps = { emitProfileRequest, consumeNotification, getActivePermissions, becomeAnotherUser, becomeSelf };
+
+export class App extends Component {
 
   static propTypes = {
     children: PropTypes.element.isRequired,
@@ -124,3 +125,5 @@ export default class App extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

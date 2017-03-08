@@ -22,8 +22,9 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getCampaigns, postSendCampaign, postTestEmail, stopSending, notify })
-export default class CampaignView extends Component {
+const mapDispatchToProps = { getCampaigns, postSendCampaign, postTestEmail, stopSending, notify };
+
+export class CampaignView extends Component {
 
   static propTypes = {
     // actions
@@ -254,3 +255,5 @@ export default class CampaignView extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(CampaignView);

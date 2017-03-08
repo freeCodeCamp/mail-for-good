@@ -15,8 +15,9 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getTemplates, deleteTemplates, notify })
-export default class Templates extends Component {
+const mapDispatchToProps = { getTemplates, deleteTemplates, notify };
+
+export class ManageTemplates extends Component {
 
   static propTypes = {
     form: PropTypes.object,
@@ -74,3 +75,5 @@ export default class Templates extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageTemplates);

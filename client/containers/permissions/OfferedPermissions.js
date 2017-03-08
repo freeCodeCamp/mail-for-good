@@ -24,11 +24,12 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, {
+const mapDispatchToProps = {
   getGrantPermissions, deleteGrantedPermissions,
   getGrantOfferedPermissions, deleteGrantOfferedPermissions,
-  notify })
-export default class GrantPermissions extends Component {
+  notify };
+
+export class OfferedPermissions extends Component {
 
   static propTypes = {
     // redux
@@ -121,3 +122,5 @@ export default class GrantPermissions extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(OfferedPermissions);

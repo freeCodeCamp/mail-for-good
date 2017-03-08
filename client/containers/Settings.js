@@ -13,7 +13,7 @@ import 'react-widgets/dist/css/react-widgets.css';
 
 const regions = ['us-west-2', 'us-east-1', 'eu-west-1']; // AWS SES regions
 
-function getState(state) {
+function mapStateToProps(state) {
   return {
     loading: state.settings.loading,
     fieldsExist: state.settings.fieldsExist,
@@ -21,6 +21,8 @@ function getState(state) {
     status: state.settings.status
   };
 }
+
+const mapDispatchToProps = { getBooleanForAssignedSettings, changeSettings, notify };
 
 const validate = values=> {
   // See ref https://docs.aws.amazon.com/IAM/latest/APIReference/API_AccessKey.html
@@ -50,9 +52,7 @@ const validate = values=> {
   return errors;
 };
 
-@reduxForm({ form: 'settings',  destroyOnUnmount: false, validate })
-@connect(getState, { getBooleanForAssignedSettings, changeSettings, notify })
-export default class Settings extends Component {
+export class Settings extends Component {
 
   static propTypes = {
     // connect
@@ -200,3 +200,8 @@ export default class Settings extends Component {
     );
   }
 }
+
+export default 
+  connect(mapStateToProps, mapDispatchToProps)
+  (reduxForm({ form: 'settings',  destroyOnUnmount: false, validate })
+  (Settings));

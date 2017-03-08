@@ -10,8 +10,9 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { consume })
-export default class Notifications extends Component {
+const mapDispatchToProps = { consume };
+
+export class Notifications extends Component {
   static propTypes = {
     notifications: PropTypes.array.isRequired,
     consume: PropTypes.func.isRequired
@@ -77,3 +78,5 @@ export default class Notifications extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Notifications);

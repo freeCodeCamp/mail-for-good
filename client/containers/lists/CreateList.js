@@ -17,8 +17,9 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { submitCSV, notify })
-export default class CreateList extends Component {
+const mapDispatchToProps = { submitCSV, notify };
+
+export class CreateList extends Component {
 
   static propTypes = {
     submitCSV: PropTypes.func.isRequired,
@@ -133,3 +134,5 @@ export default class CreateList extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateList);

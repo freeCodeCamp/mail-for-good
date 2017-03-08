@@ -8,7 +8,6 @@ const mockProps = (overrides) => ({
   form: { values: {} },
   isPosting: true,
   postCreateTemplate: () => {},
-  getTemplates: () => {},
   templates: [],
   isGetting: true,
   notify: () => {}

@@ -27,11 +27,12 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, {
+const mapDispatchToProps = {
   getReceivedPermissionOffers, deleteRejectReceivedOffers, postAcceptReceivedOffers,
   getActivePermissions, deleteActivePermissions,
-  notify })
-export default class GrantPermissions extends Component {
+  notify };
+
+export class ReceivedPermissions extends Component {
 
   static propTypes = {
     // redux
@@ -134,3 +135,5 @@ export default class GrantPermissions extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ReceivedPermissions);

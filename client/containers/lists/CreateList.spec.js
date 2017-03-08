@@ -7,7 +7,6 @@ import { CreateList } from './CreateList';
 const mockProps = (overrides) => ({
   submitCSV: () => {},
   notify: () => {},
-  getLists: () => {},
   lists: [],
   isGetting: true
 });

@@ -20,8 +20,9 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { postCreateCampaign, getLists, getTemplates, initialize, notify })
-export default class CreateCampaign extends Component {
+const mapDispatchToProps = { postCreateCampaign, getLists, getTemplates, initialize, notify };
+
+export class CreateCampaign extends Component {
 
   static propTypes = {
     form: PropTypes.object,
@@ -136,3 +137,5 @@ export default class CreateCampaign extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateCampaign);

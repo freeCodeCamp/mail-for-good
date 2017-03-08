@@ -10,7 +10,7 @@ const mockProps = (overrides) => ({
   getCampaigns: () => {},
   stopSending: () => {},
   notify: () => {},
-  campaigns: [],
+  campaigns: [{ slug: 'mockSlug', totalCampaignSubscribers: 0 }],
   isGetting: true,
   sendCampaign: () => {},
   isPostingSendCampaign: true,
@@ -19,7 +19,7 @@ const mockProps = (overrides) => ({
   isPostingSendTest: true,
   sendTestEmailResponse: '',
   sendTestEmailStatus: 0,
-  params: {}
+  params: { slug: 'mockSlug'}
 });
 
 const wrapper = shallow(<CampaignView {...mockProps()} />);

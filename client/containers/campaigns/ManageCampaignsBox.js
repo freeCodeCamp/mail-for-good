@@ -15,8 +15,9 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getCampaigns, deleteCampaigns })
-export default class ManageCampaignsBox extends Component {
+const mapDispatchToProps = { getCampaigns, deleteCampaigns };
+
+export class ManageCampaignsBox extends Component {
 
   static propTypes = {
     campaigns: PropTypes.array.isRequired,
@@ -69,3 +70,5 @@ export default class ManageCampaignsBox extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageCampaignsBox);
