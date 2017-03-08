@@ -34,6 +34,7 @@ const mailMerge = require('./mail-merge');
 
 const db = require('../../../../models');
 const AmazonEmail = require('./amazon');
+const sendCampaignSuccessEmail = require('./send-campaign-success-email');
 const CampaignAnalyticsLink = require('../../../../models').campaignanalyticslink;
 const CampaignAnalyticsOpen = require('../../../../models').campaignanalyticsopen;
 
@@ -93,6 +94,8 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, ioSo
   // Vars
   let databaseIsWorking = false; // This is a flag that will ensure that the db does not get assigned too much work
   let shouldSend = true; // Another flag that indicates whether or not a campaign should send
+
+  const startTime = new Date();  // Track the start time so we can tell the user how long sending took
 
   const bull = require('bull');
   const Queue = bull(`amazon-${campaignInfo.campaignId}`, null, process.env.REDIS_HOST || '127.0.0.1');
@@ -387,13 +390,14 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, ioSo
     sendFinalSocketNotification('success');
     Queue.close();
     finish(null);
+    sendSuccessEmail();
   }
 
   function cancel() {
     shouldSend = false;
     Queue.close();
     redis.subscriber.unsubscribe('stop-campaign-sending');
-    sendFinalSocketNotification('cancelled')
+    sendFinalSocketNotification('cancelled');
     finish('cancelled');
   }
 
@@ -410,7 +414,7 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, ioSo
         sendUpdateNotification(ioSocket, message, icon, iconColour, id);
       });
       setTimeout(callback, 5000);
-    }
+    };
 
     async.doWhilst(
       update,
@@ -430,9 +434,15 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, ioSo
       const iconColour = 'text-green';
       const newDataToFetch = 'campaigns';
       const url = '/campaigns/manage';
-      console.log("sending success")
-      console.log(ioSocket)
       sendSingleNotification(ioSocket, message, icon, iconColour, newDataToFetch, url);
     }
+  }
+
+  function sendSuccessEmail() {
+    sendCampaignSuccessEmail({
+      durationMs: new Date() - startTime,
+      campaignName: campaignInfo.name,
+      fromEmail: campaignInfo.fromEmail
+    }, ses);
   }
 };
