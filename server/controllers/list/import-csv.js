@@ -166,8 +166,7 @@ module.exports = (req, res, io) => {
 
             sendUpdateNotification(ioSocket, message, icon, iconColour, id);
           } else {
-            updateListStatusReady();
-            sendFinalNotification();
+            finishSend();
           }
 
           callback();
@@ -177,6 +176,22 @@ module.exports = (req, res, io) => {
         });
       });
     }, bufferLength);
+
+    function finishSend() {
+      // Finish when queue empties
+      const fin = () => setTimeout(() => {
+        updateListStatusReady();
+        sendFinalNotification();
+      }, 5000);
+
+      if (c.length()) {
+        c.drain(() => {
+          fin();
+        });
+      } else {
+        fin();
+      }
+    }
 
     /* Config csv parser */
     const parser = csv.parse({columns: true, skip_empty_lines: true}); // Write object with headers as object keys, and skip empty rows
@@ -234,7 +249,7 @@ module.exports = (req, res, io) => {
           );
           bufferArray = [];
         } else {
-          sendFinalNotification();
+          finishSend();
         }
       });
     });

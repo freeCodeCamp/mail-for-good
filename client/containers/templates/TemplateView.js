@@ -60,7 +60,6 @@ export default class CampaignView extends Component {
           </h1>
         </div>
 
-        {this.state.thisTemplate &&
         <section className="content">
           <div className="box box-primary">
             <div className="box-header">
@@ -76,7 +75,7 @@ export default class CampaignView extends Component {
               </div>}
             </div>
           </div>
-        </section>}
+        </section>
       </div>
     );
   }
