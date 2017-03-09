@@ -79,15 +79,15 @@ export default class CampaignView extends Component {
     }
   }
 
-  componentWillReceiveProps(props) {
+  componentWillReceiveProps(nextProps) {
     // Set thisCampaign from campaigns once we have it
-    if (props.campaigns && props.campaigns.length && !this.props.campaigns.length) { // Guarded and statement that confirms campaigns is in the new props, confirms the array isn't empty, and then confirms that current props do not exist
-      this.getSingleCampaign(props);
+    if (nextProps.campaigns && nextProps.campaigns.length && !this.props.campaigns.length) { // Guarded and statement that confirms campaigns is in the new props, confirms the array isn't empty, and then confirms that current props do not exist
+      this.getSingleCampaign(nextProps);
     }
     // Show success/failure toast for send campaign
-    if (props.sendCampaignResponse && !props.isPostingSendCampaign) {
+    if (nextProps.sendCampaignResponse && nextProps.isPostingSendCampaign) {
       this.setState({ haveShownMessage: true });
-      if (props.sendCampaignStatus === 200) {
+      if (nextProps.sendCampaignStatus === 200) {
         this.props.notify({
           message: 'Your campaign is being sent',
           colour: 'green'
@@ -100,16 +100,16 @@ export default class CampaignView extends Component {
     }
 
     // Show success/failure toast for send test
-    if (props.sendTestEmailResponse && !props.isPostingSendTest) {
+    if (nextProps.sendTestEmailResponse && nextProps.isPostingSendTest) {
       this.setState({ haveShownMessage: true });
-      if (props.sendTestEmailStatus === 200) {
+      if (nextProps.sendTestEmailStatus === 200) {
         this.props.notify({
           message: 'Your test email is being sent',
           colour: 'green'
         });
       } else {
         this.props.notify({
-          message: props.sendTestEmailResponse
+          message: nextProps.sendTestEmailResponse
         });
       }
     }
@@ -184,6 +184,7 @@ export default class CampaignView extends Component {
 
   render() {
     let downloadUnsentSubscribersUrl = encodeURI(`${window.location.origin}/api/campaign/subscribers/csv?campaignId=${this.state.thisCampaign.id}&sent=false`);
+    const isReady = this.state.thisCampaign && this.state.thisCampaign.status === 'ready';
 
     return (
       <div>
@@ -209,10 +210,10 @@ export default class CampaignView extends Component {
               <PreviewCampaignForm campaignView={this.state.thisCampaign} />
 
               <div className="form-inline">
-                <button className="btn btn-success btn-lg" type="button" onClick={this.openSendModal}>Send</button>
-                <button className="btn btn-info btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.openTestSendModal}>Send a test email</button>
+                {isReady && <button className="btn btn-success btn-lg" type="button" onClick={this.openSendModal}>Send</button>}
+                {isReady && <button className="btn btn-info btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.openTestSendModal}>Send a test email</button>}
                 <button className="btn btn-lg btn-primary" style={{ "margin-left": "1rem" }} onClick={() => {window.location = downloadUnsentSubscribersUrl;}}>Export unsent</button>
-                <button className="btn btn-danger btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.stopSending.bind(this)}>Stop sending</button>
+                {isReady && <button className="btn btn-danger btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.stopSending.bind(this)}>Stop sending</button>}
               </div>
 
               {/* Modal for sending test emails */}

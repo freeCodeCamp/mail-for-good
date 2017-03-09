@@ -25,7 +25,7 @@ export function receiveNotification(notification) {
     }
 
     dispatch({ type: RECEIVE_WS_NOTIFICATION, notification });
-  }
+  };
 }
 
 export function consumeNotification(index) {

@@ -33,8 +33,8 @@ export default class ImportCSV extends Component {
     errors: null
   }
 
-  componentWillReceiveProps(props) {
-    if (!props.isPosting) {
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.isPosting) {
       this.cancelImport();
     }
   }
@@ -96,7 +96,11 @@ export default class ImportCSV extends Component {
   }
 
   cancelImport() {
-    this.setState({subscribers: null, fields: null, errors: null});
+    this.setState({
+      subscribers: null,
+      fields: null,
+      errors: null
+    });
   }
 
   render() {
