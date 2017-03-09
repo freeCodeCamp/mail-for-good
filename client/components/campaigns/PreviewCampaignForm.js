@@ -25,8 +25,6 @@ const PreviewCampaignForm = props => {
     text = props.campaignView.emailBody;
   }
 
-  console.log(props);
-
   return (
     <div>
       {form.listName && <h3><i className="fa fa-list text-green" aria-hidden="true" /> - {form.listName}</h3>}

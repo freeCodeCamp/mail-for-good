@@ -3,17 +3,26 @@ import DOMPurify from 'dompurify';
 
 const PreviewTemplateForm = props => {
   const { handleSubmit, lastPage, submitting } = props;
+  const isCreateTemplatePreview = !!props.form;
   let text;
   let form;
   let type;
 
-  // form = { listName, campaignName, fromName, fromEmail, emailSubject, emailBody, type }
-  form = props.form.values;
-  type = form.type;
-  if (type === 'Plaintext') {
-    text = form.emailBody;
+  if (isCreateTemplatePreview) {
+    // form = { listName, campaignName, fromName, fromEmail, emailSubject, emailBody, type }
+    form = props.form.values;
+    type = form.type;
+    if (type === 'Plaintext') {
+      text = form.emailBody;
+    } else {
+      text = DOMPurify.sanitize(form.emailBody); // Purify to prevent xss attacks
+    }
   } else {
-    text = DOMPurify.sanitize(form.emailBody); // Purify to prevent xss attacks
+    // In this case, the preview is rendered within the CampaignView container
+    // We may receive plaintext or html from the server.
+    form = props.templateView;
+    type = form.type;
+    text = props.templateView.emailBody;
   }
 
   return (
