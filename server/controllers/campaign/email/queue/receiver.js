@@ -14,8 +14,9 @@ const CampaignAnalytics = require('../../../../models').campaignanalytics;
 module.exports = function(ses, rateLimit, campaignInfo ) {
   // const EMAILS_PER_SECOND = rateLimit;
   // const ONE_SECOND = 1000;
+  const CONCURRENCY = rateLimit;
 
-  Receiver.process(job => {
+  Receiver.process(CONCURRENCY, job => {
     // Call the _sendEmail function in the parent closure
     const { email, task } = job.data; // See Amazon.js - where { email } is a formatted SES email & { info } contains the id
 
