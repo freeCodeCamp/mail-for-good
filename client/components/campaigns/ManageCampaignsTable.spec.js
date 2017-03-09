@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import ManageCampaignsTable from './ManageCampaignsTable';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   data: [],
   deleteRows: () => {},
   getCampaignView: () => {},

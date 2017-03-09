@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import SidebarLink from './SidebarLink';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   to: '',
   icon: '',
   children: '',
@@ -12,7 +12,7 @@ const mockProps = (overrides) => ({
 });
 
 const mockContext = {
-  router: { isActive: (a, b) => true }
+  router: {  isActive: (a, b) => true } // eslint-disable-line no-unused-vars
 };
 
 const wrapper = shallow(<SidebarLink {...mockProps()} />, { context: mockContext });

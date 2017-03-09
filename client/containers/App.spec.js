@@ -2,10 +2,10 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { App } from './App';
+import { AppComponent } from './App';
 
-const mockProps = (overrides) => ({
-  children: <div></div>,
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
+  children: <div />,
   user: {},
   ws_notification: [],
   isGettingActivePermissions: true,
@@ -22,10 +22,10 @@ const mockProps = (overrides) => ({
 });
 
 const mockContext = {
-  router: { isActive: (a, b) => true }
+  router: {  isActive: (a, b) => true } // eslint-disable-line no-unused-vars
 };
 
-const wrapper = shallow(<App {...mockProps()} />, { context: mockContext });
+const wrapper = shallow(<AppComponent {...mockProps()} />, { context: mockContext });
 
 describe('(Container) App', () => {
   it('renders without exploding', () => {

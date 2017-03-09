@@ -17,7 +17,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = { getTemplates, deleteTemplates, notify };
 
-export class ManageTemplates extends Component {
+export class ManageTemplatesComponent extends Component {
 
   static propTypes = {
     form: PropTypes.object,
@@ -76,4 +76,4 @@ export class ManageTemplates extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageTemplates);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageTemplatesComponent);

@@ -5,7 +5,8 @@ export default class SubscribersTable extends Component {
 
   propTypes = {
     subscribers: PropTypes.array,
-    fields: PropTypes.array
+    fields: PropTypes.array,
+    deleteSubscriber: React.PropTypes.func
   }
 
   constructor(props) {
@@ -66,7 +67,3 @@ export default class SubscribersTable extends Component {
     );
   }
 }
-
-SubscribersTable.propTypes = {
-  deleteSubscriber: React.PropTypes.func,
-};

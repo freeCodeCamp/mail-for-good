@@ -2,9 +2,9 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { Settings } from './Settings';
+import { SettingsComponent } from './Settings';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   getBooleanForAssignedSettings: () => {},
   changeSettings: () => {},
   notify: () => {},
@@ -17,7 +17,7 @@ const mockProps = (overrides) => ({
   reset: () => {}
 });
 
-const wrapper = shallow(<Settings {...mockProps()} />);
+const wrapper = shallow(<SettingsComponent {...mockProps()} />);
 
 describe('(Container) Settings', () => {
   it('renders without exploding', () => {

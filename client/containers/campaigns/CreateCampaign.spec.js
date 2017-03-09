@@ -2,9 +2,9 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { CreateCampaign } from './CreateCampaign';
+import { CreateCampaignComponent } from './CreateCampaign';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   form: { values: {} },
   isPosting: true,
   postCreateCampaign: () => {},
@@ -18,10 +18,10 @@ const mockProps = (overrides) => ({
 });
 
 const mockContext = {
-  router: { isActive: (a, b) => true }
+  router: {  isActive: (a, b) => true } // eslint-disable-line no-unused-vars
 };
 
-const wrapper = shallow(<CreateCampaign {...mockProps()} />, { context: mockContext });
+const wrapper = shallow(<CreateCampaignComponent {...mockProps()} />, { context: mockContext });
 
 describe('(Container) CreateCampaign', () => {
   it('renders without exploding', () => {

@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import UploadFileModal from './UploadFileModal';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   handleNewFile: () => {}
 });
 

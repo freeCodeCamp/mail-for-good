@@ -8,4 +8,9 @@ import {
 
 describe('(Actions) settings', () => {
 
+  it('should exist', () => {
+    expect(getBooleanForAssignedSettings).to.be.a('function');
+    expect(changeSettings).to.be.a('function');
+  });
+
 });

@@ -2,9 +2,9 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { ManageListSubscribers } from './ManageListSubscribers';
+import { ManageListSubscribersComponent } from './ManageListSubscribers';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   subscribers: [],
   isGetting: true,
   deleteListSubscribers: () => {},
@@ -14,7 +14,7 @@ const mockProps = (overrides) => ({
   additionalFields: []
 });
 
-const wrapper = shallow(<ManageListSubscribers {...mockProps()} />);
+const wrapper = shallow(<ManageListSubscribersComponent {...mockProps()} />);
 
 describe('(Container) ManageListSubscribers', () => {
   it('renders without exploding', () => {

@@ -34,19 +34,19 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
       return `<span class="label label-warning">Processing</span>`;
     } else if (status == 'ready') {
       return `<span class="label label-default">Ready</span>`;
-    };
-  }
+    }
+  };
 
   const formatSignupFormButton = (cell, row) => {
     return (
-      <button onClick={() => { showListSignupFormCreator(row.subscribeKey) }}
+      <button onClick={() => { showListSignupFormCreator(row.subscribeKey); }}
               type="button"
               className="btn btn-default btn-flat">
 
         <i className="fa fa-address-card" />
       </button>
-    )
-  }
+    );
+  };
 
   const formatSubscribersTotal = (cell, row) => {
     if (row.status == 'processing') {
@@ -54,7 +54,7 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
     } else {
       return cell;
     }
-  }
+  };
 
   return (
     <BootstrapTable data={data}
@@ -81,7 +81,8 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
 
 ManageListsTable.propTypes = {
   data: PropTypes.array.isRequired,
-  deleteRows: PropTypes.func.isRequired
+  deleteRows: PropTypes.func.isRequired,
+  showListSignupFormCreator: PropTypes.func.isRequired
 };
 
 export default ManageListsTable;

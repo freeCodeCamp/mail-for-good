@@ -2,9 +2,9 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { ReceivedPermissions } from './ReceivedPermissions';
+import { ReceivedPermissionsComponent } from './ReceivedPermissions';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   isGettingReceivedPermissionOffers: true,
   receivedPermissionOffers: [],
   isGettingActivePermissions: true,
@@ -17,7 +17,7 @@ const mockProps = (overrides) => ({
   notify: () => {}
 });
 
-const wrapper = shallow(<ReceivedPermissions {...mockProps()} />);
+const wrapper = shallow(<ReceivedPermissionsComponent {...mockProps()} />);
 
 describe('(Container) ReceivedPermissions', () => {
   it('renders without exploding', () => {

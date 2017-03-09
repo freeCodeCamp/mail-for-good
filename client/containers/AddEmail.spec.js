@@ -2,13 +2,13 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { AddEmail } from './AddEmail';
+import { AddEmailComponent } from './AddEmail';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   addSubscribers: () => {}
 });
 
-const wrapper = shallow(<AddEmail {...mockProps()} />);
+const wrapper = shallow(<AddEmailComponent {...mockProps()} />);
 
 describe('(Container) AddEmail', () => {
   it('renders without exploding', () => {

@@ -11,4 +11,12 @@ import {
 
 describe('(Actions) list', () => {
 
+  it('should exist', () => {
+    expect(getListSubscribers).to.be.a('function');
+    expect(getLists).to.be.a('function');
+    expect(submitCSV).to.be.a('function');
+    expect(deleteListSubscribers).to.be.a('function');
+    expect(deleteLists).to.be.a('function');
+  });
+
 });

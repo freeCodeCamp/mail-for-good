@@ -6,7 +6,7 @@ import { addSubscribers } from '../actions/listActions';
 
 const mapDispatchToProps = { addSubscribers };
 
-export class AddEmail extends React.Component {
+export class AddEmailComponent extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
@@ -39,8 +39,8 @@ export class AddEmail extends React.Component {
   }
 }
 
-AddEmail.propTypes = {
+AddEmailComponent.propTypes = {
   addSubscribers: React.PropTypes.func.isRequired
 };
 
-export default connect(null, mapDispatchToProps)(AddEmail);
+export default connect(null, mapDispatchToProps)(AddEmailComponent);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { Modal } from 'react-bootstrap';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { connect } from 'react-redux';
@@ -7,7 +7,7 @@ import { notify } from '../../actions/notificationActions';
 
 const mapDispatchToProps = { notify };
 
-export class ListSignupFormCreator extends React.Component {
+export class ListSignupFormCreatorComponent extends React.Component {
   constructor(props) {
     super(props);
 
@@ -17,17 +17,17 @@ export class ListSignupFormCreator extends React.Component {
     };
   }
 
-  showModal() {
-    this.setState({
-      showModal: true
-    });
-  }
-
   componentWillReceiveProps(props) {
     this.setState({
       showModal: props.showModal,
       subscribeKey: props.subscribeKey
-    })
+    });
+  }
+
+  showModal() {
+    this.setState({
+      showModal: true
+    });
   }
 
   closeModal() {
@@ -45,13 +45,13 @@ export class ListSignupFormCreator extends React.Component {
               <input type="hidden" name="subscribeKey" value="${this.state.subscribeKey}" />
               <input type="submit" value="Subscribe" name="Subscribe">
               </form>
-            `
+            `;
 
     return (
       <Modal show={this.state.showModal} onHide={this.closeModal.bind(this)}>
         <div className="modal-content">
           <div className="modal-header">
-            <h3 class="modal-title">Embeddable subscription form</h3>
+            <h3 className="modal-title">Embeddable subscription form</h3>
           </div>
           <div className="modal-body">
             <h4>Allow users to sign up to your mailing list by embedding this HTML code into your website</h4>
@@ -62,7 +62,7 @@ export class ListSignupFormCreator extends React.Component {
           </div>
           <div className="modal-footer">
             <CopyToClipboard text={formBody}
-                             onCopy={() => {this.props.notify({message: 'Copied to clipboard', colour: 'green'}).bind(this)}}>
+                             onCopy={() => {this.props.notify({message: 'Copied to clipboard', colour: 'green'}).bind(this);}}>
               <button className="btn btn-primary">Copy to clipboard</button>
             </CopyToClipboard>
 
@@ -73,4 +73,9 @@ export class ListSignupFormCreator extends React.Component {
   }
 }
 
-export default connect(null, mapDispatchToProps)(ListSignupFormCreator);
+ListSignupFormCreatorComponent.propTypes = {
+  notify: PropTypes.func.isRequired,
+  subscribeKey: PropTypes.string
+};
+
+export default connect(null, mapDispatchToProps)(ListSignupFormCreatorComponent);

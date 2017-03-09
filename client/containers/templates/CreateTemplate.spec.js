@@ -2,9 +2,9 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { CreateTemplate } from './CreateTemplate';
+import { CreateTemplateComponent } from './CreateTemplate';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   form: { values: {} },
   isPosting: true,
   postCreateTemplate: () => {},
@@ -13,7 +13,7 @@ const mockProps = (overrides) => ({
   notify: () => {}
 });
 
-const wrapper = shallow(<CreateTemplate {...mockProps()} />);
+const wrapper = shallow(<CreateTemplateComponent {...mockProps()} />);
 
 describe('(Container) CreateTemplate', () => {
   it('renders without exploding', () => {

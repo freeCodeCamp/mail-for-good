@@ -29,7 +29,7 @@ const mapDispatchToProps = {
   getGrantOfferedPermissions, deleteGrantOfferedPermissions,
   notify };
 
-export class OfferedPermissions extends Component {
+export class OfferedPermissionsComponent extends Component {
 
   static propTypes = {
     // redux
@@ -123,4 +123,4 @@ export class OfferedPermissions extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OfferedPermissions);
+export default connect(mapStateToProps, mapDispatchToProps)(OfferedPermissionsComponent);

@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import Header from './Header';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   user: {},
   ws_notification: [],
   consumeNotification: () => {},

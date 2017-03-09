@@ -52,7 +52,7 @@ const validate = values=> {
   return errors;
 };
 
-export class Settings extends Component {
+export class SettingsComponent extends Component {
 
   static propTypes = {
     // connect
@@ -63,6 +63,7 @@ export class Settings extends Component {
     form: PropTypes.object, // Not required as it's only created when needed
     loading: PropTypes.bool.isRequired,
     fieldsExist: PropTypes.object.isRequired,
+    status: PropTypes.string,
     // reduxForm
     touch: PropTypes.func.isRequired,
     valid: PropTypes.bool.isRequired,
@@ -201,7 +202,8 @@ export class Settings extends Component {
   }
 }
 
-export default 
-  connect(mapStateToProps, mapDispatchToProps)
-  (reduxForm({ form: 'settings',  destroyOnUnmount: false, validate })
-  (Settings));
+export default connect(mapStateToProps, mapDispatchToProps)(
+  reduxForm({ form: 'settings', destroyOnUnmount: false, validate })(
+    SettingsComponent
+  )
+);

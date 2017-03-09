@@ -2,15 +2,15 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { Dashboard } from './Dashboard';
+import { DashboardComponent } from './Dashboard';
 
-const mockProps = (overrides) => ({
-  children: <div></div>,
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
+  children: <div />,
   user: {},
   campaigns: []
 });
 
-const wrapper = shallow(<Dashboard {...mockProps()} />);
+const wrapper = shallow(<DashboardComponent {...mockProps()} />);
 
 describe('(Container) Dashboard', () => {
   it('renders without exploding', () => {

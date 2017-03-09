@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import ManageGrantOfferedPermissionsTable from './ManageGrantOfferedPermissionsTable';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   data: [],
   deletePermissionRows: () => {},
   ...overrides

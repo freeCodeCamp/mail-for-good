@@ -16,7 +16,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = { deleteListSubscribers, getListSubscribers };
 
-export class ManageListSubscribers extends Component {
+export class ManageListSubscribersComponent extends Component {
 
   static propTypes = {
     subscribers: PropTypes.array.isRequired,
@@ -77,4 +77,4 @@ export class ManageListSubscribers extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageListSubscribers);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageListSubscribersComponent);

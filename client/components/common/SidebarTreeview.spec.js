@@ -4,14 +4,14 @@ import { expect } from 'chai';
 
 import SidebarTreeview from './SidebarTreeview';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   name: '',
   icon: '',
   ...overrides
 });
 
 const mockContext = {
-  router: { isActive: (a, b) => true }
+  router: {  isActive: (a, b) => true } // eslint-disable-line no-unused-vars
 };
 
 const wrapper = shallow(<SidebarTreeview {...mockProps()} />, { context: mockContext });

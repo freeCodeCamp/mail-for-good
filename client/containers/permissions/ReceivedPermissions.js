@@ -32,7 +32,7 @@ const mapDispatchToProps = {
   getActivePermissions, deleteActivePermissions,
   notify };
 
-export class ReceivedPermissions extends Component {
+export class ReceivedPermissionsComponent extends Component {
 
   static propTypes = {
     // redux
@@ -136,4 +136,4 @@ export class ReceivedPermissions extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReceivedPermissions);
+export default connect(mapStateToProps, mapDispatchToProps)(ReceivedPermissionsComponent);

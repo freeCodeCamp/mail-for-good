@@ -15,7 +15,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = { notify, getTemplates };
 
-export class TemplateView extends Component {
+export class TemplateViewComponent extends Component {
 
   static propTypes = {
     notify: PropTypes.func.isRequired,
@@ -82,4 +82,4 @@ export class TemplateView extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TemplateView);
+export default connect(mapStateToProps, mapDispatchToProps)(TemplateViewComponent);

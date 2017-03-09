@@ -17,7 +17,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = { getCampaigns, deleteCampaigns };
 
-export class ManageCampaignsBox extends Component {
+export class ManageCampaignsBoxComponent extends Component {
 
   static propTypes = {
     campaigns: PropTypes.array.isRequired,
@@ -71,4 +71,4 @@ export class ManageCampaignsBox extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageCampaignsBox);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageCampaignsBoxComponent);
