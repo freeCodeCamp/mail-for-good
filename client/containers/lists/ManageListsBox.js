@@ -14,8 +14,9 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { getLists, deleteLists })
-export default class ManageList extends Component {
+const mapDispatchToProps = { getLists, deleteLists };
+
+export class ManageListsBox extends Component {
 
   static propTypes = {
     getLists: PropTypes.func.isRequired,
@@ -74,3 +75,5 @@ export default class ManageList extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageListsBox);

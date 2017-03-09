@@ -14,8 +14,9 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { deleteListSubscribers, getListSubscribers })
-export default class ManageListSubscribers extends Component {
+const mapDispatchToProps = { deleteListSubscribers, getListSubscribers };
+
+export class ManageListSubscribers extends Component {
 
   static propTypes = {
     subscribers: PropTypes.array.isRequired,
@@ -23,7 +24,8 @@ export default class ManageListSubscribers extends Component {
     deleteListSubscribers: PropTypes.func.isRequired,
     getListSubscribers: PropTypes.func.isRequired,
     params: PropTypes.object,
-    totalListSubscribers: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+    totalListSubscribers: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    additionalFields: PropTypes.array.isRequired
   }
 
   constructor() {
@@ -74,3 +76,5 @@ export default class ManageListSubscribers extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageListSubscribers);

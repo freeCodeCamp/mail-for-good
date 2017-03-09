@@ -13,8 +13,9 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, { notify, getTemplates })
-export default class CampaignView extends Component {
+const mapDispatchToProps = { notify, getTemplates };
+
+export class TemplateView extends Component {
 
   static propTypes = {
     notify: PropTypes.func.isRequired,
@@ -80,3 +81,5 @@ export default class CampaignView extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(TemplateView);

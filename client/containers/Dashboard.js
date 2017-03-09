@@ -11,8 +11,7 @@ function mapStateToProps(state) {
   };
 }
 
-@connect(mapStateToProps, null)
-export default class Dashboard extends Component {
+export class Dashboard extends Component {
   render() {
     const totalSentCount = this.props.campaigns.reduce((total, campaign) => total + campaign['campaignanalytic.totalSentCount'], 0);
 
@@ -37,3 +36,5 @@ Dashboard.propTypes = {
   children: PropTypes.element,
   user: PropTypes.object
 };
+
+export default connect(mapStateToProps)(Dashboard);
