@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import WSNotification from './WS-Notification';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   message: '',
   icon: '',
   iconColour: '',

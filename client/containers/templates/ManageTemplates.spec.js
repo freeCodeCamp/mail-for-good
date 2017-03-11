@@ -2,9 +2,9 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { ManageTemplates } from './ManageTemplates';
+import { ManageTemplatesComponent } from './ManageTemplates';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   form: {},
   getTemplates: () => {},
   templates: [],
@@ -15,10 +15,10 @@ const mockProps = (overrides) => ({
 
 
 const mockContext = {
-  router: { isActive: (a, b) => true }
+  router: {  isActive: (a, b) => true } // eslint-disable-line no-unused-vars
 };
 
-const wrapper = shallow(<ManageTemplates {...mockProps()} />, { context: mockContext });
+const wrapper = shallow(<ManageTemplatesComponent {...mockProps()} />, { context: mockContext });
 
 describe('(Container) ManageTemplates', () => {
   it('renders without exploding', () => {

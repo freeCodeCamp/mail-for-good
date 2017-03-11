@@ -8,4 +8,9 @@ import {
 
 describe('(Actions) app', () => {
 
+  it('should exist', () => {
+    expect(emitProfileRequest).to.be.a('function');
+    expect(localNotification).to.be.a('function');
+  });
+
 });

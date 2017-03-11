@@ -2,16 +2,16 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { ListSignupFormCreator } from './ListSignupFormCreator';
+import { ListSignupFormCreatorComponent } from './ListSignupFormCreator';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   showModal: true,
   subscribeKey: '',
   notify: () => {},
   ...overrides
 });
 
-const wrapper = shallow(<ListSignupFormCreator {...mockProps()} />);
+const wrapper = shallow(<ListSignupFormCreatorComponent {...mockProps()} />);
 
 describe('(Component) ListSignupFormCreator', () => {
   it('renders without exploding', () => {

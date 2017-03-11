@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import ManageListsTable from './ManageListsTable';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   data: [],
   deleteRows: () => {},
   ...overrides

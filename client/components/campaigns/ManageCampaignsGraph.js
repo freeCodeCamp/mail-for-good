@@ -3,16 +3,17 @@ import ReactHighCharts from 'react-highcharts';
 
 
 export default class ManageCampaignsGraph extends React.Component {
+
+  static propTypes = {
+    data: PropTypes.array.isRequired
+  }
+
   constructor(props) {
     super(props);
 
     this.state = {
       data: this.props.data || []
-    }
-  }
-
-  static propTypes = {
-    data: PropTypes.array.isRequired
+    };
   }
 
   componentWillReceiveProps(props) {
@@ -26,7 +27,7 @@ export default class ManageCampaignsGraph extends React.Component {
     let deliveredData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     let complaintData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     let bounceData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     this.state.data.forEach(campaign => {
       const monthUTC = campaign.createdAt.getUTCMonth();
@@ -36,10 +37,10 @@ export default class ManageCampaignsGraph extends React.Component {
 
       deliveredData[monthUTC] += campaign['campaignanalytic.totalSentCount'] -
         campaign['campaignanalytic.permanentBounceCount'] -
-        campaign['campaignanalytic.transientBounceCount'];;
-    })
+        campaign['campaignanalytic.transientBounceCount'];
+    });
 
-    var config = {
+    const config = {
       title: {
         text: 'Campaign Stats'
       },
@@ -63,6 +64,6 @@ export default class ManageCampaignsGraph extends React.Component {
 
     return (
       <ReactHighCharts config={config} />
-    )
+    );
   }
 }

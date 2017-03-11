@@ -24,7 +24,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = { getCampaigns, postSendCampaign, postTestEmail, stopSending, notify };
 
-export class CampaignView extends Component {
+export class CampaignViewComponent extends Component {
 
   static propTypes = {
     // actions
@@ -256,4 +256,4 @@ export class CampaignView extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CampaignView);
+export default connect(mapStateToProps, mapDispatchToProps)(CampaignViewComponent);

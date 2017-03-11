@@ -16,7 +16,7 @@ function mapStateToProps(state) {
   };
 }
 
-export class ImportCSV extends Component {
+export class ImportCSVComponent extends Component {
 
   static propTypes = {
     handleCSVSubmit: PropTypes.func.isRequired,
@@ -159,4 +159,4 @@ export class ImportCSV extends Component {
   }
 }
 
-export default connect(mapStateToProps)(ImportCSV);
+export default connect(mapStateToProps)(ImportCSVComponent);

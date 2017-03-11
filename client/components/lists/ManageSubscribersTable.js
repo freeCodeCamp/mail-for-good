@@ -112,17 +112,18 @@ export default class ManageSubscribersTable extends Component {
     let additionalColumns = this.state.additionalFields.map(field => {
       // dynamically generate additional columns for custom data (stored in data[additionalData][{dataField}].
       // we use formatExtraData to access the nested values - see https://github.com/AllenFang/react-bootstrap-table/issues/50
-      return <TableHeaderColumn dataField={'additionalData.'+field} dataFormat={this.formatAdditionalData} formatExtraData={'additionalData.'+field}>{field}</TableHeaderColumn>
+      return <TableHeaderColumn dataField={'additionalData.'+field} key={'additionalData.'+field} dataFormat={this.formatAdditionalData} formatExtraData={'additionalData.'+field}>{field}</TableHeaderColumn>;
     });
 
     let columns = [
-      <TableHeaderColumn dataField="id" hidden={true}>id</TableHeaderColumn>,
-      <TableHeaderColumn dataField="email">Email</TableHeaderColumn>
+      <TableHeaderColumn dataField="id" key="id" hidden={true}>id</TableHeaderColumn>,
+      <TableHeaderColumn dataField="email" key="email">Email</TableHeaderColumn>
     ].concat(additionalColumns).concat([
-      <TableHeaderColumn dataField="createdAt" dataFormat={this.formatDate} width="150">Created</TableHeaderColumn>,
-      <TableHeaderColumn dataField="updatedAt" dataFormat={this.formatDate} width="150">Updated</TableHeaderColumn>,
+      <TableHeaderColumn dataField="createdAt" key="createdAt" dataFormat={this.formatDate} width="150">Created</TableHeaderColumn>,
+      <TableHeaderColumn dataField="updatedAt" key="updatedAt" dataFormat={this.formatDate} width="150">Updated</TableHeaderColumn>,
       <TableHeaderColumn
         dataField="mostRecentStatus"
+        key="mostRecentStatus"
         dataFormat={this.formatStatus}
         dataAlign="center"
         width="150"
@@ -137,6 +138,7 @@ export default class ManageSubscribersTable extends Component {
           }
         }}>Feedback</TableHeaderColumn>,
       <TableHeaderColumn dataField="subscribed"
+                         key="subscribed"
                          dataFormat={this.formatFieldSubscribed}
                          width="150"
                          dataAlign="center"

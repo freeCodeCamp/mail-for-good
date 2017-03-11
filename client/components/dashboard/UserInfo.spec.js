@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import UserInfo from './UserInfo';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   user: {},
   totalSentCount: 0,
   ...overrides

@@ -22,7 +22,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = { postCreateCampaign, getLists, getTemplates, initialize, notify };
 
-export class CreateCampaign extends Component {
+export class CreateCampaignComponent extends Component {
 
   static propTypes = {
     form: PropTypes.object,
@@ -138,4 +138,4 @@ export class CreateCampaign extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateCampaign);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateCampaignComponent);

@@ -2,16 +2,16 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { ImportCSV } from './ImportCSV';
+import { ImportCSVComponent } from './ImportCSV';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   handleCSVSubmit: () => {},
   isPosting: true,
   notification: () => {},
   upload: {}
 });
 
-const wrapper = shallow(<ImportCSV {...mockProps()} />);
+const wrapper = shallow(<ImportCSVComponent {...mockProps()} />);
 
 describe('(Container) ImportCSV', () => {
   it('renders without exploding', () => {

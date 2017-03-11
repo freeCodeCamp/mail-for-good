@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import ManageTemplatesTable from './ManageTemplatesTable';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   data: [],
   deleteRows: () => {},
   getTemplateView: () => {},

@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import ErrorsList from './ErrorsList';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   errors: [],
   ...overrides
 });

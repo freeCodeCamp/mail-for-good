@@ -18,7 +18,8 @@ WSNotification.propTypes = {
   icon: PropTypes.string,
   iconColour: PropTypes.string,
   consumeNotification: PropTypes.func.isRequired,
-  index: PropTypes.number.isRequired
+  index: PropTypes.number.isRequired,
+  url: PropTypes.string
 };
 
 export default WSNotification;

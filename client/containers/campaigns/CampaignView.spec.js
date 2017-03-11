@@ -2,9 +2,9 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { CampaignView } from './CampaignView';
+import { CampaignViewComponent } from './CampaignView';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   postSendCampaign: () => {},
   postTestEmail: () => {},
   getCampaigns: () => {},
@@ -22,7 +22,7 @@ const mockProps = (overrides) => ({
   params: { slug: 'mockSlug'}
 });
 
-const wrapper = shallow(<CampaignView {...mockProps()} />);
+const wrapper = shallow(<CampaignViewComponent {...mockProps()} />);
 
 describe('(Container) CampaignView', () => {
   it('renders without exploding', () => {

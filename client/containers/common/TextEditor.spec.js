@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import TextEditor from './TextEditor';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   input: {},
   textEditorType: ''
 });

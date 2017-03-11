@@ -2,9 +2,9 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { TemplateView } from './TemplateView';
+import { TemplateViewComponent } from './TemplateView';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   notify: () => {},
   getTemplates: () => {},
   templates: [{ slug: 'mockSlug' }],
@@ -12,7 +12,7 @@ const mockProps = (overrides) => ({
   params: { slug: 'mockSlug' }
 });
 
-const wrapper = shallow(<TemplateView {...mockProps()} />);
+const wrapper = shallow(<TemplateViewComponent {...mockProps()} />);
 
 describe('(Container) TemplateView', () => {
   it('renders without exploding', () => {

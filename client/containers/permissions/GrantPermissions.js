@@ -17,7 +17,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = { notify, postGrantPermission };
 
-export class GrantPermissions extends Component {
+export class GrantPermissionsComponent extends Component {
 
   static propTypes = {
     // redux
@@ -79,4 +79,4 @@ export class GrantPermissions extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(GrantPermissions);
+export default connect(mapStateToProps, mapDispatchToProps)(GrantPermissionsComponent);

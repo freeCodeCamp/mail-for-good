@@ -2,9 +2,9 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import { CreateList } from './CreateList';
+import { CreateListComponent } from './CreateList';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   submitCSV: () => {},
   notify: () => {},
   lists: [],
@@ -12,10 +12,10 @@ const mockProps = (overrides) => ({
 });
 
 const mockContext = {
-  router: { isActive: (a, b) => true }
+  router: {  isActive: (a, b) => true } // eslint-disable-line no-unused-vars
 };
 
-const wrapper = shallow(<CreateList {...mockProps()} />, { context: mockContext });
+const wrapper = shallow(<CreateListComponent {...mockProps()} />, { context: mockContext });
 
 describe('(Container) CreateList', () => {
   it('renders without exploding', () => {

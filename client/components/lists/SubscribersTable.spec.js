@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import SubscribersTable from './SubscribersTable';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   subscribers: [],
   fields: [],
   ...overrides

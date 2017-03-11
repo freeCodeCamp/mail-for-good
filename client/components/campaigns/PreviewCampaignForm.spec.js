@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import PreviewCampaignForm from './PreviewCampaignForm';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   handleSubmit: () => {},
   lastPage: () => {},
   form: { values: {} },

@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import ManageReceivedPermissionOffersTable from './ManageReceivedPermissionOffersTable';
 
-const mockProps = (overrides) => ({
+const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   data: [],
   rejectRows: () => {},
   acceptRows: () => {},

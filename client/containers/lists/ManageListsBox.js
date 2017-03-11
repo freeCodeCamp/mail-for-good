@@ -16,7 +16,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = { getLists, deleteLists };
 
-export class ManageListsBox extends Component {
+export class ManageListsBoxComponent extends Component {
 
   static propTypes = {
     getLists: PropTypes.func.isRequired,
@@ -31,7 +31,7 @@ export class ManageListsBox extends Component {
     this.state = {
       showListSignupFormCreator: false,
       subscribeKey: ''
-    }
+    };
   }
 
   componentDidMount() {
@@ -76,4 +76,4 @@ export class ManageListsBox extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageListsBox);
+export default connect(mapStateToProps, mapDispatchToProps)(ManageListsBoxComponent);
