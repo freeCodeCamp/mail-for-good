@@ -6,7 +6,7 @@
 
 // See ref - https://github.com/OptimalBits/bull#queue
 const QUEUE_ADD_CONFIG = {
-  attempts: 5, // How many attempts to attempt sending an email before calling it quits
+  attempts: 3, // How many attempts to attempt sending an email before calling it quits
   backoff: {
     type: 'exponential',
     delay: 5000 // ms

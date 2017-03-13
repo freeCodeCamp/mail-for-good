@@ -422,7 +422,7 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, ioSo
         if (!shouldSend) {
           update(() => { });  // Send a final sent count notification
         }
-        return shouldSend
+        return shouldSend;
       }
     );
   }

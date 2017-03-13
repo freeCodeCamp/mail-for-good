@@ -11,8 +11,9 @@ const CampaignAnalytics = require('../../../../models').campaignanalytics;
 module.exports = function(Queue, ses, rateLimit, campaignInfo ) {
   // const EMAILS_PER_SECOND = rateLimit;
   // const ONE_SECOND = 1000;
+  const CONCURRENCY = rateLimit;
 
-  Queue.process(job => {
+  Queue.process(CONCURRENCY, job => {
     // Call the _sendEmail function in the parent closure
     const { email, task } = job.data; // See Amazon.js - where { email } is a formatted SES email & { info } contains the id
 
@@ -27,7 +28,7 @@ module.exports = function(Queue, ses, rateLimit, campaignInfo ) {
         return;
       });
   });
-/*
+
   Queue.on('completed', function(){
     // Clean all completed jobs (remove from redis)
     Queue.clean(1000, 'completed');
@@ -37,7 +38,6 @@ module.exports = function(Queue, ses, rateLimit, campaignInfo ) {
   Queue.on('error', function(error) {
     console.log(error); // eslint-disable-line
   });
-*/
 
   function _updateAnalytics(data, task, campaignInfo) {
     const p1 = CampaignSubscriber.update(
