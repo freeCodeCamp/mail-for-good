@@ -8,7 +8,7 @@ const CampaignAnalytics = require('../../../../models').campaignanalytics;
   it will send to the rateLimit as determined by Amazon.
 */
 
-module.exports = function(Queue, ses, rateLimit, campaignInfo ) {
+module.exports = function(Queue, ses, rateLimit, campaignInfo) {
   // const EMAILS_PER_SECOND = rateLimit;
   // const ONE_SECOND = 1000;
   const CONCURRENCY = rateLimit;

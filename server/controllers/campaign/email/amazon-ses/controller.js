@@ -67,9 +67,9 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, ioSo
   } = amazonAccountInfo;
 
   // Constants
-  const isDevMode = process.env.NODE_ENV === 'development';
   const isProductionTestMode = process.env.TEST_PRODUCTION === 'true';
-  const rateLimit = process.env.DEV_SEND_RATE || quotas.MaxSendRate; // No. of email we can send p/s as established by Amazon
+  const isDevMode = process.env.NODE_ENV === 'development' || isProductionTestMode;
+  const rateLimit = Number(process.env.DEV_SEND_RATE) || quotas.MaxSendRate; // No. of email we can send p/s as established by Amazon
   const rateLimitTimesFive = rateLimit * 5; // Arbitrary quantity of emails to store in buffer
   const emailBuffer = []; // This stores the current buffer of emails to be sent
 
@@ -77,7 +77,6 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, ioSo
     ? new AWS.SES({  // Dev mode
         apiVersion: '2010-12-01',
         // convertResponseTypes: false,
-        maxRetries: 0,
         accessKeyId: accessKey,
         secretAccessKey:
         secretKey,
@@ -357,7 +356,7 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, ioSo
     if (isDevMode) console.log(`emailProducer called, arrayOfIdsLength: ${arrayOfIdsLength} - emailBufferLength: ${emailBufferLength}`); // eslint-disable-line
 
     // The constant below contains either the rateLimit or arrayOfIdsLength, whichever is lowest
-    const numberOfEmailsToSplice = rateLimit > arrayOfIdsLength ? (arrayOfIdsLength == 0 ? 1 : arrayOfIdsLength) : rateLimit;
+    const numberOfEmailsToSplice = rateLimit > emailBufferLength ? (emailBufferLength == 0 ? 1 : emailBufferLength) : rateLimit;
     const splicedEmails = emailBuffer.splice(0, numberOfEmailsToSplice);
 
     if (isDevMode) console.log(`splicedEmailsLength: ${splicedEmails.length} - tried to splice ${numberOfEmailsToSplice} elements from emailBuffer of length: ${emailBufferLength}`); // eslint-disable-line
