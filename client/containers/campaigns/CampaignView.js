@@ -85,8 +85,11 @@ export class CampaignViewComponent extends Component {
     if (nextProps.campaigns && nextProps.campaigns.length && !this.props.campaigns.length) { // Guarded and statement that confirms campaigns is in the new props, confirms the array isn't empty, and then confirms that current props do not exist
       this.getSingleCampaign(nextProps);
     }
+
     // Show success/failure toast for send campaign
-    if (nextProps.sendCampaignResponse && nextProps.isPostingSendCampaign) {
+    const sendCampaignResponseExists = !!nextProps.sendCampaignResponse;
+    const justSentCampaign = !nextProps.isPostingSendCampaign && this.props.isPostingSendCampaign;
+    if (sendCampaignResponseExists && justSentCampaign) {
       this.setState({ haveShownMessage: true });
       if (nextProps.sendCampaignStatus === 200) {
         this.props.notify({
@@ -101,7 +104,9 @@ export class CampaignViewComponent extends Component {
     }
 
     // Show success/failure toast for send test
-    if (nextProps.sendTestEmailResponse && nextProps.isPostingSendTest) {
+    const sendTestEmailResponseExists = !!nextProps.sendTestEmailResponse;
+    const justSentTestEmail = !nextProps.isPostingSendTest && this.props.isPostingSendTest;
+    if (sendTestEmailResponseExists && justSentTestEmail) {
       this.setState({ haveShownMessage: true });
       if (nextProps.sendTestEmailStatus === 200) {
         this.props.notify({
@@ -184,10 +189,25 @@ export class CampaignViewComponent extends Component {
   }
 
   render() {
-    let downloadUnsentSubscribersUrl = encodeURI(`${window.location.origin}/api/campaign/subscribers/csv?campaignId=${this.state.thisCampaign.id}&sent=false`);
-    const isReady = this.state.thisCampaign && this.state.thisCampaign.status === 'ready';
+    const {
+      thisCampaign,
+      haveShownMessage,
+      showTestSendModal,
+      testEmail
+    } = this.state;
 
-    return (
+    const {
+      sendCampaignResponse,
+      sendCampaignStatus,
+      isPostingSendCampaign,
+      isPostingSendTest,
+      isGetting
+    } = this.props;
+
+    const downloadUnsentSubscribersUrl = encodeURI(`${window.location.origin}/api/campaign/subscribers/csv?campaignId=${thisCampaign.id}&sent=false`);
+    const isReady = thisCampaign && thisCampaign.status === 'ready';
+
+    const renderCampaignView = () => (
       <div>
         <div className="content-header">
           <h1>Your Campaign
@@ -198,17 +218,17 @@ export class CampaignViewComponent extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-header">
-              <h3 className="box-title">Campaign: {this.state.thisCampaign.name}</h3>
+              <h3 className="box-title">Campaign: {thisCampaign.name}</h3>
             </div>
 
             <div className="box-body">
 
-              {(this.props.sendCampaignResponse && this.state.haveShownMessage) &&
-                <p className={this.props.sendCampaignStatus === 200 ? 'text-green' : 'text-red'}>
-                  <i className={this.props.sendCampaignStatus === 200 ? 'fa fa-check' : 'fa fa-exclamation'}/> {this.props.sendCampaignResponse.split('.')[0]}.<br/> <br/> {this.props.sendCampaignResponse.split('.')[1]}.
+              {(sendCampaignResponse && haveShownMessage) &&
+                <p className={sendCampaignStatus === 200 ? 'text-green' : 'text-red'}>
+                  <i className={sendCampaignStatus === 200 ? 'fa fa-check' : 'fa fa-exclamation'}/> {sendCampaignResponse.split('.')[0]}.<br/> <br/> {sendCampaignResponse.split('.')[1]}.
                 </p>}
 
-              <PreviewCampaignForm campaignView={this.state.thisCampaign} />
+              <PreviewCampaignForm campaignView={thisCampaign} />
 
               <div className="form-inline">
                 {isReady && <button className="btn btn-success btn-lg" type="button" onClick={this.openSendModal}>Send</button>}
@@ -218,13 +238,13 @@ export class CampaignViewComponent extends Component {
               </div>
 
               {/* Modal for sending test emails */}
-              <Modal show={this.state.showTestSendModal} onHide={this.closeTestSendModal}>
+              <Modal show={showTestSendModal} onHide={this.closeTestSendModal}>
                 <Modal.Header closeButton>
                   <Modal.Title>Send a test email</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
-                  <input className="form-control" style={{ "margin-left": "1rem" }} id="testEmail" placeholder="Send a test email to:" type="email" value={this.state.testEmail} onChange={this.handleChange} />
+                  <input className="form-control" style={{ "margin-left": "1rem" }} id="testEmail" placeholder="Send a test email to:" type="email" value={testEmail} onChange={this.handleChange} />
                 </Modal.Body>
 
                 <Modal.Footer>
@@ -236,7 +256,7 @@ export class CampaignViewComponent extends Component {
               {/* Modal for sending email campaign */}
               <Modal show={this.state.showSendModal} onHide={this.closeSendModal}>
                 <Modal.Header closeButton>
-                  <Modal.Title>Are you ready to send this campaign to {this.state.thisCampaign.totalCampaignSubscribers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} subscribers?</Modal.Title>
+                  <Modal.Title>Are you ready to send this campaign to {thisCampaign.totalCampaignSubscribers ? thisCampaign.totalCampaignSubscribers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0} subscribers?</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Footer>
@@ -245,12 +265,20 @@ export class CampaignViewComponent extends Component {
                 </Modal.Footer>
               </Modal>
 
-              {this.props.isGetting || this.props.isPostingSendCampaign || this.props.isPostingSendTest && <div className="overlay">
+              {isGetting || isPostingSendCampaign || isPostingSendTest && <div className="overlay">
                 <FontAwesome name="refresh" spin/>
               </div>}
             </div>
           </div>
         </section>
+      </div>
+    );
+
+    const canRender = !!(thisCampaign);
+
+    return (
+      <div>
+        {canRender && renderCampaignView()}
       </div>
     );
   }
