@@ -1,4 +1,5 @@
 module.exports = function(io, req, notification) {
+  // Reload the session - the socket may have changed if the user refreshed their browser
   req.session.reload(function(err) {
     if (err) {
       console.log(err);

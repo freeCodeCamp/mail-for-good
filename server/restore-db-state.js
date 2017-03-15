@@ -15,7 +15,6 @@ module.exports = () => {
   // update anything
   return User.findAll({ raw: true })
     .then(users => {
-      console.log(users);
       if (users.length) {
         Campaign.update({
           status: 'interrupted'
@@ -23,5 +22,5 @@ module.exports = () => {
           where: { status: 'sending' }
         });
       }
-    })
+    });
 };

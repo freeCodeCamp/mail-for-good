@@ -17,25 +17,24 @@ const routes = require('./routes');
 // Websocket notifications
 const getProfile = require('./controllers/websockets/get-profile');
 
-// Config
-require('./config/passport')(passport);
-
+// Config refis
 const redisSettings = { host: process.env.REDIS_HOST || '127.0.0.1' };
 const client = redis.createClient(redisSettings);
 const subscriber = redis.createClient(redisSettings);  // Need to create separate connections
 const publisher = redis.createClient(redisSettings);   // for pub-sub
 
-client.on("error", err => console.log(`Error: ${err} - Are you running redis?`)); // eslint-disable-line
+client.on('error', err => console.log('Error: Are you running redis? - ', err));
 
 // Session middleware
 const sessionMiddleware = session({
   store: new RedisStore({ client }),
   secret: secret.sessionSecret,
-  resave: true,
-  saveUninitialized: true
+  resave: false,
+  saveUninitialized: false
 });
 
-// Express middleware
+// Express middleware & passport setup
+require('./config/passport')(passport);
 app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
@@ -47,23 +46,26 @@ io.use(function(socket, next) {
     sessionMiddleware(socket.request, socket.request.res, next);
 });
 io.on('connection', socket => {
-  // console.log(socket.request.session);
-  // console.log(req);
   socket.request.session.passport.socket = socket.id;
   socket.request.session.save(() => {
 
+    /**
+    * Save the new socket id to the user's session stored in Redis
+    * This ensures that on refresh, users still get websockets.
+    */
+
     socket.on('login', () => {
+      // Pass the user their user info for display on the frontend
       const id = socket.request.session.passport.user;
       getProfile(id).then(userObject => {
         socket.emit('loginResponse', userObject);
       });
     });
-    console.log(socket.request.session.passport.socket, 'RELOADED');
 
   });
 });
 
-// Use dirs appropriately, with a separation of concerns for the public & dist dirs
+// There are two separate directories for unauthenticated and authenticated users.
 app.use('/public', express.static(path.join(__dirname, '../public')));
 app.use('/dist', express.static(path.join(__dirname, '../dist')));
 
@@ -74,10 +76,17 @@ routes(app, passport, io, { client, subscriber, publisher });
 restoreDbState().then(() => {
   const port = process.env.PORT || 8080;
   server.listen(port, function() {
-    console.log(`Email service live on port ${port}`); // eslint-disable-line
+    const displayMessage = `
+    ############################
+    #   Mail 4 Good started    #
+    ############################
+    # Port: ${port}
+    ############################
+    `;
+    console.log(displayMessage);
   });
 
   server.on('error', err => {
-    console.log(err); // eslint-disable-line
+    console.log(err);
   });
 });
