@@ -1,15 +1,18 @@
-module.exports = function(ioSocket, message, icon, iconColour, id) {
-  if (ioSocket) {
-    const notification = {
-      isUpdate: true, // Mark this notification as an update for an existing notification to the client
-      message,
-      id, // Unique identified for use on client side (in the reducer)
-      icon,
-      iconColour
-    };
-
-    if (ioSocket) {
-      ioSocket.emit('notification', notification);
+module.exports = function(io, req, notification) {
+  console.log('fired');
+  req.session.reload(function(err) {
+    if (err) {
+      console.log(err);
     }
-  }
+    const socketId = req.session.passport.socket;
+    console.log(socketId);
+    const userSocket = io.sockets.connected[socketId];
+    console.log('fired_before');
+    if (userSocket) {
+      console.log('fired_after');
+      Object.assign(notification, { isUpdate: true });
+
+      userSocket.emit('notification', notification);
+    }
+  });
 };

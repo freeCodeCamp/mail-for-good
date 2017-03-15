@@ -4,7 +4,6 @@ const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const passport = require('passport');
 const path = require('path');
-const cookie = require('cookie');
 const app = express();
 const server = require('http').createServer(app);
 const helmet = require('helmet');
@@ -32,7 +31,7 @@ client.on("error", err => console.log(`Error: ${err} - Are you running redis?`))
 const sessionMiddleware = session({
   store: new RedisStore({ client }),
   secret: secret.sessionSecret,
-  resave: false,
+  resave: true,
   saveUninitialized: true
 });
 
@@ -50,11 +49,17 @@ io.use(function(socket, next) {
 io.on('connection', socket => {
   // console.log(socket.request.session);
   // console.log(req);
-  socket.on('login', () => {
-    const id = socket.request.session.passport.user;
-    getProfile(id).then(userObject => {
-      socket.emit('loginResponse', userObject);
+  socket.request.session.passport.socket = socket.id;
+  socket.request.session.save(() => {
+
+    socket.on('login', () => {
+      const id = socket.request.session.passport.user;
+      getProfile(id).then(userObject => {
+        socket.emit('loginResponse', userObject);
+      });
     });
+    console.log(socket.request.session.passport.socket, 'RELOADED');
+
   });
 });
 

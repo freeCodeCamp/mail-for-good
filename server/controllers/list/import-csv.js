@@ -22,11 +22,6 @@ const sendUpdateNotification = require('../websockets/send-update-notification')
 */
 
 module.exports = (req, res, io) => {
-  /*
-        Outstanding issues:
-        TODO: TSV & other files are not accounted for. The current method only works with CSV files. There's also no current validation of CSV files in terms of both the information within and the actual file type.
-        TODO: Validate additional fields
-    */
 
   /*
         Steps in this file
@@ -88,14 +83,15 @@ module.exports = (req, res, io) => {
         ? `${filenameWithoutExtension.substr(0, 10)}...`
         : filenameWithoutExtension;
 
-      const ioSocket = io.sockets.connected[req.session.passport.socket];
-      const message = `"${filenameWithoutExtension}" successfully uploaded (${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows)`;
-      const icon = 'fa-list-alt';
-      const iconColour = 'text-green';
-      const newDataToFetch = 'lists';
-      const url = `/lists/manage/${listId}`;
+      const notification = {
+        message: `"${filenameWithoutExtension}" successfully uploaded (${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows)`,
+        icon: 'fa-list-alt',
+        iconColour: 'text-green',
+        newDataToFetch: 'lists',  // A client side resource to be updated, e.g. 'campaigns'
+        url: `/lists/manage/${listId}`  // User is redirected to this (relative) url when they dismiss a notification
+      };
 
-      sendSingleNotification(ioSocket, message, icon, iconColour, newDataToFetch, url);
+      sendSingleNotification(io, req, notification);
     }
 
     function updateListStatusReady() {
@@ -158,13 +154,15 @@ module.exports = (req, res, io) => {
 
           // Send a notification if this isn't the final batch (since if it is, the user will receive a 'success')
           if (tasksLength === bufferLength) {
-            const ioSocket = io.sockets.connected[req.session.passport.socket];
-            const message = `Processed ${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows...`;
-            const icon = 'fa-upload';
-            const iconColour = 'text-blue';
-            const id = crudeRandomId;
+            const notification = {
+              isUpdate: true, // Mark this notification as an update for an existing notification to the client
+              message :`Processed ${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows...`,
+              id: crudeRandomId, // Unique identified for use on client side (in the reducer)
+              icon: 'fa-upload',
+              iconColour: 'text-blue'
+            };
 
-            sendUpdateNotification(ioSocket, message, icon, iconColour, id);
+            sendUpdateNotification(io, req, notification);
           } else {
             finishSend();
           }

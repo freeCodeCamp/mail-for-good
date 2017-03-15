@@ -1,14 +1,14 @@
-module.exports = function(ioSocket, message, icon, iconColour, newDataToFetch, url) {
-  if (ioSocket) {
-    const notification = {
-      isUpdate: false,
-      message,
-      icon,
-      iconColour,
-      newDataToFetch,  // A client side resource to be updated, e.g. 'campaigns'
-      url  // User is redirected to this (relative) url when they dismiss a notification
-    };
+module.exports = function(io, req, notification) {
+  req.session.reload(function(err) {
+    if (err) {
+      console.log(err);
+    }
+    const socketId = req.session.passport.socket;
+    const userSocket = io.sockets.connected[socketId];
+    if (userSocket) {
+      Object.assign(notification, { isUpdate: false });
 
-    ioSocket.emit('notification', notification);
-  }
+      userSocket.emit('notification', notification);
+    }
+  });
 };
