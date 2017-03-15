@@ -15,9 +15,6 @@ const clickthrough = require('../controllers/analytics/clickthrough');
 const getSettings = require('../controllers/settings/get-settings');
 const changeSettings = require('../controllers/settings/changesettings');
 
-// Websocket notifications
-const getProfile = require('../controllers/websockets/get-profile');
-
 // Middleware
 const { apiIsAuth, isAuth } = require('./middleware/auth');
 
@@ -99,16 +96,5 @@ module.exports = (app, passport, io, redis) => {
 
   app.get('/*', isAuth, (req, res) => {
     res.sendFile(path.resolve('dist/index.html'));
-    // On initial client connection, store the user's websocket info in their authenticated session
-    io.on('connection', socket => {
-      socket.on('login', () => {
-        req.session.passport.socket = socket.id;
-        req.session.save();
-        getProfile(req).then(userObject => {
-          socket.emit('loginResponse', userObject);
-        });
-      });
-    });
   });
-
 };

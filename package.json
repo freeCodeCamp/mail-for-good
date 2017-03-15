@@ -51,6 +51,7 @@
     "bootstrap": "^3.3.7",
     "bull": "^2.2.2",
     "connect-redis": "^3.1.0",
+    "cookie": "^0.3.1",
     "cookie-parser": "^1.4.3",
     "csv": "^1.1.0",
     "debug": "^2.6.1",

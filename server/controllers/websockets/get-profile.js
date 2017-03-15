@@ -1,9 +1,9 @@
 const User = require('../../models').user;
 
-module.exports = function(req) {
+module.exports = function(id) {
   return User.findOne({
     where: {
-      id: req.user.id
+      id: id
     },
     attributes: ['picture', 'email', 'createdAt', 'name', 'sentEmailsCount']
   }).then(userInstance => {
