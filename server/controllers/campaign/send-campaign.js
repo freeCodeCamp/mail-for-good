@@ -3,6 +3,8 @@ const email = require('./email');
 const AWS = require('aws-sdk');
 const moment = require('moment');
 
+const sendSingleNotification = require('../websockets/send-single-notification');
+
 module.exports = (req, res, io, redis) => {
 
   const userId = req.user.id;
@@ -51,22 +53,20 @@ module.exports = (req, res, io, redis) => {
       quotas
     };
 
-    const ioSocket = io.sockets.connected[req.session.passport.socket]
-
-    yield email.amazon.controller(generator, redis, campaignAndListInfo, amazonAccountInfo, ioSocket);
+    yield email.amazon.controller(generator, redis, campaignAndListInfo, amazonAccountInfo, io, req);
 
     // 8. TODO: If there was an error, handle it here
 
     // 9. Push a notification regarding the success of the operation to the user if they're connected
-    if (io.sockets.connected[req.session.passport.socket]) {
-      const emailSuccess = {
-        message: `Campaign "${campaignInfo.name}" has been sent`,
-        icon: 'fa-envelope',
-        iconColour: 'text-green'
-      };
 
-      io.sockets.connected[req.session.passport.socket].emit('notification', emailSuccess);
-    }
+    const notification = {
+      message: `Campaign "${campaignInfo.name}" has been sent`,
+      icon: 'fa-envelope',
+      iconColour: 'text-green',
+    };
+
+    sendSingleNotification(io, req, notification);
+
   }
 
   const generator = sendCampaign();

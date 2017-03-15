@@ -128,13 +128,14 @@ module.exports = (req, res, io) => {
   });
 
   function sendSuccessNotification() {
-    const ioSocket = io.sockets.connected[req.session.passport.socket];
-    const message = `${req.body.campaignName} is ready to send`;
-    const icon = 'fa-list-alt';
-    const iconColour = 'text-green';
-    const newDataToFetch = 'campaigns';
-    const url = `/campaigns/manage/${slug(req.body.campaignName)}`;
+    const notification = {
+      message: `${req.body.campaignName} is ready to send`,
+      icon: 'fa-list-alt',
+      iconColour: 'text-green',
+      newDataToFetch: 'campaigns',  // A client side resource to be updated, e.g. 'campaigns'
+      url: `/campaigns/manage/${slug(req.body.campaignName)}`  // User is redirected to this (relative) url when they dismiss a notification
+    };
 
-    sendSingleNotification(ioSocket, message, icon, iconColour, newDataToFetch, url);
+    sendSingleNotification(io, req, notification);
   }
 };

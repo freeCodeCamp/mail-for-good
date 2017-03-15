@@ -155,7 +155,6 @@ module.exports = (req, res, io) => {
           // Send a notification if this isn't the final batch (since if it is, the user will receive a 'success')
           if (tasksLength === bufferLength) {
             const notification = {
-              isUpdate: true, // Mark this notification as an update for an existing notification to the client
               message :`Processed ${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows...`,
               id: crudeRandomId, // Unique identified for use on client side (in the reducer)
               icon: 'fa-upload',

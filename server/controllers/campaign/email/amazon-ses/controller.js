@@ -41,7 +41,7 @@ const CampaignAnalyticsOpen = require('../../../../models').campaignanalyticsope
 const sendSingleNotification = require('../../../websockets/send-single-notification');
 const sendUpdateNotification = require('../../../websockets/send-update-notification');
 
-module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, ioSocket) => {
+module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, io, req) => {
   /*
     # Send emails via Amazon SES' API #
     This function focuses on a tradeoff between speed and memory usage. It does the following:
@@ -407,11 +407,16 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, ioSo
         where: { campaignId: campaignInfo.campaignId },
         attributes: ['totalSentCount']
       }).then(campaignAnalytics => {
-        const message = `Sent ${campaignAnalytics.totalSentCount} emails`;
-        const icon = 'fa-envelope';
-        const iconColour = 'text-green';
-        sendUpdateNotification(ioSocket, message, icon, iconColour, id);
+        const notification = {
+          message: `Sent ${campaignAnalytics.totalSentCount} emails`,
+          id, // Unique identified for use on client side (in the reducer)
+          icon: 'fa-envelope',
+          iconColour: 'text-green'
+        };
+
+        sendUpdateNotification(io, req, notification);
       });
+
       setTimeout(callback, 5000);
     };
 
@@ -428,12 +433,15 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, ioSo
 
   function sendFinalSocketNotification(outcome) {
     if (outcome == 'success') {
-      const message = `Campaign has been delivered (${campaignInfo.name})`;
-      const icon = 'fa-envelope';
-      const iconColour = 'text-green';
-      const newDataToFetch = 'campaigns';
-      const url = '/campaigns/manage';
-      sendSingleNotification(ioSocket, message, icon, iconColour, newDataToFetch, url);
+      const notification = {
+        message: `Campaign has been delivered (${campaignInfo.name})`,
+        icon: 'fa-envelope',
+        iconColour: 'text-green',
+        newDataToFetch: 'campaigns',  // A client side resource to be updated, e.g. 'campaigns'
+        url: '/campaigns/manage'  // User is redirected to this (relative) url when they dismiss a notification
+      };
+
+      sendSingleNotification(io, req, notification);
     }
   }
 
