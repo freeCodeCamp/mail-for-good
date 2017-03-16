@@ -83,7 +83,7 @@ export class SettingsComponent extends Component {
 
   resetFormAndSubmit(e) {
     e.preventDefault();
-    const { valid, changeSettings, touch, form: { values }, reset, notify } = this.props;
+    const { valid, changeSettings, touch, form: { values }, reset } = this.props;
 
     if (valid) {
       const formattedFormValues = { // Format values in alignment with server expectations
@@ -108,7 +108,7 @@ export class SettingsComponent extends Component {
     const {
       amazonSimpleEmailServiceAccessKey,
       amazonSimpleEmailServiceSecretKey,
-      amazonSimpleQueueServiceUrl,
+      // amazonSimpleQueueServiceUrl,
       region,
       whiteLabelUrl
     } = this.props.fieldsExist;
@@ -202,8 +202,6 @@ export class SettingsComponent extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  reduxForm({ form: 'settings', destroyOnUnmount: false, validate })(
-    SettingsComponent
-  )
+export default reduxForm({ form: 'settings', destroyOnUnmount: false, validate })(
+  connect(mapStateToProps, mapDispatchToProps)(SettingsComponent)
 );
