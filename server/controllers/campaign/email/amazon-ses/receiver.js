@@ -47,7 +47,7 @@ module.exports = function(Queue, ses, rateLimit, campaignInfo) {
       },
       {
         where: {
-          id: task['campaignsubscribers.id'],
+          id: task['campaignsubscribers'][0].id,
           listsubscriberId: task.id,
           campaignId: campaignInfo.campaignId
         },

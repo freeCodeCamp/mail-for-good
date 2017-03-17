@@ -199,7 +199,10 @@ module.exports = (generator, redis, campaignAndListInfo, amazonAccountInfo, io, 
       include: [
         {
           model: db.campaignsubscriber,
-          required: true
+          required: true,
+          where: {
+            campaignId: campaignInfo.campaignId
+          }
         }
       ],
 
