@@ -14,6 +14,9 @@ const restoreDbState = require('./restore-db-state');
 const secret = require('./config/secrets');
 const routes = require('./routes');
 
+// Use bluebird over native promises. It's superior in speed and debugging.
+global.Promise=require("bluebird");
+
 // Websocket notifications
 const getProfile = require('./controllers/websockets/get-profile');
 

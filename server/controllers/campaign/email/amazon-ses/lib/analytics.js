@@ -1,3 +1,12 @@
+/**
+ * @description Add tracking info such as an unsubcribe link or tracking pixel where necessary
+ * @param {string} body - The body of the email
+ * @param {string} trackingId - Pre-configured tracking id for this email
+ * @param {string} type - The type of this email, either Plaintex or Html
+ * @param {string} whiteLabelUrl - Pre-configured white label url for this email
+ * @return {object} Object with bound functions as props
+ */
+
 function wrapLink(body, trackingId, type, whiteLabelUrl) {
   const host = whiteLabelUrl || process.env.PUBLIC_HOSTNAME;
 

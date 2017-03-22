@@ -1,3 +1,11 @@
+/**
+ * @description Create an Amazon email based on the SES spec
+ * @param {object} task - The email to create
+ * @param {object} campaignInfo - Information about this campaign
+ * @return {object} Formatted email object
+ */
+
+
 module.exports = (task, campaignInfo) => {
 
   // Ref https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SES.html#sendEmail-property

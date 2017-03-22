@@ -1,8 +1,8 @@
 const AWS = require('aws-sdk');
 const db = require('../../../../models');
-const AmazonEmail = require('./amazon');
-const { wrapLink, insertUnsubscribeLink, insertTrackingPixel } = require('./analytics');
-const mailMerge = require('./mail-merge');
+const AmazonEmail = require('./lib/amazon');
+const { wrapLink, insertUnsubscribeLink, insertTrackingPixel } = require('./lib/analytics');
+const mailMerge = require('./lib/mail-merge');
 
 module.exports = (req, res) => {
 

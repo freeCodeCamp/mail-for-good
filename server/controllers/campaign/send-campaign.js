@@ -57,16 +57,6 @@ module.exports = (req, res, io, redis) => {
 
     // 8. TODO: If there was an error, handle it here
 
-    // 9. Push a notification regarding the success of the operation to the user if they're connected
-
-    const notification = {
-      message: `Campaign "${campaignInfo.name}" has been sent`,
-      icon: 'fa-envelope',
-      iconColour: 'text-green',
-    };
-
-    sendSingleNotification(io, req, notification);
-
   }
 
   const generator = sendCampaign();
