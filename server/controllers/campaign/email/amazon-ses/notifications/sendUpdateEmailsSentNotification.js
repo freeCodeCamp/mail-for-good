@@ -12,7 +12,7 @@ const sendUpdateNotification = require('../../../../websockets/send-update-notif
 module.exports = (campaignInfo, io, req) => {
   const id = (Math.random() * 100000).toString();
 
-  const sendUpdateNotification = () => {
+  const notification = () => {
     db.campaignanalytics.findOne({
       where: { campaignId: campaignInfo.campaignId },
       attributes: ['totalSentCount']
@@ -28,5 +28,5 @@ module.exports = (campaignInfo, io, req) => {
     });
   };
 
-  return sendUpdateNotification;
+  return notification;
 };
