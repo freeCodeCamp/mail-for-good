@@ -1,4 +1,4 @@
-# nonprofit-email-service
+# Mail-for-Good
 
 This software integrates with AWS SES service to send out bulk email campaigns. It is in our road map that it will track click through, and other popular email marketing metrics. Also, it will handle un-subscription and other email marketing tasks in an automated manner.
 
