@@ -68,11 +68,10 @@ module.exports = async function (generator, redis, campaignAndListInfo, amazonAc
     // 1. Get the getAmazonEmailArray
     let currentBlockOfEmails = arrayOfIds[i];
     let amazonEmailArray = await getAmazonEmailArray(currentBlockOfEmails, campaignInfo, whiteLabelUrl);
-
     let LENGTH_OF_AMAZON_EMAIL_ARRAY = amazonEmailArray.length;
     for (let x = 0; x < LENGTH_OF_AMAZON_EMAIL_ARRAY; x++) {
       // 2. Add the email to the send queue. Continue when the queue tells us that it has space for our next email.
-      await addToQueue(amazonEmailArray[i], campaignInfo);
+      await addToQueue(amazonEmailArray[x], campaignInfo);
     }
 
     notificationSentEmails();
