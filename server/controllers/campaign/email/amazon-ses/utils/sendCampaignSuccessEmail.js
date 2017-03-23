@@ -24,5 +24,8 @@ Duration: ${(data.durationMs/1000/60).toFixed(2)} minutes`;
   ses.sendEmail(AmazonEmail(
     { email: data.fromEmail },
     { fromEmail: data.fromEmail, fromName, emailBody, emailSubject, type: 'Plaintext' }
-  ).email);
+  ).email, (data, err) => {
+    console.log("Sent campaign delivery success email")
+    console.log(err);
+  });
 };

@@ -1,7 +1,9 @@
 const getArrayOfEmailIds = require('./controllers/getArrayOfEmailIds');
-const getAmazonEmail = require('./controllers/getAmazonEmail');
+const getAmazonEmailArray = require('./controllers/getAmazonEmailArray');
 const updateCampaignStatus = require('./controllers/updateCampaignStatus');
 const finishCampaignSend = require('./controllers/finishCampaignSend');
+
+const nestArray = require('./lib/nest-array');
 
 const configSes = require('./config/configSes');
 
@@ -54,23 +56,26 @@ module.exports = async function (generator, redis, campaignAndListInfo, amazonAc
    */
   // let countPerSecond = 0; (function timerFunc() { setTimeout(() => { console.log(countPerSecond); countPerSecond = 0; timerFunc(); }, 1000) })();
   // 1. Get plain array of listSubscriberIds e.g. [1, 2, 3] etc. These are the people we will email.
-  const listSubscriberIds = await getArrayOfEmailIds(campaignInfo);
-  // 2. Iterate over the ids, sending each in turn.
-  const LENGTH_OF_LIST_SUBSCRIBER_IDS = listSubscriberIds.length;
+  const NESTED_ARRAY_LENGTH = 1000;
+  const arrayOfIds = nestArray(NESTED_ARRAY_LENGTH, await getArrayOfEmailIds(campaignInfo));
+
+  const LENGTH_OF_LIST_SUBSCRIBER_IDS = arrayOfIds.length;
   for (let i = 0; i < LENGTH_OF_LIST_SUBSCRIBER_IDS; i++) {
     if (cancelCampaignSend) {
       // Break out of loop if the user cancelled this campaign send
       break;
     }
-    if (i % 200 === 0 || i == LENGTH_OF_LIST_SUBSCRIBER_IDS - 1) {
-      // Send an update notification per 200 emails or if this is the last email
-      notificationSentEmails();
+    // 1. Get the getAmazonEmailArray
+    let currentBlockOfEmails = arrayOfIds[i];
+    let amazonEmailArray = await getAmazonEmailArray(currentBlockOfEmails, campaignInfo, whiteLabelUrl);
+
+    let LENGTH_OF_AMAZON_EMAIL_ARRAY = amazonEmailArray.length;
+    for (let x = 0; x < LENGTH_OF_AMAZON_EMAIL_ARRAY; x++) {
+      // 2. Add the email to the send queue. Continue when the queue tells us that it has space for our next email.
+      await addToQueue(amazonEmailArray[i], campaignInfo);
     }
-    const id = listSubscriberIds[i];
-    // 1. Get the getAmazonEmail for this user.
-    const amazonEmail = await getAmazonEmail(id, campaignInfo, whiteLabelUrl);
-    // 2. Add the email to the send queue. Continue when the queue tells us that it has space for our next email.
-    await addToQueue(amazonEmail, campaignInfo);
+
+    notificationSentEmails();
   }
 
   /**

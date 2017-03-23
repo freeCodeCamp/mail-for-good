@@ -10,8 +10,8 @@ const sendEmail = require('./sendEmail');
 
 module.exports = (rateLimit, ses) => {
   // https://github.com/SGrondin/bottleneck#constructor
-  const RATE_LIMIT = 1000 / (rateLimit * 10);
-  const limiter = new Bottleneck(0, RATE_LIMIT);
+  const TIME_SEND = (1 / rateLimit) * 1000;
+  const limiter = new Bottleneck(rateLimit, TIME_SEND);
 
   /**
    * @description Add an email to the queue.
@@ -20,9 +20,31 @@ module.exports = (rateLimit, ses) => {
    * @return {Promise} Scheduled promise that resolves when we can add a new item to the queue.
    */
 
+   const canSend = () => {
+     return new Promise(resolve => {
+       const timerFunc = () => {
+         setTimeout(() => {
+           if (limiter.check()) {
+             resolve();
+           } else {
+             timerFunc();
+           }
+         }, 1);
+       };
+
+       if (limiter.check()) {
+         resolve();
+       } else {
+         timerFunc();
+       }
+
+     });
+   };
+
    const scheduleEmailSend = (amazonEmail, campaignInfo) => {
      limiter.schedule(sendEmail, amazonEmail, campaignInfo, ses);
-     return;
+     return canSend();
    };
+
    return scheduleEmailSend;
 };

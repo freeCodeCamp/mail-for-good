@@ -3,8 +3,6 @@ const email = require('./email');
 const AWS = require('aws-sdk');
 const moment = require('moment');
 
-const sendSingleNotification = require('../websockets/send-single-notification');
-
 module.exports = (req, res, io, redis) => {
 
   const userId = req.user.id;
@@ -181,7 +179,6 @@ module.exports = (req, res, io, redis) => {
       }
     }).then(total => {
       totalListSubscribers = total;
-
       return db.listsubscriber.count({
         where: {
           listId,
