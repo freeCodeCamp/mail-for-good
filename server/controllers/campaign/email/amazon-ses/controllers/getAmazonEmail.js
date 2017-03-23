@@ -30,9 +30,7 @@ const AmazonEmail = require('../lib/amazon');
  *     updatedAt: 2017-03-04T21:30:16.323Z,
  *     listId: 5,
  *     campaignsubscribers:
- *      [ [Object],
- *        [Object],
- *        [Object] ] } }
+ *      [ [Object] ] } }
  */
 
 module.exports = async function (id, campaignInfo, whiteLabelUrl) {
@@ -45,7 +43,10 @@ module.exports = async function (id, campaignInfo, whiteLabelUrl) {
     include: [
       {
         model: db.campaignsubscriber,
-        required: true
+        required: true,
+        where: {
+          campaignId: campaignInfo.campaignId
+        } 
       }
     ],
   });
