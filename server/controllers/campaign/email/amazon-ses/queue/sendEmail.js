@@ -32,7 +32,7 @@ module.exports = function(amazonEmail, campaignInfo, ses) {
       },
       {
         where: {
-          id: task.campaignsubscribers[0].id,
+          id: task['campaignsubscribers.id'],
           listsubscriberId: task.id,
           campaignId: campaignInfo.campaignId
         },

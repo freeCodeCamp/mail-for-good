@@ -51,7 +51,10 @@ module.exports = async function (arrayOfIds, campaignInfo, whiteLabelUrl) {
     include: [
       {
         model: db.campaignsubscriber,
-        required: true
+        required: true,
+        where: {
+          campaignId: campaignInfo.campaignId
+        } 
       }
     ],
     raw: true
