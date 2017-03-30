@@ -11,6 +11,7 @@ import {
 } from '../constants/actionTypes';
 import { API_CAMPAIGN_ENDPOINT, API_SEND_CAMPAIGN_ENDPOINT, API_TEMPLATE_ENDPOINT, API_TEST_SEND_CAMPAIGN_ENDPOINT, API_STOP_SENDING } from '../constants/endpoints';
 import { notify } from './notificationActions';
+import { destroy } from 'redux-form';
 
 // Create new campaign
 export function requestPostCreateCampaign() {
@@ -141,6 +142,7 @@ export function postCreateCampaign(form, reset) {
     xhr.onload = () => {
       dispatch(completePostCreateCampaign());
       dispatch(getCampaigns());
+      dispatch(destroy('createCampaign'));
       reset();
     };
     xhr.setRequestHeader('Content-Type', 'application/json');
