@@ -36,7 +36,7 @@ const AmazonEmail = require('../lib/amazon');
  */
 
 module.exports = async function (arrayOfIds, campaignInfo, whiteLabelUrl) {
-  const arrayCampaignInfo = arrayOfIds.map(() => campaignInfo);
+  const arrayCampaignInfo = arrayOfIds.map(() => Object.assign({}, campaignInfo));
   /**
    * @description Get the list subscriber and join their campaign subscriber information.
    */
@@ -54,7 +54,7 @@ module.exports = async function (arrayOfIds, campaignInfo, whiteLabelUrl) {
         required: true,
         where: {
           campaignId: campaignInfo.campaignId
-        } 
+        }
       }
     ],
     raw: true
