@@ -17,7 +17,7 @@ module.exports = (credentials, callback) => {
   AWS.config.update({accessKeyId: credentials.accessKey, secretAccessKey: credentials.secretKey, region: credentials.region});
 
   async.waterfall([
-    async.apply(createSnsTopics, { sqs: { url: '', arn: '' }, sns: { bounce: { arn: '' }, complaint: { arn: '' } } }),
+    async.apply(createSnsTopics, { ses: { email: credentials.email }, sqs: { url: '', arn: '' }, sns: { bounce: { arn: '' }, complaint: { arn: '' } } }),
     createSqsQueue,
     subscribeSnsToSqs,
     subscribeSesToSns
@@ -155,13 +155,9 @@ function subscribeSesToSns (config, callback) {
       callback(err);
     } else {
       const identities = result.Identities;
-      if (!identities.length) {
-        callback(new Error('No SES identity has been configured'));
-      } else if (identities.length > 1) {
-        // Need to decide what to do for ambiguous identity case
-        callback(new Error('More than one identity present'));
+      if (!identities.includes(config.ses.email)) {
+        callback(new Error('SES email address was not found - have you created and verified this email in the SES settings page in the AWS console?'));
       } else {
-
         async.parallel({
           bounce: callback => ses.setIdentityNotificationTopic({
             Identity: identities[0],
