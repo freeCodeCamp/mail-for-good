@@ -205,7 +205,7 @@ export class CampaignViewComponent extends Component {
     } = this.props;
 
     const downloadUnsentSubscribersUrl = encodeURI(`${window.location.origin}/api/campaign/subscribers/csv?campaignId=${thisCampaign.id}&sent=false`);
-    const isReady = thisCampaign && thisCampaign.status === 'ready';
+    const status = thisCampaign.status;
 
     const renderCampaignView = () => (
       <div>
@@ -231,10 +231,10 @@ export class CampaignViewComponent extends Component {
               <PreviewCampaignForm campaignView={thisCampaign} />
 
               <div className="form-inline">
-                {isReady && <button className="btn btn-success btn-lg" type="button" onClick={this.openSendModal}>Send</button>}
-                {isReady && <button className="btn btn-info btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.openTestSendModal}>Send a test email</button>}
+                <button disabled={!['ready', 'interrupted'].includes(status)} className="btn btn-success btn-lg" type="button" onClick={this.openSendModal}>Send</button>
+                <button className="btn btn-info btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.openTestSendModal}>Send a test email</button>
                 <button className="btn btn-lg btn-primary" style={{ "margin-left": "1rem" }} onClick={() => {window.location = downloadUnsentSubscribersUrl;}}>Export unsent</button>
-                {isReady && <button className="btn btn-danger btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.stopSending.bind(this)}>Stop sending</button>}
+                <button disabled={status !== 'sending'} className="btn btn-danger btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.stopSending.bind(this)}>Stop sending</button>
               </div>
 
               {/* Modal for sending test emails */}
