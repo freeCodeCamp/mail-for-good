@@ -51,23 +51,25 @@ module.exports = function(req, res, redis) {
 
   // If any AWS settings have been changed then we need to reconfigure the feedback queues
   // This also serves as advanced validation for AWS credentials
-  if (selectProvidedFields.amazonSimpleEmailServiceAccessKey || selectProvidedFields.amazonSimpleEmailServiceSecretKey || selectProvidedFields.region) {
+  if (selectProvidedFields.amazonSimpleEmailServiceAccessKey || selectProvidedFields.amazonSimpleEmailServiceSecretKey || selectProvidedFields.region || selectProvidedFields.email ) {
     console.log("AWS settings provided, reconfiguring AWS");
     Setting.findOne({
       where: { userId: req.user.id },
-      attributes: ['amazonSimpleEmailServiceAccessKey', 'amazonSimpleEmailServiceSecretKey', 'region']
+      attributes: ['amazonSimpleEmailServiceAccessKey', 'amazonSimpleEmailServiceSecretKey', 'region', 'email']
     }).then(settingInstance => {
       const settings = _.extend(
         {
           amazonSimpleEmailServiceAccessKey: settingInstance.amazonSimpleEmailServiceAccessKey,
           amazonSimpleEmailServiceSecretKey: settingInstance.amazonSimpleEmailServiceSecretKey,
-          region: settingInstance.region
+          region: settingInstance.region,
+          email: settingInstance.email
         }, selectProvidedFields);
 
       configureAws({
         accessKey: settings.amazonSimpleEmailServiceAccessKey,
         secretKey: settings.amazonSimpleEmailServiceSecretKey,
-        region: settings.region
+        region: settings.region,
+        email: settings.email
       }, (err, queueUrl) => {
         if (err) {
           console.log("Error creating sqs feedback queue");

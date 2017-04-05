@@ -15,7 +15,8 @@ module.exports = function(req, res) {
       'amazonSimpleEmailServiceSecretKey',
       'amazonSimpleQueueServiceUrl',
       'region',
-      'whiteLabelUrl'
+      'whiteLabelUrl',
+      'email'
     ]
   }).then(settingsInstance => {
     const settingsObject = settingsInstance.get({ plain:true });

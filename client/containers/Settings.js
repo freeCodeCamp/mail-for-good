@@ -91,12 +91,13 @@ export class SettingsComponent extends Component {
         amazonSimpleEmailServiceSecretKey: values.secretAccessKey,
         region: values.region,
         whiteLabelUrl: values.whiteLabelUrl,
-        amazonSimpleQueueServiceUrl: values.queueUrl
+        amazonSimpleQueueServiceUrl: values.queueUrl,
+        email: values.email
       };
       changeSettings(formattedFormValues);
       reset();
     } else {
-      const nameArray = ['accessKey', 'secretAccessKey', 'region', 'whiteLabelUrl', 'queueUrl'];
+      const nameArray = ['accessKey', 'secretAccessKey', 'region', 'whiteLabelUrl', 'queueUrl', 'email'];
       touch(...nameArray);
     }
   }
@@ -110,7 +111,8 @@ export class SettingsComponent extends Component {
       amazonSimpleEmailServiceSecretKey,
       // amazonSimpleQueueServiceUrl,
       region,
-      whiteLabelUrl
+      whiteLabelUrl,
+      email
     } = this.props.fieldsExist;
 
     return (
@@ -156,6 +158,15 @@ export class SettingsComponent extends Component {
                       type="text"
                       placeholder="Example: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
                       helpText={<div><a target="_blank" href="https://aws.amazon.com/developers/access-keys/">Find out more about secret access keys</a></div>}
+                    />
+                    <Field
+                      exists={email}
+                      name="email"
+                      component={renderSettingsField}
+                      label="SES email address"
+                      type="text"
+                      placeholder="Example: mysesemailaddress@gmail.com"
+                      helpText={<div>Configure your SES email address <a target="_blank" href="https://aws.amazon.com/developers/access-keys/">here.</a>This is almost always your sending/from email address.</div>}
                     />
                     <Field
                       exists={region}

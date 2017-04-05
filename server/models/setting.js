@@ -32,7 +32,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     amazonSimpleQueueServiceUrl: { type: DataTypes.STRING, defaultValue: '' },
     region: { type: DataTypes.STRING, defaultValue: '' },
-    whiteLabelUrl: { type: DataTypes.STRING, defaultValue: '' }
+    whiteLabelUrl: { type: DataTypes.STRING, defaultValue: '' },
+    email: { type: DataTypes.STRING, defaultValue: '' }
   }, {
     classMethods: {
       associate: function(models) {
