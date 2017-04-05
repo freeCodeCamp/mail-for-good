@@ -111,7 +111,10 @@ function receiveMessageCallback(message, done) {
     CampaignSubscriber.update (
       { status: notificationType, bounceType, bounceSubType },
       {
-        where: { messageId: email.mail.messageId },
+        where: {
+          messageId: email.mail.messageId,
+          email: email.mail.destination[0]
+        },
         returning: true  // Returns
       }
     ).then(result => {
