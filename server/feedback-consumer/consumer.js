@@ -24,5 +24,6 @@ subscriber.subscribe('change-settings');
 
 const pollingRateMs = 10000;        
 async.forever(next => {       
+    feedbackConsumer.restart();
     setTimeout(next, pollingRateMs);     
 });
