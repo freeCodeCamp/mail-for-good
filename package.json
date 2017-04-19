@@ -75,6 +75,7 @@
     "passport-google-oauth": "^1.0.0",
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",
+    "pm2": "^2.4.5",
     "react": "15.4.2",
     "react-bootstrap": "^0.30.3",
     "react-bootstrap-table": "^3.0.0-beta.5",
