@@ -76,20 +76,20 @@ app.use('/dist', express.static(path.join(__dirname, '../dist')));
 routes(app, passport, io, { client, subscriber, publisher });
 
 // Start the server after correcting the database state
-restoreDbState().then(() => {
-  const port = process.env.PORT || 8080;
-  server.listen(port, function() {
-    const displayMessage = `
-    ############################
-    #   Mail 4 Good started    #
-    ############################
-    # Port: ${port}
-    ############################
-    `;
-    console.log(displayMessage);
-  });
+restoreDbState();
 
-  server.on('error', err => {
-    console.log(err);
-  });
+const port = process.env.PORT || 8080;
+server.listen(port, function() {
+  const displayMessage = `
+  ############################
+  #   Mail 4 Good started    #
+  ############################
+  # Port: ${port}
+  ############################
+  `;
+  console.log(displayMessage);
+});
+
+server.on('error', err => {
+  console.log(err);
 });
