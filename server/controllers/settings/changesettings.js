@@ -74,6 +74,8 @@ module.exports = function(req, res, redis) {
         if (err) {
           console.log("Error creating sqs feedback queue");
           console.log(err);
+          updateSettings();
+          redis.publisher.publish('change-settings', 'changed');
           res.status(400).send({message: err.message});
         } else {
           console.log(`Created sqs feedback queue: ${queueUrl}`);
