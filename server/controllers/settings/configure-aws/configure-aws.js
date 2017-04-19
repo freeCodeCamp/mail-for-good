@@ -100,6 +100,7 @@ function createSqsQueue (config = { sqs: { url: '', arn: '' } }, callback) {
     QueueName: SQS_NAME,
     Attributes: {
       ReceiveMessageWaitTimeSeconds: '20',
+      DelaySeconds: '120',
       Policy: JSON.stringify(policy)
     }
   }, (err, result) => {
