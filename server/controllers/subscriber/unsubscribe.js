@@ -9,6 +9,6 @@ module.exports = (req, res) => {
   ).then(results => {
     // Redirect to a nicer unsubscribed page or similar
     // -- if results empty -> err
-    res.status(200).send("successfully unsubscribed :(");
+    res.status(200).send("You have been unsubscribed from this mailing list.");
   });
 }
