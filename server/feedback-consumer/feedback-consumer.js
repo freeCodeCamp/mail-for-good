@@ -113,7 +113,7 @@ function receiveMessageCallback(message, done) {
       {
         where: {
           messageId: email.mail.messageId,
-          email: email.mail.destination[0]
+          email: email.mail.destination[0].slice(1, -1)
         },
         returning: true  // Returns
       }

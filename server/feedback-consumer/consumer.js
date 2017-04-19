@@ -21,3 +21,8 @@ subscriber.on('message', (channel, event) => {
   }
 });
 subscriber.subscribe('change-settings');
+
+const pollingRateMs = 10000;        
+async.forever(next => {       
+    setTimeout(next, pollingRateMs);     
+});
