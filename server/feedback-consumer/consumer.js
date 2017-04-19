@@ -13,7 +13,7 @@ console.log("Feedback consumer started: watching for feedback messages (bounces,
 
 // Restart the feedback consumers to apply new credentials when
 // new settings are received
-const subscriber = redis.createClient();
+const subscriber = redis.createClient({ host: process.env.REDIS_HOST || '127.0.0.1' });
 subscriber.on('message', (channel, event) => {
   if (event == 'changed') {
     debug('Got a change-settings event, so restarting consumers to apply new credentials');
