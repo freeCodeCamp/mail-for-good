@@ -2,19 +2,19 @@
 
 This software integrates with AWS SES service to send out bulk email campaigns. It is in our road map that it will track click through, and other popular email marketing metrics. Also, it will handle un-subscription and other email marketing tasks in an automated manner.
 
-###Why are we doing this?
+### Why are we doing this?
 The reason we are creating this software is to help nonprofits manage their email campaigns without having to use third party services. This can be pricey and you have to trust a third party with your email lists. It is our goal to help nonprofit companies do more with their limited resources.
 
-###Install
+### Install
 How to Install
 
-###How to Run
+### How to Run
 How to run
 
-###Want to contribute?
+### Want to contribute?
 [CONTRIBUTING.md](https://github.com/FreeCodeCamp/nonprofit-email-service/blob/master/CONTRIBUTING.md) - How to contribute.
 
-###License
+### License
 
 The BSD-3-Clause
 
