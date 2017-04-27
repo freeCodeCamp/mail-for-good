@@ -6,10 +6,26 @@ This software integrates with AWS SES service to send out bulk email campaigns. 
 The reason we are creating this software is to help nonprofits manage their email campaigns without having to use third party services. This can be pricey and you have to trust a third party with your email lists. It is our goal to help nonprofit companies do more with their limited resources.
 
 ###Install
-How to Install
+
+####Download or fork the repo.
+* For Mac - open terminal and go to the code directory and run the command 
+
+```
+npm install
+```
+
+* For Windows - open cmd and go to the code directory and run the command 
+```
+npm install
+```
+
+This will install all the dependencies.
+
 
 ###How to Run
-How to run
+How to Run
+
+
 
 ###Want to contribute?
 [CONTRIBUTING.md](https://github.com/FreeCodeCamp/nonprofit-email-service/blob/master/CONTRIBUTING.md) - How to contribute.
