@@ -3,7 +3,7 @@ FROM node:7-onbuild
 # Copying package.json and running
 # npm install are automatically handled
 
-# Add source files 
+# Add source files
 COPY . .
 
 # And then compile the frontend

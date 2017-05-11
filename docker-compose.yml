@@ -1,3 +1,7 @@
+postgres:
+    image: postgres:latest
+redis:
+    image: redis:latest
 app:
     image: freecodecamp/mail-for-good:latest
     env_file: .env
@@ -8,23 +12,8 @@ app:
         - REDIS_HOST=redis
         - VIRTUAL_HOST=app
         - VIRTUAL_PORT=8080
-    links: 
+    links:
         - redis
         - postgres
-
-nginx:
-    image: jwilder/nginx-proxy
     ports:
-        - 80:80
-    volumes:
-        - /var/run/docker.sock:/tmp/docker.sock:ro
-    links:
-        - app
-    environment:
-        - DEFAULT_HOST=app
-
-postgres:
-    image: postgres:latest
-
-redis:
-    image: redis:latest
+      - "8080:8080"

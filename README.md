@@ -1,33 +1,51 @@
-# Mail-for-Good
+# Mail for Good
 
-This software integrates with AWS SES service to send out bulk email campaigns. It is in our road map that it will track click through, and other popular email marketing metrics. Also, it will handle un-subscription and other email marketing tasks in an automated manner.
+*Please be aware that Mail for Good is currently in beta.*
+
+
+
+An app for sending millions of emails as cheap as possible. Mail for Good uses AWS Simple Email Service to send bulk emails at $0.10 per 1000 emails.
+
+Mail for Good is fast and memory efficient, currently sending over 100 emails per second on a 1gb Digital Ocean VPS.
+
+We've used Mail for Good to deliver newsletters to hundreds of thousands of campers per week.
+
+**Click the image below to view our youtube video and get started.**
+
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/_7U03GVD4a8/0.jpg)](https://www.youtube.com/watch?v=_7U03GVD4a8 "Mail for Good")
+
+## What does Mail for Good do?
+
+With Mail for Good you can:
+
+- Send email campaigns of unlimited size.
+- Import emails saved in CSV format.
+- Create templates to reuse for convenience when sending email campaigns.
+- Track bounce rate and other standard metrics. You can also insert tracking pixels and unsubcribe links a click of a button.
+- Add custom fields to imported email lists such as names or cities.
+- Grant other users (limited or otherwise) permissions to use your account on your behalf.
+
+A full feature list for Mail for Good can be found here:
+
+### Performance
+
+We're currently sending weekly email blasts of over 700,000 emails in 3-4 hours on a $10 p/m Digital Ocean VPS with 1gb memory and 1 core processor.
+
+Mail for Good is fast and scales to the rate limit enforced by AWS.
 
 ### Why are we doing this?
-The reason we are creating this software is to help nonprofits manage their email campaigns without having to use third party services. This can be pricey and you have to trust a third party with your email lists. It is our goal to help nonprofit companies do more with their limited resources.
 
-### Install
-How to Install
+We want to help nonprofits manage their email services without having to use third party services. These services can be pricey, both for importing emails and sending email campaigns. It is our goal to help nonprofit companies do more with their limited resources.
 
-### How to Run
-How to run
+### Install and run
 
-### Want to contribute?
-[CONTRIBUTING.md](https://github.com/FreeCodeCamp/nonprofit-email-service/blob/master/CONTRIBUTING.md) - How to contribute.
+To install and run this app check out our [how to install](https://github.com/freeCodeCamp/Mail-for-Good/blob/master/docs/how_to_install.md) guide.
+
+### How to contribute
+We warmly welcome contributions from anyone. Check out our [how to contribute](https://github.com/FreeCodeCamp/nonprofit-email-service/blob/master/CONTRIBUTING.md) section to find out how you can do so.
 
 ### License
 
-The BSD-3-Clause
+Copyright (c) 2017, freeCodeCamp.
 
-Copyright (c) 2016, Free Code Camp All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-Neither the name of Free Code Camp nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY FREE CODE CAMP AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
-  
-
+This computer software is licensed under the [BSD-3-Clause](https://github.com/freeCodeCamp/Mail-for-Good/blob/master/LICENSE.md).
