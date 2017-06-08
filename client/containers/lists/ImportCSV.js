@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, FormControl } from 'react-bootstrap';
 
-import UploadFileModal from './UploadFileModal';
 import SubscribersTable from '../../components/lists/SubscribersTable';
 import ErrorsList from '../../components/lists/ErrorsList';
 
@@ -102,6 +101,11 @@ export class ImportCSVComponent extends Component {
     });
   }
 
+  onUpload(e) {
+    const files = e.target.files;
+    this.handleNewFile(files[0]);
+  }
+
   render() {
     return (
       <div>
@@ -135,7 +139,11 @@ export class ImportCSVComponent extends Component {
             </div>
 
             <div className="box-body">
-              {(!this.state.subscribers && !this.state.errors) && <UploadFileModal handleNewFile={this.handleNewFile.bind(this)}/>}
+            {/*The label as been put in place of the input and the input is hidden
+              we can't style a file input but we can style its label
+              and clicking the label is equivalent to clicking the input*/}
+              {(!this.state.subscribers && !this.state.errors) && <label htmlFor="fileInput" className="btn pull-left btn-lg btn-primary">Import</label>}
+              <FormControl id="fileInput" style={{display:"none"}} className="btn" type="file" onChange={this.onUpload.bind(this)}/>
 
               <ErrorsList errors={this.state.errors}/>
 
