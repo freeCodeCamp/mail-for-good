@@ -8,9 +8,9 @@ Mail for Good is fast and memory efficient, currently sending over 100 emails pe
 
 We've used Mail for Good to deliver newsletters to hundreds of thousands of campers per week.
 
-**Click the image below to view our youtube video and get started.**
+[**Click here to view our youtube video and get started.**](https://www.youtube.com/watch?v=_7U03GVD4a8)
 
-[![IMAGE ALT TEXT](http://img.youtube.com/vi/_7U03GVD4a8/0.jpg)](https://www.youtube.com/watch?v=_7U03GVD4a8 "Mail for Good")
+![Image showing Mail 4 Good](docs/resources/hero.png)
 
 ## What does Mail for Good do?
 
@@ -38,25 +38,39 @@ We want to help nonprofits manage their email campaigns as inexpensively as poss
 
 Mail for good uses lots of different services (redis, Postgres and so on) that would make manual installation arduous. To streamline this process, we use Docker.
 
-### Your machine
+###### Your machine
 
 Mail for good is designed to be memory efficient, nonetheless the amount of memory needed will depend on how many emails you are capable of sending per second (this limited is placed by Amazon). We **strongly suggest you enable swap space** if your VPS does not enable this automatically (such as DigitalOcean).
 
 We suggest a machine with at least 2gb memory.
 
-### Installing with Docker
+###### Preinstallation
+
+First, keep in mind that this application uses [Amazon SES](https://aws.amazon.com/ses/). Your account will initially be [limited by Amazon](http://docs.aws.amazon.com/ses/latest/DeveloperGuide/manage-sending-limits.html). To increase these limits, check out Amazon's documentation [here](http://docs.aws.amazon.com/ses/latest/DeveloperGuide/increase-sending-limits.html).
+
+Before installing this application, you'll need some API keys from Google to handle authentication. This can be done in a few steps:
+
+1. Login to [Google API Manager](https://console.developers.google.com/apis/).
+2. In the left menu, select **Dashboard**. Now select **Enable API**, search for `Google+` and select it. At the top of the screen, ensure it's enabled by clicking on **Enable**.
+3. In the left menu, select **Credentials**. Then click **Create Credentials** > **OAuth client ID**.
+4. Select **Web Application**. Name is as you wish, but under **Authorised Javascript Origins** put `http://localhost:8080`, and under **Authorised redirect URIs** put `http://localhost:8080/auth/google/callback`.
+5. Click **Create**. You will now have a Client ID and Client Secret. In your .env file, put the Client ID as your GOOGLE_CONSUMER_KEY, and the Client Secret as your GOOGLE_CONSUMER_SECRET.
+
+###### Installing with Docker
 
 The first step is to download Docker itself. The process for this differs depending your OS. You can find a guide here https://docs.docker.com/engine/installation/.
 
 Now, clone the repository and change into it.
 
+Edit the `.env.example` file in your root directory.
+
 After this, you'll need to create your own .env file. Check out the .env.example file in this repo. From the terminal, you can run `cp .env.example .env` then edit the .env file with any editor of your choice. There are instruction in this file that you can follow.
 
 Now run `docker-compose up`. This will run all the containers needed to launch this app, and will take some time to finish.
 
-When the process is finished, the app will be exposed on port 80 and accessible by visiting `http://[hostname]`.
+When the process is finished, the app will be exposed on port 8080 and accessible by visiting `http://[hostname]`.
 
-### Installation summary
+###### Installation summary
 
 1. Install and run the Docker daemon.
 2. Clone the repository and change into it `git clone https://github.com/freeCodeCamp/Mail-for-Good && cd Mail-for-Good`.
@@ -68,6 +82,7 @@ When the process is finished, the app will be exposed on port 80 and accessible 
 
 We're keen to tackle any issues people encounter. If you experience any problems, please create an issue and we'll get back to you.
 
+If at any point you changed a file after running `docker-compose`, run `docker-compose up --force-recreate` to ensure they're included.
 
 ### How to contribute
 
