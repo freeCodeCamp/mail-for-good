@@ -2,8 +2,6 @@
 
 *Please be aware that Mail for Good is currently in beta.*
 
-
-
 An app for sending millions of emails as cheaply as possible. Mail for Good uses AWS Simple Email Service to send bulk emails at $0.10 per 1000 emails.
 
 Mail for Good is fast and memory efficient, currently sending over 100 emails per second on a 1gb Digital Ocean VPS.
@@ -72,6 +70,9 @@ We're keen to tackle any issues people encounter. If you experience any problems
 
 
 ### How to contribute
+
+Found a bug? Please let us know by [creating an issue](https://github.com/freeCodeCamp/Mail-for-Good/issues/new).
+
 We warmly welcome contributions from anyone. Check out our [how to contribute](https://github.com/FreeCodeCamp/nonprofit-email-service/blob/master/CONTRIBUTING.md) section to find out how you can do so.
 
 ### License
