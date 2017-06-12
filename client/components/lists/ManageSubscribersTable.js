@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import { BootstrapTable, TableHeaderColumn, ExportCSVButton } from 'react-bootstrap-table';
 import moment from 'moment';
 
 export default class ManageSubscribersTable extends Component {
@@ -104,6 +104,16 @@ export default class ManageSubscribersTable extends Component {
     window.location = encodeURI(downloadUrl);
   }
 
+  customExportCSVButton() {
+    return (
+      <ExportCSVButton
+      btnText='Export all to CSV'
+      onClick={this.onExportToCSV.bind(this)}
+      >
+      </ExportCSVButton>
+    )
+  }
+
   render() {
     // create an array of columns and map over them
     // - need to generate columns at the same time rather than using an inline {this.state.additionalFields.map(...)}
@@ -153,33 +163,33 @@ export default class ManageSubscribersTable extends Component {
 
     return (
       <BootstrapTable data={this.state.data}
-                      remote={true}
-                      fetchInfo={{ dataTotalSize: this.props.total }}
-                      options={{
-                        clearSearch: true,
-                        noDataText: 'This list has no subscribers',
-                        onExportToCSV: this.onExportToCSV.bind(this),
-                        onFilterChange: this.onFilterChange.bind(this),
-                        onPageChange: this.onPageChange.bind(this),
-                        onSizePerPageList: this.onSizePerPageList.bind(this),
-                        sizePerPage: this.state.sizePerPage,
-                        sizePerPageList: [ 10, 25, 50, 100 ],
-                        page: this.state.currentPage,
-                        onRowClick: () => {
-                        },
-                        afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
-                          this.props.deleteRows(rows);
-                        },
-                        handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
-                      }}
-                      deleteRow={true}
-                      selectRow={this.selectRowProp}
-                      pagination={true}
-                      hover={true}
-                      maintainSelected={true}
-                      exportCSV={true}
-                      csvFileName="subscribers"
-                      keyField="id"
+      remote={true}
+      fetchInfo={{ dataTotalSize: this.props.total }}
+      options={{
+        clearSearch: true,
+        noDataText: 'This list has no subscribers',
+        exportCSVBtn: this.customExportCSVButton.bind(this),
+        onFilterChange: this.onFilterChange.bind(this),
+        onPageChange: this.onPageChange.bind(this),
+        onSizePerPageList: this.onSizePerPageList.bind(this),
+        sizePerPage: this.state.sizePerPage,
+        sizePerPageList: [ 10, 25, 50, 100 ],
+        page: this.state.currentPage,
+        onRowClick: () => {
+        },
+        afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
+          this.props.deleteRows(rows);
+        },
+        handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
+      }}
+      deleteRow={true}
+      selectRow={this.selectRowProp}
+      pagination={true}
+      hover={true}
+      maintainSelected={true}
+      exportCSV={true}
+      csvFileName="subscribers"
+      keyField="id"
       >
         {
           columns.map(c => { return c; })
