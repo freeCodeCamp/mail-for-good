@@ -1,5 +1,6 @@
+const webpack = require('webpack');
 const express = require('express');
-const redis = require("redis");
+const redis = require('redis');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const passport = require('passport');
@@ -10,7 +11,6 @@ const helmet = require('helmet');
 
 require('dotenv').config();
 const restoreDbState = require('./restore-db-state');
-
 const secret = require('./config/secrets');
 const routes = require('./routes');
 
@@ -19,6 +19,18 @@ global.Promise=require("bluebird");
 
 // Websocket notifications
 const getProfile = require('./controllers/websockets/get-profile');
+
+// Config Webpack in dev mode
+if (process.env.NODE_ENV === 'development') {
+  const webpackDevMiddleware = require('webpack-dev-middleware');
+  const webpackHotMiddleware = require('webpack-hot-middleware');
+
+  const devWebpackConfig = require('../webpack.config.dev');
+  const compiler = webpack(devWebpackConfig);
+
+  app.use(webpackDevMiddleware(compiler, { publicPath: devWebpackConfig.output.publicPath }));
+  app.use(webpackHotMiddleware(compiler));
+}
 
 // Config refis
 const redisSettings = { host: process.env.REDIS_HOST || '127.0.0.1' };
