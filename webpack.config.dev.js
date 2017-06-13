@@ -1,8 +1,8 @@
-import webpack from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import autoprefixer from 'autoprefixer';
+const webpack =  require('webpack');
+const HtmlWebpackPlugin =  require('html-webpack-plugin');
+const autoprefixer =  require('autoprefixer');
 
-export default {
+module.exports = {
   resolve: {
     extensions: ['', '.js', '.jsx']
   },
