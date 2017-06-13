@@ -143,7 +143,7 @@ export class ImportCSVComponent extends Component {
               we can't style a file input but we can style its label
               and clicking the label is equivalent to clicking the input*/}
               {(!this.state.subscribers && !this.state.errors) && <label htmlFor="fileInput" className="btn pull-left btn-lg btn-primary">Import</label>}
-              <FormControl id="fileInput" style={{display:"none"}} className="btn" type="file" onChange={this.onUpload.bind(this)}/>
+              <FormControl id="fileInput" accept=".csv" style={{display:"none"}} className="btn" type="file" onChange={this.onUpload.bind(this)}/>
 
               <ErrorsList errors={this.state.errors}/>
 
