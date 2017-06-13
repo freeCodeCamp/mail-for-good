@@ -1,4 +1,4 @@
-import io from 'socket.io-client';
+import io from 'socket.io';
 import {
   REQUEST_WS_PROFILE,
   COMPLETE_WS_PROFILE,
