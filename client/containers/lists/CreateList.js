@@ -37,6 +37,7 @@ export class CreateListComponent extends Component {
     this.handleCSVSubmit = this.handleCSVSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.notification = this.notification.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   state = {
@@ -45,6 +46,10 @@ export class CreateListComponent extends Component {
 
   notification(notification) {
     this.props.notify(notification);
+  }
+
+  handleFormSubmit(e) {
+    e.preventDefault();
   }
 
   handleCSVSubmit(file, headers) {
@@ -105,12 +110,14 @@ export class CreateListComponent extends Component {
                           {/*<li className="">
                             <a href="#tab_1-1" data-toggle="tab">Add single email</a>
                           </li>*/}
-                          <li className="pull-left header"><i className="fa fa-th"/>
-                            Import a list</li>
+                          <li className="pull-left header">
+                            <i className="fa fa-th"/>
+                            Import a list
+                          </li>
                         </ul>
 
 
-                        <form role="form">
+                        <form role="form" onSubmit={this.handleFormSubmit}>
                           <div className="form-group">
                             <input className="form-control" id="title" placeholder="The name of this list" type="text" value={this.state.title} onChange={this.handleChange} />
                           </div>
