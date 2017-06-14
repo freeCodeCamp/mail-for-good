@@ -59,7 +59,10 @@ export class ManageCampaignsBoxComponent extends Component {
 
         <div className="box-body">
 
-          <ManageCampaignsTable data={this.props.campaigns} deleteRows={this.deleteRows} getCampaignView={this.getCampaignView}/>
+          <ManageCampaignsTable
+            data={this.props.campaigns}
+            deleteRows={this.deleteRows}
+            getCampaignView={this.getCampaignView} />
           {this.props.isGetting && <div className="overlay">
             <FontAwesome name="refresh" spin/>
           </div>}

@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import ManageCampaignsGraph from './ManageCampaignsGraph';
 
-const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
+const mockProps = (overrides) => ({
   data: [],
   ...overrides
 });
