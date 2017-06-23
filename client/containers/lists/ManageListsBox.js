@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import FontAwesome from 'react-fontawesome';
 
-import { getLists, deleteLists } from '../../actions/listActions';
+import { getLists, deleteLists, editListName } from '../../actions/listActions';
 import ManageListsTable from '../../components/lists/ManageListsTable';
 import ListSignupFormCreator from '../../components/lists/ListSignupFormCreator';
 
@@ -14,7 +14,7 @@ function mapStateToProps(state) {
   };
 }
 
-const mapDispatchToProps = { getLists, deleteLists };
+const mapDispatchToProps = { getLists, deleteLists, editListName };
 
 export class ManageListsBoxComponent extends Component {
 
@@ -22,12 +22,14 @@ export class ManageListsBoxComponent extends Component {
     getLists: PropTypes.func.isRequired,
     lists: PropTypes.array.isRequired,
     isGetting: PropTypes.bool.isRequired,
-    deleteLists: PropTypes.func.isRequired
+    deleteLists: PropTypes.func.isRequired,
+    editListName: PropTypes.func.isRequired
   }
 
   constructor() {
     super();
     this.deleteRows = this.deleteRows.bind(this);
+    this.editListName = this.editListName.bind(this);
     this.state = {
       showListSignupFormCreator: false,
       subscribeKey: ''
@@ -41,6 +43,10 @@ export class ManageListsBoxComponent extends Component {
 
   deleteRows(listIds) {
     this.props.deleteLists(listIds, this.props.lists);
+  }
+
+  editListName(listId, newName){
+    this.props.editListName(listId, newName, this.props.lists);
   }
 
   showListSignupFormCreator(subscribeKey) {
@@ -65,6 +71,7 @@ export class ManageListsBoxComponent extends Component {
           <ManageListsTable data={this.props.lists}
                             deleteRows={this.deleteRows}
                             showListSignupFormCreator={this.showListSignupFormCreator.bind(this)}
+                            editListName={this.editListName}
           />
 
           {this.props.isGetting && <div className="overlay">

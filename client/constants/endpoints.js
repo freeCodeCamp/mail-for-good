@@ -15,6 +15,7 @@ export const API_SUBSCRIBERS_ENDPOINT = BASE_URL + '/api/list/add/subscribers';
 export const API_IMPORTCSV_ENDPOINT = BASE_URL + '/api/list/add/csv';
 export const API_MANAGELIST_ENDPOINT = BASE_URL + '/api/list/manage';
 export const API_LISTSUBSCRIBERS_ENDPOINT = BASE_URL + '/api/list/subscribers';
+export const API_LIST_ENDPOINT = BASE_URL + '/api/list';
 
 // Analytics
 

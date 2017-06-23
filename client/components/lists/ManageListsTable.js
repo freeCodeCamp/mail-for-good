@@ -3,7 +3,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Link } from 'react-router';
 import moment from 'moment';
 
-const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
+const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator, editListName }) => {
 
   const selectRowProp = {
     mode: "checkbox",
@@ -17,6 +17,17 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
       deleteRows(rows);
     },
     handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
+  };
+
+  const cellEditProps = {
+    mode: 'click',
+    blurToSave: true,
+    //beforeSaveCell is meant to run tests and return a boolean telling if react-bootstrap-table should or not update the value of the cell
+    //but because the change has to be handled with redux the change is made in beforeSaveCell and false is always returned
+    beforeSaveCell:(row, cellName, cellValue)=>{
+      editListName(row.id,cellValue);
+      return false;
+    },
   };
 
   const formatFieldDate = cell => moment(cell).format('lll');
@@ -65,16 +76,17 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
       options={options}
       search={true}
       searchPlaceholder="Filter lists"
-      clearSearch={true}>
+      clearSearch={true}
+      cellEdit={cellEditProps}>
 
       <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
-      <TableHeaderColumn dataField="name" dataSort={true}>Name</TableHeaderColumn>
-      <TableHeaderColumn dataField="status" dataAlign="center" dataSort={true} dataFormat={formatStatus} width="150">Status</TableHeaderColumn>
-      <TableHeaderColumn dataField="total" dataAlign="center" dataSort={true} dataFormat={formatSubscribersTotal} width="150">Total</TableHeaderColumn>
-      <TableHeaderColumn dataField="createdAt" dataSort={true} dataFormat={formatFieldDate}>Created</TableHeaderColumn>
-      <TableHeaderColumn dataField="updatedAt" dataSort={true} dataFormat={formatFieldDate}>Updated</TableHeaderColumn>
-      <TableHeaderColumn dataAlign="center" width="150" dataFormat={formatSignupFormButton}>Signup form</TableHeaderColumn>
-      <TableHeaderColumn dataAlign="center" width="150" dataFormat={formatFieldManageSubscribers}>Subscribers</TableHeaderColumn>
+      <TableHeaderColumn dataField="name" dataSort={true} editable={true}>Name</TableHeaderColumn>
+      <TableHeaderColumn dataField="status" dataAlign="center" dataSort={true} dataFormat={formatStatus} editable={false} width="150">Status</TableHeaderColumn>
+      <TableHeaderColumn dataField="total" dataAlign="center" dataSort={true} dataFormat={formatSubscribersTotal} editable={false} width="150">Total</TableHeaderColumn>
+      <TableHeaderColumn dataField="createdAt" dataSort={true} dataFormat={formatFieldDate} editable={false}>Created</TableHeaderColumn>
+      <TableHeaderColumn dataField="updatedAt" dataSort={true} dataFormat={formatFieldDate} editable={false}>Updated</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" width="150" dataFormat={formatSignupFormButton} editable={false}>Signup form</TableHeaderColumn>
+      <TableHeaderColumn dataAlign="center" width="150" dataFormat={formatFieldManageSubscribers} editable={false}>Subscribers</TableHeaderColumn>
     </BootstrapTable>
   );
 };
@@ -82,7 +94,8 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator }) => {
 ManageListsTable.propTypes = {
   data: PropTypes.array.isRequired,
   deleteRows: PropTypes.func.isRequired,
-  showListSignupFormCreator: PropTypes.func.isRequired
+  showListSignupFormCreator: PropTypes.func.isRequired,
+  editListName: PropTypes.func.isRequired
 };
 
 export default ManageListsTable;

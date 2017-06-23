@@ -12,6 +12,7 @@ const importCSV = require('../controllers/list/import-csv');
 const subscribeToList = require('../controllers/list/subscribe');
 const deleteSubscribers = require('../controllers/list/delete-subscribers');
 const deleteLists = require('../controllers/list/delete-lists');
+const updateList = require('../controllers/list/update-list');
 
 // Middleware
 const { apiIsAuth } = require('./middleware/auth');
@@ -58,5 +59,10 @@ module.exports = function(app, io) {
   // Delete lists
   app.delete('/api/list/manage', apiIsAuth, parseJson, cookieParser, writeListAccess, (req, res) => {
     deleteLists(req, res);
+  });
+
+  //update a list
+  app.patch('/api/list', apiIsAuth, parseJson, cookieParser, writeListAccess, (req,res) => {
+    updateList(req,res);
   });
 };
