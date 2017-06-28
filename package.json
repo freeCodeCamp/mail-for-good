@@ -82,7 +82,7 @@
     "redux-form": "^6.8.0",
     "redux-localstorage": "^0.4.1",
     "redux-thunk": "2.2.0",
-    "sequelize": "^4.1.0",
+    "sequelize": "3.30.4",
     "slug": "^0.9.1",
     "socket.io": "^2.0.3",
     "sqs-consumer": "^3.6.0",
