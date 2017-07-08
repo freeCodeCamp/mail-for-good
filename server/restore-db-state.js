@@ -22,5 +22,8 @@ module.exports = () => {
           where: { status: 'sending' }
         });
       }
-    });
+    })
+    // If the promise is rejected, the table doesn't exist. This is fine, as it may be the first
+    // time the app was run. We can discard the error.
+    .catch(() => {});
 };
