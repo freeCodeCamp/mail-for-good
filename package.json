@@ -5,7 +5,7 @@
   "main": "index.js",
   "engines": {
     "npm": ">=3",
-    "node": ">=7.4.0"
+    "node": ">=7.6.0"
   },
   "scripts": {
     "client:lint": "esw webpack.config.* client tools --color",
@@ -14,10 +14,10 @@
     "server:test": "npm run server:unit:test && npm run server:functional:test",
     "server:unit:test": "mocha tools/testSetup.js \"server/**/*.spec.js\"",
     "server:functional:test": "babel-tape-runner test/databaseTests.js | node_modules/.bin/tap-spec",
-    "start": "NODE_ENV=production ./node_modules/pm2/bin/pm2 start server/index.js --node-args=\"--harmony-async-await\" server/feedback-consumer/consumer.js --no-daemon",
-    "production": "DEV_SEND_RATE=200 TEST_PRODUCTION=true NODE_ENV=production node --harmony-async-await server/index.js",
-    "dev": "DEV_SEND_RATE=200 NODE_ENV=development node --harmony-async-await server/index.js",
-    "debug": "DEV_SEND_RATE=200 NODE_ENV=development node --inspect --debug-brk --harmony-async-await server/index.js",
+    "start": "NODE_ENV=production ./node_modules/pm2/bin/pm2 start server/index.js --node-args=server/feedback-consumer/consumer.js --no-daemon",
+    "production": "DEV_SEND_RATE=200 TEST_PRODUCTION=true NODE_ENV=production node server/index.js",
+    "dev": "DEV_SEND_RATE=200 NODE_ENV=development node server/index.js",
+    "debug": "DEV_SEND_RATE=200 NODE_ENV=development node --inspect --debug-brk server/index.js",
     "build": "babel-node tools/build.js",
     "test": "npm run client:test && npm run server:test",
     "simulator": "node ./node_modules/node-amazon-ses-simulator/index.js -e 0",
