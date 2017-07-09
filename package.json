@@ -19,7 +19,7 @@
     "feedback-consumer": "NODE_ENV=production node server/feedback-consumer/index.js",
     "test:server": "npm run test:server:unit && npm run test:server:functional",
     "test:server:unit": "mocha tools/testSetup.js \"server/**/*.spec.js\"",
-    "test:server:functional": "tape server/tests/**/*.spec.js | node_modules/.bin/tap-spec",
+    "test:server:functional": "tape server/tests/**/*.func.js | node_modules/.bin/tap-spec",
     "test:client": "mocha --require tools/testClientSetup.js tools/testSetup.js \"client/**/*.spec.js\"",
     "test": "npm run test:client && npm run test:server"
   },
