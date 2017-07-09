@@ -4,6 +4,7 @@ const express = require('express');
 const passport = require('passport');
 const helmet = require('helmet');
 
+const configureSequelize = require('./sequelize');
 const configureWebpackDevMiddleware = require('./webpack-dev-middleware');
 const configureRedis = require('./redis');
 const configureSession = require('./session');
@@ -16,6 +17,8 @@ const app = express();
 const server = http.Server(app);
 
 module.exports = () => {
+  // Sync the db
+  configureSequelize();
   // Use webpack deb middleware in development mode
   configureWebpackDevMiddleware(app);
 
