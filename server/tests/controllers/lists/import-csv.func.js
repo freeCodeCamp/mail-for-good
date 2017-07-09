@@ -28,17 +28,35 @@ exec(`mkdir ${__dirname + '/test-csv-files'}`);
 */
 
 test('Import CSV function correctly parses a CSV with a single column "email" & valid email rows.', async function (t) {
-  t.plan(1);
+  t.plan(3);
   const FILENAME = '10normalemails';
   const PATH_TO_FILE = path.resolve(__dirname, `./test-csv-files/${FILENAME}`);
+  const TEST_EMAIL_ARRAY = ['a@a.com', 'b@b.com', 'c@c.com'];
 
   // Write CSV files to ./test-csv-files/10normalemails
-  exec(`rm ${PATH_TO_FILE}; echo "email\na@a.com\nb@b.com\nc@c.com" > ${PATH_TO_FILE};`);
+  exec(`rm ${PATH_TO_FILE}; echo "email\n${TEST_EMAIL_ARRAY.join('\n')}" > ${PATH_TO_FILE};`);
 
   // Clear db & prep for import
   await prepareDbForCsvImports();
 
   // Mock req, res and io
+  /*
+    The terminating condition of the import-csv function is when send-single-notification is called.
+    This function sends the user a notification via websockets.
+    It is a function that first refreshes the request it is passed to ensure that the socket info it has is correct.
+    We will spy on this function and once called check the DB to validate if import-csv functioned correctly.
+  */
+  const stubSessionReload = () => {
+    t.pass('Finished by calling send-single-notification');
+
+    ListSubscriber.findAll({
+      raw: true,
+    }).then(values => {
+      // Check if all emails were written to the db correctly.
+      const everyListsubscriberWasWritten = values.every(value => ~TEST_EMAIL_ARRAY.indexOf(value.email));
+      t.ok(everyListsubscriberWasWritten, 'Every item written to the db was in the uploaded file');
+    })
+  };
   const req = httpMocks.createRequest({
     method: 'POST',
     url: '/user/42',
@@ -57,7 +75,7 @@ test('Import CSV function correctly parses a CSV with a single column "email" & 
       id: USER_ID,
     },
     session: {
-      reload: sinon.stub()
+      reload: stubSessionReload
     }
   });
   const res = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter });

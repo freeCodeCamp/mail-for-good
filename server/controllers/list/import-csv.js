@@ -179,7 +179,7 @@ module.exports = (req, res, io) => {
       const fin = () => setTimeout(() => {
         updateListStatusReady();
         sendFinalNotification();
-      }, 5000);
+      }, 1000);
 
       if (c.length()) {
         c.drain(() => {
