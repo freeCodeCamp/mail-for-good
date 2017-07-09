@@ -3,7 +3,7 @@ import {
   COMPLETE_ADD_SUBSCRIBERS, REQUEST_ADD_SUBSCRIBERS,
   REQUEST_GET_LISTS, COMPLETE_GET_LISTS,
   REQUEST_GET_LIST_SUBSCRIBERS, COMPLETE_GET_LIST_SUBSCRIBERS,
-  COMPLETE_DELETE_LIST_SUBSCRIBERS, COMPLETE_DELETE_LISTS
+  COMPLETE_DELETE_LIST_SUBSCRIBERS, COMPLETE_DELETE_LISTS, COMPLETE_EDIT_LIST_NAME
 } from '../constants/actionTypes';
 
 export function manageListSubscribers(state = initialState.manageListSubscribers, action) {
@@ -66,6 +66,11 @@ export function manageList(state = initialState.manageList, action) {
       };
     }
     case COMPLETE_DELETE_LISTS: {
+      return {...state,
+        lists: action.lists
+      };
+    }
+    case COMPLETE_EDIT_LIST_NAME: {
       return {...state,
         lists: action.lists
       };

@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
-import moment from 'moment';
 
 import ImportCSV from './ImportCSV';
 
@@ -41,7 +40,7 @@ export class CreateListComponent extends Component {
   }
 
   state = {
-    title: this.generateDefaultTitle()
+    title: ''
   }
 
   notification(notification) {
@@ -64,7 +63,6 @@ export class CreateListComponent extends Component {
     }
     else {
       this.props.submitCSV(file, headers, title);
-      this.setState({ title: this.generateDefaultTitle() });
       this.props.notify({
         message: 'Uploaded initiated - check notifications for progress',
         colour: 'green'
@@ -77,10 +75,6 @@ export class CreateListComponent extends Component {
     this.setState({
       [e.target.id]: e.target.value
     });
-  }
-
-  generateDefaultTitle() {
-    return `List - ${moment().format('l, h:mm:ss')}`;
   }
 
   render() {

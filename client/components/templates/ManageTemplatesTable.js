@@ -20,7 +20,11 @@ const ManageTemplatesTable = ({ data, deleteRows, getTemplateView }) => {
     afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
       deleteRows(rows);
     },
-    handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
+
+    handleConfirmDeleteRow: next => { 
+    if (confirm('Are you sure that you want to delete the selected tempale(s)?')) 
+      next();
+    } 
   };
 
   const dateFormatter = cell => {

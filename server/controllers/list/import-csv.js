@@ -24,11 +24,11 @@ const sendUpdateNotification = require('../websockets/send-update-notification')
 module.exports = (req, res, io) => {
 
   /*
-        Steps in this file
-        1. Check if the list (req.body.list) exists. If so, use it. If not, create it.
-        2. Iterate through the CSV file based on the concurrency set in const concurrency.
-        3. Using the instance of the list table upsert rows to the listsubscriber(s) table, providing a foreign key from the list instance.
-    */
+    Steps in this file
+    1. Check if the list (req.body.list) exists. If so, use it. If not, create it.
+    2. Iterate through the CSV file based on the concurrency set in const concurrency.
+    3. Using the instance of the list table upsert rows to the listsubscriber(s) table, providing a foreign key from the list instance.
+  */
 
   const listName = req.body.list; // Name of the list from the user
   const additionalFields = _.without(JSON.parse(req.body.headers), 'email'); // e.g. name, location, sex, (excluding email header)
@@ -179,7 +179,7 @@ module.exports = (req, res, io) => {
       const fin = () => setTimeout(() => {
         updateListStatusReady();
         sendFinalNotification();
-      }, 5000);
+      }, 1000);
 
       if (c.length()) {
         c.drain(() => {
