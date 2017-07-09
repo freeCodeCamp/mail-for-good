@@ -19,7 +19,7 @@
     "feedback-consumer": "NODE_ENV=production node server/feedback-consumer/index.js",
     "test:server": "npm run test:server:unit && npm run test:server:functional",
     "test:server:unit": "mocha tools/testSetup.js \"server/**/*.spec.js\"",
-    "test:server:functional": "babel-tape-runner test/databaseTests.js | node_modules/.bin/tap-spec",
+    "test:server:functional": "tape test/**/*.spec.js | node_modules/.bin/tap-spec",
     "test:client": "mocha --require tools/testClientSetup.js tools/testSetup.js \"client/**/*.spec.js\"",
     "test": "npm run test:client && npm run test:server"
   },
@@ -103,7 +103,6 @@
     "babel-preset-react-hmre": "1.1.1",
     "babel-preset-stage-1": "^6.24.1",
     "babel-register": "^6.24.1",
-    "babel-tape-runner": "^2.0.1",
     "chai": "^4.0.2",
     "chalk": "1.1.3",
     "css-loader": "^0.28.4",
