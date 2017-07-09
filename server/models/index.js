@@ -36,7 +36,7 @@ db.Sequelize = Sequelize;
 sequelize
   .sync({ force: false })
   .then(function() {
-    console.log('DB connected & reset');
+    console.log('DB connected');
   }, function (err) {
     console.log('An error occurred while creating the table:', err);
   });
