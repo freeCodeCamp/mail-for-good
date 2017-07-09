@@ -1,5 +1,5 @@
-const Campaign = require('./models').campaign;
-const User = require('./models').user;
+const Campaign = require('../../models').campaign;
+const User = require('../../models').user;
 
 
 /**
