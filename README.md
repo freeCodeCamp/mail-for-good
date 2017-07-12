@@ -2,6 +2,10 @@
 
 *Please be aware that Mail for Good is currently in beta.*
 
+Looking to contribute? Read our [developer setup guide](https://github.com/freeCodeCamp/Mail-for-Good/wiki/Setup-for-development).
+
+---
+
 An app for sending millions of emails as cheaply as possible. Mail for Good uses AWS Simple Email Service to send bulk emails at $0.10 per 1000 emails.
 
 Mail for Good is fast and memory efficient, currently sending over 100 emails per second on a 1gb Digital Ocean VPS.
@@ -68,7 +72,7 @@ After this, you'll need to create your own .env file. Check out the .env.example
 
 Now run `docker-compose up`. This will run all the containers needed to launch this app, and will take some time to finish.
 
-When the process is finished, the app will be exposed on port 8080 and accessible by visiting `http://[hostname]`.
+When the process is finished, the app will be exposed on port 8080 and accessible by visiting `http://[hostname]:8080`. You may use a reverse proxy such as Nginx to serve the app on port 80.
 
 ###### Installation summary
 
@@ -76,7 +80,7 @@ When the process is finished, the app will be exposed on port 8080 and accessibl
 2. Clone the repository and change into it `git clone https://github.com/freeCodeCamp/Mail-for-Good && cd Mail-for-Good`.
 3. Run `cp .env.example .env` then open `.env` and edit it, passing in your own values.
 4. Run `docker-compose up`. Wait for it to finish.
-5. Visit `http://[hostname]` or `localhost` if running locally.
+5. Visit `http://[hostname]:8080` or `localhost:8080` if running locally.
 
 ### Troubleshooting
 

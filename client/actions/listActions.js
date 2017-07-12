@@ -2,13 +2,15 @@ import axios from 'axios';
 import {
   API_IMPORTCSV_ENDPOINT,
   API_MANAGELIST_ENDPOINT,
-  API_LISTSUBSCRIBERS_ENDPOINT
+  API_LISTSUBSCRIBERS_ENDPOINT,
+  API_LIST_ENDPOINT
 } from '../constants/endpoints';
 import {
   REQUEST_ADD_SUBSCRIBERS, COMPLETE_ADD_SUBSCRIBERS,
   REQUEST_GET_LISTS, COMPLETE_GET_LISTS,
   REQUEST_GET_LIST_SUBSCRIBERS, COMPLETE_GET_LIST_SUBSCRIBERS,
-  COMPLETE_DELETE_LIST_SUBSCRIBERS, COMPLETE_DELETE_LISTS
+  COMPLETE_DELETE_LIST_SUBSCRIBERS, COMPLETE_DELETE_LISTS,
+  COMPLETE_EDIT_LIST_NAME
 } from '../constants/actionTypes';
 import { notify } from '../actions/notificationActions';
 import { localNotification } from './appActions';
@@ -43,6 +45,10 @@ export function completeDeleteListSubscribers(subscribers) {
 
 export function completeDeleteLists(lists) {
   return { type: COMPLETE_DELETE_LISTS, lists };
+}
+
+export function completeEditListName(lists) {
+  return { type: COMPLETE_EDIT_LIST_NAME, lists};
 }
 
 export function getListSubscribers(listId, offset=1, limit=10, filters={}) {
@@ -149,5 +155,27 @@ export function deleteLists(listIds, lists) {
     }).catch(() => {
       dispatch(notify({ message: 'There was an error completing this request.' }));
     });
+  };
+}
+
+export function editListName(listId, newName, lists) {
+  return dispatch => {
+      axios.patch(API_LIST_ENDPOINT, {id: listId ,values: {name: newName}}
+      ).then(response => {
+        //create an updated version of the lists
+        const newLists = lists.map((list)=>{
+          if(list.id === listId){
+            return Object.assign({},list,{name:newName});
+          }else{
+            return list;
+          }
+        });
+        //update the lists
+        dispatch(completeEditListName(newLists));
+
+        dispatch(notify({message: response.data, colour: 'green'}));
+      }).catch(() => {
+        dispatch(notify({message: 'There was an error editing this list'}));
+      });
   };
 }

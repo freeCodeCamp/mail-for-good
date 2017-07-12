@@ -6,8 +6,8 @@ const publisher = require("fakeredis").createClient('1');
 const subscriber = require("fakeredis").createClient('1');
 const redis = { publisher, subscriber };
 
-const exportSentUnsentCsv = require('../server/controllers/campaign/export-sent-unsent-csv');
-const stopCampaignSending = require('../server/controllers/campaign/stop-campaign-sending');
+const exportSentUnsentCsv = require('./controllers/campaign/export-sent-unsent-csv');
+const stopCampaignSending = require('../controllers/campaign/stop-campaign-sending');
 
 const {
   sequelize,
@@ -17,7 +17,7 @@ const {
   user: User,
   list: List,
   listsubscriber: ListSubscriber
-} = require('../server/models');
+} = require('../models');
 
 /*
   This test file should be used to test features that require modifications to the postgres test db.

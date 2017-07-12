@@ -1,8 +1,10 @@
-const secrets = require('./secrets');
-const db = require('../models');
-const Google = require('./passport/google');
+const passport = require('passport');
 
-module.exports = (passport) => {
+const secrets = require('../secrets');
+const db = require('../../models');
+const Google = require('../passport/google');
+
+module.exports = () => {
   passport.serializeUser(function(user, done) {
     done(null, user.id);
   });
