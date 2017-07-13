@@ -7,15 +7,14 @@ const PreviewCampaignForm = props => {
   let text;
   let form;
   let type;
-
   if (isCreateCampaignPreview) {
-    // form = { listName, campaignName, fromName, fromEmail, emailSubject, emailBody, type }
+    // form = { listName, campaignName, fromName, fromEmail, emailSubject, emailBodyPlaintext OR emailBodyHTML, type }
     form = props.form.values;
     type = form.type;
     if (type === 'Plaintext') {
-      text = form.emailBody;
+      text = form.emailBody ? form.emailBody : form[`emailBody${form.type}`];
     } else {
-      text = DOMPurify.sanitize(form.emailBody); // Purify to prevent xss attacks
+      text = DOMPurify.sanitize(form.emailBody ? form.emailBody : form[`emailBody${form.type}`]); // Purify to prevent xss attacks
     }
   } else {
     // In this case, the preview is rendered within the CampaignView container
@@ -36,10 +35,13 @@ const PreviewCampaignForm = props => {
       <h4><strong>Subject: {`${form.emailSubject}`}</strong></h4>
       {type === 'HTML'
       ?
+
       <blockquote>
         <div dangerouslySetInnerHTML={{ __html: text }} />
       </blockquote>
+
       :
+
       <textarea
         className="form-control"
         disabled

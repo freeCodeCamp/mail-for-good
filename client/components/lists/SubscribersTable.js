@@ -3,7 +3,7 @@ import { Table } from 'react-bootstrap';
 
 export default class SubscribersTable extends Component {
 
-  propTypes = {
+  static propTypes = {
     subscribers: PropTypes.array,
     fields: PropTypes.array,
     deleteSubscriber: React.PropTypes.func
@@ -25,9 +25,7 @@ export default class SubscribersTable extends Component {
     });
   }
 
-  render() {  // should add key props to these 3 loops
-    // const metaFields = ['delete'];
-
+  render() {
     return (
       <div>
         {this.state.subscribers &&

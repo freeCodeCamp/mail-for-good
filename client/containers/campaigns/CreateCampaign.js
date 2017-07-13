@@ -48,7 +48,6 @@ export class CreateCampaignComponent extends Component {
     this.lastPage = this.lastPage.bind(this);
     this.applyTemplate = this.applyTemplate.bind(this);
     this.passResetToState = this.passResetToState.bind(this);
-    this.clearTextEditor = this.clearTextEditor.bind(this);
   }
 
   state = {
@@ -73,8 +72,14 @@ export class CreateCampaignComponent extends Component {
 
   handleSubmit() {
     const formValues = this.props.form.values;
+    // Extract emailBodyPlaintext or emailBodyHTML as our emailBody
+    const correctForm = Object.assign({}, formValues, {
+      emailBody: formValues[`emailBody${formValues.type}`],
+    });
 
-    this.props.postCreateCampaign(JSON.stringify(formValues), this.state.reset);
+    delete correctForm[`emailBody${formValues.type}`];
+
+    this.props.postCreateCampaign(JSON.stringify(correctForm), this.state.reset);
     this.props.notify({
       message: 'Campaign is being created - it will be ready to send soon.',
       colour: 'green'
@@ -83,15 +88,18 @@ export class CreateCampaignComponent extends Component {
 
   applyTemplate(template) {
     if (template) {
-      const applyTemplateOnTopOfCurrentValues = Object.assign({}, this.props.form.values, template);
+      // Set the template's emailBody prop to emailBodyPlaintext or emailBodyHTML
+      const correctTemplate = Object.assign({}, template, {
+        [`emailBody${template.type}`]: template.emailBody,
+      });
+
+      delete correctTemplate.emailBody;
+
+      const applyTemplateOnTopOfCurrentValues = Object.assign({}, this.props.form.values, correctTemplate);
       this.props.initialize('createCampaign', applyTemplateOnTopOfCurrentValues);
     } else {
       this.props.notify({ message: 'You have not selected a valid template' });
     }
-  }
-
-  clearTextEditor() {
-    this.state.editor.loadHTML('');
   }
 
   nextPage() {
@@ -125,7 +133,6 @@ export class CreateCampaignComponent extends Component {
             <div className="box-body">
               {page === 1 &&
                 <CreateCampaignForm
-                  clearTextEditor={this.clearTextEditor}
                   passResetToState={this.passResetToState}
                   textEditorType={type}
                   applyTemplate={this.applyTemplate}
