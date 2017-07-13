@@ -33,7 +33,7 @@ module.exports = () => {
   const { sessionMiddleware } = configureSession(client);
 
   // Configure io
-  const { io } = configureIo(sessionMiddleware, server);
+  const io = configureIo(sessionMiddleware, server);
 
   // Configure express & passport
   require('./passport')(passport); // Configure passport strategies & serialisation

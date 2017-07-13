@@ -22,7 +22,6 @@ const sendUpdateNotification = require('../websockets/send-update-notification')
 */
 
 module.exports = (req, res, io) => {
-
   /*
     Steps in this file
     1. Check if the list (req.body.list) exists. If so, use it. If not, create it.
