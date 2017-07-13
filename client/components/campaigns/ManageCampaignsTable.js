@@ -5,6 +5,11 @@ import moment from 'moment';
 // Ref: https://allenfang.github.io/react-bootstrap-table/docs.html
 const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
 
+  const selectRowProp = {
+    mode: "checkbox",
+    bgColor: "rgb(176, 224, 230)"
+  };
+
   const options = {
     clearSearch: true,
     noDataText: 'You do not have any campaigns linked with your account',
@@ -71,7 +76,8 @@ const ManageCampaignsTable = ({ data, deleteRows, getCampaignView }) => {
     <BootstrapTable data={data}
       pagination={true}
       hover={true}
-      deleteRow={false}
+      deleteRow={true}
+      selectRow={selectRowProp}
       options={options}
       search={true}
       searchPlaceholder="Filter campaigns"

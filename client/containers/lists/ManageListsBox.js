@@ -69,9 +69,9 @@ export class ManageListsBoxComponent extends Component {
 
         <div className="box-body">
           <ManageListsTable data={this.props.lists}
-                            deleteRows={this.deleteRows}
-                            showListSignupFormCreator={this.showListSignupFormCreator.bind(this)}
-                            editListName={this.editListName}
+            deleteRows={this.deleteRows}
+            showListSignupFormCreator={this.showListSignupFormCreator.bind(this)}
+            editListName={this.editListName}
           />
 
           {this.props.isGetting && <div className="overlay">
