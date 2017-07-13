@@ -123,8 +123,21 @@ export class CreateCampaignComponent extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateCampaignForm clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} applyTemplate={this.applyTemplate} templates={templates} lists={lists} nextPage={this.nextPage} initialValues={initialFormValues} />}
-              {page === 2 && <PreviewCampaignForm form={form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} />}
+              {page === 1 &&
+                <CreateCampaignForm
+                  clearTextEditor={this.clearTextEditor}
+                  passResetToState={this.passResetToState}
+                  textEditorType={type}
+                  applyTemplate={this.applyTemplate}
+                  templates={templates}
+                  lists={lists}
+                  nextPage={this.nextPage}
+                  initialValues={initialFormValues} />}
+              {page === 2 &&
+                <PreviewCampaignForm
+                  form={form}
+                  lastPage={this.lastPage}
+                  handleSubmit={this.handleSubmit} />}
             </div>
 
             {isGetting || isPosting && <div className="overlay">

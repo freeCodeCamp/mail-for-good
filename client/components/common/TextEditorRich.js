@@ -42,7 +42,6 @@ export default class TextEditorRich extends Component {
       <ReactQuill
         readOnly={false}
         id="TextEditorRich"
-        className="TextEditor"
         bounds="#TextEditorRich"
         placeholder="Write your email ..."
         theme="snow"

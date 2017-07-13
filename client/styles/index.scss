@@ -13,7 +13,11 @@ html, body, h1, h2, h3, h4, h5, h6, p {
 
 // Ensure the text editor is at least 60vh
 .TextEditor {
-  height: 60vh;
+  min-height: 60vh;
+}
+
+.ql-editor {
+  min-height: 60vh;
 }
 
 // Override Bootstrap table's orange 'delete' button colour
