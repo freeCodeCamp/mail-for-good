@@ -42,8 +42,8 @@ module.exports = () => {
   app.use(passport.session()); // Use passport middleware for auth
   app.use(helmet()); // Implements various security tweaks to http response headers
 
-  app.use('/public', express.static(path.join(__dirname, '../public'))); // Serve /public static files when unauth
-  app.use('/dist', express.static(path.join(__dirname, '../dist'))); // Serve /dist static diles when auth
+  app.use('/public', express.static(path.join(__dirname, '../../../public'))); // Serve /public static files when unauth
+  app.use('/dist', express.static(path.join(__dirname, '../../../dist'))); // Serve /dist static diles when auth
 
   // Routes
   routes(app, passport, io, { client, subscriber, publisher });
