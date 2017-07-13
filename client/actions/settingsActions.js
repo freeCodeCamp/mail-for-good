@@ -19,7 +19,9 @@ export function updateSettingsFieldsExist(fields) {
 
 export function getBooleanForAssignedSettings(notification) {
   return dispatch => {
-    axios.get(API_SETTINGS_ENDPOINT)
+    axios.get(API_SETTINGS_ENDPOINT, {
+      responseType: 'json',
+    })
     .then(res => {
       if (notification) {
         dispatch(notify(notification));

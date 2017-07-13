@@ -107,6 +107,7 @@ export function getGrantPermissions() {
     dispatch(requestGetGrantPermissions());
     const xhr = new XMLHttpRequest();
     xhr.open('GET', API_GRANT_PERMISSIONS_ENDPOINT);
+    xhr.setRequestHeader('Accept', 'application/json, text/javascript');
     xhr.onload = () => {
       if (xhr.responseText) {
         // Convert response from JSON
@@ -164,6 +165,7 @@ export function getActivePermissions() {
     dispatch(requestGetActivePermissions());
     const xhr = new XMLHttpRequest();
     xhr.open('GET', API_ACTIVE_PERMISSIONS_ENDPOINT);
+    xhr.setRequestHeader('Accept', 'application/json, text/javascript');
     xhr.onload = () => {
       if (xhr.responseText) {
         // Convert response from JSON
@@ -205,6 +207,7 @@ export function getReceivedPermissionOffers() {
     dispatch(requestGetReceivedPermissionOffers());
     const xhr = new XMLHttpRequest();
     xhr.open('GET', API_RECEIVED_PERMISSIONS_ENDPOINT);
+    xhr.setRequestHeader('Accept', 'application/json, text/javascript');
     xhr.onload = () => {
       if (xhr.responseText) {
         // Convert response from JSON
@@ -263,6 +266,7 @@ export function getGrantOfferedPermissions() {
     dispatch(requestGetGrantOfferedPermissions());
     const xhr = new XMLHttpRequest();
     xhr.open('GET', API_GRANT_OFFERED_PERMISSIONS_ENDPOINT);
+    xhr.setRequestHeader('Accept', 'application/json, text/javascript');
     xhr.onload = () => {
       if (xhr.responseText) {
         // Convert response from JSON
