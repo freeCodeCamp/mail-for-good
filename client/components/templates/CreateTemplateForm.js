@@ -18,7 +18,6 @@ const CreateTemplateForm = props => {
     validationFailed,
     textEditorType,
     passResetToState,
-    clearTextEditor
   } = props;
 
   const nameArray = [
@@ -46,7 +45,6 @@ const CreateTemplateForm = props => {
 
   const resetForm = () => {
     reset();
-    clearTextEditor('');
   };
 
   return (
@@ -91,7 +89,6 @@ CreateTemplateForm.propTypes = {
   validationFailed: PropTypes.func.isRequired,
   textEditorType: PropTypes.string.isRequired,
   passResetToState: PropTypes.func.isRequired,
-  clearTextEditor: PropTypes.func.isRequired
 };
 
 const validate = values => {

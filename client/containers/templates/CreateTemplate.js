@@ -37,7 +37,6 @@ export class CreateTemplateComponent extends Component {
     this.lastPage = this.lastPage.bind(this);
     this.validationFailed = this.validationFailed.bind(this);
     this.passResetToState = this.passResetToState.bind(this);
-    this.clearTextEditor = this.clearTextEditor.bind(this);
   }
 
   state = {
@@ -82,10 +81,6 @@ export class CreateTemplateComponent extends Component {
     this.setState({ reset });
   }
 
-  clearTextEditor() {
-    this.state.editor.loadHTML('');
-  }
-
   render() {
     const { page } = this.state;
     const type = (this.props.form && this.props.form.values.type) || this.state.initialFormValues.type;
@@ -101,7 +96,7 @@ export class CreateTemplateComponent extends Component {
         <section className="content">
           <div className="box box-primary">
             <div className="box-body">
-              {page === 1 && <CreateTemplateForm clearTextEditor={this.clearTextEditor} passResetToState={this.passResetToState} textEditorType={type} validationFailed={this.validationFailed} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
+              {page === 1 && <CreateTemplateForm passResetToState={this.passResetToState} textEditorType={type} validationFailed={this.validationFailed} nextPage={this.nextPage} initialValues={this.state.initialFormValues} />}
               {page === 2 && <PreviewTemplateForm form={this.props.form} lastPage={this.lastPage} handleSubmit={this.handleSubmit} submitting={this.props.isPosting} />}
             </div>
             {this.props.isPosting || this.props.isGetting && <div className="overlay">
