@@ -166,6 +166,7 @@ module.exports = (req, res, io, redis) => {
         // We should let them know and NOT send this campaign
         if (MaxSendRate <= 1) {
           res.status(400).send({message: 'You are currently in Sandbox Mode. Please contact Amazon to get this lifted.'});
+          return;
         }
         const AvailableToday = Max24HourSend - SentLast24Hours;
         generator.next({ Max24HourSend, SentLast24Hours, MaxSendRate, AvailableToday });

@@ -38,7 +38,7 @@ export function changeSettings(newSettings) {
       dispatch(getBooleanForAssignedSettings({message: 'Settings updated', colour: 'green'}));
     }).catch(res => {
       dispatch(receiveChangeSettings({message: res.response.data.message, error: true}));
-      dispatch(getBooleanForAssignedSettings({message: 'Error updating some settings', colour: 'red'}));
+      dispatch(getBooleanForAssignedSettings({message: res.response.data.message, colour: 'red'}));
     });
   };
 }
