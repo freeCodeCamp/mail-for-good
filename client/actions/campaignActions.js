@@ -99,6 +99,7 @@ export function getCampaigns() {
     dispatch(requestGetCampaign());
     const xhr = new XMLHttpRequest();
     xhr.open('GET', API_CAMPAIGN_ENDPOINT);
+    xhr.setRequestHeader('Accept', 'application/json, text/javascript');
     xhr.onload = () => {
       if (xhr.responseText) {
         // Convert response from JSON
@@ -199,6 +200,7 @@ export function getTemplates() {
     dispatch(requestGetTemplates());
     const xhr = new XMLHttpRequest();
     xhr.open('GET', API_TEMPLATE_ENDPOINT);
+    xhr.setRequestHeader('Accept', 'application/json, text/javascript');
     xhr.onload = () => {
       // Convert response from JSON
       const templatesArray = JSON.parse(xhr.responseText);

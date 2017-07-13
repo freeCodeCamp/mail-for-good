@@ -19,7 +19,9 @@ export function updateSettingsFieldsExist(fields) {
 
 export function getBooleanForAssignedSettings(notification) {
   return dispatch => {
-    axios.get(API_SETTINGS_ENDPOINT)
+    axios.get(API_SETTINGS_ENDPOINT, {
+      responseType: 'json',
+    })
     .then(res => {
       if (notification) {
         dispatch(notify(notification));
@@ -38,7 +40,7 @@ export function changeSettings(newSettings) {
       dispatch(getBooleanForAssignedSettings({message: 'Settings updated', colour: 'green'}));
     }).catch(res => {
       dispatch(receiveChangeSettings({message: res.response.data.message, error: true}));
-      dispatch(getBooleanForAssignedSettings({message: 'Error updating some settings', colour: 'red'}));
+      dispatch(getBooleanForAssignedSettings({message: res.response.data.message, colour: 'red'}));
     });
   };
 }

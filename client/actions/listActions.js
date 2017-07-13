@@ -56,7 +56,8 @@ export function getListSubscribers(listId, offset=1, limit=10, filters={}) {
     dispatch(requestGetListSubscribers(listId));
 
     axios.get(API_LISTSUBSCRIBERS_ENDPOINT, {
-      params: { listId, offset, limit, filters }
+      params: { listId, offset, limit, filters },
+      responseType: 'json',
     })
       .then(response => {
         dispatch(completeGetListSubscribers(response.data.subscribers, response.data.total, response.data.additionalFields));
@@ -73,6 +74,7 @@ export function getLists() {
     dispatch(requestGetList());
     const xhr = new XMLHttpRequest();
     xhr.open('GET', API_MANAGELIST_ENDPOINT);
+    xhr.setRequestHeader('Accept', 'application/json, text/javascript');
     xhr.onload = () => {
       if (xhr.responseText) {
         // Convert response from JSON

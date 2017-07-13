@@ -162,6 +162,12 @@ module.exports = (req, res, io, redis) => {
         res.status(400).send({message: 'Please confirm your Amazon SES settings and try again later.'});
       } else {
         const {Max24HourSend, SentLast24Hours, MaxSendRate} = data;
+        // If the user's max send rate is 1, they are in sandbox mode.
+        // We should let them know and NOT send this campaign
+        if (MaxSendRate <= 1) {
+          res.status(400).send({message: 'You are currently in Sandbox Mode. Please contact Amazon to get this lifted.'});
+          return;
+        }
         const AvailableToday = Max24HourSend - SentLast24Hours;
         generator.next({ Max24HourSend, SentLast24Hours, MaxSendRate, AvailableToday });
       }

@@ -2,13 +2,11 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const db = require('../../models');
 
 module.exports = (passport, secret) => {
-
   passport.use(new GoogleStrategy({
     clientID: secret.consumerKey,
     clientSecret: secret.consumerSecret,
-    callbackURL: secret.callbackURL
+    callbackURL: secret.callbackURL,
   }, (token, tokenSecret, profile, done) => {
-
     db.user.findOne({
       where: {
         googleId: profile.id
@@ -34,15 +32,12 @@ module.exports = (passport, secret) => {
         }).then(() => {
           done(null, newUserCreated);
         }).catch(err => {
-          throw err;
           done(err);
         });
-
       }
+      return null;
     }).catch(err => {
-      throw err;
       done(err);
     });
-
-  }))
-}
+  }));
+};

@@ -38,26 +38,6 @@ test('Stop campaign send feature returns the correct status code', async functio
   t.equal(400, res.statusCode, 'Response status code from stop campaign should be 400');
 });
 
-test('Stop campaign publishes a cancel message to redis', async function(t) {
-  t.plan(2);
-  await beforeEachStopSendCampaign();
-
-  const res = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter });
-  const req = {
-    user: { id: 1 },
-    body: { id: 1 }
-  };
-
-  redis.subscriber.on('message', (channel, message) => {
-    t.equal('stop-campaign-sending', channel, 'Redis subscriber channel is "stop-campaign-sending"');
-    t.equal('1', message, 'Redis subscriber message is "1"');
-    redis.subscriber.unsubscribe('stop-campaign-sending');
-  });
-  redis.subscriber.subscribe('stop-campaign-sending');
-
-  stopCampaignSending(req, res, redis);
-});
-
 test('Stop campaign modifies the campaign status appropriately', async function(t) {
   t.plan(1);
   await beforeEachStopSendCampaign();

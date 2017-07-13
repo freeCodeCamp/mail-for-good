@@ -22,7 +22,6 @@ const sendUpdateNotification = require('../websockets/send-update-notification')
 */
 
 module.exports = (req, res, io) => {
-
   /*
     Steps in this file
     1. Check if the list (req.body.list) exists. If so, use it. If not, create it.
@@ -35,7 +34,7 @@ module.exports = (req, res, io) => {
   const userId = req.user.id;
 
   function validateEmail(email) {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line
     return re.test(email);
   }
 
