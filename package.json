@@ -65,7 +65,6 @@
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0",
     "pg": "^6.2.4",
-    "pm2": "^2.4.5",
     "quill": "^1.2.6",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.0",
