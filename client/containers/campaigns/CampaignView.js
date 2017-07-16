@@ -232,9 +232,9 @@ export class CampaignViewComponent extends Component {
 
               <div className="form-inline">
                 <button disabled={!['ready', 'interrupted'].includes(status)} className="btn btn-success btn-lg" type="button" onClick={this.openSendModal}>Send</button>
-                <button className="btn btn-info btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.openTestSendModal}>Send a test email</button>
-                <button className="btn btn-lg btn-primary" style={{ "margin-left": "1rem" }} onClick={() => {window.location = downloadUnsentSubscribersUrl;}}>Export unsent</button>
-                <button disabled={status !== 'sending'} className="btn btn-danger btn-lg" style={{ "margin-left": "1rem" }} type="button" onClick={this.stopSending.bind(this)}>Stop sending</button>
+                <button className="btn btn-info btn-lg" style={{ "marginLeft": "1rem" }} type="button" onClick={this.openTestSendModal}>Send a test email</button>
+                <button className="btn btn-lg btn-primary" style={{ "marginLeft": "1rem" }} onClick={() => {window.location = downloadUnsentSubscribersUrl;}}>Export unsent</button>
+                <button disabled={status !== 'sending'} className="btn btn-danger btn-lg" style={{ "marginLeft": "1rem" }} type="button" onClick={this.stopSending.bind(this)}>Stop sending</button>
               </div>
 
               {/* Modal for sending test emails */}
@@ -244,7 +244,7 @@ export class CampaignViewComponent extends Component {
                 </Modal.Header>
 
                 <Modal.Body>
-                  <input className="form-control" style={{ "margin-left": "1rem" }} id="testEmail" placeholder="Send a test email to:" type="email" value={testEmail} onChange={this.handleChange} />
+                  <input className="form-control" style={{ "marginLeft": "1rem" }} id="testEmail" placeholder="Send a test email to:" type="email" value={testEmail} onChange={this.handleChange} />
                 </Modal.Body>
 
                 <Modal.Footer>

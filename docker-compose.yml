@@ -1,7 +1,7 @@
 postgres:
-    image: postgres:latest
+    image: postgres:9.6
 redis:
-    image: redis:latest
+    image: redis:4.0
 app:
     image: freecodecamp/mail-for-good:latest
     env_file: .env

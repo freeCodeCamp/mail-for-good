@@ -2,9 +2,6 @@ module.exports = {
   sessionSecret: process.env.SESSION_SECRET || 'TestingTesting',
   mongo: process.env.MONGO_DB,
 
-  // Secrets for testing purposes
-  testEmail: process.env.EMAIL || null,
-
   email: {
     amazon: {
       accessKeyId: process.env.AMAZON_ACCESS_KEY_ID || null,

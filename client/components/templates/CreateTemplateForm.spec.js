@@ -14,7 +14,6 @@ const mockProps = ( overrides) => ({ // eslint-disable-line no-unused-vars
   validationFailed: () => {},
   textEditorType: '',
   passResetToState: () => {},
-  clearTextEditor: () => {},
   ...overrides
 });
 
