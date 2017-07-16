@@ -87,6 +87,7 @@
     "redux-localstorage": "^0.4.1",
     "redux-thunk": "2.2.0",
     "sequelize": "^3.24.3",
+    "shortid": "^2.2.8",
     "slug": "^0.9.1",
     "socket.io": "^2.0.3",
     "sqs-consumer": "^3.6.0",

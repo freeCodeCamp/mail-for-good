@@ -3,6 +3,7 @@ const csv = require('csv');
 const fs = require('fs');
 const cargo = require('async/cargo');
 const _ = require('lodash');
+const shortid = require('shortid');
 
 const db = require('../../models');
 const sendSingleNotification = require('../websockets/send-single-notification');
@@ -59,12 +60,27 @@ module.exports = (req, res, io) => {
       return false;
     }
   }, err => {
-    throw err;
+    return err;
   });
 
-  Promise.all([validateListBelongsToUser]).then(values => {
+  const validateCsvDoesNotContainErrors = new Promise((resolve, reject) => {
+    // Parse the CSV in full & check for any error prior to doing any work
+    const parser = csv.parse({columns: true, skip_empty_lines: true});
+    fs.createReadStream(`${path.resolve(req.file.path)}`)
+      .pipe(parser)
+      .on('error', err => {
+        res.status(400).send({ message: err.message });
+        reject(err);
+      })
+      .on('finish', () => {
+        resolve();
+      });
+  });
+
+  Promise.all([validateListBelongsToUser, validateCsvDoesNotContainErrors])
+  .then(values => {
     let [listInstance] = values; // Get variables from the values array
-    const crudeRandomId = (Math.random() * 100000).toString(); // This doesn't really need to be unique as only one CSV should ever be uploaded at any one time by a client
+    const randomId = shortid.generate();
 
     listInstance = listInstance[0];
     const listIsNew = listInstance.$options.isNewRecord;
@@ -155,7 +171,7 @@ module.exports = (req, res, io) => {
           if (tasksLength === bufferLength) {
             const notification = {
               message :`Processed ${numberProcessed.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows...`,
-              id: crudeRandomId, // Unique identified for use on client side (in the reducer)
+              id: randomId, // Unique identified for use on client side (in the reducer)
               icon: 'fa-upload',
               iconColour: 'text-blue'
             };
@@ -223,8 +239,8 @@ module.exports = (req, res, io) => {
     }, transformerOptions);
 
     transformer.on('error', err => {
-      // Catch & throw errs
-      throw err;
+      // Catch errs
+      console.log(err);
     });
 
     // Create read stream, parse then pipe to transformer to perform async operations. Finally, release data for garbage collection.
@@ -256,7 +272,8 @@ module.exports = (req, res, io) => {
     res.status(202).send({message: message});
 
     return null;
-  }, err => {
-    throw err;
+  })
+  .catch(err => {
+    res.status(400).send({ message: err.message });
   });
 };

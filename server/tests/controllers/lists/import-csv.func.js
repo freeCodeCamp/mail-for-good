@@ -1,6 +1,5 @@
 const httpMocks = require('node-mocks-http');
 const test = require('tape');
-const sinon = require('sinon');
 const path = require('path');
 const exec = require('child_process').exec;
 
@@ -12,8 +11,6 @@ const LIST_NAME = 'list';
 
 const {
   sequelize,
-  campaignsubscriber: CampaignSubscriber,
-  campaign: Campaign,
   user: User,
   list: List,
   listsubscriber: ListSubscriber
@@ -85,6 +82,53 @@ test('Import CSV function correctly parses a CSV with a single column "email" & 
 
   res.on('end', () => {
     t.equal(202, res.statusCode, 'Response status code equals 202');
+  });
+});
+
+test('Import CSV does not accept malformed CSVs with extra semicolons.', async function (t) {
+  t.plan(1);
+  const FILENAME = '10emailswithtoomanycommas';
+  const PATH_TO_FILE = path.resolve(__dirname, `./test-csv-files/${FILENAME}`);
+  const TEST_EMAIL_ARRAY = ['a@a.com,,,', 'b@b.com,', 'c@c.com'];
+
+  // Write CSV files to ./test-csv-files/10normalemails
+  exec(`rm ${PATH_TO_FILE}; echo "email\n${TEST_EMAIL_ARRAY.join('\n')}" > ${PATH_TO_FILE};`);
+
+  // Clear db & prep for import
+  await prepareDbForCsvImports();
+
+  // Mock req, res and io
+  /*
+    The terminating condition of the import-csv function is when send-single-notification is called.
+    This function sends the user a notification via websockets.
+    It is a function that first refreshes the request it is passed to ensure that the socket info it has is correct.
+    We will spy on this function and once called check the DB to validate if import-csv functioned correctly.
+  */
+  const req = httpMocks.createRequest({
+    method: 'POST',
+    url: '/user/42',
+    body: {
+      list: LIST_NAME,
+      headers: JSON.stringify(['email'])
+    },
+    file: {
+      encoding: '7bit',
+      mimetype: 'text/csv',
+      filename: FILENAME,
+      originalname: FILENAME,
+      path: PATH_TO_FILE,
+    },
+    user: {
+      id: USER_ID,
+    },
+  });
+  const res = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter });
+  const io = {};
+
+  importCsv(req, res, io);
+
+  res.on('end', () => {
+    t.equal(400, res.statusCode, 'Response status code equals 400');
   });
 });
 
