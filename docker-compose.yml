@@ -3,7 +3,7 @@ postgres:
 redis:
     image: redis:4.0
 app:
-    image: freecodecamp/mail-for-good:latest
+    image: freecodecamp/mail-for-good:stable
     env_file: .env
     environment:
         - PSQL_USERNAME=postgres

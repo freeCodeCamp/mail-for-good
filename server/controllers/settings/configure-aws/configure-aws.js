@@ -29,7 +29,7 @@ module.exports = (credentials, callback) => {
       callback(null, queueUrl);
     }
   });
-}
+};
 
 function createSnsTopics (config = { sns: { bounce: { arn: '' }, complaint: { arn: '' } } }, callback) {
   const SNS_BOUNCE_NAME = 'mail-for-good-ses-bounce';
@@ -49,7 +49,7 @@ function createSnsTopics (config = { sns: { bounce: { arn: '' }, complaint: { ar
         callback(null, result.TopicArn);
       }
     });
-  }
+  };
 
   async.parallel({
     bounce: async.apply(create, SNS_BOUNCE_NAME),
@@ -94,7 +94,7 @@ function createSqsQueue (config = { sqs: { url: '', arn: '' } }, callback) {
           }
         }
       }
-  }
+  };
 
   sqs.createQueue({
     QueueName: SQS_NAME,
@@ -135,7 +135,7 @@ function subscribeSnsToSqs (config, callback) {
       Protocol: 'sqs',
       Endpoint: config.sqs.arn
     }, callback);
-  }
+  };
 
   async.parallel({
     bounce: async.apply(subscribe, config.sns.bounce.arn),
