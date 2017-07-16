@@ -1,5 +1,5 @@
 postgres:
-    image: postgres:9.6
+    image: postgres:9.6.3
 redis:
     image: redis:4.0
 app:
