@@ -64,11 +64,19 @@ module.exports = (req, res, io) => {
   });
 
   const validateCsvDoesNotContainErrors = new Promise((resolve, reject) => {
+    const notification = {
+      message: 'Validating CSV ...',
+      icon: 'fa-list-alt',
+      iconColour: 'text-green',
+    };
+
+    sendSingleNotification(io, req, notification);
     // Parse the CSV in full & check for any error prior to doing any work
     const parser = csv.parse({columns: true, skip_empty_lines: true});
     fs.createReadStream(`${path.resolve(req.file.path)}`)
       .pipe(parser)
       .on('error', err => {
+        console.log(err);
         res.status(400).send({ message: err.message });
         reject(err);
       })
@@ -77,7 +85,7 @@ module.exports = (req, res, io) => {
       });
   });
 
-  Promise.all([validateListBelongsToUser, validateCsvDoesNotContainErrors])
+  Promise.all([validateListBelongsToUser])
   .then(values => {
     let [listInstance] = values; // Get variables from the values array
     const randomId = shortid.generate();

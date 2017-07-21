@@ -1,4 +1,4 @@
-FROM node:7-onbuild
+FROM node:8.1.4-onbuild
 
 # Copying package.json and running
 # npm install are automatically handled
