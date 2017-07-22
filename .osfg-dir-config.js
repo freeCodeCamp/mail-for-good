@@ -16,7 +16,7 @@
 module.exports = {
   title: 'Mail for Good',
   demoVideo: 'https://www.youtube.com/watch?v=_7U03GVD4a8',
-  liveDemo: 'https://meeting.freecodecamp.com/',
+  liveDemo: '',
   description: `An app for sending millions of emails as cheaply as possible. Mail for Good uses AWS Simple Email Service to send bulk emails at $0.10 per 1000 emails.
 
 Mail for Good is fast and memory efficient, currently sending over 100 emails per second on a 1gb Digital Ocean VPS.
