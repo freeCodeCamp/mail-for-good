@@ -18,7 +18,7 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator, editLis
     },
     handleConfirmDeleteRow: next => { 
       // We do want to prompt for confirmation on list deletion, per GitHub issue #141
-      if (prompt("Do you really want to delete the selected list(s)?")) {
+      if (confirm("Do you really want to delete the selected list(s)?")) {
         next();
       }
     } 
