@@ -15,7 +15,7 @@ module.exports = (req, res) => {
     // Therefore we can respond when we know that the lists were deleted.
     // ListSubscribers will only be deleted when lists have themselves been destroyed.
     // Lists will only be destroyed if each listId has an id matching the userId
-    ListSubscriber.destroy({
+    return ListSubscriber.destroy({
       where: { listId: listIds }
     });
   })
