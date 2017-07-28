@@ -22,7 +22,7 @@ const ManageTemplatesTable = ({ data, deleteRows, getTemplateView }) => {
     },
 
     handleConfirmDeleteRow: next => { 
-    if (confirm('Are you sure that you want to delete the selected tempale(s)?')) 
+    if (confirm('Are you sure that you want to delete the selected template(s)?')) 
       next();
     } 
   };
