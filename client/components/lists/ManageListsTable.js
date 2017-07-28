@@ -16,7 +16,12 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator, editLis
     afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
       deleteRows(rows);
     },
-    handleConfirmDeleteRow: next => { next(); } // By default, react-bootstrap-table confirms choice using an alert. We want to override that behaviour.
+    handleConfirmDeleteRow: next => { 
+      // We do want to prompt for confirmation on list deletion, per GitHub issue #141
+      if (confirm("Do you really want to delete the selected list(s)?")) {
+        next();
+      }
+    } 
   };
 
   const cellEditProps = {
