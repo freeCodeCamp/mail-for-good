@@ -63,21 +63,7 @@ module.exports = (req, res, io) => {
     return err;
   });
 
-  const validateCsvDoesNotContainErrors = new Promise((resolve, reject) => {
-    // Parse the CSV in full & check for any error prior to doing any work
-    const parser = csv.parse({columns: true, skip_empty_lines: true});
-    fs.createReadStream(`${path.resolve(req.file.path)}`)
-      .pipe(parser)
-      .on('error', err => {
-        res.status(400).send({ message: err.message });
-        reject(err);
-      })
-      .on('finish', () => {
-        resolve();
-      });
-  });
-
-  Promise.all([validateListBelongsToUser, validateCsvDoesNotContainErrors])
+  Promise.all([validateListBelongsToUser])
   .then(values => {
     let [listInstance] = values; // Get variables from the values array
     const randomId = shortid.generate();
@@ -88,7 +74,7 @@ module.exports = (req, res, io) => {
 
     const filename = req.file.originalname;
     let bufferArray = [];
-    const bufferLength = 2500;
+    const bufferLength = 1000;
     let numberProcessed = 0; // Var for tracking how many CSVs have been processed. Sends a WS notification per 'bufferLength' processed emails.
 
     function sendFinalNotification() {
@@ -194,7 +180,7 @@ module.exports = (req, res, io) => {
       const fin = () => setTimeout(() => {
         updateListStatusReady();
         sendFinalNotification();
-      }, 1000);
+      }, 3000);
 
       if (c.length()) {
         c.drain(() => {
