@@ -1,4 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import ReactTooltip from 'react-tooltip';
 import { Link } from 'react-router';
 
 const WSNotification = props => { // eslint-disable-line no-unused-vars
@@ -6,9 +8,12 @@ const WSNotification = props => { // eslint-disable-line no-unused-vars
   return (
     <li onClick={() => consumeNotification(index)}>
       <Link to={url || '#'}>
-        <i className={`fa ${icon || 'fa-users'} ${iconColour || 'text-green'}`} />
-        {message}
+        <a data-tip={message} data-for={`ws-${index}`}>
+          <i className={`fa ${icon || 'fa-users'} ${iconColour || 'text-green'}`} /> {message}
+        </a>
       </Link>
+
+      <ReactTooltip id={`ws-${index}`} place="top" type="dark" effect="float" />
     </li>
   );
 };
