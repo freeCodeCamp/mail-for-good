@@ -71,21 +71,51 @@ module.exports = (req, res, io) => {
     };
 
     sendSingleNotification(io, req, notification);
+    let currentLine = 1; // The current parsed line no.
+    const randomId = shortid.generate();
     // Parse the CSV in full & check for any error prior to doing any work
     const parser = csv.parse({columns: true, skip_empty_lines: true});
     fs.createReadStream(`${path.resolve(req.file.path)}`)
       .pipe(parser)
+      .on('data', () => {
+        if (currentLine % 1000 === 0) {
+          const notification = {
+            message :`Validated ${currentLine.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} rows`,
+            id: randomId, // Unique identified for use on client side (in the reducer)
+            icon: 'fa-upload',
+            iconColour: 'text-blue'
+          };
+
+          sendUpdateNotification(io, req, notification);
+        }
+
+        currentLine++;
+      })
       .on('error', err => {
+        const notification = {
+          message: `${err}`,
+          icon: 'fa-list-alt',
+          iconColour: 'text-red',
+        };
+
+        sendSingleNotification(io, req, notification);
         console.log(err);
         res.status(400).send({ message: err.message });
         reject(err);
       })
       .on('finish', () => {
+        const notification = {
+          message: `CSV validated (${currentLine} rows)`,
+          icon: 'fa-list-alt',
+          iconColour: 'text-green',
+        };
+
+        sendSingleNotification(io, req, notification);
         resolve();
       });
   });
 
-  Promise.all([validateListBelongsToUser])
+  Promise.all([validateListBelongsToUser, validateCsvDoesNotContainErrors])
   .then(values => {
     let [listInstance] = values; // Get variables from the values array
     const randomId = shortid.generate();
@@ -96,7 +126,7 @@ module.exports = (req, res, io) => {
 
     const filename = req.file.originalname;
     let bufferArray = [];
-    const bufferLength = 2500;
+    const bufferLength = 1000;
     let numberProcessed = 0; // Var for tracking how many CSVs have been processed. Sends a WS notification per 'bufferLength' processed emails.
 
     function sendFinalNotification() {
