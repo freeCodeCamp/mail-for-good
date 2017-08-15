@@ -48,6 +48,9 @@ Mail for good is designed to be memory efficient, nonetheless the amount of memo
 
 We suggest a machine with at least 2gb memory.
 
+###### On a Amazon Web Services instance
+After following the steps described in the preinstallation below and shown in [**this video**](https://www.youtube.com/watch?v=_7U03GVD4a8), follow the steps in our [**deploy.md**](./docs/deploy.md).
+
 ###### Preinstallation
 
 First, keep in mind that this application uses [Amazon SES](https://aws.amazon.com/ses/). Your account will initially be [limited by Amazon](http://docs.aws.amazon.com/ses/latest/DeveloperGuide/manage-sending-limits.html). To increase these limits, check out Amazon's documentation [here](http://docs.aws.amazon.com/ses/latest/DeveloperGuide/increase-sending-limits.html).

@@ -2,9 +2,9 @@ Deploying Mail for Good on AWS
 ===================
 
 
-Creating the blank instance
+Creating and preparing a blank instance
 --------------
-
+### Create the instance
 Right after you log in AWS you will land on this page
 ![](resources/deploy_images/1.png)
 
@@ -56,6 +56,20 @@ protocol: tcp
 port range:8080
 source: custom 0.0.0.0/0, ::/0
 
+### Allocate a static IP to the instance
+By default AWS will allocate you a new address every time your instance starts up.
+
+To get a static IP go into navbar->EC2->left menu->Elastic IPs
+![](resources/deploy_images/navbar_ec2_elasticIP.png)
+
+Then click on "Allocate new address"
+![](resources/deploy_images/elastic_allocate_new.png)
+
+Confirm until your Elastic IP is created then click on Action->"associate address"
+![](resources/deploy_images/elastic_associate.png)
+
+Select your instance, its private IP and let "resource type" on "instance"
+![](resources/deploy_images/elastic_associate_conf.png)
 
 
 Deploying Mail for Good on your instance
@@ -138,10 +152,12 @@ Add Docker’s official GPG key:
 $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 ```
 Install the docker version currently marked as "stable"
+```
 $ sudo add-apt-repository \
  "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
  $(lsb_release -cs) \
  stable"
+ ```
 
 To install docker-compose you need to run the next command
 ```
@@ -156,13 +172,22 @@ git clone https://github.com/freeCodeCamp/mail-for-good && cd Mail-for-Good
 
 Create a .env file
 ```
-cp .env.example
+cp .env.example .env
 ```
 
 Then edit your .env according to the comments present in it.
 (to quit, use Ctrl+X. Nano will ask  you to confirm then ask for the name of the file, don't change it)
 ```
 nano .env
+```
+
+Here is an example of what we have written in the .env for our example
+```
+GOOGLE_CONSUMER_KEY=<your google consumer key
+GOOGLE_CONSUMER_SECRET=<Your secret>
+GOOGLE_CALLBACK=http://ec2-54-77-4-200.eu-west-1.compute.amazonaws.com:8080/auth/google/callback
+
+ENCRYPTION_PASSWORD=<randomly generated password>
 ```
 
 Launch Mail-for-Good
