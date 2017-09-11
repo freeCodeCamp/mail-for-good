@@ -7,6 +7,10 @@ module.exports = (passport, secret) => {
     clientSecret: secret.consumerSecret,
     callbackURL: secret.callbackURL,
   }, (token, tokenSecret, profile, done) => {
+    //Check if the user has the privilege to log in
+    if (!db.user.isWhiteListed(profile.emails)) {
+      return done(null,false);
+    }
     db.user.findOne({
       where: {
         googleId: profile.id
