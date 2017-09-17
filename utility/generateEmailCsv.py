@@ -1,21 +1,14 @@
 import sys
 import random, string
-import os
-
-numberOfEmailsToGenerate = sys.argv[1]
 
 try:
-    int(numberOfEmailsToGenerate)
-    print('Generating a CSV with ' + numberOfEmailsToGenerate + ' random emails')
+    numberOfEmailsToGenerate = int(sys.argv[1])
+    print('Generating a CSV with %d random emails' % numberOfEmailsToGenerate)
     print('This make take some time if the CSV is large ...')
 except:
-    sys.exit('Please pass a number as the first arg')
+    sys.exit('Failed to parse argument. Usage "python %s <number of expected e-mail addresses e.g.: 10>' % sys.argv[0])
 
-numberOfEmailsToGenerate = int(numberOfEmailsToGenerate)
-
-# Delete ./generated.csv, then create it
-os.system('touch ./generated.csv')
-
-for x in range(0, numberOfEmailsToGenerate):
-    randomString = ''.join(random.choice(string.lowercase) for i in range(20))
-    os.system('echo ' + randomString + '@email.com' ' >> ./generated.csv')
+with open("./generated.csv", "w") as generated_csv:
+    for x in range(0, numberOfEmailsToGenerate):
+        randomString = ''.join(random.choice(string.lowercase) for i in range(20))
+        generated_csv.write("%s@gmail.com\n" % randomString)
