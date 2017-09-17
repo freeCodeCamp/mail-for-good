@@ -7,7 +7,7 @@ Before installing this application, you'll need some API keys from Google to han
 1. Login to [Google API Manager](https://console.developers.google.com/apis/).
 2. In the left menu, select **Dashboard**. Now select **Enable API**, search for `Google+` and select it. At the top of the screen, ensure it's enabled by clicking on **Enable**.
 3. In the left menu, select **Credentials**. Then click **Create Credentials** > **OAuth client ID**.
-4. Select **Web Application**. Name is as you wish, but under **Authorised Javascript Origins** put `http://localhost:80`, and under **Authorised redirect URIs** put `http://localhost:80/auth/google/callback`.
+4. Select **Web Application**. Name is as you wish, but under **Authorised Javascript Origins** put `http://localhost`, and under **Authorised redirect URIs** put `http://localhost/auth/google/callback`.
 5. Click **Create**. You will now have a Client ID and Client Secret. In your .env file, put the Client ID as your GOOGLE_CONSUMER_KEY, and the Client Secret as your GOOGLE_CONSUMER_SECRET.
 
 ###### Installing with Docker
@@ -30,4 +30,4 @@ When the process is finished, the app will be exposed on port 80 and accessible 
 2. Clone the repository and change into it `git clone https://github.com/freeCodeCamp/Mail-for-Good && cd Mail-for-Good`.
 3. Run `cp .env.example .env` then open `.env` and edit it, passing in your own values.
 4. Run `docker-compose up`. Wait for it to finish.
-5. Visit `http://[hostname]:80` or `localhost:80` if running locally.
+5. Visit `http://[hostname]:80` or `localhost` if running locally.
