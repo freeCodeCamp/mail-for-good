@@ -22,7 +22,7 @@ After this, you'll need to create your own .env file. Check out the .env.example
 
 Now run `docker-compose up`. This will run all the containers needed to launch this app, and will take some time to finish.
 
-When the process is finished, the app will be exposed on port 80 and accessible by visiting `http://[hostname]:80`. You may use a reverse proxy such as Nginx to serve the app on port 80.
+When the process is finished, the app will be exposed on port 80 and accessible by visiting `http://[hostname]`.
 
 ###### Installation summary
 
@@ -30,4 +30,4 @@ When the process is finished, the app will be exposed on port 80 and accessible 
 2. Clone the repository and change into it `git clone https://github.com/freeCodeCamp/Mail-for-Good && cd Mail-for-Good`.
 3. Run `cp .env.example .env` then open `.env` and edit it, passing in your own values.
 4. Run `docker-compose up`. Wait for it to finish.
-5. Visit `http://[hostname]:80` or `localhost` if running locally.
+5. Visit `http://[hostname]` or `localhost` if running locally.
