@@ -22,7 +22,7 @@ After this, you'll need to create your own .env file. Check out the .env.example
 
 Now run `sudo docker-compose up`. This will run all the containers needed to launch this app, and will take some time to finish.
 
-When the process is finished, the app will be exposed on port 8080 and accessible by visiting `http://[hostname]:8080`. You may use a reverse proxy such as Nginx to serve the app on port 80.
+When the process is finished, the app will be exposed on port 80 and accessible by visiting `http://[hostname]`.
 
 ###### Installation summary
 
