@@ -1,7 +1,11 @@
 const redis = require('redis');
 
 module.exports = () => {
-  const redisSettings = { host: process.env.REDIS_HOST || '127.0.0.1' };
+  const redisSettings = {
+    host: process.env.REDIS_HOST || '127.0.0.1',
+    port: process.env.REDIS_PORT,
+    password: process.env.REDIS_PASSWORD,
+  };
   const client = redis.createClient(redisSettings);
   const subscriber = redis.createClient(redisSettings);  // Need to create separate connections
   const publisher = redis.createClient(redisSettings);   // for pub-sub
