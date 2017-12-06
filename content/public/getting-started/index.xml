@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Getting-starteds on Mail For Good</title>
+    <link>/getting-started/</link>
+    <description>Recent content in Getting-starteds on Mail For Good</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 30 Sep 2017 16:08:39 -0500</lastBuildDate>
+    
+	<atom:link href="/getting-started/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Getting Started</title>
+      <link>/getting-started/</link>
+      <pubDate>Sat, 30 Sep 2017 16:08:39 -0500</pubDate>
+      
+      <guid>/getting-started/</guid>
+      <description>How to install Get the app up and running by following our AWS deployment guide. After following these steps watch this guide to set up the keys you&amp;rsquo;ll need for sending emails.
+Want to test the app on your own machine? Check out our local deployment guide.
+Troubleshooting We&amp;rsquo;re keen to tackle any issues people encounter. If you experience any problems, please create an issue and we&amp;rsquo;ll get back to you.</description>
+    </item>
+    
+  </channel>
+</rss>
