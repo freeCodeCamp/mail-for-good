@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mail For Good</title>
+    <link>/</link>
+    <description>Recent content on Mail For Good</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 30 Sep 2017 16:56:37 -0500</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>How to configure your Google API Keys</title>
+      <link>/google-api-guide/</link>
+      <pubDate>Sat, 30 Sep 2017 16:56:37 -0500</pubDate>
+      
+      <guid>/google-api-guide/</guid>
+      <description>Login to Google API Manager. In the left menu, select Dashboard. Now select Enable API, search for Google+ and select it. At the top of the screen, ensure it&amp;rsquo;s enabled by clicking on Enable. In the left menu, select Credentials. Then click Create Credentials &amp;gt; OAuth client ID. Select Web Application. Name is as you wish, but under Authorised Javascript Origins put http://localhost:8080, and under Authorised redirect URIs put http://localhost:8080/auth/google/callback.</description>
+    </item>
+    
+    <item>
+      <title>License</title>
+      <link>/license/</link>
+      <pubDate>Sat, 30 Sep 2017 16:55:45 -0500</pubDate>
+      
+      <guid>/license/</guid>
+      <description>Copyright &amp;copy; 2017, freeCodeCamp.
+This computer software is licensed under the BSD-3-Clause.</description>
+    </item>
+    
+    <item>
+      <title>How to Contribute</title>
+      <link>/how-to-contribute/</link>
+      <pubDate>Sat, 30 Sep 2017 16:55:37 -0500</pubDate>
+      
+      <guid>/how-to-contribute/</guid>
+      <description>Found a bug? Please let us know by creating an issue.
+How to run Mail For Good in development mode This guide was written for linux-based machines (using Debian). It will also work with OSX, but you&amp;rsquo;ll need to install things differently (e.g. with Brew). Deployment on Windows is untested, and the current suggestion is to run Ubuntu in a virtual machine using software such as VirtualBox.
+In development mode, Mail 4 Good has a number of useful utilities:</description>
+    </item>
+    
+    <item>
+      <title>Local Deployment Guide</title>
+      <link>/local-deployment-guide/</link>
+      <pubDate>Sat, 30 Sep 2017 16:53:35 -0500</pubDate>
+      
+      <guid>/local-deployment-guide/</guid>
+      <description>Preinstallation First, keep in mind that this application uses Amazon SES. Your account will initially be limited by Amazon. To increase these limits, check out Amazon&amp;rsquo;s documentation here.
+Before installing this application, you&amp;rsquo;ll need some API keys from Google to handle authentication. This can be done in a few steps:
+ Login to Google API Manager. In the left menu, select Dashboard. Now select Enable API, search for Google+ and select it.</description>
+    </item>
+    
+    <item>
+      <title>Deploying Mail for Good on AWS</title>
+      <link>/aws-deployment-guide/</link>
+      <pubDate>Sat, 30 Sep 2017 16:52:32 -0500</pubDate>
+      
+      <guid>/aws-deployment-guide/</guid>
+      <description>Get up and running on Amazon Right after you log in to AWS you will land on this page.
+Scroll down until you see the &amp;ldquo;build a solution&amp;rdquo; box as below, then select &amp;ldquo;Launch a virtual machine&amp;rdquo;.
+Click on the &amp;ldquo;Get started&amp;rdquo; button in the &amp;ldquo;EC2 Instance&amp;rdquo; box.
+Give your instance a name. In this example, we will go with &amp;ldquo;Mail-for-Good&amp;rdquo;
+Select Ubuntu as your operating system.
+Here is the preselected instance is fine.</description>
+    </item>
+    
+    <item>
+      <title>Getting Started</title>
+      <link>/getting-started/</link>
+      <pubDate>Sat, 30 Sep 2017 16:08:39 -0500</pubDate>
+      
+      <guid>/getting-started/</guid>
+      <description>How to install Get the app up and running by following our AWS deployment guide. After following these steps watch this guide to set up the keys you&amp;rsquo;ll need for sending emails.
+Want to test the app on your own machine? Check out our local deployment guide.
+Troubleshooting We&amp;rsquo;re keen to tackle any issues people encounter. If you experience any problems, please create an issue and we&amp;rsquo;ll get back to you.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>/</link>
+      <pubDate>Tue, 08 Mar 2016 21:07:13 +0100</pubDate>
+      
+      <guid>/</guid>
+      <description>Beta
+Please be aware that Mail For Good is currently in beta.
+ Looking to contribute? Read our developer setup guide.
+An app for sending millions of emails as cheaply as possible. Mail for Good uses AWS Simple Email Service to send bulk emails at $0.10 per 1000 emails.
+Mail for Good is fast and memory efficient, currently sending over 100 emails per second on a 1gb Digital Ocean VPS.</description>
+    </item>
+    
+  </channel>
+</rss>
