@@ -43,6 +43,8 @@ export class ListSignupFormCreatorComponent extends React.Component {
               <label for="signup-email">Email</label>
               <input type="email" value="" name="email" label="signup-email">
               <input type="hidden" name="subscribeKey" value="${this.state.subscribeKey}" />
+              <input type="hidden" name="redirectOnSuccess" value="" />
+              <input type="hidden" name="redirectOnFailure" value="" />
               <input type="submit" value="Subscribe" name="Subscribe">
               </form>
             `;
@@ -55,6 +57,8 @@ export class ListSignupFormCreatorComponent extends React.Component {
           </div>
           <div className="modal-body">
             <h4>Allow users to sign up to your mailing list by embedding this HTML code into your website</h4>
+            <br/>
+            <p>Optionnaly, you can customize where the user is redirected on success and failure by inserting a URL in the value of the redirectOnSuccess and redirectOnFailure.</p>
             <br/>
             <textarea className="form-control" rows="5">
               {formBody}
