@@ -5,10 +5,11 @@ First, keep in mind that this application uses [Amazon SES](https://aws.amazon.c
 Before installing this application, you'll need some API keys from Google to handle authentication. This can be done in a few steps:
 
 1. Login to [Google API Manager](https://console.developers.google.com/apis/).
-2. In the left menu, select **Dashboard**. Now select **Enable API**, search for `Google+` and select it. At the top of the screen, ensure it's enabled by clicking on **Enable**.
-3. In the left menu, select **Credentials**. Then click **Create Credentials** > **OAuth client ID**.
-4. Select **Web Application**. Name is as you wish, but under **Authorised Javascript Origins** put `http://localhost`, and under **Authorised redirect URIs** put `http://localhost/auth/google/callback`.
-5. Click **Create**. You will now have a Client ID and Client Secret. In your .env file, put the Client ID as your GOOGLE_CONSUMER_KEY, and the Client Secret as your GOOGLE_CONSUMER_SECRET.
+2. Choose **Select a project** on the top left dropdown. Click on the **+** to create a new project, `mail-for-good` or (select it you have created it before). 
+3. In the left menu, select **Dashboard**. Now select **Enable API**, search for `Google+` and select it. At the top of the screen, ensure it's enabled by clicking on **Enable**.
+4. In the left menu, select **Credentials**. Then click **Create Credentials** > **OAuth client ID**.
+5. Select **Web Application**. Name is as you wish, but under **Authorised Javascript Origins** put `http://localhost`, and under **Authorised redirect URIs** put `http://localhost/auth/google/callback`.
+6. Click **Create**. You will now have a Client ID and Client Secret. In your .env file, put the Client ID as your GOOGLE_CONSUMER_KEY, and the Client Secret as your GOOGLE_CONSUMER_SECRET.
 
 ###### Installing with Docker
 
