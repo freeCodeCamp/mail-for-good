@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+  
+  
+  
+  
+   <html class="no-js"> 
+
+  <head lang="en-us">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+    <title>Deploying Mail for Good on AWS - Mail For Good</title>
+    <meta name="generator" content="Hugo 0.30.2" />
+
+    
+    <meta name="description" content="An open source app for sending millions of emails as cheaply as possible.">
+    
+    <link rel="canonical" href="/aws-deployment-guide/">
+    
+    <meta name="author" content="Free Code Camp">
+    
+
+    <meta property="og:url" content="/aws-deployment-guide/">
+    <meta property="og:title" content="Mail For Good">
+    <meta property="og:image" content="/logo.png">
+    <meta name="apple-mobile-web-app-title" content="Mail For Good">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="shortcut icon" type="image/x-icon" href="/logo.png">
+    <link rel="icon" type="image/x-icon" href="/logo.png">
+
+    <style>
+      @font-face {
+        font-family: 'Icon';
+        src: url('/fonts/icon.eot');
+        src: url('/fonts/icon.eot')
+               format('embedded-opentype'),
+             url('/fonts/icon.woff')
+               format('woff'),
+             url('/fonts/icon.ttf')
+               format('truetype'),
+             url('/fonts/icon.svg')
+               format('svg');
+        font-weight: normal;
+        font-style: normal;
+      }
+    </style>
+    <link rel="stylesheet" href="/stylesheets/application.css">
+    <link rel="stylesheet" href="/stylesheets/temporary.css">
+    <link rel="stylesheet" href="/stylesheets/palettes.css">
+    <link rel="stylesheet" href="/stylesheets/highlight/highlight.css">
+
+    
+    
+    
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=%27Lato%27%2c%20sans-serif:400,700|Ubuntu&#43;Mono">
+    <style>
+      body, input {
+        font-family: '\27Lato\27, sans-serif', Helvetica, Arial, sans-serif;
+      }
+      pre, code {
+        font-family: 'Ubuntu Mono', 'Courier New', 'Courier', monospace;
+      }
+    </style>
+
+    
+    <link rel="stylesheet" href="/stylesheets/modal.css">
+    
+    <link rel="stylesheet" href="/stylesheets/misc.css">
+    
+    <link rel="stylesheet" href="/stylesheets/palettes.css">
+    
+    <script src="/javascripts/modernizr.js"></script>
+
+    
+
+  </head>
+  <body class="palette-primary-green palette-accent-yellow">
+
+
+
+	
+	
+
+
+<div class="backdrop">
+	<div class="backdrop-paper"></div>
+</div>
+
+<input class="toggle" type="checkbox" id="toggle-drawer">
+<input class="toggle" type="checkbox" id="toggle-search">
+<label class="toggle-button overlay" for="toggle-drawer"></label>
+
+<header class="header">
+	<nav aria-label="Header">
+  <div class="bar default">
+    <div class="button button-menu" role="button" aria-label="Menu">
+      <label class="toggle-button icon icon-menu" for="toggle-drawer">
+        <span></span>
+      </label>
+    </div>
+    <div class="stretch">
+      <div class="title" style="display: flex; align-items: flex-start;">
+        <p style="font-weight: bold;"><a href="/">Mail For Good</a></p> <img src="/logo.png" style="max-height: 5rem; margin-top: -1.25rem;" />
+      </div>
+    </div>
+
+    
+    <div class="button button-twitter" role="button" aria-label="Twitter">
+       <a href="https://twitter.com/freeCodeCamp" title="@freeCodeCamp on Twitter" target="_blank" class="toggle-button icon icon-twitter"></a>
+    </div>
+    
+
+    
+    <div class="button button-github" role="button" aria-label="GitHub">
+      <a href="https://github.com/freeCodeCamp/mail-for-good" title="@freeCodeCamp/mail-for-good on GitHub" target="_blank" class="toggle-button icon icon-github"></a>
+    </div>
+    
+    
+        
+  </div>
+  <div class="bar search">
+    <div class="button button-close" role="button" aria-label="Close">
+      <label class="toggle-button icon icon-back" for="toggle-search"></label>
+    </div>
+    <div class="stretch">
+      <div class="field">
+        <input class="query" type="text" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck>
+      </div>
+    </div>
+    <div class="button button-reset" role="button" aria-label="Search">
+      <button class="toggle-button icon icon-close" id="reset-search"></button>
+    </div>
+  </div>
+</nav>
+</header>
+
+<main class="main">
+	<div class="drawer">
+		<nav aria-label="Navigation">
+  <a href="https://github.com/freeCodeCamp/mail-for-good" class="project">
+    <div class="banner">
+      
+        <div class="logo">
+          <img src="/logo.png">
+        </div>
+      
+      <div class="name">
+        <strong>Mail For Good <span class="version">1.0.0</span></strong>
+        
+          <br>
+          freeCodeCamp/mail-for-good
+        
+      </div>
+    </div>
+  </a>
+
+  <div class="scrollable">
+    <div class="wrapper">
+      
+        <ul class="repo">
+          <li class="repo-download">
+            <a href="https://github.com/freeCodeCamp/mail-for-good/archive/master.zip" target="_blank" title="Download" data-action="download">
+              <i class="icon icon-download"></i> Download
+            </a>
+          </li>
+          <li class="repo-stars">
+            <a href="https://github.com/freeCodeCamp/mail-for-good/stargazers" target="_blank" title="Stargazers" data-action="star">
+              <i class="icon icon-star"></i> Stars
+              <span class="count">&ndash;</span>
+            </a>
+          </li>
+        </ul>
+        <hr>
+      
+
+      <div class="toc">
+        
+        <ul>
+          
+
+
+
+
+<li>
+  
+    
+
+
+
+<a  title="About" href="/">
+	
+	About
+</a>
+
+
+
+  
+</li>
+
+
+
+<li>
+  
+    
+
+
+
+<a  title="Getting started" href="/getting-started/">
+	
+	Getting started
+</a>
+
+
+
+  
+</li>
+
+
+
+<li>
+  
+    
+
+
+
+<a  title="How to Contribute" href="/how-to-contribute/">
+	
+	How to Contribute
+</a>
+
+
+
+  
+</li>
+
+
+
+<li>
+  
+    
+
+
+
+<a  title="License" href="/license/">
+	
+	License
+</a>
+
+
+
+  
+</li>
+
+
+        </ul>
+        
+
+        
+        <hr>
+        <span class="section">The author</span>
+        
+        <ul>
+          
+          <li>
+            <a href="https://twitter.com/freeCodeCamp" target="_blank" title="@freeCodeCamp on Twitter">
+              @freeCodeCamp on Twitter
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://github.com/freeCodeCamp/mail-for-good" target="_blank" title="@freeCodeCamp/mail-for-good on GitHub">
+              @freeCodeCamp/mail-for-good on GitHub
+            </a>
+          </li>
+          
+
+          
+        </ul>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+
+	</div>
+
+	<article class="article">
+		<div class="wrapper">
+			<h1>Deploying Mail for Good on AWS </h1>
+
+			
+
+<h2 id="get-up-and-running-on-amazon">Get up and running on Amazon</h2>
+
+<p>Right after you log in to AWS you will land on this page.</p>
+
+<p><img class='image' src='/1.png' /></p>
+
+<p>Scroll down until you see the &ldquo;build a solution&rdquo; box as below, then select &ldquo;Launch a virtual machine&rdquo;.</p>
+
+<p><img class='image' src='/2.png' /></p>
+
+<p>Click on the &ldquo;Get started&rdquo; button in the &ldquo;EC2 Instance&rdquo; box.</p>
+
+<p><img class='image' src='/3.png' /></p>
+
+<p>Give your instance a name. In this example, we will go with &ldquo;Mail-for-Good&rdquo;</p>
+
+<p><img class='image' src='/4.png' /></p>
+
+<p>Select Ubuntu as your operating system.</p>
+
+<p><img class='image' src='/5.png' /></p>
+
+<p>Here is the preselected instance is fine. (t2.micro instances are eligible for the free tier).</p>
+
+<p><img class='image' src='/6.png' /></p>
+
+<p>AWS will now create an SSH key for your instance. You will need this file to login to the remote server.</p>
+
+<p>We will call this file <code>MfG-private-key</code>.</p>
+
+<p><img class='image' src='/7.png' /></p>
+
+<p>AWS will now create your instance.</p>
+
+<p><img class='image' src='/8.png' /></p>
+
+<p>You should see this when it&rsquo;s done.</p>
+
+<p><img src='/9.png' /></p>
+
+<h2 id="configure-your-aws-instance">Configure your AWS instance</h2>
+
+<p>In the navbar at the top of the screen select &ldquo;EC2&rdquo; under the &ldquo;Compute&rdquo; category.</p>
+
+<p><img class='image' src='/10.png' /></p>
+
+<p>In the menu on the left of your screen, click on &ldquo;Instances&rdquo;</p>
+
+<p><img class='image' src='/11.png' /></p>
+
+<p>Then scroll the box containing the instances to the far right until you see &ldquo;Security Groups&rdquo;.</p>
+
+<p><img class='image' src='/13.png' /></p>
+
+<p>Click on the security group of your instance and open the &ldquo;Inbound&rdquo; tab</p>
+
+<p><img class='image' src='/14.png' /></p>
+
+<p>then &ldquo;Edit&rdquo;.</p>
+
+<p><img class='image' src='/15.png' /></p>
+
+<p>Add the following rule, as pictured:</p>
+
+<pre><code>type: custom tcp rule
+protocol: tcp
+port range: 80
+source: custom 0.0.0.0/0, ::/0
+</code></pre>
+
+<h2 id="allocate-a-ip-to-your-instance">Allocate a  IP to your instance</h2>
+
+<p>By default AWS will allocate you a new address every time your instance starts up.</p>
+
+<p>To get a  IP go to navbar -&gt; EC2 -&gt; left menu -&gt; Elastic IPs.</p>
+
+<p><img class='image' src='/navbar_ec2_elasticIP.png' /></p>
+
+<p>Then click on &ldquo;Allocate new address&rdquo;.</p>
+
+<p><img class='image' src='/elastic_allocate_new.png' /></p>
+
+<p>Once your Elastic IP is created click on Actions -&gt; &ldquo;Associate address&rdquo;.</p>
+
+<p><img class='image' src='/elastic_associate.png' /></p>
+
+<p>Leave the Resource Type as its default (&ldquo;Instance&rdquo;).</p>
+
+<p>Select the Instance you just created and its Private IP.</p>
+
+<p><img class='image' src='/elastic_associate_conf.png' /></p>
+
+<h2 id="connect-to-your-new-ec2-server">Connect to your new EC2 server</h2>
+
+<p>In the navbar at the top of your screen select &ldquo;EC2&rdquo; under the &ldquo;Compute&rdquo; category.</p>
+
+<p><img class='image' src='/10.png' /></p>
+
+<p>In the menu on the left of your screen, click on &ldquo;Instances&rdquo;.</p>
+
+<p><img class='image' src='/11.png' /></p>
+
+<p>Select your instance. Then take note of the &ldquo;Public DNS (IPv4)&rdquo; of your application. In this case, ours is &ldquo;ec2-54-77-4-200.eu-west-1.compute.amazonaws.com&rdquo;.</p>
+
+<p><img class='image' src='/12.png' /></p>
+
+<hr />
+
+<h4 id="in-the-commands-below-you-ll-need-to-replace-what-s-between-and-with-what-is-described">In the commands below, you&rsquo;ll need to replace what&rsquo;s between &lt; and &gt; with what is described.</h4>
+
+<hr />
+
+<p>Copy the private key you downloaded earlier and put it somewhere safe. By default, it will probably be in <code>~/Downloads</code>. You can check this with:</p>
+
+<pre><code class="language-Shell">cd ~/Downloads &amp;&amp; cat ./MfG-private-key.pem
+</code></pre>
+
+<p>We&rsquo;ll assume this is true and copy the key to our home directory (you may wish to do otherwise, bear this in mind):</p>
+
+<pre><code class="language-Shell">cp ~/Downloads/MfG-private-key.pem ~/
+</code></pre>
+
+<p>Before using your key you will need to make it readable by running:</p>
+
+<pre><code class="language-Shell">chmod 400 &lt;path to your key&gt;
+</code></pre>
+
+<p>Which would be the following command for our example:</p>
+
+<pre><code class="language-Shell">chmod 400 ~/MfG-private-key.pem
+</code></pre>
+
+<p>Log into your instance:</p>
+
+<pre><code class="language-Shell">ssh -i &quot;&lt;path to the key file you downloaded earlier&gt;&quot; ubuntu@&lt;your Public DNS (IPv4) from Amazon&gt;
+</code></pre>
+
+<p>In our example we would use this command:</p>
+
+<pre><code class="language-Shell">ssh -i &quot;~/MfG-private-key.pem&quot; ubuntu@ec2-54-77-4-200.eu-west-1.compute.amazonaws.com
+</code></pre>
+
+<p>If everything went well so far you should see the following text:</p>
+
+<pre><code class="language-Shell">Welcome to Ubuntu 16.04.3 LTS (GNU/Linux 4.4.0-1030-aws x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  Get cloud support with Ubuntu Advantage Cloud Guest:
+    http://www.ubuntu.com/business/services/cloud
+
+0 packages can be updated.
+0 updates are security updates.
+
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+To run a command as administrator (user &quot;root&quot;), use &quot;sudo &lt;command&gt;&quot;.
+See &quot;man sudo_root&quot; for details.
+</code></pre>
+
+<p>You are now logged in to your instance.</p>
+
+<h2 id="install-docker-and-docker-compose-on-your-instance">Install docker and docker-compose on your instance</h2>
+
+<hr />
+
+<h4 id="from-this-point-onwards-all-commands-should-be-run-on-the-aws-instance-you-just-logged-in-to">From this point onwards all commands should be run on the AWS Instance you just logged in to.</h4>
+
+<h4 id="the-installation-process-for-docker-is-described-in-more-detail-at-https-docs-docker-com-engine-installation-linux-docker-ce-ubuntu-check-this-out-for-more-details">The installation process for docker is described in more detail at <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/">https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/</a>. Check this out for more details.</h4>
+
+<hr />
+
+<p>Update your package sources:</p>
+
+<pre><code class="language-Shell">$ sudo apt-get update
+</code></pre>
+
+<p>Install packages to allow <code>apt</code> to use a repository over HTTPS:</p>
+
+<pre><code class="language-Shell">$ sudo apt-get install \
+ apt-transport-https \
+ ca-certificates \
+ curl \
+ software-properties-common
+</code></pre>
+
+<p>Add Docker’s official GPG key:</p>
+
+<pre><code class="language-Shell">$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+</code></pre>
+
+<p>Install the docker version currently marked as &ldquo;stable&rdquo;:</p>
+
+<pre><code class="language-Shell">$ sudo add-apt-repository \
+ &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+ $(lsb_release -cs) \
+ stable&quot;
+</code></pre>
+
+<p>To install docker-compose run:</p>
+
+<pre><code class="language-Shell">sudo apt-get install docker-compose
+</code></pre>
+
+<h3 id="get-set-up-with-google-authentication">Get set up with Google authentication</h3>
+
+<p>Login to <a href="https://console.developers.google.com/apis/">Google API Manager</a>.</p>
+
+<p>In the left menu, select <strong>Dashboard</strong>. Now select <strong>Enable API</strong>, search for <code>Google+</code> and select it. At the top of the screen, ensure it&rsquo;s enabled by clicking on <strong>Enable</strong>.</p>
+
+<p>In the left menu, select <strong>Credentials</strong>. Then click <strong>Create Credentials</strong> &gt; <strong>OAuth client ID</strong>.</p>
+
+<p>Select <strong>Web Application</strong>. Name it as you wish
+  - Under <strong>Authorised Javascript Origins</strong> put the “Public DNS (IPv4)” you received from Amazon earlier.
+  - Under <strong>Authorised redirect URIs</strong> put your “Public DNS (IPv4)” followed by <code>/auth/google/callback</code>.</p>
+
+<p><img class='image' src='/google_origins.png' /></p>
+
+<p><strong>Any issues here? Double check that both URLs are preceeded with http://</strong>.</p>
+
+<p>Click <strong>Create</strong>.</p>
+
+<h3 id="configure-mail-for-good">Configure Mail for Good</h3>
+
+<p>Clone Mail-for-Good:</p>
+
+<pre><code class="language-Shell">git clone https://github.com/freeCodeCamp/mail-for-good &amp;&amp; cd mail-for-good
+</code></pre>
+
+<p>Create a .env file:</p>
+
+<pre><code class="language-Shell">cp .env.example .env
+</code></pre>
+
+<p>Edit your .env according to the comments present in it:</p>
+
+<pre><code class="language-Shell">nano .env
+</code></pre>
+
+<p>In particular, you need to edit these four attributes:</p>
+
+<pre><code class="language-Shell">  # Your Google Client ID
+  # E.g. 1234547812345-12345qrp123459bzcd12345660412345.apps.googleusercontent.com
+GOOGLE_CONSUMER_KEY=
+  # Your Client Secret
+  # E.g abcdefQVw1ghijzeaQklmnop
+GOOGLE_CONSUMER_SECRET=
+  # The URL Google will send you back to after logging in.
+  # It must match what is under &quot;Authorised redirect URIs&quot; in the Google Dashboard exactly
+GOOGLE_CALLBACK=
+  # A random, preferably long sequence of characters. You do not need to remember this.
+ENCRYPTION_PASSWORD=
+</code></pre>
+
+<p>To write your changes, press CTRL+O (then confirm your choice).</p>
+
+<p>Press CTRL+X to exit.</p>
+
+<h3 id="launch-mail-for-good">Launch Mail-for-Good</h3>
+
+<p>All done! Run the command below and wait for it to finish. This may take some time:</p>
+
+<pre><code class="language-bash">sudo docker-compose up
+</code></pre>
+
+<p>Finally, close the terminal. Do not exit the app before doing so.</p>
+
+<h3 id="visit-your-app">Visit your app</h3>
+
+<p>You can now visit the app by visiting your &ldquo;Public DNS (IPv4)&rdquo;.</p>
+
+<p>In our example we would visit &ldquo;ec2-54-77-4-200.eu-west-1.compute.amazonaws.com&rdquo;.</p>
+
+
+			<footer class="footer">
+				 
+<nav class="pagination" aria-label="Footer">
+  <div class="previous">
+    
+    <a href="/local-deployment-guide/" title="Local Deployment Guide">
+      <span class="direction">
+        Previous
+      </span>
+      <div class="page">
+        <div class="button button-previous" role="button" aria-label="Previous">
+          <i class="icon icon-back"></i>
+        </div>
+        <div class="stretch">
+          <div class="title">
+            Local Deployment Guide
+          </div>
+        </div>
+      </div>
+    </a>
+    
+  </div>
+
+  <div class="next">
+    
+    <a href="/getting-started/" title="Getting Started">
+      <span class="direction">
+        Next
+      </span>
+      <div class="page">
+        <div class="stretch">
+          <div class="title">
+            Getting Started
+          </div>
+        </div>
+        <div class="button button-next" role="button" aria-label="Next">
+          <i class="icon icon-forward"></i>
+        </div>
+      </div>
+    </a>
+    
+  </div>
+</nav>
+  
+</div>
+<section id="modal-wrap">
+  <div id="modal-close-button">
+    <p>&times;</p>
+  </div>
+  <div id="modal">
+    <img src="" id='modal-image' alt="">
+  </div>
+</section>
+			</footer>
+		</div>
+	</article>
+
+	<div class="results" role="status" aria-live="polite">
+		<div class="scrollable">
+			<div class="wrapper">
+				<div class="meta"></div>
+				<div class="list"></div>
+			</div>
+		</div>
+	</div>
+</main>
+
+    <script>
+    
+      var base_url = '\/';
+      var repo_id  = 'freeCodeCamp\/mail-for-good';
+    
+    </script>
+
+    <script src="/javascripts/application.js"></script>
+    
+    <script src="/javascripts/modal.js"></script>
+    
+
+    <script>
+      /* Add headers to scrollspy */
+      var headers   = document.getElementsByTagName("h2");
+      var scrollspy = document.getElementById('scrollspy');
+
+      if(scrollspy) {
+        if(headers.length > 0) {
+          for(var i = 0; i < headers.length; i++) {
+            var li = document.createElement("li");
+            li.setAttribute("class", "anchor");
+
+            var a  = document.createElement("a");
+            a.setAttribute("href", "#" + headers[i].id);
+            a.setAttribute("title", headers[i].innerHTML);
+            a.innerHTML = headers[i].innerHTML;
+
+            li.appendChild(a)
+            scrollspy.appendChild(li);
+          }
+        } else {
+          scrollspy.parentElement.removeChild(scrollspy)
+        }
+
+
+        /* Add permanent link next to the headers */
+        var headers = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
+
+        for(var i = 0; i < headers.length; i++) {
+            var a = document.createElement("a");
+            a.setAttribute("class", "headerlink");
+            a.setAttribute("href", "#" + headers[i].id);
+            a.setAttribute("title", "Permanent link")
+            a.innerHTML = "#";
+            headers[i].appendChild(a);
+        }
+      }
+    </script>
+
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>
+

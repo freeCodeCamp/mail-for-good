@@ -1,0 +1,11 @@
+/* 
+ * overwrite the current primary color of the 
+ * theme that is used as fallback in codeblocks 
+ */
+.article pre code {
+	color: rgba(0, 0, 0, 0.8) !important;
+	font-size: 1.5rem;
+}
+
+
+
