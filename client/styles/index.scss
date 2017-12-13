@@ -1,0 +1,33 @@
+@import './tables.scss';
+
+// Override default AdminLTE values
+@font-face
+{
+   font-family: Lato;
+   src: url('../utils/adminLte/assets/Lato-Regular.ttf');
+}
+
+html, body, h1, h2, h3, h4, h5, h6, p {
+  font-family: Lato, sans-serif!important;
+}
+
+// Ensure the text editor is at least 60vh
+.TextEditor {
+  min-height: 60vh;
+}
+
+.ql-editor {
+  min-height: 60vh;
+}
+
+// Override Bootstrap table's orange 'delete' button colour
+.react-bs-table-del-btn {
+  color: #fff;
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
+
+.btn-hug {
+  margin: 1em;
+  width: 125px;
+}

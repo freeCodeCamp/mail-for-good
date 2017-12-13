@@ -6,9 +6,6 @@ logs
 *.log
 npm-debug.log*
 
-### environment file ###
-.env
-
 # Runtime data
 pids
 *.pid
@@ -76,7 +73,6 @@ seeders
 # Development db
 tools/simulator/simulator.db
 
-# Annoying mac files et al
+# DS files
 dump.rdb
-*.rdb
-.DS_Store
+*.DS_Store
