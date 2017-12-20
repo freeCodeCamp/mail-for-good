@@ -18,7 +18,7 @@ module.exports = function(req, res) {
       foundCampaignAnalyticsOpen.opened = true;
 
       // Attempt to get ip
-      const ipAddress = req.headers['x -forwarded-for'] ||
+      const ipAddress = req.headers['x-forwarded-for'] ||
         req.connection.remoteAddress ||
         req.socket.remoteAddress ||
         req.connection.socket.remoteAddress;
