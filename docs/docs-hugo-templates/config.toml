@@ -1,0 +1,71 @@
+baseurl = "https://freeCodeCamp.github.io/mail-for-good/"
+languageCode = "en-us"
+title = "Mail For Good"
+theme = "hugo-material-docs"
+metadataformat = "yaml"
+canonifyurls = true
+publishDir = '../'
+
+[params]
+	# General information
+	author = "Free Code Camp"
+	description = "An open source app for sending millions of emails as cheaply as possible."
+
+	# Repository
+	provider = "GitHub"
+	repo_url = "https://github.com/freeCodeCamp/mail-for-good"
+
+	version = "1.0.0"
+	logo = "logo.png"
+	favicon = "logo.png"
+
+	permalink = "#"
+
+	# Custom assets, theme overrides
+	custom_css = ['/stylesheets/modal.css', '/stylesheets/misc.css', '/stylesheets/palettes.css']
+	custom_js  = ['/javascripts/modal.js']
+	highlight_css = "stylesheets/highlight/highlight.css"
+
+	# Color scheme
+	[params.palette]
+    	primary = "green"
+    	accent  = "yellow"
+
+	# Font
+    [params.font]
+    	text = "'Lato', sans-serif"
+    	code = "Ubuntu Mono"
+
+
+# Social media links
+[social]
+	twitter = "freeCodeCamp"
+	github  = "freeCodeCamp/mail-for-good"
+
+# Sidebar menu
+[[menu.main]]
+	name   = "About"
+	url    = "/"
+	weight = 1
+
+[[menu.main]]
+	name   = "Getting started"
+	url    = "getting-started/"
+	weight = 10
+
+[[menu.main]]
+	name   = "How to Contribute"
+	url    = "how-to-contribute/"
+	weight = 20
+
+[[menu.main]]
+	name   = "License"
+	url    = "license/"
+	weight = 30
+
+# Markdown settings
+[blackfriday]
+	smartypants	= true
+	fractions = true
+	smartDashes = true
+	plainIDAnchors = true
