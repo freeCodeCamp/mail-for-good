@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "https://freeCodeCamp.github.io/mail-for-good/"
 languageCode = "en-us"
 title = "Mail For Good"
 theme = "hugo-material-docs"
