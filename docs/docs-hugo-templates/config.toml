@@ -4,6 +4,7 @@ title = "Mail For Good"
 theme = "hugo-material-docs"
 metadataformat = "yaml"
 canonifyurls = true
+publishDir = '../'
 
 [params]
 	# General information
