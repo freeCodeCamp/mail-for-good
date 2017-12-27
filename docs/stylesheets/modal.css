@@ -1,0 +1,40 @@
+@media (min-width: 960px) {
+  #modal-wrap {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .6);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  #modal-image {
+    max-height: 70vh;
+    margin: 5px auto;
+  }
+  #modal-close-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  #modal-close-button p {
+    color: #fff;
+    cursor: pointer;
+    font-size: 50px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+}
