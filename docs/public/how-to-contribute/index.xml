@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>How-to-contributes on Mail For Good</title>
+    <link>/how-to-contribute/</link>
+    <description>Recent content in How-to-contributes on Mail For Good</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 30 Sep 2017 16:55:37 -0500</lastBuildDate>
+    
+	<atom:link href="/how-to-contribute/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>How to Contribute</title>
+      <link>/how-to-contribute/</link>
+      <pubDate>Sat, 30 Sep 2017 16:55:37 -0500</pubDate>
+      
+      <guid>/how-to-contribute/</guid>
+      <description>Found a bug? Please let us know by creating an issue.
+How to run Mail For Good in development mode This guide was written for linux-based machines (using Debian). It will also work with OSX, but you&amp;rsquo;ll need to install things differently (e.g. with Brew). Deployment on Windows is untested, and the current suggestion is to run Ubuntu in a virtual machine using software such as VirtualBox.
+In development mode, Mail 4 Good has a number of useful utilities:</description>
+    </item>
+    
+  </channel>
+</rss>
