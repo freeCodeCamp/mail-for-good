@@ -11,7 +11,7 @@
     "check-env-file": "python ./tools/setup/initial_setup.py",
     "client:lint": "esw webpack.config.* client tools --color",
     "client:clean-dist": "npm run client:remove-dist && mkdir dist",
-    "start": "NODE_ENV=production npm-run-all start:*",
+    "start": "NODE_ENV=production npm-run-all --parallel start:*",
     "start:main": "node server/index.js",
     "start:consumer": "node server/feedback-consumer/consumer.js",
     "production": "DEV_SEND_RATE=200 TEST_PRODUCTION=true NODE_ENV=production node server/index.js",
