@@ -30,7 +30,7 @@ module.exports = function(req, res) {
         } else {
           ListSubscriber.create({
             email, listId
-          }).then(handleSuccess(res,handleSuccess));
+          }).then(handleSuccess(res,redirectOnSuccess));
         }
       });
     } else {
