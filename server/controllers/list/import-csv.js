@@ -4,6 +4,7 @@ const fs = require('fs');
 const cargo = require('async/cargo');
 const _ = require('lodash');
 const shortid = require('shortid');
+const emailValidator = require('email-validator');
 
 const db = require('../../models');
 const sendSingleNotification = require('../websockets/send-single-notification');
@@ -33,11 +34,6 @@ module.exports = (req, res, io) => {
   const listName = req.body.list; // Name of the list from the user
   const additionalFields = _.without(JSON.parse(req.body.headers), 'email'); // e.g. name, location, sex, (excluding email header)
   const userId = req.user.id;
-
-  function validateEmail(email) {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line
-    return re.test(email);
-  }
 
   // Validate the list name. This should also be handled client side so there's no need for a message response.
   if (listName === '') {
@@ -252,7 +248,7 @@ module.exports = (req, res, io) => {
 
     const transformer = csv.transform((row, callback) => {
       // If row has no email field (though it should), skip the line. Implicit conversion from both undefined & '' is assumed.
-      if (!row.email || !validateEmail(row.email)) {
+      if (!row.email || !emailValidator.validate(row.email)) {
         callback();
       } else {
         // Add fields to row
