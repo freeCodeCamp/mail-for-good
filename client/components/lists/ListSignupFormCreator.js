@@ -58,7 +58,7 @@ export class ListSignupFormCreatorComponent extends React.Component {
           <div className="modal-body">
             <h4>Allow users to sign up to your mailing list by embedding this HTML code into your website</h4>
             <br/>
-            <p>Optionnaly, you can customize where the user is redirected on success and failure by inserting a URL in the value of the redirectOnSuccess and redirectOnFailure.</p>
+            <p>Optionally, you can customize where the user is redirected on success and failure by inserting a URL in the value of the redirectOnSuccess and redirectOnFailure.</p>
             <br/>
             <textarea className="form-control" rows="5">
               {formBody}
