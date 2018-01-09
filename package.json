@@ -51,6 +51,7 @@
     "debug": "^2.6.8",
     "dompurify": "^0.9.0",
     "dotenv": "^4.0.0",
+    "email-validator": "^1.1.1",
     "express": "^4.15.3",
     "express-session": "^1.15.3",
     "geoip-lite": "^1.2.1",
