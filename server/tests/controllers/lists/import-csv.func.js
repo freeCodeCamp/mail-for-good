@@ -43,17 +43,7 @@ test('Import CSV function correctly parses a CSV with a single column "email" & 
     It is a function that first refreshes the request it is passed to ensure that the socket info it has is correct.
     We will spy on this function and once called check the DB to validate if import-csv functioned correctly.
   */
-  const stubSessionReload = () => {
-    t.pass('Finished by calling send-single-notification');
-
-    ListSubscriber.findAll({
-      raw: true,
-    }).then(values => {
-      // Check if all emails were written to the db correctly.
-      const everyListsubscriberWasWritten = values.every(value => ~TEST_EMAIL_ARRAY.indexOf(value.email));
-      t.ok(everyListsubscriberWasWritten, 'Every item written to the db was in the uploaded file');
-    })
-  };
+  const stubSessionReload = func => func();
   const req = httpMocks.createRequest({
     method: 'POST',
     url: '/user/42',
@@ -72,11 +62,33 @@ test('Import CSV function correctly parses a CSV with a single column "email" & 
       id: USER_ID,
     },
     session: {
-      reload: stubSessionReload
+      reload: stubSessionReload,
+      passport: {
+        socket: 0,
+      },
     }
   });
   const res = httpMocks.createResponse({ eventEmitter: require('events').EventEmitter });
-  const io = {};
+  const io = {
+    sockets: {
+      connected: {
+        0: {
+          emit: (type, notifcation) => {
+            if (notifcation.message.startsWith('CSV validated')) {
+              t.pass('Finished by calling send-single-notification');
+              ListSubscriber.findAll({
+                raw: true,
+              }).then(values => {
+                // Check if all emails were written to the db correctly.
+                const everyListsubscriberWasWritten = values.every(value => ~TEST_EMAIL_ARRAY.indexOf(value.email));
+                t.ok(everyListsubscriberWasWritten, 'Every item written to the db was in the uploaded file');
+              });
+            }
+          }
+        }
+      }
+    }
+  };
 
   importCsv(req, res, io);
 
