@@ -1,0 +1,31 @@
+{
+  "name":"Mail for Good",
+  "description":"An open source email campaign management tool for nonprofits",
+  "repository":"https://github.com/freeCodeCamp/mail-for-good",
+  "logo":"https://raw.githubusercontent.com/freeCodeCamp/assets/master/assets/logos/fcc_puck600.png",
+  "keywords":["email","nonprofit","freecodecamp"],
+  "formation":{
+    "web":{
+      "quantity":1,
+      "size":"free"
+    }
+  },
+  "stack":"heroku-16",
+  "env": {
+    "HEROKU": {
+      "value":"true"
+    },
+  },
+  "addons":[
+    {
+      "plan":"heroku-postgresql:hobby-dev",
+      "options":{
+        "version":"9.6"
+      }
+    },
+    {
+      "plan":"heroku-redis:hobby-dev",
+    }
+  ]
+}
+}
