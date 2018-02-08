@@ -12,6 +12,11 @@ module.exports = (passport, secret) => {
         googleId: profile.id
       }
     }).then(userExists => {
+      let email = profile._json.emails[0].value
+      if (secret.users && secret.users.indexOf(email) == -1) {
+        throw new Error('User not found!');
+      }
+
       if (userExists) {
         done(null, userExists);
       } else {
@@ -21,7 +26,7 @@ module.exports = (passport, secret) => {
           return db.user.create({
             googleId: profile.id,
             token: token,
-            email: profile._json.emails[0].value,
+            email: email,
             name: profile.displayName,
             picture: profile._json.image.url
           }, { transaction: t })
