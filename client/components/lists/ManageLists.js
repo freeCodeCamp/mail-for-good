@@ -7,7 +7,7 @@ const ManageLists = () => {
     <div>
       <div className="content-header">
         <h1>Manage lists
-          <small>Edit, delete and segement your lists here</small>
+          <small>Edit, delete and segment your lists here</small>
         </h1>
       </div>
 
