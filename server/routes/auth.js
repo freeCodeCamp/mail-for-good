@@ -2,7 +2,16 @@ const path = require('path');
 
 module.exports = (app, passport) => {
   app.get('/login', (req, res) => {
-    res.sendFile(path.resolve('public/index.html'));
+    if (req.isAuthenticated()) {
+      res.redirect('/');
+    } else {
+      const headers = {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        "Pragma": 'no-cache',
+        'Expires': 0
+      };
+      res.sendFile(path.resolve('public/index.html'), { headers });
+    }
   });
 
   // Redirect user to Google for authentication. When complete, Google will return the user to /auth/google/return
