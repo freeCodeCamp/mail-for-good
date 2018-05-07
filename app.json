@@ -15,6 +15,9 @@
     "HEROKU": {
       "value":"true"
     },
+    "ENCRYPTION_PASSWORD":{
+      "generator":"secret"
+    },
   },
   "addons":[
     {
