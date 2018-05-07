@@ -6,9 +6,11 @@ module.exports = () => {
     port: process.env.REDIS_PORT,
     password: process.env.REDIS_PASSWORD,
   };
-  const client = redis.createClient(redisSettings);
-  const subscriber = redis.createClient(redisSettings);  // Need to create separate connections
-  const publisher = redis.createClient(redisSettings);   // for pub-sub
+  const redisUrl = process.env.REDIS_URL;
+
+  const client = createRedisClient(redisSettings,redisUrl); 
+  const subscriber = createRedisClient(redisSettings,redisUrl);  // Need to create separate connections
+  const publisher = createRedisClient(redisSettings,redisUrl);   // for pub-sub
 
   client.on('error', err => console.log('Error: Are you running redis? - ', err));
 
@@ -18,3 +20,16 @@ module.exports = () => {
     publisher,
   };
 };
+
+
+function createRedisClient(settings, url) {
+  let client;
+
+  if(url){
+    client = redis.createClient(url);
+  }else{
+    client = redis.createClient(settings);
+  }
+
+  return client;
+}
