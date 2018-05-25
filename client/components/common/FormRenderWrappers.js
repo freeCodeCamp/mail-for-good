@@ -71,7 +71,7 @@ export const renderField = ({ input, label, type, meta: { touched, error, warnin
   <div>
     <label>{label}</label>
     <div>
-      <input className="form-control" {...input} placeholder={label} type={type}/>
+      <input className={getInputClassFromType(type)} {...input} placeholder={label} type={type}/>
       {touched && ((error && <span className="text-red"><i className="fa fa-exclamation" /> {error}</span>) || (warning && <span>{warning}</span>))}
     </div>
   </div>
@@ -99,3 +99,26 @@ export const renderTextEditor = ({ input, label, type, meta: { touched, error, w
     </div>
   </div>
 );
+
+function getInputClassFromType(type) {
+  let properClass = ''
+
+  switch (type) {
+    case "datetime-local":
+    case "email":
+    case "password":
+    case "search":
+    case "tel":
+    case "text":
+    case "url":
+      properClass="form-control";
+      break;
+    case "checkbox":
+    case "radio":
+      properClass="form-check-input";
+      break;
+  }
+
+  return properClass;
+
+}
