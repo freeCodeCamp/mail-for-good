@@ -24,7 +24,8 @@
     "test:server:unit": "mocha tools/testSetup.js \"server/**/*.spec.js\"",
     "test:server:functional": "babel-tape-runner -r dotenv/config server/tests/**/*.func.js | node_modules/.bin/tap-spec",
     "test:client": "mocha --require tools/testClientSetup.js tools/testSetup.js \"client/**/*.spec.js\"",
-    "test": "npm run test:client && npm run test:server"
+    "test": "npm run test:client && npm run test:server",
+    "updateDB":"node_modules/.bin/sequelize db:migrate --env production"
   },
   "repository": {
     "type": "git",
@@ -92,6 +93,7 @@
     "redux-localstorage": "^0.4.1",
     "redux-thunk": "2.2.0",
     "sequelize": "^3.24.3",
+    "sequelize-cli": "^4.0.0",
     "shortid": "^2.2.8",
     "slug": "^0.9.1",
     "socket.io": "^2.0.3",
