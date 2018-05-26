@@ -56,6 +56,16 @@ const initialState = {
     isPosting: false,
     response: {}
   },
+  createAccount: {
+    isGetting: false,
+    isPosting: false,
+    response: {}
+  },
+  deleteAccount: { // Refers to DeleteAccount container
+    isGetting: false,
+    isPosting: false,
+    response: {}
+  },
   receivedPermissionOffers: { // Permission offers received from another user
     isGetting: false,
     receivedPermissionOffers: []
