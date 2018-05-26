@@ -22,6 +22,7 @@ const { apiIsAuth, isAuth } = require('./middleware/auth');
 const lists = require('./lists');
 const templates = require('./templates');
 const campaigns = require('./campaigns');
+const accountsManagement = require('./accountsManagement')
 const permissions = require('./permissions');
 
 module.exports = (app, passport, io, redis) => {
@@ -49,6 +50,8 @@ module.exports = (app, passport, io, redis) => {
 
   /* Lists */
   lists(app, io);
+
+  accountsManagement(app)
 
   /* Permissions */
   permissions(app);
