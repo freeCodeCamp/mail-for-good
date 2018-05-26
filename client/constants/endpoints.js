@@ -20,6 +20,8 @@ export const API_LIST_ENDPOINT = BASE_URL + '/api/list';
 // Analytics
 
 // Permissions
+export const API_CREATE_USER_ENDPOINT = '/api/create-user';
+export const API_DELETE_USER_ENDPOINT = '/api/delete-user';
 export const API_GRANT_PERMISSIONS_ENDPOINT = '/api/permissions';
 export const API_ACTIVE_PERMISSIONS_ENDPOINT = '/api/active-permissions';
 export const API_RECEIVED_PERMISSIONS_ENDPOINT = '/api/received-permissions';

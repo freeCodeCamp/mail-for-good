@@ -3,6 +3,7 @@ const passport = require('passport');
 const secrets = require('../secrets');
 const db = require('../../models');
 const Google = require('../passport/google');
+const local = require('../passport/local')
 
 module.exports = () => {
   passport.serializeUser(function(user, done) {
@@ -21,5 +22,8 @@ module.exports = () => {
   ///////////////////////////////
   /* AUTHENTICATION STRATEGIES */
   ///////////////////////////////
-  Google(passport, secrets.google);
+  if(typeof process.env.GOOGLE_CONSUMER_KEY !== 'undefined'){
+    Google(passport, secrets.google);
+  }
+  local(passport)
 };

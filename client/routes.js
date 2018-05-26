@@ -19,6 +19,9 @@ import ManageLists from './components/lists/ManageLists';
 import ManageListSubscribers from './containers/lists/ManageListSubscribers';
 // Analytics
 import CampaignReports from './containers/analytics/CampaignReports';
+// Accounts Management
+import CreateAccount from './containers/accountsManagement/CreateAccount';
+import DeleteAccount from './containers/accountsManagement/DeleteAccount';
 // Permissions
 import GrantPermissions from './containers/permissions/GrantPermissions';
 import OfferedPermissions from './containers/permissions/OfferedPermissions';
@@ -93,6 +96,11 @@ export default class RouterConfig extends Component {
 
           <Route path="analytics" onEnter={this.onEnter} >
             <Route path="reports" component={CampaignReports}/>
+          </Route>
+
+          <Route path="accountsManagement" onEnter={this.onEnter} >
+            <Route path="createAccount" component={CreateAccount}/>
+            <Route path="deleteAccount" component={DeleteAccount}/>
           </Route>
 
           <Route path="permissions" onEnter={this.onEnter} >

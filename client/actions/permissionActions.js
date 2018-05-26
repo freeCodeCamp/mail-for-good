@@ -16,6 +16,8 @@ import {
   ACTIVATE_ACCOUNT, DEACTIVATE_ACCOUNT
 } from '../constants/actionTypes';
 import {
+  API_CREATE_USER_ENDPOINT,
+  API_DELETE_USER_ENDPOINT,
   API_GRANT_PERMISSIONS_ENDPOINT,
   API_RECEIVED_PERMISSIONS_ENDPOINT,
   API_ACTIVE_PERMISSIONS_ENDPOINT,
@@ -26,6 +28,12 @@ import cookie from 'react-cookie';
 import { notify } from './notificationActions';
 
 // REST for granting permissions
+export function requestDeleteUser() {
+  return { type: REQUEST_DELETE_USER };
+}
+export function completeDeleteUser() {
+  return { type: COMPLETE_DELETE_USER };
+}
 export function requestGetGrantPermissions() {
   return { type: REQUEST_GET_GRANT_PERMISSION };
 }
