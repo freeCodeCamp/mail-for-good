@@ -16,6 +16,13 @@ Mail for Good is fast and memory efficient, currently sending over 100 emails pe
 
 We've used Mail for Good to deliver newsletters to hundreds of thousands of campers per week.
 
+## Sounds good? Give it a try!
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/freeCodeCamp/mail-for-good/tree/heroku/stable)
+
+"My instance is deployed, what now?"
+
+In [setting_up.md](./docs/setting_up.md) you'll find how to connect, create your admin account and set up your AWS credentials allowing you to send your first blast.
+
 [**Click here to view our youtube video and get started.**](https://www.youtube.com/watch?v=_7U03GVD4a8)
 
 ## What does Mail for Good do?
@@ -40,17 +47,12 @@ Mail for Good is fast and scales to the rate limit enforced by AWS.
 
 We want to help nonprofits manage their email campaigns as inexpensively as possible, and have full control over their data.
 
-### How to install
-
-Get the app up and running by following our [**AWS deployment guide.md**](./docs/aws_deploy.md). After following these steps watch [**this guide**](https://www.youtube.com/watch?v=_7U03GVD4a8) to set up the keys you'll need for sending emails.
-
-Want to test the app on your own machine? Check out our [**local deployment guide.md**](./docs/local_deploy.md).
+### How to install locally
+[**local deployment guide.md**](./docs/local_deploy.md).
 
 ### Troubleshooting
 
 We're keen to tackle any issues people encounter. If you experience any problems, please create an issue and we'll get back to you.
-
-If at any point you changed a file after running `docker-compose`, run `docker-compose up --force-recreate` to ensure they're included.
 
 ### How to contribute
 
@@ -60,6 +62,6 @@ We warmly welcome contributions from anyone. Check out our [how to contribute](h
 
 ### License
 
-Copyright (c) 2017, freeCodeCamp.
+Copyright (c) 2018, freeCodeCamp.
 
 This computer software is licensed under the [BSD-3-Clause](https://github.com/freeCodeCamp/Mail-for-Good/blob/master/LICENSE.md).
