@@ -23,8 +23,6 @@ We've used Mail for Good to deliver newsletters to hundreds of thousands of camp
 
 In [setting_up.md](./docs/setting_up.md) you'll find how to connect, create your admin account and set up your AWS credentials allowing you to send your first blast.
 
-[**Click here to view our youtube video and get started.**](https://www.youtube.com/watch?v=_7U03GVD4a8)
-
 ## What does Mail for Good do?
 
 With Mail for Good you can:
