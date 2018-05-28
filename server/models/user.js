@@ -19,6 +19,21 @@ module.exports = function(sequelize, DataTypes) {
     }
   });
 
+  User.addHook('afterSync',() => {
+    User.findOne({where:{isAdmin:true}})
+    .then((anAdmin)=>{
+      if(anAdmin === null){
+          User.createOne({
+          email:'admin@admin.com',
+          name:'admin',
+          password:'admin',
+          isAdmin:true
+        })
+      }
+    })
+    return null
+  })
+
   //returns Promise(isValid:boolean)
   User.checkPassword = (plainTextPassword, hash) => {
     return bcrypt.compare(plainTextPassword, hash);
