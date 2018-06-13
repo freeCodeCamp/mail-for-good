@@ -7,13 +7,10 @@ module.exports = function(sequelize, DataTypes) {
     campaigns: { type: DataTypes.STRING, validate: { isIn: [['None', 'Read', 'Write']] } },
     templates: { type: DataTypes.STRING, validate: { isIn: [['None', 'Read', 'Write']] } },
     lists: { type: DataTypes.STRING, validate: { isIn: [['None', 'Read', 'Write']] } }
-  }, {
-    classMethods: {
-      associate: function(models) {
+  });
+    offerPermission.associate = function (models) {
         // associations can be defined here
         offerPermission.belongsTo(models.user);
-      }
     }
-  });
   return offerPermission;
 };

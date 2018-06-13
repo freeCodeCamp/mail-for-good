@@ -61,7 +61,7 @@ module.exports = (req, res, io) => {
           slug: slug(req.body.campaignName)
         }
       }).then((instance) => {
-        if (instance[0].$options.isNewRecord) {
+        if (instance[0]._options.isNewRecord) {
           const campaignId = instance[0].dataValues.id;
           let totalCampaignSubscribersProcessed = 0;
           db.campaignanalytics.create({campaignId}).then(() => {

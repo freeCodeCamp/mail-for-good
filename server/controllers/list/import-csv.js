@@ -117,7 +117,7 @@ module.exports = (req, res, io) => {
     const randomId = shortid.generate();
 
     listInstance = listInstance[0];
-    const listIsNew = listInstance.$options.isNewRecord;
+    const listIsNew = listInstance._options.isNewRecord;
     const listId = listInstance.dataValues.id;
 
     const filename = req.file.originalname;

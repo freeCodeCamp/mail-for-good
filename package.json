@@ -8,6 +8,9 @@
     "node": ">=7.6.0"
   },
   "scripts": {
+    "mysql": "mysql  -h 'localhost' -u root mail_for_good -p'' -e 'show tables;'",
+    "clear-db": "sequelize db:drop; sequelize db:create",
+    "migrate": "DEBUG=s.  *sequelize db:migrate; DEBUG=s.*  sequelize db:seed:all",
     "check-env-file": "python ./tools/setup/initial_setup.py",
     "client:lint": "esw webpack.config.* client tools --color",
     "client:clean-dist": "npm run client:remove-dist && mkdir dist",
@@ -15,7 +18,7 @@
     "start:main": "node server/index.js",
     "start:consumer": "node server/feedback-consumer/consumer.js",
     "production": "DEV_SEND_RATE=200 TEST_PRODUCTION=true NODE_ENV=production node server/index.js",
-    "dev": "DEV_SEND_RATE=200 NODE_ENV=development node server/index.js",
+    "dev": "DEBUG=sequelize* DEV_SEND_RATE=200 NODE_ENV=development node server/index.js",
     "debug": "DEV_SEND_RATE=200 NODE_ENV=development node --inspect --debug-brk server/index.js",
     "build": "babel-node tools/build.js",
     "simulator": "node ./node_modules/node-amazon-ses-simulator/index.js -e 0",
@@ -25,7 +28,7 @@
     "test:server:functional": "babel-tape-runner -r dotenv/config server/tests/**/*.func.js | node_modules/.bin/tap-spec",
     "test:client": "mocha --require tools/testClientSetup.js tools/testSetup.js \"client/**/*.spec.js\"",
     "test": "npm run test:client && npm run test:server",
-    "updateDB":"node_modules/.bin/sequelize db:migrate --env production"
+    "updateDB": "node_modules/.bin/sequelize db:migrate --env production"
   },
   "repository": {
     "type": "git",
@@ -64,12 +67,12 @@
     "lodash": "^4.15.0",
     "moment": "^2.18.1",
     "multer": "^1.2.0",
+    "mysql2": "^1.5.3",
     "npm-run-all": "^4.0.2",
     "papaparse": "^4.3.3",
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
-    "pg": "^6.2.4",
     "pug": "^2.0.0-rc.4",
     "quill": "^1.2.6",
     "react": "^15.6.1",
@@ -93,7 +96,7 @@
     "redux-form": "^6.8.0",
     "redux-localstorage": "^0.4.1",
     "redux-thunk": "2.2.0",
-    "sequelize": "^3.24.3",
+    "sequelize": "^4.37.10",
     "sequelize-cli": "^4.0.0",
     "shortid": "^2.2.8",
     "slug": "^0.9.1",

@@ -11,14 +11,11 @@ module.exports = function(sequelize, DataTypes) {
     browserName: DataTypes.STRING,
     opened: { type: DataTypes.BOOLEAN, defaultValue: false },
     trackingId: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4 }
-  }, {
-    classMethods: {
-      associate: function(models) {
+  });
+    campaignanalyticsopen.associate = function (models) {
         campaignanalyticsopen.belongsTo(models.campaignanalytics);
         campaignanalyticsopen.belongsTo(models.listsubscriber);
         // might want to assoc with user too
-      }
     }
-  });
   return campaignanalyticsopen;
 };

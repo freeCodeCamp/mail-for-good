@@ -7,23 +7,21 @@ module.exports = function(sequelize, DataTypes) {
     mostRecentStatus: { type: DataTypes.STRING, defaultValue: 'unconfirmed' }, // bounce:permanent, bounce:transient, complaint
     additionalData: { type: DataTypes.JSONB, defaultValue: {} }
   }, {
-    classMethods: {
-      associate: function(models) {
+      indexes: [
+        {
+            fields: ['email']
+        },
+        {
+            fields: ['subscribed']
+        }
+      ]
+    });
+    listsubscriber.associate = function (models) {
         // associations can be defined here
         listsubscriber.belongsTo(models.list);
         listsubscriber.hasMany(models.campaignanalyticslink);
         listsubscriber.hasMany(models.campaignanalyticsopen);
         listsubscriber.hasMany(models.campaignsubscriber);
-      }
-    },
-    indexes: [
-      {
-        fields: ['email']
-      },
-      {
-        fields: ['subscribed']
-      }
-    ]
-  });
+  }
   return listsubscriber;
 };
