@@ -53,16 +53,17 @@ module.exports = function(req, res, redis) {
   // This also serves as advanced validation for AWS credentials
   if (selectProvidedFields.amazonSimpleEmailServiceAccessKey || selectProvidedFields.amazonSimpleEmailServiceSecretKey || selectProvidedFields.region || selectProvidedFields.email ) {
     console.log("AWS settings provided, reconfiguring AWS");
-    Setting.findOne({
+    Setting.findOrCreate({
       where: { userId: req.user.id },
-      attributes: ['amazonSimpleEmailServiceAccessKey', 'amazonSimpleEmailServiceSecretKey', 'region', 'email']
+      attributes: ['amazonSimpleEmailServiceAccessKey', 'amazonSimpleEmailServiceSecretKey', 'region', 'email', 'userId']
     }).then(settingInstance => {
       const settings = _.extend(
         {
           amazonSimpleEmailServiceAccessKey: settingInstance.amazonSimpleEmailServiceAccessKey,
           amazonSimpleEmailServiceSecretKey: settingInstance.amazonSimpleEmailServiceSecretKey,
           region: settingInstance.region,
-          email: settingInstance.email
+          email: settingInstance.email,
+          userId: req.user.id
         }, selectProvidedFields);
 
       configureAws({
