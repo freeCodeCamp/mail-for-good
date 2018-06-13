@@ -2,7 +2,7 @@
 module.exports = function(sequelize, DataTypes) {
   var subscriber = sequelize.define('subscriber', {
     email: DataTypes.STRING,
-    customdata: DataTypes.ARRAY(DataTypes.STRING)
+    customdata: DataTypes.JSON
   }, {
     classMethods: {
       associate: function(models) {

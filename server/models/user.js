@@ -11,12 +11,6 @@ module.exports = function(sequelize, DataTypes) {
     password: DataTypes.STRING,
     isAdmin: DataTypes.BOOLEAN,
     sentEmailsCount: { type: DataTypes.INTEGER, defaultValue: 0 }
-  }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
-    }
   });
 
   User.addHook('afterSync',() => {

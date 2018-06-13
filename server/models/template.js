@@ -11,13 +11,11 @@ module.exports = function(sequelize, DataTypes) {
     trackingPixelEnabled: { type: DataTypes.BOOLEAN, defaultValue: false },
     trackLinksEnabled: { type: DataTypes.BOOLEAN, defaultValue: false },
     unsubscribeLinkEnabled: { type: DataTypes.BOOLEAN, defaultValue: false }
-  }, {
-    classMethods: {
-      associate: function(models) {
+  });
+    template.associate = function(models)
+    {
         // associations can be defined here
         template.belongsTo(models.user);
-      }
     }
-  });
   return template;
 };

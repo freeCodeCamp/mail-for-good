@@ -12,13 +12,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     {
     freezeTableName: true,  // because CampaignAnalyticss is a silly name
-    classMethods: {
-      associate: function(models) {
-        campaignanalytics.belongsTo(models.campaign);
-        campaignanalytics.hasMany(models.campaignanalyticslink);
-        campaignanalytics.hasMany(models.campaignanalyticsopen);
-      }
-    }
-  });
+    });
+  campaignanalytics.associate = function (models) {
+      campaignanalytics.belongsTo(models.campaign);
+      campaignanalytics.hasMany(models.campaignanalyticslink);
+      campaignanalytics.hasMany(models.campaignanalyticsopen);
+  }
   return campaignanalytics;
 };

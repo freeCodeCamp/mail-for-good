@@ -6,13 +6,11 @@ module.exports = function(sequelize, DataTypes) {
     additionalFields: { type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: [ ] },
     status: { type: DataTypes.STRING, defaultValue: 'processing', validate: { isIn: [['processing', 'ready']] } },
     total: { type: DataTypes.INTEGER, defaultValue: 0 },
-  }, {
-    classMethods: {
-      associate: function(models) {
+  });
+
+    list.associate = function (models) {
         // associations can be defined here
         list.belongsTo(models.user);
-      }
     }
-  });
   return list;
 };
