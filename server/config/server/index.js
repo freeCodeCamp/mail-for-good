@@ -19,7 +19,7 @@ const server = http.Server(app);
 module.exports = () => {
   // Sync the db
   configureSequelize();
-  // Use webpack deb middleware in development mode
+  // Use webpack dev middleware in development mode
   configureWebpackDevMiddleware(app);
 
   // Configure redis, receiving connections to client, subscriber and publisher
@@ -43,7 +43,7 @@ module.exports = () => {
   app.use(helmet()); // Implements various security tweaks to http response headers
 
   app.use('/public', express.static(path.join(__dirname, '../../../public'))); // Serve /public static files when unauth
-  app.use('/dist', express.static(path.join(__dirname, '../../../dist'))); // Serve /dist static diles when auth
+  app.use('/dist', express.static(path.join(__dirname, '../../../dist'))); // Serve /dist static files when auth
 
   // Routes
   routes(app, passport, io, { client, subscriber, publisher });
