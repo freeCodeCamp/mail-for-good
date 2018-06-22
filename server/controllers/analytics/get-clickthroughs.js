@@ -17,7 +17,7 @@ module.exports = function(req, res) {
     if (result) {
       res.send(result.campaignanalytic.campaignanalyticslinks);
     } else {
-      res.status(400).send('you do not have permissions or this campaign does not exist')
+      res.status(400).send('You do not have permissions or this campaign does not exist')
     }
   })
 }
