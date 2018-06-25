@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         campaignanalyticsopen.belongsTo(models.campaignanalytics);
         campaignanalyticsopen.belongsTo(models.listsubscriber);
-        // might want to assoc with user too
+        // might want to associate with user too
       }
     }
   });
