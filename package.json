@@ -25,7 +25,7 @@
     "test:server:functional": "babel-tape-runner -r dotenv/config server/tests/**/*.func.js | node_modules/.bin/tap-spec",
     "test:client": "mocha --require tools/testClientSetup.js tools/testSetup.js \"client/**/*.spec.js\"",
     "test": "npm run test:client && npm run test:server",
-    "updateDB":"node_modules/.bin/sequelize db:migrate --env production"
+    "updateDB": "node_modules/.bin/sequelize db:migrate --env production"
   },
   "repository": {
     "type": "git",
