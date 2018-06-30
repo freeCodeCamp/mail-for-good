@@ -312,4 +312,3 @@ module.exports = (req, res, io) => {
   });
 };
 
-console.log('mic check?')
