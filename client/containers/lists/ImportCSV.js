@@ -47,7 +47,7 @@ export class ImportCSVComponent extends Component {
 
     const callback = results => {
       if (!results.meta.fields.some(field => field.toLowerCase() === 'email' || 'e-mail')) { // Check if any header field is labeled email
-        this.handleErrorWithFile('Please ensure the CSV file contains at least one column field labeled "email" (check the first row)');
+        this.handleErrorWithFile('Please ensure the CSV file contains at least one column field labeled "email/e-mail" (check the first row)');
       } else {
 
         const errors = results.errors;
