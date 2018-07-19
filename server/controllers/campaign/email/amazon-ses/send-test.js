@@ -106,6 +106,9 @@ module.exports = (req, res) => {
         ? new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region, endpoint: 'http://localhost:9999' })
         : new AWS.SES({ accessKeyId: accessKey, secretAccessKey: secretKey, region, apiVersion: '2010-12-01'});
 
+
+      //replace all variables by their names to not get their '{}' processed by wrapLink()
+      campaign.emailBody = campaign.emailBody.replace(/{{.*}}/gm,(match)=>{return match.slice(2,-2);});
       // Modify email body for analytics
       if (campaign.trackLinksEnabled) {
         campaign.emailBody = wrapLink(campaign.emailBody, 'example-tracking-id', campaign.type, whiteLabelUrl);
