@@ -46,7 +46,7 @@ Mail for Good is fast and scales to the rate limit enforced by AWS.
 We want to help nonprofits manage their email campaigns as inexpensively as possible, and have full control over their data.
 
 ### How to install locally
-[**local deployment guide.md**](./docs/local_deploy.md).
+Step by Step installation instruction available here [**local deployment guide.md**](./docs/local_deploy.md).
 
 ### Troubleshooting
 
