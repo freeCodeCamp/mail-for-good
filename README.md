@@ -1,5 +1,5 @@
 # Mail for Good
-
+funny boii
 [![Join the chat at https://gitter.im/FreeCodeCamp/mail-for-good](https://badges.gitter.im/FreeCodeCamp/mail-for-good.svg)](https://gitter.im/FreeCodeCamp/mail-for-good?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 *Please be aware that Mail for Good is currently in beta.*
