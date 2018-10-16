@@ -48,11 +48,11 @@ We want to help nonprofits manage their email campaigns as inexpensively as poss
 ### How to install locally
 [**local deployment guide.md**](./docs/local_deploy.md).
 
-### Troubleshooting
+### Troubleshooting problems
 
 We're keen to tackle any issues people encounter. If you experience any problems, please create an issue and we'll get back to you.
 
-### How to contribute
+### How to contribute?
 
 Found a bug? Please let us know by [creating an issue](https://github.com/freeCodeCamp/Mail-for-Good/issues/new).
 
