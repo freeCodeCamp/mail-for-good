@@ -50,7 +50,7 @@ We want to help nonprofits manage their email campaigns as inexpensively as poss
 
 ### Troubleshooting
 
-We're keen to tackle any issues people encounter. If you experience any problems, please create an issue and we'll get back to you.
+We're keen to tackle any issues people encounter. If you experience any problems, please create an issue and we'll get back to you!
 
 ### How to contribute
 
