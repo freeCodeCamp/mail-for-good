@@ -132,3 +132,9 @@ ENCRYPTION_PASSWORD={}
 if __name__ == '__main__':
     main()
 ###
+
+
+## Quick References for Learning more about python
+
+1. https://www.cs.put.poznan.pl/csobaniec/software/python/py-qrc.html
+2. http://rgruet.free.fr/
