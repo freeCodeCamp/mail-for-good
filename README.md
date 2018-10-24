@@ -25,7 +25,7 @@ In [setting_up.md](./docs/setting_up.md) you'll find how to connect, create your
 
 ## What does Mail for Good do?
 
-With Mail for Good you can:
+With Mail for Good you can have following features:
 
 - Send email campaigns of unlimited size.
 - Import emails saved in CSV format.
