@@ -29,6 +29,7 @@ With Mail for Good you can:
 
 - Send email campaigns of unlimited size.
 - Import emails saved in CSV format.
+- Show how much regular you are.
 - Create templates to reuse for convenience when sending email campaigns.
 - Track bounce rate and other standard metrics. You can also insert tracking pixels and unsubscribe links at the click of a button.
 - Add custom fields to imported email lists such as names or cities.
