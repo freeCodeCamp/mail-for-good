@@ -235,8 +235,8 @@ In the left menu, select **Dashboard**. Now select **Enable API**, search for `G
 In the left menu, select **Credentials**. Then click **Create Credentials** > **OAuth client ID**.
 
 Select **Web Application**. Name it as you wish
-  - Under **Authorised Javascript Origins** put the “Public DNS (IPv4)” you received from Amazon earlier.
-  - Under **Authorised redirect URIs** put your “Public DNS (IPv4)” followed by `/auth/google/callback`.
+  - Under **Authorized Javascript Origins** put the “Public DNS (IPv4)” you received from Amazon earlier.
+  - Under **Authorized redirect URIs** put your “Public DNS (IPv4)” followed by `/auth/google/callback`.
 
 ![](resources/deploy_images/google_origins.png)
 
@@ -274,7 +274,7 @@ GOOGLE_CONSUMER_KEY=
   # E.g abcdefQVw1ghijzeaQklmnop
 GOOGLE_CONSUMER_SECRET=
   # The URL Google will send you back to after logging in.
-  # It must match what is under "Authorised redirect URIs" in the Google Dashboard exactly
+  # It must match what is under "Authorized redirect URIs" in the Google Dashboard exactly
 GOOGLE_CALLBACK=
   # A random, preferably long sequence of characters. You do not need to remember this.
 ENCRYPTION_PASSWORD=
