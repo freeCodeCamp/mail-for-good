@@ -10,7 +10,7 @@ Looking to contribute? Read our [developer setup guide](https://github.com/freeC
 
 ![Image showing Mail 4 Good](docs/resources/hero.png)
 
-An app for sending millions of emails as cheaply as possible. Mail for Good uses AWS Simple Email Service to send bulk emails at $0.10 per 1000 emails.
+An app for sending millions of emails as cheaply as possible, Mail for Good uses AWS Simple Email Service to send bulk emails at $0.10 per 1000 emails.
 
 Mail for Good is fast and memory efficient, currently sending over 100 emails per second on a 1gb Digital Ocean VPS.
 
