@@ -90,7 +90,6 @@
     "react-tooltip": "^3.3.0",
     "react-widgets": "^3.4.8",
     "redis": "^2.7.1",
-    "redis-server": "^1.2.2",
     "redux": "3.6.0",
     "redux-form": "^6.8.0",
     "redux-localstorage": "^0.4.1",
