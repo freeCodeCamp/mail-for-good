@@ -23,7 +23,7 @@ Select Ubuntu as your operating system.
 
 ![](resources/deploy_images/5.png)
 
-Here is the preselected instance is fine. (t2.micro instances are eligible for the free tier).
+Here the preselected instance is fine. (t2.micro instances are eligible for the free tier).
 
 ![](resources/deploy_images/6.png)
 
