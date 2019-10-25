@@ -58,7 +58,7 @@ Found a bug? Please let us know by [creating an issue](https://github.com/freeCo
 
 We warmly welcome contributions from anyone. Check out our [how to contribute](https://github.com/FreeCodeCamp/nonprofit-email-service/blob/master/CONTRIBUTING.md) section to find out how you can do so.
 
-### License
+### [License](https://github.com/freeCodeCamp/Mail-for-Good/blob/master/LICENSE.md)
 
 Copyright (c) 2018, freeCodeCamp.
 
