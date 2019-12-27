@@ -13,10 +13,10 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator, editLis
   const options = {
     clearSearch: true,
     noDataText: 'You do not have any lists linked with your account',
-    afterDeleteRow: rows => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
+    afterDeleteRow: (rows) => { // Optimistic update, can assume request will succeed. 'Rows' has format [...rowKey] where rowKey is a list primary key
       deleteRows(rows);
     },
-    handleConfirmDeleteRow: next => { 
+    handleConfirmDeleteRow: (next) => { 
       // We do want to prompt for confirmation on list deletion, per GitHub issue #141
       if (confirm("Do you really want to delete the selected list(s)?")) {
         next();
@@ -29,7 +29,7 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator, editLis
     blurToSave: true,
     //beforeSaveCell is meant to run tests and return a boolean telling if react-bootstrap-table should or not update the value of the cell
     //but because the change has to be handled with redux the change is made in beforeSaveCell and false is always returned
-    beforeSaveCell:(row, cellName, cellValue)=>{
+    beforeSaveCell: (row, cellName, cellValue) => {
       editListName(row.id,cellValue);
       return false;
     },
@@ -45,51 +45,44 @@ const ManageListsTable = ({ data, deleteRows, showListSignupFormCreator, editLis
       </Link>
   );
 
-  const formatStatus = status => {
-    if (status == 'processing') {
+  const formatStatus = (status) => {
+    if (status === 'processing') {
       return `<span class="label label-warning">Processing</span>`;
-    } else if (status == 'ready') {
+    } else if (status === 'ready') {
       return `<span class="label label-default">Ready</span>`;
     }
   };
 
-  const formatSignupFormButton = (cell, row) => {
-    return (
-      <button onClick={() => { showListSignupFormCreator(row.subscribeKey); }}
-              type="button"
-              className="btn btn-default btn-flat">
+  const formatSignupFormButton = (cell, row) => (
+    <button 
+        onClick={() => { showListSignupFormCreator(row.subscribeKey); }}
+        type="button"
+        className="btn btn-default btn-flat">
 
         <i className="fa fa-address-card" />
-      </button>
-    );
-  };
+    </button>
+  );
 
-  const formatSubscribersTotal = (cell, row) => {
-    if (row.status == 'processing') {
-      return 'n/a';
-    } else {
-      return cell;
-    }
-  };
+  const formatSubscribersTotal = (cell, row) => row.status === 'processing' ? 'n/a' : cell;
 
   return (
     <BootstrapTable data={data}
-      pagination={true}
-      hover={true}
-      deleteRow={true}
+      pagination
+      hover
+      deleteRow
       selectRow={selectRowProp}
       options={options}
-      search={true}
+      search
       searchPlaceholder="Filter lists"
-      clearSearch={true}
+      clearSearch
       cellEdit={cellEditProps}>
 
-      <TableHeaderColumn dataField="id" hidden={true} isKey={true}>id</TableHeaderColumn>
-      <TableHeaderColumn dataField="name" dataSort={true} editable={true}>Name</TableHeaderColumn>
-      <TableHeaderColumn dataField="status" dataAlign="center" dataSort={true} dataFormat={formatStatus} editable={false} width="150">Status</TableHeaderColumn>
-      <TableHeaderColumn dataField="total" dataAlign="center" dataSort={true} dataFormat={formatSubscribersTotal} editable={false} width="150">Total</TableHeaderColumn>
-      <TableHeaderColumn dataField="createdAt" dataSort={true} dataFormat={formatFieldDate} editable={false}>Created</TableHeaderColumn>
-      <TableHeaderColumn dataField="updatedAt" dataSort={true} dataFormat={formatFieldDate} editable={false}>Updated</TableHeaderColumn>
+      <TableHeaderColumn dataField="id" hidden isKey={true}>id</TableHeaderColumn>
+      <TableHeaderColumn dataField="name" dataSort editable={true}>Name</TableHeaderColumn>
+      <TableHeaderColumn dataField="status" dataAlign="center" dataSort dataFormat={formatStatus} editable={false} width="150">Status</TableHeaderColumn>
+      <TableHeaderColumn dataField="total" dataAlign="center" dataSort dataFormat={formatSubscribersTotal} editable={false} width="150">Total</TableHeaderColumn>
+      <TableHeaderColumn dataField="createdAt" dataSort dataFormat={formatFieldDate} editable={false}>Created</TableHeaderColumn>
+      <TableHeaderColumn dataField="updatedAt" dataSort dataFormat={formatFieldDate} editable={false}>Updated</TableHeaderColumn>
       <TableHeaderColumn dataAlign="center" width="150" dataFormat={formatSignupFormButton} editable={false}>Signup form</TableHeaderColumn>
       <TableHeaderColumn dataAlign="center" width="150" dataFormat={formatFieldManageSubscribers} editable={false}>Subscribers</TableHeaderColumn>
     </BootstrapTable>
