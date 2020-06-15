@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/FreeCodeCamp/mail-for-good](https://badges.gitter.im/FreeCodeCamp/mail-for-good.svg)](https://gitter.im/FreeCodeCamp/mail-for-good?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-*Please be aware that Mail for Good is currently in beta.*
+*Please be aware and make sure that Mail for Good is currently in beta.*
 
 Looking to contribute? Read our [developer setup guide](https://github.com/freeCodeCamp/Mail-for-Good/wiki/Setup-for-development).
 
