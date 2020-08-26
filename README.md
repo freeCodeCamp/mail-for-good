@@ -37,7 +37,7 @@ With Mail for Good you can:
 
 ### Performance
 
-We're currently sending weekly email blasts of over 800,000 emails in 4 hours on a $10 per month Digital Ocean VPS with 1gb memory and 1 core processor.
+We're currently sending weekly email blasts of over 800,000 emails in 4 hours on a $10 per month Digital Ocean VPS with 1 GB memory and 1 core processor.
 
 Mail for Good is fast and scales to the rate limit enforced by AWS.
 
