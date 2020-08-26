@@ -1,7 +1,7 @@
 {
   "name": "Mail for Good",
   "description": "An open source email campaign management tool for nonprofits",
-  "repository": "https://github.com/freeCodeCamp/mail-for-good",
+  "repository": "https://github.com/saviorand/mail-for-good/tree/heroku/stable",
   "logo": "https://raw.githubusercontent.com/freeCodeCamp/assets/master/assets/logos/fcc_puck600.png",
   "keywords": ["email", "nonprofit", "freecodecamp"],
   "formation": {
