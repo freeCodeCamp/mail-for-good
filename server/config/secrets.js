@@ -8,10 +8,9 @@ module.exports = {
       secretAccessKey: process.env.AMAZON_SECRET_ACCESS_KEY || null
     }
   },
-  //
-
+  
   smtpServer: {
-    port: process.env.SMTP_TEST_PORT || '2025', // Linux envs disallo use of port <= 1024 without root
+    port: process.env.SMTP_TEST_PORT || '2025', // Linux envs disallow use of port <= 1024 without root
     host: process.env.SMTP_TEST_HOST || '127.0.0.1'
   },
 
@@ -20,5 +19,4 @@ module.exports = {
     consumerSecret: process.env.GOOGLE_CONSUMER_SECRET,
     callbackURL: process.env.GOOGLE_CALLBACK || 'http://localhost:8080/auth/google/callback'
   },
-
 };
