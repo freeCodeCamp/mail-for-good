@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "A cost effective, open source solution to sending mass emails",
   "main": "index.js",
-  "engines": {
-    "npm": "5",
-    "node": "7.6.0"
-  },
   "scripts": {
     "check-env-file": "python ./tools/setup/initial_setup.py",
     "client:lint": "esw webpack.config.* client tools --color",
