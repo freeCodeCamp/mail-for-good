@@ -3,7 +3,8 @@ const path = require('path');
 const express = require('express');
 const passport = require('passport');
 const helmet = require('helmet');
-const cookieSession = require('cookie-session');
+
+const cookieSession = require('express-session');
 const configureSequelize = require('./sequelize');
 const configureWebpackDevMiddleware = require('./webpack-dev-middleware');
 const configureRedis = require('./redis');
